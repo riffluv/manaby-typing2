@@ -3,6 +3,10 @@ import * as wanakana from 'wanakana';
 import { wordList } from '@/data/wordList';
 import styles from '@/styles/TypingGame.module.css';
 import { convertHiraganaToRomaji, getAllRomajiPatterns, createTypingChars, TypingChar } from '@/utils/japaneseUtils';
+import { 
+  playSound, playBGM, stopBGM, pauseBGM, resumeBGM, preloadAllSounds,
+  setEffectsEnabled, setBGMEnabled, setEffectsVolume, setBGMVolume 
+} from '@/utils/soundPlayer';
 
 const TypingGame: React.FC = () => {
   // 現在のお題のインデックス
@@ -127,24 +131,21 @@ const TypingGame: React.FC = () => {
             });
           } else {
             // お題がすべて完了した場合
-            if (currentWordIndex + 1 < wordList.length) {
-              // 次のお題へ
+            if (currentWordIndex + 1 < wordList.length) {              // 次のお題へ
               setTimeout(() => {
                 setCurrentWordIndex(prev => prev + 1);
-              }, 500);
-            } else {
+              }, 500);} else {
               // ゲーム終了
               setGameStatus('finished');
               gameStateRef.current.gameStatus = 'finished';
             }
           }
         }
-        
-        // 将来的に正解音を再生する場合
-        // playSound('correct', 0.5);
+          // 正解音を再生
+        playSound('correct', 0.5);
       } else {
-        // 将来的に不正解音を再生する場合
-        // playSound('wrong', 0.5);
+        // 不正解音を再生
+        playSound('wrong', 0.5);
       }
     }
   }, [currentWordIndex]);
@@ -161,6 +162,11 @@ const TypingGame: React.FC = () => {
     // 次のフレームを要求
     requestRef.current = requestAnimationFrame(animationLoop);
   }, [processKeyInputQueue]);
+    // コンポーネントマウント時にサウンドをプリロード
+  useEffect(() => {
+    // すべてのサウンドをプリロード
+    preloadAllSounds();
+  }, []);
   
   // ゲーム開始時にキーボードイベントをセット & アニメーションフレームを開始
   useEffect(() => {
@@ -169,11 +175,13 @@ const TypingGame: React.FC = () => {
       const status = gameStateRef.current.gameStatus;
       
       // ゲームがプレイ中でない場合はスペースキーでスタート
-      if (status !== 'playing') {
-        if (e.key === ' ' || e.code === 'Space') {
+      if (status !== 'playing') {        if (e.key === ' ' || e.code === 'Space') {
           e.preventDefault();
           setGameStatus('playing');
           gameStateRef.current.gameStatus = 'playing';
+          
+          // サウンドをプリロード
+          preloadAllSounds();
         }
         return;
       }
@@ -182,9 +190,7 @@ const TypingGame: React.FC = () => {
       if (e.key === 'Escape') {
         resetGame();
         return;
-      }
-
-      // 入力可能キーの場合はキューに追加
+      }      // 入力可能キーの場合はキューに追加
       if (e.key.length === 1) {
         keyInputQueueRef.current.push(e.key);
       }
@@ -199,9 +205,7 @@ const TypingGame: React.FC = () => {
         cancelAnimationFrame(requestRef.current);
       }
     };
-  }, [animationLoop]);
-
-  // ゲームをリセット
+  }, [animationLoop]);  // ゲームをリセット
   const resetGame = useCallback(() => {
     setCurrentWordIndex(0);
     setUserInput('');
