@@ -1,0 +1,148 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>MCP接続テスト</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      max-width: 800px;
+      margin: 0 auto;
+      padding: 20px;
+    }
+    h1 {
+      color: #333;
+    }
+    .card {
+      border: 1px solid #ddd;
+      border-radius: 8px;
+      padding: 16px;
+      margin-bottom: 16px;
+      background-color: #f9f9f9;
+    }
+    button {
+      background-color: #4CAF50;
+      border: none;
+      color: white;
+      padding: 10px 20px;
+      text-align: center;
+      text-decoration: none;
+      display: inline-block;
+      font-size: 16px;
+      margin: 10px 0;
+      cursor: pointer;
+      border-radius: 4px;
+    }
+    button:hover {
+      background-color: #45a049;
+    }
+    .status-indicator {
+      display: inline-block;
+      width: 12px;
+      height: 12px;
+      background-color: gray;
+      border-radius: 50%;
+      margin-right: 8px;
+    }
+    .success { background-color: green; }
+    .error { background-color: red; }
+    pre {
+      background-color: #f0f0f0;
+      padding: 10px;
+      border-radius: 4px;
+      overflow-x: auto;
+    }
+  </style>
+</head>
+<body>
+  <h1>MCP接続テスト</h1>
+  
+  <div class="card">
+    <h2>接続ステータス</h2>
+    <div id="connection-status">
+      <span class="status-indicator"></span>
+      <span>待機中...</span>
+    </div>
+    <button id="check-connection">接続をチェック</button>
+  </div>
+  
+  <div class="card">
+    <h2>レスポンス</h2>
+    <pre id="response">まだレスポンスはありません</pre>
+  </div>
+  
+  <div class="card">
+    <h2>ログ</h2>
+    <div id="logs"></div>
+  </div>
+
+  <div id="app">
+    <div id="mcp-status"></div>
+  </div>
+
+  <script>
+    // ログを表示する関数
+    function log(message, isError = false) {
+      const logsElement = document.getElementById('logs');
+      const logItem = document.createElement('div');
+      logItem.textContent = `[${new Date().toLocaleTimeString()}] ${message}`;
+      if (isError) {
+        logItem.style.color = 'red';
+      }
+      logsElement.appendChild(logItem);
+      console.log(message);
+    }
+
+    // 接続チェックボタンのイベントリスナー
+    document.getElementById('check-connection').addEventListener('click', function() {
+      checkMCPConnection();
+    });    // MCP接続チェック関数
+    function checkMCPConnection() {
+      const MCP_URL = 'http://localhost:3003/mcp/status';
+      const connectionStatus = document.getElementById('connection-status');
+      const responseElement = document.getElementById('response');
+      log(`MCPサーバーに接続を試みます: ${MCP_URL}`);
+      
+      connectionStatus.innerHTML = `
+        <span class="status-indicator"></span>
+        <span>接続中...</span>
+      `;
+      
+      fetch(MCP_URL)
+        .then(response => {
+          log(`レスポンス受信: ${response.status} ${response.statusText}`);
+          if (!response.ok) {
+            throw new Error(`HTTP エラー: ${response.status}`);
+          }
+          return response.json();
+        })
+        .then(data => {
+          log(`データ受信: ${JSON.stringify(data)}`);
+          connectionStatus.innerHTML = `
+            <span class="status-indicator success"></span>
+            <span>接続成功</span>
+          `;
+          responseElement.textContent = JSON.stringify(data, null, 2);
+        })
+        .catch(error => {
+          log(`接続エラー: ${error.message}`, true);
+          connectionStatus.innerHTML = `
+            <span class="status-indicator error"></span>
+            <span>接続失敗: ${error.message}</span>
+          `;
+        });
+    }
+
+    // ページ読み込み時に自動チェック
+    window.addEventListener('DOMContentLoaded', function() {
+      log('ページ読み込み完了');
+      // 少し待ってから接続チェック
+      setTimeout(checkMCPConnection, 500);
+    });
+  </script>
+  
+  <!-- MCP チェックスクリプトの読み込み -->
+  <script src="/mcp-check.js"></script>
+</body>
+</html>

@@ -1,0 +1,8 @@
+github(API)
+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  
+Tavily(API)
+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
+
+
+# GitHub リポジトリ
+https://github.com/riffluv/manaby-typing2.git
