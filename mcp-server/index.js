@@ -7,7 +7,7 @@ const path = require('path');
 const { execSync } = require('child_process');
 
 // サーバー設定
-const PORT = process.env.MCP_PORT || 3004;
+const PORT = process.env.MCP_PORT || 3005;
 const HOST = 'localhost';
 const SERVER_START_TIME = Date.now();
 

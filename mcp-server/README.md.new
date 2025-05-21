@@ -1,6 +1,4 @@
-cd C:\Users\hr-hm\Desktop\newProject\typing-next
-
-
+# Model Context Protocol (MCP) サーバー
 
 このディレクトリには、GitHub Copilotとの連携を支援するMCPサーバーが含まれています。MCPサーバーは、プロジェクトのコンテキスト情報をGitHub Copilotに提供し、より的確な補完と提案を可能にします。
 
@@ -25,19 +23,37 @@ npm run mcp
 node mcp-server/index.js
 ```
 
+### 開発モードでの起動（自動リロード）
+
+```
+npm run dev:nodemon:mcp
+```
+
+### GitHubモードでの起動
+
+```
+npm run mcp:github
+```
+
+または
+
+```
+npm run dev:nodemon:mcp:github
+```
+
 ### 利用可能なエンドポイント
 
-- `http://localhost:3003/mcp/status` - サーバーステータス
-- `http://localhost:3003/mcp/repository` - リポジトリ情報
-- `http://localhost:3003/mcp/project` - プロジェクト構造
-- `http://localhost:3003/mcp/package` - パッケージ情報
+- `http://localhost:3004/mcp/status` - サーバーステータス
+- `http://localhost:3004/mcp/repository` - リポジトリ情報
+- `http://localhost:3004/mcp/project` - プロジェクト構造
+- `http://localhost:3004/mcp/package` - パッケージ情報
 
 ## 動作確認
 
 サーバーの動作を確認するには、ブラウザで次のURLにアクセスしてください：
 
 ```
-http://localhost:3003/mcp/status
+http://localhost:3004/mcp/status
 ```
 
 または、プロジェクトに含まれるテストページを使用：
