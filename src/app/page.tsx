@@ -1,3 +1,7 @@
+'use client';
+
+import TypingGame from '@/components/TypingGame';
+
 export default function Home() {
   return (
     <div style={{
@@ -12,7 +16,7 @@ export default function Home() {
       alignItems: 'center',
       justifyContent: 'center',
     }}>
-      {/* 必要ならここにロゴやタイトルを追加 */}
+      <TypingGame />
     </div>
   );
 }
