@@ -7,6 +7,7 @@ import {
   playSound, playBGM, stopBGM, pauseBGM, resumeBGM, preloadAllSounds,
   setEffectsEnabled, setBGMEnabled, setEffectsVolume, setBGMVolume 
 } from '@/utils/soundPlayer';
+import MCPStatus from '@/components/MCPStatus';
 
 const TypingGame: React.FC = () => {
   // 現在のお題のインデックス
@@ -296,6 +297,9 @@ const TypingGame: React.FC = () => {
           </button>
         </div>
       )}
+
+      {/* MCPサーバー接続状態の表示 */}
+      <MCPStatus position="bottom-right" />
     </div>
   );
 };

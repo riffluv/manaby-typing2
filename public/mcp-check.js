@@ -10,9 +10,8 @@
 // 即時実行関数でスコープを囲む
 (function() {
   console.log('MCPステータスチェッカーを開始します...');
-  
-  // MCPサーバーのURL
-  const MCP_URL = 'http://localhost:3004/mcp/status';
+    // MCPサーバーのURL
+  const MCP_URL = 'http://localhost:3005/mcp/status';
   // ステータスチェック関数
   function checkMcpStatus() {
     console.log(`MCPサーバーに接続します: ${MCP_URL}`);

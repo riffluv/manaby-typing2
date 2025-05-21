@@ -2,7 +2,7 @@
 export async function checkMCPStatus(callback) {
   try {
     console.log('MCPサーバーのステータスを確認しています...');
-    const response = await fetch('http://localhost:3003/mcp/status');
+    const response = await fetch('http://localhost:3005/mcp/status');
     
     if (!response.ok) {
       throw new Error(`MCPサーバーからエラーレスポンス: ${response.status} ${response.statusText}`);
@@ -28,7 +28,7 @@ export async function checkMCPStatus(callback) {
 // プロミス版のMCPステータスチェッカー
 export function checkMCPStatusPromise() {
   return new Promise((resolve, reject) => {
-    fetch('http://localhost:3003/mcp/status')
+    fetch('http://localhost:3005/mcp/status')
       .then(response => {
         if (!response.ok) {
           throw new Error(`MCPサーバーからエラーレスポンス: ${response.status} ${response.statusText}`);
@@ -51,7 +51,7 @@ export function checkMCPStatusPromise() {
 // XHR版のMCPステータスチェッカー（フォールバック用）
 export function checkMCPStatusXHR(callback) {
   const xhr = new XMLHttpRequest();
-  xhr.open('GET', 'http://localhost:3003/mcp/status');
+  xhr.open('GET', 'http://localhost:3005/mcp/status');
   
   xhr.onload = function() {
     if (xhr.status >= 200 && xhr.status < 300) {
