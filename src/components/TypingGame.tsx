@@ -1,4 +1,4 @@
-import { useState, useEffect, useCallback, useRef } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import * as wanakana from 'wanakana';
 import { wordList } from '@/data/wordList';
 import styles from '@/styles/TypingGame.module.css';
@@ -8,300 +8,154 @@ import {
   setEffectsEnabled, setBGMEnabled, setEffectsVolume, setBGMVolume 
 } from '@/utils/soundPlayer';
 import MCPStatus from '@/components/MCPStatus';
+import { useTypingStore, useCurrentKanaIndex, useUserInput, useCurrentKanaDisplay } from '@/store/typingStore';
+import { useTypingGameStore, useGameStatus, useDisplayWord, useCurrentWord, useCurrentWordIndex, useWordListLength } from '@/store/typingGameStore';
+import { useAudioStore } from '@/store/audioStore';
+import { useTypingProcessor } from '@/hooks/useTypingProcessor';
+import React, { memo, useCallback } from 'react';
+
+// TypingGameRefactored.tsxの構造を参考に、Zustandストアのセレクターとカスタムフックを使った構造にリファクタ
+// 旧useState, useRefベースの状態管理を廃止し、Zustandストアのセレクターで必要な状態のみ購読
+// キー入力処理はuseTypingProcessorカスタムフックに委譲
 
 const TypingGame: React.FC = () => {
-  // 現在のお題のインデックス
-  const [currentWordIndex, setCurrentWordIndex] = useState(0);
-  
-  // 現在のお題
-  const [currentWord, setCurrentWord] = useState({ 
-    japanese: '', 
-    hiragana: '',
-    romaji: '',
-    typingChars: [] as TypingChar[],
-    displayChars: [] as string[]
-  });
-  
-  // ユーザーの入力
-  const [userInput, setUserInput] = useState('');
-  
-  // 現在の文字位置（かなのインデックス）
-  const [currentKanaIndex, setCurrentKanaIndex] = useState(0);
-  
-  // 表示するステータス
-  const [gameStatus, setGameStatus] = useState<'ready' | 'playing' | 'finished'>('ready');
+  // Zustandストアから必要な状態のみ購読
+  const gameStatus = useGameStatus();
+  const { setGameStatus, advanceToNextWord, resetGame, setupCurrentWord } = useTypingGameStore();
+  const { preloadSounds } = useAudioStore();
+  const { resetTypingState } = useTypingStore();
+  const { setupKeydownHandler } = useTypingProcessor();
 
-  // 現在のかな文字の表示情報
-  const [currentKanaDisplay, setCurrentKanaDisplay] = useState({
-    acceptedText: '',
-    remainingText: '',
-    displayText: ''
-  });
-
-  // アニメーションフレーム用のref
-  const requestRef = useRef<number | undefined>(undefined);
-  const previousTimeRef = useRef<number | undefined>(undefined);
-  
-  // キー入力キューのref
-  const keyInputQueueRef = useRef<string[]>([]);
-
-  // 表示用の状態をrefで管理し、レンダリングの最適化
-  const gameStateRef = useRef({
-    currentKanaIndex: 0,
-    typingChars: [] as TypingChar[],
-    currentPosition: 0,
-    gameStatus: 'ready' as 'ready' | 'playing' | 'finished',
-  });
-  
-  // お題をセットアップ - 最適化版
+  // 初期化 - サウンドのプリロードと初期単語セットアップ
   useEffect(() => {
-    if (wordList.length > 0) {
-      const word = wordList[currentWordIndex];
-      // タイピング文字オブジェクトの配列を作成
-      const typingChars = createTypingChars(word.hiragana);
-      // 表示用のローマ字の配列を作成
-      const displayChars = typingChars.map(char => char.getDisplayInfo().displayText);
-      
-      setCurrentWord({
-        japanese: word.japanese,
-        hiragana: word.hiragana,
-        romaji: displayChars.join(''),
-        typingChars: typingChars,
-        displayChars: displayChars
-      });
-      
-      // refを使って状態を管理
-      gameStateRef.current = {
-        ...gameStateRef.current,
-        typingChars: typingChars,
-        currentKanaIndex: 0,
-        currentPosition: 0
-      };
+    preloadSounds();
+    setupCurrentWord();
+  }, [preloadSounds, setupCurrentWord]);
 
-      setUserInput('');
-      setCurrentKanaIndex(0);
-      
-      if (typingChars.length > 0) {
-        const currentInfo = typingChars[0].getDisplayInfo();
-        setCurrentKanaDisplay({
-          acceptedText: currentInfo.acceptedText,
-          remainingText: currentInfo.remainingText,
-          displayText: currentInfo.displayText
-        });
-      }
-    }
-  }, [currentWordIndex]);
-  
-  // キー入力のバッファ処理 (typingmania-refスタイル)
-  const processKeyInputQueue = useCallback(() => {
-    while (keyInputQueueRef.current.length > 0 && gameStateRef.current.gameStatus === 'playing') {
-      const key = keyInputQueueRef.current.shift();
-      if (!key) continue;
-      
-      // 現在入力中のかな文字オブジェクト
-      const currentTypingChar = gameStateRef.current.typingChars[gameStateRef.current.currentKanaIndex];
-      if (!currentTypingChar) continue;
-      
-      // 入力処理
-      if (currentTypingChar.canAccept(key)) {
-        currentTypingChar.accept(key);
-        
-        // 表示情報の更新
-        const currentInfo = currentTypingChar.getDisplayInfo();
-        setCurrentKanaDisplay({
-          acceptedText: currentInfo.acceptedText,
-          remainingText: currentInfo.remainingText,
-          displayText: currentInfo.displayText
-        });
-        
-        setUserInput(prev => prev + key);
-        
-        // かなが完了したかチェック
-        if (currentInfo.isCompleted) {
-          const nextIndex = gameStateRef.current.currentKanaIndex + 1;
-          gameStateRef.current.currentKanaIndex = nextIndex;
-          setCurrentKanaIndex(nextIndex);
-          
-          // 次のかなの表示情報を更新
-          if (nextIndex < gameStateRef.current.typingChars.length) {
-            const nextInfo = gameStateRef.current.typingChars[nextIndex].getDisplayInfo();
-            setCurrentKanaDisplay({
-              acceptedText: nextInfo.acceptedText,
-              remainingText: nextInfo.remainingText,
-              displayText: nextInfo.displayText
-            });
-          } else {
-            // お題がすべて完了した場合
-            if (currentWordIndex + 1 < wordList.length) {              // 次のお題へ
-              setTimeout(() => {
-                setCurrentWordIndex(prev => prev + 1);
-              }, 500);} else {
-              // ゲーム終了
-              setGameStatus('finished');
-              gameStateRef.current.gameStatus = 'finished';
-            }
-          }
-        }
-          // 正解音を再生
-        playSound('correct', 0.5);
-      } else {
-        // 不正解音を再生
-        playSound('wrong', 0.5);
-      }
-    }
-  }, [currentWordIndex]);
-
-  // アニメーションループ
-  const animationLoop = useCallback((time: number) => {
-    if (previousTimeRef.current === undefined) {
-      previousTimeRef.current = time;
-    }
-    
-    // キー入力キューを処理
-    processKeyInputQueue();
-    
-    // 次のフレームを要求
-    requestRef.current = requestAnimationFrame(animationLoop);
-  }, [processKeyInputQueue]);
-    // コンポーネントマウント時にサウンドをプリロード
+  // ゲーム開始時のキーボードイベント設定
   useEffect(() => {
-    // すべてのサウンドをプリロード
-    preloadAllSounds();
-  }, []);
-  
-  // ゲーム開始時にキーボードイベントをセット & アニメーションフレームを開始
-  useEffect(() => {
-    // 軽量化したキーダウンハンドラ
-    const keyDownHandler = (e: KeyboardEvent) => {
-      const status = gameStateRef.current.gameStatus;
-      
-      // ゲームがプレイ中でない場合はスペースキーでスタート
-      if (status !== 'playing') {        if (e.key === ' ' || e.code === 'Space') {
-          e.preventDefault();
-          setGameStatus('playing');
-          gameStateRef.current.gameStatus = 'playing';
-          
-          // サウンドをプリロード
-          preloadAllSounds();
-        }
-        return;
-      }
-
-      // ESCキーでゲームリセット
-      if (e.key === 'Escape') {
+    const cleanup = setupKeydownHandler(
+      gameStatus as 'ready' | 'playing' | 'finished',
+      () => setGameStatus('playing'),
+      () => {
         resetGame();
-        return;
-      }      // 入力可能キーの場合はキューに追加
-      if (e.key.length === 1) {
-        keyInputQueueRef.current.push(e.key);
+        resetTypingState();
+      },
+      () => {
+        advanceToNextWord();
+        resetTypingState();
       }
-    };
-    
-    window.addEventListener('keydown', keyDownHandler);
-    requestRef.current = requestAnimationFrame(animationLoop);
-    
-    return () => {
-      window.removeEventListener('keydown', keyDownHandler);
-      if (requestRef.current) {
-        cancelAnimationFrame(requestRef.current);
-      }
-    };
-  }, [animationLoop]);  // ゲームをリセット
-  const resetGame = useCallback(() => {
-    setCurrentWordIndex(0);
-    setUserInput('');
-    setCurrentKanaIndex(0);
-    setGameStatus('ready');
-    gameStateRef.current = {
-      ...gameStateRef.current,
-      currentKanaIndex: 0,
-      currentPosition: 0,
-      gameStatus: 'ready'
-    };
-  }, []);
-
-  // 各文字のスタイルを決定（かな単位ではなく、表示テキスト単位）
-  const getCharClass = useCallback((kanaIndex: number, charIndex: number, char: string) => {
-    if (kanaIndex < currentKanaIndex) {
-      return styles.completed; // 入力済みのかな
-    } else if (kanaIndex === currentKanaIndex) {
-      const currentInfo = currentWord.typingChars[kanaIndex]?.getDisplayInfo();
-      if (currentInfo) {
-        const acceptedLength = currentInfo.acceptedText.length;
-        
-        if (charIndex < acceptedLength) {
-          return styles.completed; // 入力済みの文字
-        } else if (charIndex === acceptedLength) {
-          return styles.current; // 現在の文字
-        }
-      }
-    }
-    return styles.pending; // 未入力
-  }, [currentKanaIndex, currentWord.typingChars]);
-
-  // メモ化されたレンダリングコンポーネント
-  const renderTypingArea = useCallback(() => {
-    return (
-      <>
-        {currentWord.typingChars.map((typingChar, kanaIndex) => {
-          // 各かなに対応するローマ字表示
-          const displayText = currentWord.displayChars[kanaIndex] || '';
-          
-          return (
-            <span key={kanaIndex} className={styles.kanaGroup}>
-              {displayText.split('').map((char, charIndex) => (
-                <span 
-                  key={`${kanaIndex}-${charIndex}`} 
-                  className={getCharClass(kanaIndex, charIndex, char)}
-                >
-                  {char}
-                </span>
-              ))}
-            </span>
-          );
-        })}
-      </>
     );
-  }, [currentWord, currentKanaIndex, currentKanaDisplay, getCharClass]);
+    return cleanup;
+  }, [gameStatus, setGameStatus, resetGame, advanceToNextWord, setupKeydownHandler, resetTypingState]);
 
+  // リセットハンドラ
+  const handleReset = useCallback(() => {
+    resetGame();
+    resetTypingState();
+  }, [resetGame, resetTypingState]);
+
+  // 画面分割レンダリング
   return (
     <div className={styles.typingGameContainer}>
+      {/* スタート画面 */}
       {gameStatus === 'ready' && (
         <div className={styles.startScreen}>
           <h2>タイピングゲーム</h2>
           <p>スペースキーを押してスタート</p>
         </div>
       )}
-
-      {gameStatus === 'playing' && (
-        <div className={styles.gameScreen}>
-          <div className={styles.wordJapanese}>{currentWord.japanese}</div>
-          <div className={styles.wordHiragana}>{currentWord.hiragana}</div>
-          
-          <div className={styles.typingArea}>
-            {renderTypingArea()}
-          </div>
-
-          <div className={styles.progress}>
-            お題: {currentWordIndex + 1} / {wordList.length}
-          </div>
-        </div>
-      )}
-
+      {/* ゲーム画面 */}
+      {gameStatus === 'playing' && <GameScreen />}
+      {/* フィニッシュ画面 */}
       {gameStatus === 'finished' && (
         <div className={styles.finishScreen}>
           <h2>クリア！</h2>
           <p>おめでとうございます！</p>
-          <button onClick={resetGame} className={styles.resetButton}>
+          <button onClick={handleReset} className={styles.resetButton}>
             もう一度プレイ
           </button>
         </div>
       )}
-
       {/* MCPサーバー接続状態の表示 */}
       <MCPStatus position="bottom-right" />
     </div>
   );
 };
+
+const TypingArea = memo(({ 
+  currentKanaIndex,
+  typingChars, 
+  displayChars, 
+  kanaDisplay
+}: { 
+  currentKanaIndex: number;
+  typingChars: any[];
+  displayChars: string[];
+  kanaDisplay: {
+    acceptedText: string;
+    remainingText: string;
+    displayText: string;
+  };
+}) => {
+  const getCharClass = useCallback((kanaIndex: number, charIndex: number) => {
+    if (kanaIndex < currentKanaIndex) {
+      return styles.completed;
+    } else if (kanaIndex === currentKanaIndex) {
+      const acceptedLength = kanaDisplay.acceptedText.length;
+      if (charIndex < acceptedLength) {
+        return styles.completed;
+      } else if (charIndex === acceptedLength) {
+        return styles.current;
+      }
+    }
+    return styles.pending;
+  }, [currentKanaIndex, kanaDisplay.acceptedText.length]);
+
+  return (
+    <>
+      {typingChars.map((typingChar, kanaIndex) => {
+        const displayText = displayChars[kanaIndex] || '';
+        return (
+          <span key={kanaIndex} className={styles.kanaGroup}>
+            {displayText.split('').map((char, charIndex) => (
+              <span key={`${kanaIndex}-${charIndex}`} className={getCharClass(kanaIndex, charIndex)}>
+                {char}
+              </span>
+            ))}
+          </span>
+        );
+      })}
+    </>
+  );
+});
+TypingArea.displayName = 'TypingArea';
+
+const GameScreen = memo(() => {
+  const { japanese, hiragana } = useDisplayWord();
+  const currentWord = useCurrentWord();
+  const currentWordIndex = useCurrentWordIndex();
+  const wordListLength = useWordListLength();
+  const currentKanaIndex = useCurrentKanaIndex();
+  const currentKanaDisplay = useCurrentKanaDisplay();
+  return (
+    <div className={styles.gameScreen}>
+      <div className={styles.wordJapanese}>{japanese}</div>
+      <div className={styles.wordHiragana}>{hiragana}</div>
+      <div className={styles.typingArea}>
+        <TypingArea 
+          currentKanaIndex={currentKanaIndex}
+          typingChars={currentWord.typingChars}
+          displayChars={currentWord.displayChars}
+          kanaDisplay={currentKanaDisplay}
+        />
+      </div>
+      <div className={styles.progress}>
+        お題: {currentWordIndex + 1} / {wordListLength}
+      </div>
+    </div>
+  );
+});
+GameScreen.displayName = 'GameScreen';
 
 export default TypingGame;
