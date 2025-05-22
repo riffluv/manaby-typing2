@@ -328,8 +328,8 @@ const TypingGame: React.FC<{ onGoMenu?: () => void; onGoRanking?: () => void }> 
           <h2>リザルト画面</h2>
           <div className={styles.scoreBoard}>
             {resultScore ? <>
-              <div>KPM<br /><span>{resultScore.kpm}</span></div>
-              <div>Accuracy<br /><span>{resultScore.accuracy}%</span></div>
+              <div>KPM<br /><span>{Math.floor(resultScore.kpm)}</span></div>
+              <div>Accuracy<br /><span>{Math.floor(resultScore.accuracy)}%</span></div>
               <div>Correct<br /><span>{resultScore.correct}</span></div>
               <div>Miss<br /><span>{resultScore.miss}</span></div>
             </> : 
