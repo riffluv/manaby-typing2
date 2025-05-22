@@ -7,7 +7,7 @@ import MCPStatus from '@/components/MCPStatus';
 import GameScreen from '@/components/GameScreen';
 import styles from '@/styles/TypingGame.module.css';
 
-const TypingGame: React.FC = () => {
+const TypingGame: React.FC<{ onFinish?: () => void }> = ({ onFinish }) => {
   // Zustandストアから「お題情報」「ゲーム状態」だけ購読
   const gameStatus = useGameStatus();
   const { setGameStatus, advanceToNextWord, resetGame, setupCurrentWord } = useTypingGameStore();
@@ -88,6 +88,7 @@ const TypingGame: React.FC = () => {
           } else {
             setTimeout(() => {
               advanceToNextWord();
+              // onFinishはadvanceToNextWordの中で呼ぶ
             }, 300);
           }
         }

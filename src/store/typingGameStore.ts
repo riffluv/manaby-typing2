@@ -64,11 +64,12 @@ const useTypingGameStoreBase = create<TypingGameState>((set, get) => ({
   
   advanceToNextWord: () => {
     const { currentWordIndex } = get();
-    if (currentWordIndex + 1 < wordList.length) {
+    // 8問で終了（0〜7まで出題、8問目終了でリザルト）
+    if (currentWordIndex + 1 >= 8 || currentWordIndex + 1 >= wordList.length) {
+      set({ gameStatus: 'finished' });
+    } else {
       set({ currentWordIndex: currentWordIndex + 1 });
       get().setupCurrentWord();
-    } else {
-      set({ gameStatus: 'finished' });
     }
   },
   
