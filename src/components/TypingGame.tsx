@@ -91,6 +91,9 @@ const TypingGame: React.FC = () => {
             }, 300);
           }
         }
+      } else {
+        // 不正解キーの場合
+        playSound && playSound('wrong');
       }
     };
     window.addEventListener('keydown', keyDownHandler);
