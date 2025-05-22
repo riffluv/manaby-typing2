@@ -4,10 +4,11 @@ import { useState, useEffect } from 'react';
 import { checkMCPStatus, checkMCPStatusXHR, checkMCPStatusPromise } from '@/utils/mcpChecker';
 
 export default function MultiTestPage() {
-  const [fetchResult, setFetchResult] = useState(null);
-  const [xhrResult, setXhrResult] = useState(null);
-  const [promiseResult, setPromiseResult] = useState(null);
-  const [loading, setLoading] = useState(false);
+  // 型安全のため、useStateの型を明示
+  const [fetchResult, setFetchResult] = useState<any>(null);
+  const [xhrResult, setXhrResult] = useState<any>(null);
+  const [promiseResult, setPromiseResult] = useState<any>(null);
+  const [loading, setLoading] = useState<boolean>(false);
 
   async function runAllTests() {
     setLoading(true);
@@ -16,12 +17,14 @@ export default function MultiTestPage() {
     setPromiseResult(null);
     
     // Fetch APIテスト
-    checkMCPStatus(result => {
+    // 型安全のため、コールバックの型を明示
+    checkMCPStatus((result: any) => {
       setFetchResult(result);
     });
     
     // XHRテスト
-    checkMCPStatusXHR(result => {
+    // 型安全のため、コールバックの型を明示
+    checkMCPStatusXHR((result: any) => {
       setXhrResult(result);
     });
     

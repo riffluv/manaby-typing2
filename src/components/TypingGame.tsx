@@ -12,19 +12,9 @@ import type { PerWordScoreLog, GameScoreLog } from '@/types/score';
 import { useRouter } from 'next/navigation';
 import KeyboardSoundUtils from '@/utils/KeyboardSoundUtils';
 import { addRankingEntry } from '@/lib/rankingManaby2';
-
-// --- Web Workerスコア計算ラッパー（型安全・エラー耐性強化） ---
 import type { ScoreWorkerRequest, ScoreWorkerResponse } from '@/workers/scoreWorker';
 
-let scoreWorker: Worker | null = null;
-function getScoreWorker() {
-  if (!scoreWorker) {
-    scoreWorker = new Worker(new URL('@/workers/scoreWorker.ts', import.meta.url));
-  }
-  return scoreWorker;
-}
-
-// --- ランキング登録モーダル状態管理（ベストプラクティス: 外部定義） ---
+// --- 型定義・reducer・getScoreWorkerはコンポーネント外 ---
 type ModalState = {
   show: boolean;
   name: string;
@@ -50,20 +40,32 @@ function modalReducer(state: ModalState, action: any): ModalState {
     default: return state;
   }
 }
+let scoreWorker: Worker | null = null;
+function getScoreWorker() {
+  if (!scoreWorker) {
+    // Next.jsではpublic配下のscoreWorker.jsを直接参照
+    scoreWorker = new Worker('/scoreWorker.js');
+  }
+  return scoreWorker;
+}
 
 const TypingGame: React.FC<{ onGoMenu?: () => void; onGoRanking?: () => void }> = ({ onGoMenu, onGoRanking }) => {
+  // --- ここから下はすべて関数コンポーネント内でフック・store・propsを宣言 ---
   const router = useRouter();
-  // Zustandストアから「お題情報」「ゲーム状態」だけ購読
   const gameStatus = useGameStatus();
   const { setGameStatus, advanceToNextWord, resetGame, setupCurrentWord } = useTypingGameStore();
   const storeWord = useCurrentWord();
   const { playSound } = useAudioStore();
   useTypingGameLifecycle();
 
-  // typingmania-ref流: 進行状態はuseRefで管理
+  // --- タイピング進行・スコア記録はuseRefで管理し、再レンダリングを抑制 ---
   const typingCharsRef = useRef<TypingWord['typingChars']>([]);
   const displayCharsRef = useRef<TypingWord['displayChars']>([]);
   const kanaIndexRef = useRef<number>(0);
+  const wordKeyCountRef = useRef(0);
+  const wordCorrectRef = useRef(0);
+  const wordMissRef = useRef(0);
+  const wordStartTimeRef = useRef<number>(0);
 
   // 画面表示用のみuseState
   const [kanaDisplay, setKanaDisplay] = useState<KanaDisplay>({
@@ -78,16 +80,62 @@ const TypingGame: React.FC<{ onGoMenu?: () => void; onGoRanking?: () => void }> 
     typingChars: [],
     displayChars: []
   });
-
-  // スコア記録
   const [scoreLog, setScoreLog] = useState<PerWordScoreLog[]>([]);
   const [resultScore, setResultScore] = useState<GameScoreLog['total'] | null>(null);
-  const wordKeyCountRef = useRef(0);
-  const wordCorrectRef = useRef(0);
-  const wordMissRef = useRef(0);
-  const wordStartTimeRef = useRef<number>(0);
+  const [modalState, dispatchModal] = useReducer(modalReducer, initialModalState);
 
-  // お題切り替え時のみuseRefを初期化
+  // --- useCallbackで関数の再生成を抑制 ---
+  const handleReset = useCallback(() => {
+    resetGame();
+    setupCurrentWord();
+    setScoreLog([]);
+    setResultScore(null);
+  }, [resetGame, setupCurrentWord]);
+
+  const handleRegisterRanking = useCallback(async () => {
+    if (!resultScore || !modalState.name.trim()) return;
+    dispatchModal({ type: 'registering' });
+    try {
+      await addRankingEntry({
+        name: modalState.name.trim(),
+        kpm: resultScore.kpm,
+        accuracy: resultScore.accuracy,
+        correct: resultScore.correct,
+        miss: resultScore.miss
+      });
+      dispatchModal({ type: 'success' });
+      setTimeout(() => dispatchModal({ type: 'close' }), 1200);
+    } catch (e: any) {
+      dispatchModal({ type: 'error', error: '登録に失敗しました: ' + (e?.message || String(e)) });
+    }
+  }, [resultScore, modalState.name]);
+
+  const handleGoRanking = useCallback(() => {
+    if (onGoRanking) onGoRanking();
+  }, [onGoRanking]);
+  const handleGoMenu = useCallback(() => {
+    if (onGoMenu) onGoMenu();
+  }, [onGoMenu]);
+
+  // --- WebWorkerスコア計算はゲーム終了時のみ ---
+  const calcScoreWithWorker = useCallback((payload: ScoreWorkerRequest['payload']): Promise<ScoreWorkerResponse['payload']> => {
+    return new Promise((resolve, reject) => {
+      const worker = getScoreWorker();
+      const handleMessage = (e: MessageEvent<any>) => {
+        const data = e.data;
+        if (data && data.type === 'scoreResult' && data.payload) {
+          resolve(data.payload);
+        } else {
+          reject(new Error('Workerから不正なレスポンス'));
+        }
+        worker.removeEventListener('message', handleMessage);
+      };
+      worker.addEventListener('message', handleMessage);
+      worker.postMessage({ type: 'calcScore', payload });
+    });
+  }, []);
+
+  // --- useEffectでお題切り替え・スコア計算・キー入力を管理（再レンダリング最小化） ---
   useEffect(() => {
     if (storeWord && storeWord.japanese !== currentWord.japanese) {
       setCurrentWord(storeWord);
@@ -256,61 +304,6 @@ const TypingGame: React.FC<{ onGoMenu?: () => void; onGoRanking?: () => void }> 
     // eslint-disable-next-line
   }, []); // 初回マウント時のみ判定
 
-  // リセットハンドラ
-  const handleReset = useCallback(() => {
-    resetGame();
-    setupCurrentWord();
-    setScoreLog([]);
-    setResultScore(null);
-  }, [resetGame, setupCurrentWord]);
-
-  const [modalState, dispatchModal] = useReducer(modalReducer, initialModalState);
-
-  // ランキング登録処理
-  const handleRegisterRanking = useCallback(async () => {
-    if (!resultScore || !modalState.name.trim()) return;
-    dispatchModal({ type: 'registering' });
-    try {
-      await addRankingEntry({
-        name: modalState.name.trim(),
-        kpm: resultScore.kpm,
-        accuracy: resultScore.accuracy,
-        correct: resultScore.correct,
-        miss: resultScore.miss
-      });
-      dispatchModal({ type: 'success' });
-      setTimeout(() => dispatchModal({ type: 'close' }), 1200); // 1.2秒後に自動クローズ
-    } catch (e: any) {
-      dispatchModal({ type: 'error', error: '登録に失敗しました: ' + (e?.message || String(e)) });
-    }
-  }, [resultScore, modalState.name]);
-
-  // 画面遷移コールバックもuseCallbackでラップ
-  const handleGoRanking = useCallback(() => {
-    if (onGoRanking) onGoRanking();
-  }, [onGoRanking]);
-  const handleGoMenu = useCallback(() => {
-    if (onGoMenu) onGoMenu();
-  }, [onGoMenu]);
-
-  // useCallbackは関数コンポーネントの中で定義する
-  const calcScoreWithWorker = useCallback((payload: ScoreWorkerRequest['payload']): Promise<ScoreWorkerResponse['payload']> => {
-    return new Promise((resolve, reject) => {
-      const worker = getScoreWorker();
-      const handleMessage = (e: MessageEvent<any>) => {
-        const data = e.data;
-        if (data && data.type === 'scoreResult' && data.payload) {
-          resolve(data.payload);
-        } else {
-          reject(new Error('Workerから不正なレスポンス'));
-        }
-        worker.removeEventListener('message', handleMessage);
-      };
-      worker.addEventListener('message', handleMessage);
-      worker.postMessage({ type: 'calcScore', payload });
-    });
-  }, []);
-
   // 画面分割レンダリング
   return (
     <div className={styles.typingGameContainer}>
@@ -348,7 +341,7 @@ const TypingGame: React.FC<{ onGoMenu?: () => void; onGoRanking?: () => void }> 
                   onClick={() => {
                     // 強制的に再計算を試みる
                     const dummyScore = {
-                      kpm: scoreLog.reduce((sum, log) => sum + (log.kpm || 0), 0) / scoreLog.length || 0,
+                      kpm: Math.floor(scoreLog.reduce((sum, log) => sum + (log.kpm || 0), 0) / scoreLog.length || 0),
                       accuracy: scoreLog.reduce((sum, log) => sum + (log.accuracy || 0), 0) / scoreLog.length || 0,
                       correct: scoreLog.reduce((sum, log) => sum + (log.correct || 0), 0),
                       miss: scoreLog.reduce((sum, log) => sum + (log.miss || 0), 0)

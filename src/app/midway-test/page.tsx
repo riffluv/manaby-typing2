@@ -6,10 +6,11 @@ import { useState, useEffect } from 'react';
 const MCP_SERVER_URL = process.env.NEXT_PUBLIC_MCP_SERVER_URL || 'http://localhost:3003';
 
 export default function MidwayTestPage() {
-  const [apiResponse, setApiResponse] = useState(null);
-  const [loading, setLoading] = useState(false);
-  const [error, setError] = useState(null);
-  const [refresh, setRefresh] = useState(0);
+  // 型安全のため、useStateの型を明示
+  const [apiResponse, setApiResponse] = useState<any>(null);
+  const [loading, setLoading] = useState<boolean>(false);
+  const [error, setError] = useState<string | null>(null);
+  const [refresh, setRefresh] = useState<number>(0);
 
   useEffect(() => {
     const fetchData = async () => {

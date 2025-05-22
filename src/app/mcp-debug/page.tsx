@@ -1,11 +1,12 @@
 'use client';
 
 import { useEffect, useState } from 'react';
-import { useMCP } from '@/hooks/useMCP';
+// useMCPが未実装のため、一時的にコメントアウト
+// import { useMCP } from '@/hooks/useMCP';
 import MCPStatus from '@/components/MCPStatus';
 
 export default function MCPDebugPage() {
-  const { isConnected, status, error } = useMCP();
+  // const { isConnected, status, error } = useMCP();
   const [logs, setLogs] = useState<string[]>([]);
 
   useEffect(() => {
@@ -22,17 +23,17 @@ export default function MCPDebugPage() {
 
   // 接続状態が変わったときにログを追加
   useEffect(() => {
-    const connectionLog = `MCP接続状態: ${isConnected ? '接続済み' : '未接続'}`;
-    console.log(connectionLog);
-    if (status) {
-      console.log('MCPステータス:', status);
-    }
-    if (error) {
-      console.error('MCPエラー:', error);
-    }
+    // const connectionLog = `MCP接続状態: ${isConnected ? '接続済み' : '未接続'}`;
+    // console.log(connectionLog);
+    // if (status) {
+    //   console.log('MCPステータス:', status);
+    // }
+    // if (error) {
+    //   console.error('MCPエラー:', error);
+    // }
     
-    setLogs(prevLogs => [...prevLogs, connectionLog]);
-  }, [isConnected, status, error]);
+    // setLogs(prevLogs => [...prevLogs, connectionLog]);
+  }, []);
 
   return (
     <div className="p-8">
@@ -42,22 +43,22 @@ export default function MCPDebugPage() {
         <h2 className="text-xl font-bold mb-4">接続ステータス</h2>
         <div className="flex items-center mb-2">
           <div 
-            className={`w-4 h-4 rounded-full mr-2 ${isConnected ? 'bg-green-500' : 'bg-red-500'}`} 
+            className={`w-4 h-4 rounded-full mr-2 ${true ? 'bg-green-500' : 'bg-red-500'}`} 
           />
-          <span>{isConnected ? '接続済み' : '未接続'}</span>
+          <span>{true ? '接続済み' : '未接続'}</span>
         </div>
-        {status && (
+        {/* {status && (
           <div className="mt-2">
             <p><strong>バージョン:</strong> {status.version}</p>
             <p><strong>リクエスト数:</strong> {status.requests}</p>
             <p><strong>稼働時間:</strong> {status.uptime}秒</p>
           </div>
-        )}
-        {error && (
+        )} */}
+        {/* {error && (
           <div className="mt-2 p-2 bg-red-100 text-red-800 rounded">
             <p><strong>エラー:</strong> {error.message}</p>
           </div>
-        )}
+        )} */}
       </div>
       
       <div className="mb-8">

@@ -4,7 +4,8 @@
 'use client';
 
 import { useState, useEffect } from 'react';
-import TestMCP from '@/components/TestMCP';
+// TestMCPコンポーネントが存在しないため、一時的にコメントアウト
+// import TestMCP from '@/components/TestMCP';
 
 export default function TestPage() {
   const [time, setTime] = useState(new Date().toLocaleTimeString());
@@ -24,7 +25,7 @@ export default function TestPage() {
       <p className="mb-4">現在時刻: {time}</p>
       
       <div className="grid gap-6 md:grid-cols-2">
-        <TestMCP />
+        {/* <TestMCP /> */}
         
         <div className="p-4 bg-gray-100 rounded-lg">
           <h2 className="text-lg font-bold mb-2">手動テスト</h2>
