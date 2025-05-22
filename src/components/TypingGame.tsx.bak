@@ -1,21 +1,20 @@
 'use client';
 
-import { useState, useEffect, useCallback, useRef, useReducer } from 'react';
+import { useState, useEffect, useCallback, useRef } from 'react';
 import { useGameStatus, useTypingGameStore, useCurrentWord } from '@/store/typingGameStore';
 import { useAudioStore } from '@/store/audioStore';
 import { TypingWord, KanaDisplay } from '@/types/typing';
 import { useTypingGameLifecycle } from '@/hooks/useTypingGameLifecycle';
 import MCPStatus from '@/components/MCPStatus';
 import GameScreen from '@/components/GameScreen';
+import RankingScreen from '@/components/RankingScreen';
 import styles from '@/styles/TypingGame.module.css';
 import type { PerWordScoreLog, GameScoreLog } from '@/types/score';
 import { useRouter } from 'next/navigation';
 import KeyboardSoundUtils from '@/utils/KeyboardSoundUtils';
-import { addRankingEntry } from '@/lib/rankingManaby2';
+import { saveRanking, initializeFirebase } from '@/utils/FirebaseUtils';
 
-// --- Web Workerスコア計算ラッパー（型安全・エラー耐性強化） ---
-import type { ScoreWorkerRequest, ScoreWorkerResponse } from '@/workers/scoreWorker';
-
+// --- Web Workerスコア計算ラッパー ---
 let scoreWorker: Worker | null = null;
 function getScoreWorker() {
   if (!scoreWorker) {
@@ -23,32 +22,18 @@ function getScoreWorker() {
   }
   return scoreWorker;
 }
-
-// --- ランキング登録モーダル状態管理（ベストプラクティス: 外部定義） ---
-type ModalState = {
-  show: boolean;
-  name: string;
-  registering: boolean;
-  done: boolean;
-  error: string;
-};
-const initialModalState: ModalState = {
-  show: false,
-  name: '',
-  registering: false,
-  done: false,
-  error: '',
-};
-function modalReducer(state: ModalState, action: any): ModalState {
-  switch (action.type) {
-    case 'open': return { ...state, show: true, done: false, error: '', name: '' };
-    case 'close': return { ...initialModalState };
-    case 'setName': return { ...state, name: action.name };
-    case 'registering': return { ...state, registering: true, error: '' };
-    case 'success': return { ...state, registering: false, done: true, error: '' };
-    case 'error': return { ...state, registering: false, error: action.error };
-    default: return state;
-  }
+function calcScoreWithWorker(payload: any): Promise<any> {
+  return new Promise((resolve) => {
+    const worker = getScoreWorker();
+    const handleMessage = (e: MessageEvent<any>) => {
+      if (e.data.type === 'scoreResult') {
+        resolve(e.data.payload);
+        worker.removeEventListener('message', handleMessage);
+      }
+    };
+    worker.addEventListener('message', handleMessage);
+    worker.postMessage({ type: 'calcScore', payload });
+  });
 }
 
 const TypingGame: React.FC<{ onGoMenu?: () => void; onGoRanking?: () => void }> = ({ onGoMenu, onGoRanking }) => {
@@ -59,7 +44,12 @@ const TypingGame: React.FC<{ onGoMenu?: () => void; onGoRanking?: () => void }> 
   const storeWord = useCurrentWord();
   const { playSound } = useAudioStore();
   useTypingGameLifecycle();
-
+  
+  // Firebase初期化
+  useEffect(() => {
+    initializeFirebase();
+  }, []);
+  
   // typingmania-ref流: 進行状態はuseRefで管理
   const typingCharsRef = useRef<TypingWord['typingChars']>([]);
   const displayCharsRef = useRef<TypingWord['displayChars']>([]);
@@ -78,6 +68,21 @@ const TypingGame: React.FC<{ onGoMenu?: () => void; onGoRanking?: () => void }> 
     typingChars: [],
     displayChars: []
   });
+
+  // ランキング登録用
+  const [playerName, setPlayerName] = useState<string>('');
+  const [isSubmitting, setIsSubmitting] = useState<boolean>(false);
+  const [submitSuccess, setSubmitSuccess] = useState<boolean>(false);
+  const [difficulty, setDifficulty] = useState<string>('normal');
+
+  // 最終スコア管理
+  const [lastScore, setLastScore] = useState<{
+    playerName?: string;
+    kpm: number;
+    accuracy: number;
+    time: number;
+    mistakes: number;
+  } | null>(null);
 
   // スコア記録
   const [scoreLog, setScoreLog] = useState<PerWordScoreLog[]>([]);
@@ -211,31 +216,54 @@ const TypingGame: React.FC<{ onGoMenu?: () => void; onGoRanking?: () => void }> 
   useEffect(() => {
     if (gameStatus === 'finished' && scoreLog.length > 0) {
       console.log('スコア計算開始', scoreLog);
+      
       try {
-        const mappedData = scoreLog.map(log => ({
-          keyCount: typeof log.keyCount === 'number' ? log.keyCount : 0,
-          missCount: typeof log.miss === 'number' ? log.miss : 0,
-          correctCount: typeof log.correct === 'number' ? log.correct : 0,
-          startTime: typeof log.startTime === 'number' ? log.startTime : 0,
-          endTime: typeof log.endTime === 'number' ? log.endTime : 0,
-        }));
+        // 型変換とプロパティ名の修正を明示的に行う
+        const mappedData = scoreLog.map(log => {
+          // nullチェックと型変換を行い、Workerが要求する形式に合わせる
+          const missCount = typeof log.miss === 'number' ? log.miss : 0;
+          const correctCount = typeof log.correct === 'number' ? log.correct : 0;
+          
+          return {
+            keyCount: log.keyCount,
+            missCount: missCount,
+            correctCount: correctCount,
+            startTime: log.startTime,
+            endTime: log.endTime
+          };
+        });
+        
+        console.log('Worker送信データ', mappedData);
+        
         if (mappedData.length === 0) {
+          console.error('スコアデータがありません');
           setResultScore({ kpm: 0, accuracy: 0, correct: 0, miss: 0 });
           return;
         }
+        
         calcScoreWithWorker({ results: mappedData })
           .then(result => {
-            setResultScore({
-              kpm: typeof result.kpm === 'number' ? result.kpm : 0,
-              accuracy: typeof result.accuracy === 'number' ? result.accuracy : 0,
-              correct: typeof result.correct === 'number' ? result.correct : 0,
-              miss: typeof result.miss === 'number' ? result.miss : 0,
-            });
+            console.log('Worker結果', result);
+            if (result && typeof result === 'object') {
+              // 結果のバリデーション
+              const validatedResult = {
+                kpm: typeof result.kpm === 'number' ? result.kpm : 0,
+                accuracy: typeof result.accuracy === 'number' ? result.accuracy : 0,
+                correct: typeof result.correct === 'number' ? result.correct : 0,
+                miss: typeof result.miss === 'number' ? result.miss : 0,
+              };
+              setResultScore(validatedResult);
+            } else {
+              console.error('不正な結果形式', result);
+              setResultScore({ kpm: 0, accuracy: 0, correct: 0, miss: 0 });
+            }
           })
           .catch(error => {
+            console.error('スコア計算エラー', error);
             setResultScore({ kpm: 0, accuracy: 0, correct: 0, miss: 0 });
           });
       } catch (e) {
+        console.error('スコア計算の準備中にエラー', e);
         setResultScore({ kpm: 0, accuracy: 0, correct: 0, miss: 0 });
       }
     }
@@ -256,62 +284,51 @@ const TypingGame: React.FC<{ onGoMenu?: () => void; onGoRanking?: () => void }> 
     // eslint-disable-next-line
   }, []); // 初回マウント時のみ判定
 
-  // リセットハンドラ
-  const handleReset = useCallback(() => {
-    resetGame();
-    setupCurrentWord();
-    setScoreLog([]);
-    setResultScore(null);
-  }, [resetGame, setupCurrentWord]);
-
-  const [modalState, dispatchModal] = useReducer(modalReducer, initialModalState);
-
-  // ランキング登録処理
-  const handleRegisterRanking = useCallback(async () => {
-    if (!resultScore || !modalState.name.trim()) return;
-    dispatchModal({ type: 'registering' });
-    try {
-      await addRankingEntry({
-        name: modalState.name.trim(),
+  // 結果が出たときにlastScoreを更新
+  useEffect(() => {
+    if (gameStatus === 'finished' && resultScore) {
+      setLastScore({
+        playerName: playerName || undefined,
         kpm: resultScore.kpm,
         accuracy: resultScore.accuracy,
-        correct: resultScore.correct,
-        miss: resultScore.miss
+        time: 60, // ゲーム時間は60秒と仮定
+        mistakes: resultScore.miss
       });
-      dispatchModal({ type: 'success' });
-      setTimeout(() => dispatchModal({ type: 'close' }), 1200); // 1.2秒後に自動クローズ
-    } catch (e: any) {
-      dispatchModal({ type: 'error', error: '登録に失敗しました: ' + (e?.message || String(e)) });
     }
-  }, [resultScore, modalState.name]);
+  }, [gameStatus, resultScore, playerName]);
 
-  // 画面遷移コールバックもuseCallbackでラップ
-  const handleGoRanking = useCallback(() => {
-    if (onGoRanking) onGoRanking();
-  }, [onGoRanking]);
-  const handleGoMenu = useCallback(() => {
-    if (onGoMenu) onGoMenu();
-  }, [onGoMenu]);
+  // ゲームをリセットする
+  const handleReset = useCallback(() => {
+    resetGame();
+    setScoreLog([]);
+    setResultScore(null);
+    setSubmitSuccess(false);
+    setLastScore(null);
+  }, [resetGame]);
 
-  // useCallbackは関数コンポーネントの中で定義する
-  const calcScoreWithWorker = useCallback((payload: ScoreWorkerRequest['payload']): Promise<ScoreWorkerResponse['payload']> => {
-    return new Promise((resolve, reject) => {
-      const worker = getScoreWorker();
-      const handleMessage = (e: MessageEvent<any>) => {
-        const data = e.data;
-        if (data && data.type === 'scoreResult' && data.payload) {
-          resolve(data.payload);
-        } else {
-          reject(new Error('Workerから不正なレスポンス'));
-        }
-        worker.removeEventListener('message', handleMessage);
-      };
-      worker.addEventListener('message', handleMessage);
-      worker.postMessage({ type: 'calcScore', payload });
-    });
-  }, []);
-
-  // 画面分割レンダリング
+  // ランキングに登録する
+  const handleSubmitRanking = async () => {
+    if (!resultScore || !playerName.trim() || isSubmitting) return;
+    
+    setIsSubmitting(true);
+    try {
+      await saveRanking(
+        playerName.trim(),
+        resultScore.kpm,
+        resultScore.accuracy,
+        60, // ゲーム時間は60秒と仮定
+        resultScore.miss,
+        difficulty
+      );
+      setSubmitSuccess(true);
+      playSound('correct');
+    } catch (error) {
+      console.error('ランキング登録エラー:', error);
+      playSound('wrong');
+    } finally {
+      setIsSubmitting(false);
+    }
+  };  // 画面分割レンダリング
   return (
     <div className={styles.typingGameContainer}>
       {/* スタート画面 */}
@@ -321,6 +338,7 @@ const TypingGame: React.FC<{ onGoMenu?: () => void; onGoRanking?: () => void }> 
           <p>スペースキーを押してスタート</p>
         </div>
       )}
+      
       {/* ゲーム画面 */}
       {gameStatus === 'playing' && (
         <GameScreen
@@ -329,6 +347,7 @@ const TypingGame: React.FC<{ onGoMenu?: () => void; onGoRanking?: () => void }> 
           currentKanaDisplay={kanaDisplay}
         />
       )}
+      
       {/* リザルト画面 */}
       {gameStatus === 'finished' && (
         <div className={styles.finishScreen}>
@@ -341,6 +360,7 @@ const TypingGame: React.FC<{ onGoMenu?: () => void; onGoRanking?: () => void }> 
               <div>Miss<br /><span>{resultScore.miss}</span></div>
             </> : 
             gameStatus === 'finished' && scoreLog.length > 0 ? (
+              // 10秒以上経過してもスコアが計算されない場合のフォールバック
               <div className={styles.calculatingScore}>
                 計算中...
                 <button 
@@ -363,61 +383,75 @@ const TypingGame: React.FC<{ onGoMenu?: () => void; onGoRanking?: () => void }> 
               <div>計算中...</div>
             )}
           </div>
-          {/* ランキング登録ボタン */}
-          {resultScore && !modalState.done && (
-            <button onClick={() => dispatchModal({ type: 'open' })} className={styles.resetButton} style={{marginTop: 12, background: '#f59e42'}}>
-              ランキング登録
-            </button>
-          )}
-          {modalState.done && (
-            <div style={{color:'#22d3ee',marginTop:8,fontWeight:'bold'}}>登録が完了しました！</div>
-          )}
+          
+          {/* ランキング登録フォーム */}
+          {resultScore && !submitSuccess ? (
+            <div className={styles.rankingForm}>
+              <h3>ランキングに登録</h3>
+              <div className={styles.formGroup}>
+                <select 
+                  value={difficulty} 
+                  onChange={(e) => setDifficulty(e.target.value)}
+                  className={styles.difficultySelect}
+                  disabled={isSubmitting}
+                >
+                  <option value="easy">やさしい</option>
+                  <option value="normal">ふつう</option>
+                  <option value="hard">難しい</option>
+                </select>
+              </div>
+              <div className={styles.formGroup}>
+                <input
+                  type="text"
+                  placeholder="あなたの名前"
+                  value={playerName}
+                  onChange={(e) => setPlayerName(e.target.value)}
+                  maxLength={20}
+                  className={styles.nameInput}
+                  disabled={isSubmitting}
+                />
+              </div>
+              <button 
+                onClick={handleSubmitRanking}
+                className={`${styles.resetButton} ${styles.submitButton}`}
+                disabled={!playerName.trim() || isSubmitting}
+                style={{marginTop: 12, background: '#10b981'}}
+              >
+                {isSubmitting ? '送信中...' : 'ランキングに登録する'}
+              </button>
+            </div>
+          ) : submitSuccess ? (
+            <div className={styles.submitSuccess} style={{margin: '15px 0', color: '#10b981', fontWeight: 'bold'}}>
+              🎉 ランキングに登録しました！
+            </div>
+          ) : null}
+
           <button onClick={handleReset} className={styles.resetButton}>
             もう一度プレイ
           </button>
-          <button onClick={handleGoRanking} className={styles.resetButton} style={{marginTop: 12, background: '#06b6d4'}}>
+          <button 
+            onClick={() => setGameStatus('ranking')} 
+            className={styles.resetButton} 
+            style={{marginTop: 12, background: '#06b6d4'}}
+          >
             ランキングへ
           </button>
-          <button onClick={handleGoMenu} className={styles.resetButton} style={{marginTop: 12, background: '#334155'}}>
+          <button onClick={onGoMenu} className={styles.resetButton} style={{marginTop: 12, background: '#334155'}}>
             メニューへ
           </button>
-          {/* ランキング登録モーダル */}
-          {modalState.show && (
-            <div style={{position:'fixed',top:0,left:0,width:'100vw',height:'100vh',background:'rgba(0,0,0,0.5)',zIndex:1000,display:'flex',alignItems:'center',justifyContent:'center'}}>
-              <div style={{background:'#222',padding:'2rem',borderRadius:'1rem',minWidth:320,boxShadow:'0 0 32px #00f2ff88',display:'flex',flexDirection:'column',gap:16}}>
-                <h3 style={{color:'#f59e42',fontWeight:'bold'}}>ランキング登録</h3>
-                {modalState.done ? (
-                  <>
-                    <div style={{color:'#22d3ee',fontWeight:'bold',marginBottom:8}}>登録が完了しました！</div>
-                    <button onClick={()=>dispatchModal({type:'close'})} style={{background:'#334155',color:'#fff',border:'none',borderRadius:8,padding:'0.5rem',cursor:'pointer'}}>閉じる</button>
-                  </>
-                ) : (
-                  <>
-                    <input
-                      type="text"
-                      placeholder="名前を入力（10文字以内）"
-                      maxLength={10}
-                      value={modalState.name}
-                      onChange={e => dispatchModal({ type: 'setName', name: e.target.value })}
-                      style={{padding:'0.5rem',borderRadius:8,border:'1px solid #888',fontSize:'1.1rem'}}
-                      disabled={modalState.registering}
-                    />
-                    <button
-                      onClick={handleRegisterRanking}
-                      style={{padding:'0.5rem',borderRadius:8,background:'#f59e42',color:'#fff',fontWeight:'bold',fontSize:'1.1rem',border:'none',cursor:'pointer',opacity:modalState.registering?0.6:1}}
-                      disabled={modalState.registering || !modalState.name.trim()}
-                    >
-                      {modalState.registering ? '登録中...' : '登録する'}
-                    </button>
-                    {modalState.error && <div style={{color:'#f87171'}}>{modalState.error}</div>}
-                    <button onClick={()=>dispatchModal({type:'close'})} style={{marginTop:8,background:'#334155',color:'#fff',border:'none',borderRadius:8,padding:'0.5rem',cursor:'pointer'}}>キャンセル</button>
-                  </>
-                )}
-              </div>
-            </div>
-          )}
         </div>
       )}
+      
+      {/* ランキング画面 */}
+      {gameStatus === 'ranking' && (
+        <RankingScreen 
+          onGoBack={() => setGameStatus('finished')} 
+          lastScore={lastScore}
+        />
+      )}
+    </div>
+  );
+};
     </div>
   );
 };
