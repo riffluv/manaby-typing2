@@ -1,5 +1,6 @@
-import Link from "next/link";
+'use client';
+import TypingGame from '@/components/TypingGame';
 
 export default function Game() {
-  return <></>;
+  return <TypingGame />;
 }

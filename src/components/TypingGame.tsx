@@ -1,3 +1,5 @@
+'use client';
+
 import { useState, useEffect, useCallback, useRef } from 'react';
 import { useGameStatus, useTypingGameStore, useCurrentWord } from '@/store/typingGameStore';
 import { useAudioStore } from '@/store/audioStore';
@@ -6,15 +8,38 @@ import { useTypingGameLifecycle } from '@/hooks/useTypingGameLifecycle';
 import MCPStatus from '@/components/MCPStatus';
 import GameScreen from '@/components/GameScreen';
 import styles from '@/styles/TypingGame.module.css';
+import type { PerWordScoreLog, GameScoreLog } from '@/types/score';
+import { useRouter } from 'next/navigation';
 
-const TypingGame: React.FC<{ onFinish?: () => void }> = ({ onFinish }) => {
+// --- Web Workerスコア計算ラッパー ---
+let scoreWorker: Worker | null = null;
+function getScoreWorker() {
+  if (!scoreWorker) {
+    scoreWorker = new Worker(new URL('@/workers/scoreWorker.ts', import.meta.url));
+  }
+  return scoreWorker;
+}
+function calcScoreWithWorker(payload: any): Promise<any> {
+  return new Promise((resolve) => {
+    const worker = getScoreWorker();
+    const handleMessage = (e: MessageEvent<any>) => {
+      if (e.data.type === 'scoreResult') {
+        resolve(e.data.payload);
+        worker.removeEventListener('message', handleMessage);
+      }
+    };
+    worker.addEventListener('message', handleMessage);
+    worker.postMessage({ type: 'calcScore', payload });
+  });
+}
+
+const TypingGame: React.FC = () => {
+  const router = useRouter();
   // Zustandストアから「お題情報」「ゲーム状態」だけ購読
   const gameStatus = useGameStatus();
   const { setGameStatus, advanceToNextWord, resetGame, setupCurrentWord } = useTypingGameStore();
   const storeWord = useCurrentWord();
   const { playSound } = useAudioStore();
-
-  // Typingゲームの初期化副作用
   useTypingGameLifecycle();
 
   // typingmania-ref流: 進行状態はuseRefで管理
@@ -36,6 +61,14 @@ const TypingGame: React.FC<{ onFinish?: () => void }> = ({ onFinish }) => {
     displayChars: []
   });
 
+  // スコア記録
+  const [scoreLog, setScoreLog] = useState<PerWordScoreLog[]>([]);
+  const [resultScore, setResultScore] = useState<GameScoreLog['total'] | null>(null);
+  const wordKeyCountRef = useRef(0);
+  const wordCorrectRef = useRef(0);
+  const wordMissRef = useRef(0);
+  const wordStartTimeRef = useRef<number>(0);
+
   // お題切り替え時のみuseRefを初期化
   useEffect(() => {
     if (storeWord && storeWord.japanese !== currentWord.japanese) {
@@ -51,8 +84,12 @@ const TypingGame: React.FC<{ onFinish?: () => void }> = ({ onFinish }) => {
           displayText: info.displayText
         });
       }
+      // お題切り替え時にスコア記録用refもリセット
+      wordKeyCountRef.current = 0;
+      wordCorrectRef.current = 0;
+      wordMissRef.current = 0;
+      wordStartTimeRef.current = 0;
     }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [storeWord]);
 
   // typingmania-ref流: キー入力はuseRefを直接ミューテート
@@ -65,8 +102,13 @@ const TypingGame: React.FC<{ onFinish?: () => void }> = ({ onFinish }) => {
       const idx = kanaIndexRef.current;
       const currentTypingChar = typingChars[idx];
       if (!currentTypingChar) return;
+      if (wordKeyCountRef.current === 0) {
+        wordStartTimeRef.current = Date.now();
+      }
+      wordKeyCountRef.current++;
       if (currentTypingChar.canAccept(e.key)) {
         currentTypingChar.accept(e.key);
+        wordCorrectRef.current++;
         playSound && playSound('correct');
         const info = currentTypingChar.getDisplayInfo();
         setKanaDisplay({
@@ -86,14 +128,24 @@ const TypingGame: React.FC<{ onFinish?: () => void }> = ({ onFinish }) => {
               displayText: nextInfo.displayText
             });
           } else {
+            // 1問分のスコア記録
+            setScoreLog(prev => [...prev, {
+              keyCount: wordKeyCountRef.current,
+              correct: wordCorrectRef.current,
+              miss: wordMissRef.current,
+              startTime: wordStartTimeRef.current,
+              endTime: Date.now(),
+              duration: 0,
+              kpm: 0,
+              accuracy: 0
+            }]);
             setTimeout(() => {
               advanceToNextWord();
-              // onFinishはadvanceToNextWordの中で呼ぶ
             }, 300);
           }
         }
       } else {
-        // 不正解キーの場合
+        wordMissRef.current++;
         playSound && playSound('wrong');
       }
     };
@@ -114,10 +166,25 @@ const TypingGame: React.FC<{ onFinish?: () => void }> = ({ onFinish }) => {
     return () => window.removeEventListener('keydown', keyDownHandler);
   }, [gameStatus, setGameStatus]);
 
+  // ゲーム終了時にスコア計算
+  useEffect(() => {
+    if (gameStatus === 'finished' && scoreLog.length > 0) {
+      calcScoreWithWorker({ results: scoreLog.map(log => ({
+        keyCount: log.keyCount,
+        missCount: log.miss ?? 0,
+        correctCount: log.correct ?? 0,
+        startTime: log.startTime,
+        endTime: log.endTime
+      })) }).then(setResultScore);
+    }
+  }, [gameStatus, scoreLog]);
+
   // リセットハンドラ
   const handleReset = useCallback(() => {
     resetGame();
     setupCurrentWord();
+    setScoreLog([]);
+    setResultScore(null);
   }, [resetGame, setupCurrentWord]);
 
   // 画面分割レンダリング
@@ -138,18 +205,29 @@ const TypingGame: React.FC<{ onFinish?: () => void }> = ({ onFinish }) => {
           currentKanaDisplay={kanaDisplay}
         />
       )}
-      {/* フィニッシュ画面 */}
+      {/* リザルト画面 */}
       {gameStatus === 'finished' && (
         <div className={styles.finishScreen}>
-          <h2>クリア！</h2>
-          <p>おめでとうございます！</p>
+          <h2>リザルト画面</h2>
+          <div className={styles.scoreBoard}>
+            {resultScore ? <>
+              <div>KPM<br /><span>{resultScore.kpm}</span></div>
+              <div>Accuracy<br /><span>{resultScore.accuracy}%</span></div>
+              <div>Correct<br /><span>{resultScore.correct}</span></div>
+              <div>Miss<br /><span>{resultScore.miss}</span></div>
+            </> : <div>計算中...</div>}
+          </div>
           <button onClick={handleReset} className={styles.resetButton}>
             もう一度プレイ
           </button>
+          <button onClick={() => router.push('/ranking')} className={styles.resetButton} style={{marginTop: 12, background: '#06b6d4'}}>
+            ランキングへ
+          </button>
+          <button onClick={() => router.push('/')} className={styles.resetButton} style={{marginTop: 12, background: '#334155'}}>
+            メニューへ
+          </button>
         </div>
       )}
-      {/* MCPサーバー接続状態の表示 */}
-      <MCPStatus position="bottom-right" />
     </div>
   );
 };
