@@ -272,11 +272,7 @@ const TypingGame: React.FC = () => {
         <div className={styles.gameScreen}>
           <div className={styles.wordJapanese}>{currentWord.japanese}</div>
           <div className={styles.wordHiragana}>{currentWord.hiragana}</div>
-          
-          <div className={styles.typingArea}>
-            {renderTypingArea()}
-          </div>
-
+          <div className={styles.typingArea}>{renderTypingArea()}</div>
           <div className={styles.progress}>
             お題: {currentWordIndex + 1} / {wordList.length}
           </div>

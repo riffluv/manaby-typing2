@@ -1,13 +1,17 @@
 .typingGameContainer {
+  background: rgba(20,30,60,0.7);
+  border-radius: 1.5rem;
+  box-shadow: 0 0 32px #00f2ff88;
+  padding: 2rem 3rem;
+  color: #fff;
+  backdrop-filter: blur(8px);
+  max-width: 800px;
+  width: 100%;
   display: flex;
   flex-direction: column;
   align-items: center;
   justify-content: center;
-  padding: 2rem;
-  width: 100%;
-  max-width: 800px;
   margin: 0 auto;
-  color: white;
 }
 
 .startScreen, 
@@ -119,5 +123,29 @@
   to {
     opacity: 1;
     transform: translateY(0);
+  }
+}
+
+/* メニュー・リザルト・ランキング共通パネル */
+.panel {
+  background: rgba(20,30,60,0.7);
+  border-radius: 1.5rem;
+  box-shadow: 0 0 32px #00f2ff88;
+  padding: 2rem 3rem;
+  color: #fff;
+  backdrop-filter: blur(8px);
+  max-width: 400px;
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 2rem;
+  margin: 0 auto;
+}
+
+@media (max-width: 600px) {
+  .typingGameContainer, .panel {
+    padding: 1rem 0.5rem;
+    max-width: 98vw;
   }
 }
