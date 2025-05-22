@@ -143,6 +143,18 @@
   margin: 0 auto;
 }
 
+.mcpStatusWrapper {
+  position: fixed;
+  right: 2vw;
+  bottom: 2vh;
+  z-index: 1000;
+  pointer-events: none;
+}
+
+.mcpStatusWrapper > * {
+  pointer-events: auto;
+}
+
 @media (max-width: 600px) {
   .typingGameContainer, .panel {
     padding: 1rem 0.5rem;

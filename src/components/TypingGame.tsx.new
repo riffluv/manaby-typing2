@@ -3,6 +3,33 @@ import * as wanakana from 'wanakana';
 import { wordList } from '@/data/wordList';
 import styles from '@/styles/TypingGame.module.css';
 import { convertHiraganaToRomaji, getAllRomajiPatterns, createTypingChars, TypingChar } from '@/utils/japaneseUtils';
+import MCPStatus from '@/components/MCPStatus';
+
+// --- Web Workerスコア計算ラッパー ---
+import type { ScoreWorkerRequest, ScoreWorkerResponse } from '@/workers/scoreWorker';
+
+let scoreWorker: Worker | null = null;
+function getScoreWorker() {
+  if (!scoreWorker) {
+    scoreWorker = new Worker(new URL('@/workers/scoreWorker.ts', import.meta.url));
+  }
+  return scoreWorker;
+}
+
+export function calcScoreWithWorker(payload: any): Promise<any> {
+  return new Promise((resolve) => {
+    const worker = getScoreWorker();
+    const handleMessage = (e: MessageEvent<ScoreWorkerResponse>) => {
+      if (e.data.type === 'scoreResult') {
+        resolve(e.data.payload);
+        worker.removeEventListener('message', handleMessage);
+      }
+    };
+    worker.addEventListener('message', handleMessage);
+    const req: ScoreWorkerRequest = { type: 'calcScore', payload };
+    worker.postMessage(req);
+  });
+}
 
 const TypingGame: React.FC = () => {
   // 現在のお題のインデックス
@@ -260,35 +287,40 @@ const TypingGame: React.FC = () => {
   }, [currentWord, currentKanaIndex, currentKanaDisplay, getCharClass]);
 
   return (
-    <div className={styles.typingGameContainer}>
-      {gameStatus === 'ready' && (
-        <div className={styles.startScreen}>
-          <h2>タイピングゲーム</h2>
-          <p>スペースキーを押してスタート</p>
-        </div>
-      )}
-
-      {gameStatus === 'playing' && (
-        <div className={styles.gameScreen}>
-          <div className={styles.wordJapanese}>{currentWord.japanese}</div>
-          <div className={styles.wordHiragana}>{currentWord.hiragana}</div>
-          <div className={styles.typingArea}>{renderTypingArea()}</div>
-          <div className={styles.progress}>
-            お題: {currentWordIndex + 1} / {wordList.length}
+    <>
+      <div className={styles.typingGameContainer}>
+        {gameStatus === 'ready' && (
+          <div className={styles.startScreen}>
+            <h2>タイピングゲーム</h2>
+            <p>スペースキーを押してスタート</p>
           </div>
-        </div>
-      )}
+        )}
 
-      {gameStatus === 'finished' && (
-        <div className={styles.finishScreen}>
-          <h2>クリア！</h2>
-          <p>おめでとうございます！</p>
-          <button onClick={resetGame} className={styles.resetButton}>
-            もう一度プレイ
-          </button>
-        </div>
-      )}
-    </div>
+        {gameStatus === 'playing' && (
+          <div className={styles.gameScreen}>
+            <div className={styles.wordJapanese}>{currentWord.japanese}</div>
+            <div className={styles.wordHiragana}>{currentWord.hiragana}</div>
+            <div className={styles.typingArea}>{renderTypingArea()}</div>
+            <div className={styles.progress}>
+              お題: {currentWordIndex + 1} / {wordList.length}
+            </div>
+          </div>
+        )}
+
+        {gameStatus === 'finished' && (
+          <div className={styles.finishScreen}>
+            <h2>クリア！</h2>
+            <p>おめでとうございます！</p>
+            <button onClick={resetGame} className={styles.resetButton}>
+              もう一度プレイ
+            </button>
+          </div>
+        )}
+      </div>
+      <div className={styles.mcpStatusWrapper}>
+        <MCPStatus position="bottom-right" />
+      </div>
+    </>
   );
 };
 

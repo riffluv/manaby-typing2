@@ -3,11 +3,10 @@
 import { useState, useEffect } from 'react';
 import TypingGame from '@/components/TypingGame';
 import { useGameStatus } from '@/store/typingGameStore';
-import styles from './page.module.css';
 
 function MainMenu({ onStart }: { onStart: () => void }) {
   return (
-    <div className={styles.panel}>
+    <div className="panel">
       <div style={{display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 32}}>
         <h1 style={{fontSize: '2rem', fontWeight: 'bold', marginBottom: 8, color: '#67e8f9', textShadow: '0 0 8px #00f2ff88'}}>SFタイピングゲーム</h1>
         <button onClick={onStart} style={{padding: '1rem 2.5rem', borderRadius: 16, background: '#06b6d4', color: '#fff', fontWeight: 'bold', fontSize: '1.25rem', boxShadow: '0 0 32px #00f2ff88', border: 'none', marginBottom: 24, cursor: 'pointer'}}>スタート</button>
@@ -34,7 +33,7 @@ export default function Home() {
   if (scene === 'menu') return <MainMenu onStart={() => setScene('game')} />;
   if (scene === 'game') return <TypingGame />;
   if (scene === 'result') return (
-    <div className={styles.panel}>
+    <div className="panel">
       <div style={{display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 32}}>
         <h1 style={{fontSize:'2rem',fontWeight:'bold',marginBottom:8,color:'#67e8f9',textShadow:'0 0 8px #00f2ff88'}}>リザルト画面</h1>
         <button onClick={()=>setScene('ranking')} style={{padding:'1rem 2.5rem',borderRadius:16,background:'#06b6d4',color:'#fff',fontWeight:'bold',fontSize:'1.25rem',boxShadow:'0 0 32px #00f2ff88',border:'none',marginBottom:24,cursor:'pointer'}}>ランキングへ</button>
@@ -43,7 +42,7 @@ export default function Home() {
     </div>
   );
   if (scene === 'ranking') return (
-    <div className={styles.panel}>
+    <div className="panel">
       <div style={{display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 32}}>
         <h1 style={{fontSize:'2rem',fontWeight:'bold',marginBottom:8,color:'#67e8f9',textShadow:'0 0 8px #00f2ff88'}}>RANKING画面</h1>
         <button onClick={()=>setScene('menu')} style={{padding:'0.75rem 2rem',borderRadius:12,background:'#334155',color:'#fff',fontWeight:'bold',border:'2px solid #67e8f9',cursor:'pointer',opacity:1}}>メニューへ</button>
