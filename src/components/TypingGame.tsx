@@ -10,6 +10,7 @@ import GameScreen from '@/components/GameScreen';
 import styles from '@/styles/TypingGame.module.css';
 import type { PerWordScoreLog, GameScoreLog } from '@/types/score';
 import { useRouter } from 'next/navigation';
+import KeyboardSoundUtils from '@/utils/KeyboardSoundUtils';
 
 // --- Web Workerスコア計算ラッパー ---
 let scoreWorker: Worker | null = null;
@@ -113,7 +114,9 @@ const TypingGame: React.FC<{ onGoMenu?: () => void; onGoRanking?: () => void }> 
       if (currentTypingChar.canAccept(e.key)) {
         currentTypingChar.accept(e.key);
         wordCorrectRef.current++;
-        playSound && playSound('correct');
+        // --- ここをWeb Audio API合成音に差し替え ---
+        KeyboardSoundUtils.playClickSound();
+        // ---
         const info = currentTypingChar.getDisplayInfo();
         setKanaDisplay({
           acceptedText: info.acceptedText,
@@ -133,15 +136,30 @@ const TypingGame: React.FC<{ onGoMenu?: () => void; onGoRanking?: () => void }> 
             });
           } else {
             // 1問分のスコア記録
+            const now = Date.now();
+            const durationMs = now - wordStartTimeRef.current;
+            const durationSec = durationMs / 1000;
+            let wordKpm = 0;
+            let wordAccuracy = 0;
+            
+            if (durationSec > 0) {
+              wordKpm = Math.round((wordKeyCountRef.current / durationSec) * 60 * 10) / 10;
+            }
+            
+            const totalInput = wordCorrectRef.current + wordMissRef.current;
+            if (totalInput > 0) {
+              wordAccuracy = Math.round((wordCorrectRef.current / totalInput) * 1000) / 10;
+            }
+            
             setScoreLog(prev => [...prev, {
               keyCount: wordKeyCountRef.current,
               correct: wordCorrectRef.current,
               miss: wordMissRef.current,
               startTime: wordStartTimeRef.current,
-              endTime: Date.now(),
-              duration: 0,
-              kpm: 0,
-              accuracy: 0
+              endTime: now,
+              duration: durationSec,
+              kpm: wordKpm,
+              accuracy: wordAccuracy
             }]);
             setTimeout(() => {
               advanceToNextWord();
@@ -150,12 +168,14 @@ const TypingGame: React.FC<{ onGoMenu?: () => void; onGoRanking?: () => void }> 
         }
       } else {
         wordMissRef.current++;
-        playSound && playSound('wrong');
+        // --- ここもWeb Audio API合成音に差し替え ---
+        KeyboardSoundUtils.playErrorSound();
+        // ---
       }
     };
     window.addEventListener('keydown', keyDownHandler);
     return () => window.removeEventListener('keydown', keyDownHandler);
-  }, [gameStatus, advanceToNextWord, playSound, router]);
+  }, [gameStatus, advanceToNextWord, router]);
 
   // スペースキーでゲーム開始
   useEffect(() => {
@@ -173,13 +193,57 @@ const TypingGame: React.FC<{ onGoMenu?: () => void; onGoRanking?: () => void }> 
   // ゲーム終了時にスコア計算
   useEffect(() => {
     if (gameStatus === 'finished' && scoreLog.length > 0) {
-      calcScoreWithWorker({ results: scoreLog.map(log => ({
-        keyCount: log.keyCount,
-        missCount: log.miss ?? 0,
-        correctCount: log.correct ?? 0,
-        startTime: log.startTime,
-        endTime: log.endTime
-      })) }).then(setResultScore);
+      console.log('スコア計算開始', scoreLog);
+      
+      try {
+        // 型変換とプロパティ名の修正を明示的に行う
+        const mappedData = scoreLog.map(log => {
+          // nullチェックと型変換を行い、Workerが要求する形式に合わせる
+          const missCount = typeof log.miss === 'number' ? log.miss : 0;
+          const correctCount = typeof log.correct === 'number' ? log.correct : 0;
+          
+          return {
+            keyCount: log.keyCount,
+            missCount: missCount,
+            correctCount: correctCount,
+            startTime: log.startTime,
+            endTime: log.endTime
+          };
+        });
+        
+        console.log('Worker送信データ', mappedData);
+        
+        if (mappedData.length === 0) {
+          console.error('スコアデータがありません');
+          setResultScore({ kpm: 0, accuracy: 0, correct: 0, miss: 0 });
+          return;
+        }
+        
+        calcScoreWithWorker({ results: mappedData })
+          .then(result => {
+            console.log('Worker結果', result);
+            if (result && typeof result === 'object') {
+              // 結果のバリデーション
+              const validatedResult = {
+                kpm: typeof result.kpm === 'number' ? result.kpm : 0,
+                accuracy: typeof result.accuracy === 'number' ? result.accuracy : 0,
+                correct: typeof result.correct === 'number' ? result.correct : 0,
+                miss: typeof result.miss === 'number' ? result.miss : 0,
+              };
+              setResultScore(validatedResult);
+            } else {
+              console.error('不正な結果形式', result);
+              setResultScore({ kpm: 0, accuracy: 0, correct: 0, miss: 0 });
+            }
+          })
+          .catch(error => {
+            console.error('スコア計算エラー', error);
+            setResultScore({ kpm: 0, accuracy: 0, correct: 0, miss: 0 });
+          });
+      } catch (e) {
+        console.error('スコア計算の準備中にエラー', e);
+        setResultScore({ kpm: 0, accuracy: 0, correct: 0, miss: 0 });
+      }
     }
   }, [gameStatus, scoreLog]);
 
@@ -234,7 +298,30 @@ const TypingGame: React.FC<{ onGoMenu?: () => void; onGoRanking?: () => void }> 
               <div>Accuracy<br /><span>{resultScore.accuracy}%</span></div>
               <div>Correct<br /><span>{resultScore.correct}</span></div>
               <div>Miss<br /><span>{resultScore.miss}</span></div>
-            </> : <div>計算中...</div>}
+            </> : 
+            gameStatus === 'finished' && scoreLog.length > 0 ? (
+              // 10秒以上経過してもスコアが計算されない場合のフォールバック
+              <div className={styles.calculatingScore}>
+                計算中...
+                <button 
+                  className={styles.recalcButton}
+                  onClick={() => {
+                    // 強制的に再計算を試みる
+                    const dummyScore = {
+                      kpm: scoreLog.reduce((sum, log) => sum + (log.kpm || 0), 0) / scoreLog.length || 0,
+                      accuracy: scoreLog.reduce((sum, log) => sum + (log.accuracy || 0), 0) / scoreLog.length || 0,
+                      correct: scoreLog.reduce((sum, log) => sum + (log.correct || 0), 0),
+                      miss: scoreLog.reduce((sum, log) => sum + (log.miss || 0), 0)
+                    };
+                    setResultScore(dummyScore);
+                  }}
+                >
+                  スコアを表示
+                </button>
+              </div>
+            ) : (
+              <div>計算中...</div>
+            )}
           </div>
           <button onClick={handleReset} className={styles.resetButton}>
             もう一度プレイ

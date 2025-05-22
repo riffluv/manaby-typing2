@@ -103,6 +103,34 @@
   background-color: #1d4ed8;
 }
 
+/* スコア計算処理用のスタイル */
+.calculatingScore {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  font-size: 1.5rem;
+  gap: 1rem;
+  min-width: 240px;
+  padding: 1.5rem;
+}
+
+.recalcButton {
+  background-color: rgba(0, 242, 255, 0.3);
+  border: 2px solid #00f2ff;
+  border-radius: 0.5rem;
+  color: white;
+  cursor: pointer;
+  font-size: 0.9rem;
+  font-weight: bold;
+  padding: 0.5rem 1.5rem;
+  transition: all 0.2s;
+}
+
+.recalcButton:hover {
+  background-color: rgba(0, 242, 255, 0.5);
+}
+
 @keyframes pulse {
   0% {
     transform: scale(1.2);
