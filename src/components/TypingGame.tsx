@@ -33,7 +33,7 @@ function calcScoreWithWorker(payload: any): Promise<any> {
   });
 }
 
-const TypingGame: React.FC = () => {
+const TypingGame: React.FC<{ onGoMenu?: () => void; onGoRanking?: () => void }> = ({ onGoMenu, onGoRanking }) => {
   const router = useRouter();
   // Zustandストアから「お題情報」「ゲーム状態」だけ購読
   const gameStatus = useGameStatus();
@@ -97,6 +97,10 @@ const TypingGame: React.FC = () => {
     if (gameStatus !== 'playing') return;
     const keyDownHandler = (e: KeyboardEvent) => {
       if (gameStatus !== 'playing') return;
+      if (e.key === 'Escape') {
+        router.push('/'); // ESCでメインメニューに遷移
+        return;
+      }
       if (e.key.length !== 1) return;
       const typingChars = typingCharsRef.current;
       const idx = kanaIndexRef.current;
@@ -151,7 +155,7 @@ const TypingGame: React.FC = () => {
     };
     window.addEventListener('keydown', keyDownHandler);
     return () => window.removeEventListener('keydown', keyDownHandler);
-  }, [gameStatus, advanceToNextWord, playSound]);
+  }, [gameStatus, advanceToNextWord, playSound, router]);
 
   // スペースキーでゲーム開始
   useEffect(() => {
@@ -178,6 +182,21 @@ const TypingGame: React.FC = () => {
       })) }).then(setResultScore);
     }
   }, [gameStatus, scoreLog]);
+
+  // /game直アクセス時のみリダイレクト（初回マウント時に一度だけ判定）
+  useEffect(() => {
+    if (typeof window !== 'undefined') {
+      const isDirectAccess = window.location.pathname === '/game';
+      const fromMenu = sessionStorage.getItem('fromMenu');
+      if (isDirectAccess && !fromMenu) {
+        router.replace('/');
+      }
+      if (fromMenu) {
+        sessionStorage.removeItem('fromMenu'); // 一度だけ消す
+      }
+    }
+    // eslint-disable-next-line
+  }, []); // 初回マウント時のみ判定
 
   // リセットハンドラ
   const handleReset = useCallback(() => {
@@ -220,10 +239,10 @@ const TypingGame: React.FC = () => {
           <button onClick={handleReset} className={styles.resetButton}>
             もう一度プレイ
           </button>
-          <button onClick={() => router.push('/ranking')} className={styles.resetButton} style={{marginTop: 12, background: '#06b6d4'}}>
+          <button onClick={onGoRanking} className={styles.resetButton} style={{marginTop: 12, background: '#06b6d4'}}>
             ランキングへ
           </button>
-          <button onClick={() => router.push('/')} className={styles.resetButton} style={{marginTop: 12, background: '#334155'}}>
+          <button onClick={onGoMenu} className={styles.resetButton} style={{marginTop: 12, background: '#334155'}}>
             メニューへ
           </button>
         </div>
