@@ -1,7 +1,6 @@
 import React, { useEffect, useCallback, memo } from 'react';
 import styles from '@/styles/TypingGame.module.css';
 import MCPStatus from '@/components/MCPStatus';
-import { useTypingStore, useCurrentKanaIndex, useUserInput, useCurrentKanaDisplay } from '@/store/typingStore';
 import { useTypingGameStore, useGameStatus, useDisplayWord, useCurrentWord, useCurrentWordIndex, useWordListLength } from '@/store/typingGameStore';
 import { useAudioStore } from '@/store/audioStore';
 import { useTypingProcessor } from '@/hooks/useTypingProcessor';
@@ -65,12 +64,12 @@ TypingArea.displayName = 'TypingArea';
 // ゲーム画面全体（メモ化）
 const GameScreen = memo(() => {
   const gameStatus = useGameStatus();
-  const { japanese, hiragana } = useDisplayWord(); // 必要な情報のみを購読
+  const { japanese, hiragana } = useDisplayWord();
   const currentWord = useCurrentWord();
   const currentWordIndex = useCurrentWordIndex();
   const wordListLength = useWordListLength();
-  const currentKanaIndex = useCurrentKanaIndex();
-  const currentKanaDisplay = useCurrentKanaDisplay();
+  // 進行状態はuseTypingProcessorから取得
+  const { kanaDisplay, currentKanaIndexRef } = useTypingProcessor();
 
   if (gameStatus !== 'playing') return null;
 
@@ -78,16 +77,14 @@ const GameScreen = memo(() => {
     <div className={styles.gameScreen}>
       <div className={styles.wordJapanese}>{japanese}</div>
       <div className={styles.wordHiragana}>{hiragana}</div>
-      
       <div className={styles.typingArea}>
         <TypingArea 
-          currentKanaIndex={currentKanaIndex}
+          currentKanaIndex={currentKanaIndexRef.current}
           typingChars={currentWord.typingChars}
           displayChars={currentWord.displayChars}
-          kanaDisplay={currentKanaDisplay}
+          kanaDisplay={kanaDisplay}
         />
       </div>
-
       <div className={styles.progress}>
         お題: {currentWordIndex + 1} / {wordListLength}
       </div>
@@ -131,47 +128,41 @@ const TypingGameRefactored: React.FC = () => {
   const gameStatus = useGameStatus();
   const { setGameStatus, advanceToNextWord, resetGame, setupCurrentWord } = useTypingGameStore();
   const { preloadSounds } = useAudioStore();
-  const { resetTypingState } = useTypingStore();
-    // タイピング処理のカスタムフック
-  const { setupKeydownHandler } = useTypingProcessor();
-  
-  // 初期化 - サウンドのプリロード
+  // 進行状態管理はuseTypingProcessorで
+  const { setupKeydownHandler, resetProgress } = useTypingProcessor();
+
   useEffect(() => {
     preloadSounds();
-    setupCurrentWord(); // 初期単語のセットアップ
-  }, [preloadSounds, setupCurrentWord]);
-  
-  // ゲーム開始時のキーボードイベント設定
+    setupCurrentWord();
+    resetProgress(); // お題切り替え時に進行状態リセット
+  }, [preloadSounds, setupCurrentWord, resetProgress]);
+
   useEffect(() => {
     const cleanup = setupKeydownHandler(
       gameStatus as 'ready' | 'playing' | 'finished',
       () => setGameStatus('playing'),
       () => {
         resetGame();
-        resetTypingState();
+        resetProgress();
       },
       () => {
         advanceToNextWord();
-        resetTypingState();
+        resetProgress();
       }
     );
-    
     return cleanup;
-  }, [gameStatus, setGameStatus, resetGame, advanceToNextWord, setupKeydownHandler, resetTypingState]);
-  
-  // リセットハンドラ
+  }, [gameStatus, setGameStatus, resetGame, advanceToNextWord, setupKeydownHandler, resetProgress]);
+
   const handleReset = useCallback(() => {
     resetGame();
-    resetTypingState();
-  }, [resetGame, resetTypingState]);
-  
+    resetProgress();
+  }, [resetGame, resetProgress]);
+
   return (
     <div className={styles.typingGameContainer}>
       <StartScreen gameStatus={gameStatus} />
       <GameScreen />
       <FinishScreen gameStatus={gameStatus} onReset={handleReset} />
-      
-      {/* MCPサーバー接続状態の表示 */}
       <MCPStatus position="bottom-right" />
     </div>
   );
