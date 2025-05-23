@@ -13,6 +13,8 @@ import { useRouter } from 'next/navigation';
 import KeyboardSoundUtils from '@/utils/KeyboardSoundUtils';
 import { addRankingEntry } from '@/lib/rankingManaby2';
 import type { ScoreWorkerRequest, ScoreWorkerResponse } from '@/workers/scoreWorker';
+import { createPortal } from 'react-dom';
+import { motion, AnimatePresence } from 'framer-motion';
 
 // --- 型定義・reducer・getScoreWorkerはコンポーネント外 ---
 type ModalState = {
@@ -83,6 +85,7 @@ const TypingGame: React.FC<{ onGoMenu?: () => void; onGoRanking?: () => void }> 
   const [scoreLog, setScoreLog] = useState<PerWordScoreLog[]>([]);
   const [resultScore, setResultScore] = useState<GameScoreLog['total'] | null>(null);
   const [modalState, dispatchModal] = useReducer(modalReducer, initialModalState);
+  const [isScoreRegistered, setIsScoreRegistered] = useState(false);
 
   // --- useCallbackで関数の再生成を抑制 ---
   const handleReset = useCallback(() => {
@@ -90,10 +93,11 @@ const TypingGame: React.FC<{ onGoMenu?: () => void; onGoRanking?: () => void }> 
     setupCurrentWord();
     setScoreLog([]);
     setResultScore(null);
+    setIsScoreRegistered(false); // ゲームリセット時に登録済みフラグもリセット
   }, [resetGame, setupCurrentWord]);
 
   const handleRegisterRanking = useCallback(async () => {
-    if (!resultScore || !modalState.name.trim()) return;
+    if (!resultScore || !modalState.name.trim() || isScoreRegistered) return;
     dispatchModal({ type: 'registering' });
     try {
       await addRankingEntry({
@@ -103,12 +107,13 @@ const TypingGame: React.FC<{ onGoMenu?: () => void; onGoRanking?: () => void }> 
         correct: resultScore.correct,
         miss: resultScore.miss
       });
+      setIsScoreRegistered(true); // 登録成功時にフラグを立てる
       dispatchModal({ type: 'success' });
       setTimeout(() => dispatchModal({ type: 'close' }), 1200);
     } catch (e: any) {
       dispatchModal({ type: 'error', error: '登録に失敗しました: ' + (e?.message || String(e)) });
     }
-  }, [resultScore, modalState.name]);
+  }, [resultScore, modalState.name, isScoreRegistered]);
 
   const handleGoRanking = useCallback(() => {
     if (onGoRanking) onGoRanking();
@@ -357,13 +362,13 @@ const TypingGame: React.FC<{ onGoMenu?: () => void; onGoRanking?: () => void }> 
             )}
           </div>
           {/* ランキング登録ボタン */}
-          {resultScore && !modalState.done && (
+          {resultScore && !modalState.done && !isScoreRegistered && (
             <button onClick={() => dispatchModal({ type: 'open' })} className={styles.resetButton} style={{marginTop: 12, background: '#f59e42'}}>
               ランキング登録
             </button>
           )}
-          {modalState.done && (
-            <div style={{color:'#22d3ee',marginTop:8,fontWeight:'bold'}}>登録が完了しました！</div>
+          {isScoreRegistered && (
+            <div style={{color:'#22d3ee',marginTop:8,fontWeight:'bold'}}>このスコアは登録済みです</div>
           )}
           <button onClick={handleReset} className={styles.resetButton}>
             もう一度プレイ
@@ -374,40 +379,52 @@ const TypingGame: React.FC<{ onGoMenu?: () => void; onGoRanking?: () => void }> 
           <button onClick={handleGoMenu} className={styles.resetButton} style={{marginTop: 12, background: '#334155'}}>
             メニューへ
           </button>
-          {/* ランキング登録モーダル */}
-          {modalState.show && (
-            <div style={{position:'fixed',top:0,left:0,width:'100vw',height:'100vh',background:'rgba(0,0,0,0.5)',zIndex:1000,display:'flex',alignItems:'center',justifyContent:'center'}}>
-              <div style={{background:'#222',padding:'2rem',borderRadius:'1rem',minWidth:320,boxShadow:'0 0 32px #00f2ff88',display:'flex',flexDirection:'column',gap:16}}>
-                <h3 style={{color:'#f59e42',fontWeight:'bold'}}>ランキング登録</h3>
-                {modalState.done ? (
-                  <>
-                    <div style={{color:'#22d3ee',fontWeight:'bold',marginBottom:8}}>登録が完了しました！</div>
-                    <button onClick={()=>dispatchModal({type:'close'})} style={{background:'#334155',color:'#fff',border:'none',borderRadius:8,padding:'0.5rem',cursor:'pointer'}}>閉じる</button>
-                  </>
-                ) : (
-                  <>
-                    <input
-                      type="text"
-                      placeholder="名前を入力（10文字以内）"
-                      maxLength={10}
-                      value={modalState.name}
-                      onChange={e => dispatchModal({ type: 'setName', name: e.target.value })}
-                      style={{padding:'0.5rem',borderRadius:8,border:'1px solid #888',fontSize:'1.1rem'}}
-                      disabled={modalState.registering}
-                    />
-                    <button
-                      onClick={handleRegisterRanking}
-                      style={{padding:'0.5rem',borderRadius:8,background:'#f59e42',color:'#fff',fontWeight:'bold',fontSize:'1.1rem',border:'none',cursor:'pointer',opacity:modalState.registering?0.6:1}}
-                      disabled={modalState.registering || !modalState.name.trim()}
-                    >
-                      {modalState.registering ? '登録中...' : '登録する'}
-                    </button>
-                    {modalState.error && <div style={{color:'#f87171'}}>{modalState.error}</div>}
-                    <button onClick={()=>dispatchModal({type:'close'})} style={{marginTop:8,background:'#334155',color:'#fff',border:'none',borderRadius:8,padding:'0.5rem',cursor:'pointer'}}>キャンセル</button>
-                  </>
-                )}
-              </div>
-            </div>
+          {/* ランキング登録モーダル（framer-motionでアニメーション） */}
+          {modalState.show && typeof window !== 'undefined' && createPortal(
+            <div className={styles.modal}>
+              <AnimatePresence mode="wait">
+                <motion.div
+                  key={modalState.done ? 'done' : 'form'}
+                  className={styles.modalContent}
+                  initial={{ opacity: 0, scale: 0.95 }}
+                  animate={{ opacity: 1, scale: 1 }}
+                  exit={{ opacity: 0, scale: 0.95 }}
+                  transition={{ duration: 0.18 }}
+                  layout // 高さ変化も滑らかに
+                >
+                  <h3 style={{color:'#f59e42',fontWeight:'bold'}}>ランキング登録</h3>
+                  {modalState.done ? (
+                    <div style={{minHeight: 120, display: 'flex', flexDirection: 'column', justifyContent: 'center', alignItems: 'center'}}>
+                      <div style={{color:'#22d3ee',fontWeight:'bold',marginBottom:8}}>登録が完了しました！</div>
+                      <button onClick={()=>dispatchModal({type:'close'})} style={{background:'#334155',color:'#fff',border:'none',borderRadius:8,padding:'0.5rem',cursor:'pointer'}}>閉じる</button>
+                      <div style={{height: 32}} />
+                    </div>
+                  ) : (
+                    <form style={{minHeight: 120, display: 'flex', flexDirection: 'column', justifyContent: 'center', alignItems: 'center'}} onSubmit={e => {e.preventDefault();handleRegisterRanking();}}>
+                      <input
+                        type="text"
+                        placeholder="名前を入力（10文字以内）"
+                        maxLength={10}
+                        value={modalState.name}
+                        onChange={e => dispatchModal({ type: 'setName', name: e.target.value })}
+                        style={{padding:'0.5rem',borderRadius:8,border:'1px solid #888',fontSize:'1.1rem',marginBottom:8}}
+                        disabled={modalState.registering || isScoreRegistered}
+                      />
+                      <button
+                        type="submit"
+                        style={{padding:'0.5rem',borderRadius:8,background:'#f59e42',color:'#fff',fontWeight:'bold',fontSize:'1.1rem',border:'none',cursor:'pointer',opacity:modalState.registering?0.6:1,marginBottom:8}}
+                        disabled={modalState.registering || !modalState.name.trim() || isScoreRegistered}
+                      >
+                        {modalState.registering ? '登録中...' : '登録する'}
+                      </button>
+                      {modalState.error && <div style={{color:'#f87171',marginBottom:8}}>{modalState.error}</div>}
+                      <button type="button" onClick={()=>dispatchModal({type:'close'})} style={{background:'#334155',color:'#fff',border:'none',borderRadius:8,padding:'0.5rem',cursor:'pointer'}}>キャンセル</button>
+                    </form>
+                  )}
+                </motion.div>
+              </AnimatePresence>
+            </div>,
+            document.body
           )}
         </div>
       )}
