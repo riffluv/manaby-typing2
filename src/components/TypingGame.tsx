@@ -310,35 +310,31 @@ const TypingGame: React.FC<{ onGoMenu?: () => void; onGoRanking?: () => void }> 
 
   // 画面分割レンダリング
   return (
-    <div className="w-full h-screen flex flex-col items-center justify-center bg-transparent text-white relative z-10 overflow-hidden">
+    <div className="w-full h-screen min-h-[400px] flex flex-col items-center justify-center bg-transparent text-white relative z-10 overflow-y-auto overflow-x-hidden">
       {/* 画面切り替えごとにTailwindクラスで装飾 - monkeytype風ミニマルデザイン */}
       {gameStatus === 'ready' && (
         <motion.div 
-          className="bg-transparent rounded p-8 text-center w-full max-w-2xl animate-fadeIn min-h-[45vh] flex flex-col items-center justify-center relative overflow-hidden"
+          className="bg-transparent rounded p-4 md:p-8 text-center w-full max-w-screen-sm max-w-[95vw] animate-fadeIn min-h-[40vh] flex flex-col items-center justify-center relative overflow-hidden"
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
           transition={{ duration: 0.3 }}
         >
           {/* スタート画面 */}
-          <h2 className="text-4xl font-mono font-bold mb-8 tracking-tight">manaby typing</h2>
-          
+          <h2 className="font-mono font-bold mb-8 tracking-tight" style={{fontSize:'clamp(1.5rem,4vw,2.5rem)'}}>manaby typing</h2>
           <div className="flex items-center justify-center mb-8">
-            <div className="bg-gray-800 border border-amber-400 text-amber-400 rounded px-4 py-2 font-mono mr-2">space</div>
-            <p className="text-xl">を押してスタート</p>
+            <div className="bg-gray-800 border border-amber-400 text-amber-400 rounded px-4 py-2 font-mono mr-2 text-base md:text-lg">space</div>
+            <p className="text-xl md:text-2xl">を押してスタート</p>
           </div>
-          
-          <div className="text-gray-400 text-sm mt-4">
+          <div className="text-gray-400 text-xs md:text-sm mt-4">
             <MCPStatus />
           </div>
-          
           {/* 背景は既存のものを維持 */}
           <div className="absolute inset-0 bg-gradient-to-r from-purple-500 to-blue-500 opacity-30 rounded-lg pointer-events-none"></div>
         </motion.div>
       )}
-      
       {gameStatus === 'playing' && (
         <motion.div 
-          className="bg-transparent rounded p-8 text-center w-full max-w-3xl animate-fadeIn min-h-[45vh] flex flex-col items-center justify-center relative overflow-hidden"
+          className="bg-transparent rounded p-4 md:p-8 text-center w-full max-w-screen-md max-w-[98vw] animate-fadeIn min-h-[40vh] flex flex-col items-center justify-center relative overflow-hidden"
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
           transition={{ duration: 0.3 }}
@@ -349,9 +345,8 @@ const TypingGame: React.FC<{ onGoMenu?: () => void; onGoRanking?: () => void }> 
             currentKanaIndex={kanaIndexRef.current}
             currentKanaDisplay={kanaDisplay}
           />
-          
           {/* プログレスバーとステータス */}
-          <div className="w-full max-w-lg mx-auto mt-6">
+          <div className="w-full max-w-md mx-auto mt-6">
             <div className="h-1 w-full bg-gray-700 rounded-full overflow-hidden">
               <motion.div 
                 className="h-full bg-amber-400"
@@ -360,8 +355,7 @@ const TypingGame: React.FC<{ onGoMenu?: () => void; onGoRanking?: () => void }> 
                 transition={{ duration: 0.2 }}
               />
             </div>
-            
-            <div className="flex justify-between text-sm text-gray-400 mt-2 font-mono">
+            <div className="flex justify-between text-xs md:text-sm text-gray-400 mt-2 font-mono">
               <div>WORDS: {scoreLog.length}</div>
               {scoreLog.length > 0 && (
                 <>
@@ -373,35 +367,33 @@ const TypingGame: React.FC<{ onGoMenu?: () => void; onGoRanking?: () => void }> 
           </div>
         </motion.div>
       )}
-      
       {gameStatus === 'finished' && (
         <motion.div 
-          className="bg-transparent rounded p-8 text-center w-full max-w-2xl animate-fadeIn min-h-[45vh] flex flex-col items-center justify-center relative overflow-hidden"
+          className="bg-transparent rounded p-4 md:p-8 text-center w-full max-w-screen-sm max-w-[95vw] animate-fadeIn min-h-[40vh] flex flex-col items-center justify-center relative overflow-hidden"
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
           transition={{ duration: 0.3 }}
         >
           {/* リザルト画面 */}
-          <h2 className="text-3xl font-mono font-bold mb-8 text-center">test complete</h2>
-          
-          <div className="grid grid-cols-2 gap-y-6 gap-x-12 text-center mb-10 w-full max-w-md mx-auto">
+          <h2 className="font-mono font-bold mb-8 text-center" style={{fontSize:'clamp(1.2rem,3vw,2rem)'}}>test complete</h2>
+          <div className="grid grid-cols-2 gap-y-6 gap-x-6 md:gap-x-12 text-center mb-10 w-full max-w-xs md:max-w-md mx-auto">
             {resultScore ? (
               <>
                 <div>
-                  <div className="text-gray-400 text-sm mb-1 font-mono">kpm</div>
-                  <div className="text-4xl font-mono text-amber-400 font-bold">{Math.floor(resultScore.kpm)}</div>
+                  <div className="text-gray-400 text-xs md:text-sm mb-1 font-mono">kpm</div>
+                  <div className="font-mono text-amber-400 font-bold" style={{fontSize:'clamp(1.5rem,4vw,2.5rem)'}}>{Math.floor(resultScore.kpm)}</div>
                 </div>
                 <div>
-                  <div className="text-gray-400 text-sm mb-1 font-mono">accuracy</div>
-                  <div className="text-4xl font-mono text-amber-400 font-bold">{Math.floor(resultScore.accuracy)}%</div>
+                  <div className="text-gray-400 text-xs md:text-sm mb-1 font-mono">accuracy</div>
+                  <div className="font-mono text-amber-400 font-bold" style={{fontSize:'clamp(1.5rem,4vw,2.5rem)'}}>{Math.floor(resultScore.accuracy)}%</div>
                 </div>
                 <div>
-                  <div className="text-gray-400 text-sm mb-1 font-mono">correct</div>
-                  <div className="text-3xl font-mono text-green-400 font-bold">{resultScore.correct}</div>
+                  <div className="text-gray-400 text-xs md:text-sm mb-1 font-mono">correct</div>
+                  <div className="font-mono text-green-400 font-bold" style={{fontSize:'clamp(1.2rem,3vw,2rem)'}}>{resultScore.correct}</div>
                 </div>
                 <div>
-                  <div className="text-gray-400 text-sm mb-1 font-mono">miss</div>
-                  <div className="text-3xl font-mono text-red-400 font-bold">{resultScore.miss}</div>
+                  <div className="text-gray-400 text-xs md:text-sm mb-1 font-mono">miss</div>
+                  <div className="font-mono text-red-400 font-bold" style={{fontSize:'clamp(1.2rem,3vw,2rem)'}}>{resultScore.miss}</div>
                 </div>
               </>
             ) : gameStatus === 'finished' && scoreLog.length > 0 ? (
@@ -427,56 +419,49 @@ const TypingGame: React.FC<{ onGoMenu?: () => void; onGoRanking?: () => void }> 
               <div className="col-span-2 text-center py-4 font-mono">計算中...</div>
             )}
           </div>
-          
-          <div className="flex flex-col items-center space-y-3">
+          <div className="flex flex-col items-center space-y-3 w-full max-w-xs md:max-w-md mx-auto">
             {/* ランキング登録ボタン */}
             {resultScore && !modalState.done && !isScoreRegistered && (
               <button 
                 onClick={() => dispatchModal({ type: 'open' })} 
-                className="px-6 py-2 bg-amber-500 hover:bg-amber-600 text-gray-900 font-bold rounded transition-colors w-48"
+                className="px-6 py-2 bg-amber-500 hover:bg-amber-600 text-gray-900 font-bold rounded transition-colors w-full"
               >
                 ランキング登録
               </button>
             )}
-            
             {isScoreRegistered && (
               <div className="text-green-400 font-mono">このスコアは登録済みです</div>
             )}
-            
             <button 
               onClick={handleReset} 
-              className="px-6 py-2 bg-gray-700 hover:bg-gray-600 text-white font-medium rounded transition-colors w-48"
+              className="px-6 py-2 bg-gray-700 hover:bg-gray-600 text-white font-medium rounded transition-colors w-full"
             >
               もう一度プレイ
             </button>
-            
             <button 
               onClick={handleGoRanking} 
-              className="px-6 py-2 bg-gray-800 hover:bg-gray-700 text-white font-medium rounded transition-colors w-48"
+              className="px-6 py-2 bg-gray-800 hover:bg-gray-700 text-white font-medium rounded transition-colors w-full"
             >
               ランキングへ
             </button>
-            
             <button 
               onClick={handleGoMenu} 
-              className="px-6 py-2 border border-gray-700 hover:bg-gray-800 text-white font-medium rounded transition-colors w-48"
+              className="px-6 py-2 border border-gray-700 hover:bg-gray-800 text-white font-medium rounded transition-colors w-full"
             >
               メニューへ
             </button>
           </div>
-          
           {/* 背景は既存のものを維持 */}
           <div className="absolute inset-0 bg-gradient-to-r from-purple-500 to-blue-500 opacity-30 rounded-lg pointer-events-none"></div>
         </motion.div>
       )}
-
       {/* ランキング登録モーダル - monkeytype風にリデザイン */}
       {modalState.show && typeof window !== 'undefined' && createPortal(
         <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-70 z-50">
           <AnimatePresence mode="wait">
             <motion.div
               key={modalState.done ? 'done' : 'form'}
-              className="bg-gray-900 rounded-lg p-8 shadow-xl w-full max-w-md mx-4 border border-gray-700"
+              className="bg-gray-900 rounded-lg p-6 md:p-8 shadow-xl w-full max-w-md mx-4 border border-gray-700"
               initial={{ opacity: 0, scale: 0.95 }}
               animate={{ opacity: 1, scale: 1 }}
               exit={{ opacity: 0, scale: 0.95 }}
@@ -502,25 +487,22 @@ const TypingGame: React.FC<{ onGoMenu?: () => void; onGoRanking?: () => void }> 
                     maxLength={10}
                     value={modalState.name}
                     onChange={e => dispatchModal({ type: 'setName', name: e.target.value })}
-                    className="p-3 rounded border border-gray-600 w-full text-center mb-4 bg-gray-800 text-white font-mono"
+                    className="p-3 rounded border border-gray-600 w-full text-center mb-4 bg-gray-800 text-white font-mono text-base md:text-lg"
                     disabled={modalState.registering || isScoreRegistered}
                   />
-                  
                   <div className="flex flex-col space-y-3">
                     <button
                       type="submit"
-                      className="px-5 py-2 bg-amber-500 hover:bg-amber-600 text-gray-900 rounded font-bold transition-colors disabled:opacity-50"
+                      className="px-5 py-2 bg-amber-500 hover:bg-amber-600 text-gray-900 rounded font-bold transition-colors disabled:opacity-50 w-full"
                       disabled={modalState.registering || !modalState.name.trim() || isScoreRegistered}
                     >
                       {modalState.registering ? '登録中...' : '登録する'}
                     </button>
-                    
                     {modalState.error && <div className="text-red-400 text-sm my-2 font-mono">{modalState.error}</div>}
-                    
                     <button 
                       type="button" 
                       onClick={()=>dispatchModal({type:'close'})} 
-                      className="px-5 py-2 bg-gray-700 hover:bg-gray-600 text-white rounded transition-colors"
+                      className="px-5 py-2 bg-gray-700 hover:bg-gray-600 text-white rounded transition-colors w-full"
                     >
                       キャンセル
                     </button>
