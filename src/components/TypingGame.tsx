@@ -315,8 +315,12 @@ const TypingGame: React.FC<{ onGoMenu?: () => void; onGoRanking?: () => void }> 
       {/* スタート画面 */}
       {gameStatus === 'ready' && (
         <div className={styles.startScreen}>
-          <h2>タイピングゲーム</h2>
-          <p>スペースキーを押してスタート</p>
+          <h2 className={styles.startTitle}>SF タイピングゲーム</h2>
+          <div className={styles.startInstruction}>
+            <div className={styles.keyboardKey}>Space</div>
+            <p>を押してスタート</p>
+          </div>
+          <div className={styles.startScreenDecoration}></div>
         </div>
       )}
       {/* ゲーム画面 */}
@@ -330,15 +334,16 @@ const TypingGame: React.FC<{ onGoMenu?: () => void; onGoRanking?: () => void }> 
       {/* リザルト画面 */}
       {gameStatus === 'finished' && (
         <div className={styles.finishScreen}>
-          <h2>リザルト画面</h2>
+          <h2 className={styles.resultTitle}>MISSION COMPLETE</h2>
           <div className={styles.scoreBoard}>
-            {resultScore ? <>
-              <div>KPM<br /><span>{Math.floor(resultScore.kpm)}</span></div>
-              <div>Accuracy<br /><span>{Math.floor(resultScore.accuracy)}%</span></div>
-              <div>Correct<br /><span>{resultScore.correct}</span></div>
-              <div>Miss<br /><span>{resultScore.miss}</span></div>
-            </> : 
-            gameStatus === 'finished' && scoreLog.length > 0 ? (
+            {resultScore ? (
+              <>
+                <div>KPM<br /><span>{Math.floor(resultScore.kpm)}</span></div>
+                <div>Accuracy<br /><span>{Math.floor(resultScore.accuracy)}%</span></div>
+                <div>Correct<br /><span>{resultScore.correct}</span></div>
+                <div>Miss<br /><span>{resultScore.miss}</span></div>
+              </>
+            ) : gameStatus === 'finished' && scoreLog.length > 0 ? (
               <div className={styles.calculatingScore}>
                 計算中...
                 <button 
@@ -368,7 +373,7 @@ const TypingGame: React.FC<{ onGoMenu?: () => void; onGoRanking?: () => void }> 
             </button>
           )}
           {isScoreRegistered && (
-            <div style={{color:'#22d3ee',marginTop:8,fontWeight:'bold'}}>このスコアは登録済みです</div>
+            <div className={styles.registeredMessage}>このスコアは登録済みです</div>
           )}
           <button onClick={handleReset} className={styles.resetButton}>
             もう一度プレイ

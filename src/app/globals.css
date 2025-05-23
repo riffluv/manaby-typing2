@@ -13,16 +13,13 @@
 }
 
 body {
-  background-image: url('https://images.unsplash.com/photo-1462331940025-496dfbfc7564?auto=format&fit=crop&w=1200&q=80');
-  background-size: cover;
-  background-position: center;
-  background-repeat: no-repeat;
-  background-color: #0a0a23;
+  background: #080212; /* より暗い背景色 */
   min-height: 100vh;
   min-width: 100vw;
   display: flex;
   align-items: center;
   justify-content: center;
+  overflow-x: hidden;
   color: var(--foreground);
   font-family: Arial, Helvetica, sans-serif;
   /* Tailwindのfont-sansを優先したい場合は下記を有効化 */
