@@ -1,51 +1,20 @@
 'use client';
 
-import { useState, useEffect } from 'react';
+import useSWR from 'swr';
 
-// MCPサーバーのURL
 const MCP_SERVER_URL = 'http://localhost:3003';
+const fetcher = (url: string) => fetch(url).then(res => {
+  if (!res.ok) throw new Error(`MCP server responded with status: ${res.status}`);
+  return res.json();
+});
 
 export default function McpTestPage() {
-  // 型安全のため、useStateの型を明示
-  const [apiResponse, setApiResponse] = useState<any>(null);
-  const [loading, setLoading] = useState<boolean>(false);
-  const [error, setError] = useState<string | null>(null);
-  const [refresh, setRefresh] = useState<number>(0);
+  const { data: apiResponse, error, isLoading, mutate } = useSWR(
+    `${MCP_SERVER_URL}/mcp/status`,
+    fetcher,
+    { revalidateOnFocus: false }
+  );
 
-  useEffect(() => {
-    const fetchData = async () => {
-      setLoading(true);
-      setError(null);
-      
-      try {
-        console.log('MCPサーバーにリクエストを送信中...');
-        const response = await fetch(`${MCP_SERVER_URL}/mcp/status`, {
-          headers: {
-            'Content-Type': 'application/json',
-            'Accept': 'application/json'
-          },
-          cache: 'no-cache'
-        });
-        console.log('レスポンスステータス:', response.status);
-        
-        if (!response.ok) {
-          throw new Error(`MCP server responded with status: ${response.status}`);
-        }
-        
-        const data = await response.json();
-        console.log('受信したデータ:', data);
-        setApiResponse(data);
-      } catch (err) {
-        console.error('MCP接続エラー:', err);
-        setError(err instanceof Error ? err.message : 'Unknown error occurred');
-      } finally {
-        setLoading(false);
-      }
-    };
-    
-    fetchData();
-  }, [refresh]);
-  
   return (
     <div className="p-8 max-w-4xl mx-auto">
       <h1 className="text-2xl font-bold mb-6">MCP接続テスト</h1>
@@ -54,15 +23,15 @@ export default function McpTestPage() {
         <p className="text-gray-700">テスト対象URL: <code className="bg-gray-100 px-2 py-1 rounded">{MCP_SERVER_URL}/mcp/status</code></p>
         
         <button
-          onClick={() => setRefresh(prev => prev + 1)}
+          onClick={() => mutate()}
           className="mt-4 px-4 py-2 bg-blue-500 hover:bg-blue-600 text-white rounded"
-          disabled={loading}
+          disabled={isLoading}
         >
-          {loading ? 'リクエスト中...' : '再度テスト'}
+          {isLoading ? 'リクエスト中...' : '再度テスト'}
         </button>
       </div>
       
-      {loading && (
+      {isLoading && (
         <div className="animate-pulse bg-gray-100 p-4 rounded">
           <div className="h-4 bg-gray-200 rounded mb-2 w-2/3"></div>
           <div className="h-4 bg-gray-200 rounded mb-2 w-1/2"></div>
@@ -73,11 +42,11 @@ export default function McpTestPage() {
       {error && (
         <div className="bg-red-50 border border-red-200 p-4 rounded">
           <h2 className="text-lg font-medium text-red-700 mb-2">エラーが発生しました</h2>
-          <p className="text-red-600">{error}</p>
+          <p className="text-red-600">{error.message}</p>
         </div>
       )}
       
-      {apiResponse && !loading && !error && (
+      {apiResponse && !isLoading && !error && (
         <div className="bg-green-50 border border-green-200 p-4 rounded">
           <h2 className="text-lg font-medium text-green-700 mb-2">接続成功！</h2>
           <div className="bg-white p-4 rounded border border-gray-200 overflow-auto">

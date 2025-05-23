@@ -20,6 +20,7 @@
     "next": "15.3.2",
     "react": "^19.0.0",
     "react-dom": "^19.0.0",
+    "swr": "^2.3.3",
     "wanakana": "^5.3.1",
     "zustand": "^5.0.4"
   },
@@ -28,8 +29,8 @@
     "@modelcontextprotocol/server-github": "^2025.4.8",
     "@tailwindcss/postcss": "^4",
     "@types/jest": "^29.5.14",
-    "@types/node": "^20",
-    "@types/react": "^19",
+    "@types/node": "^20.17.50",
+    "@types/react": "^19.1.5",
     "@types/react-dom": "^19",
     "concurrently": "^9.1.2",
     "eslint": "^9",

@@ -7,7 +7,6 @@ import { TypingWord, KanaDisplay } from '@/types/typing';
 import { useTypingGameLifecycle } from '@/hooks/useTypingGameLifecycle';
 import MCPStatus from '@/components/MCPStatus';
 import GameScreen from '@/components/GameScreen';
-import styles from '@/styles/TypingGame.module.css';
 import type { PerWordScoreLog, GameScoreLog } from '@/types/score';
 import { useRouter } from 'next/navigation';
 import KeyboardSoundUtils from '@/utils/KeyboardSoundUtils';
@@ -311,43 +310,36 @@ const TypingGame: React.FC<{ onGoMenu?: () => void; onGoRanking?: () => void }> 
 
   // 画面分割レンダリング
   return (
-    <div className={styles.typingGameContainer}>
-      {/* スタート画面 */}
+    <div className="w-full h-screen flex flex-col items-center justify-center bg-transparent text-white relative z-10 overflow-hidden">
+      {/* 画面切り替えごとにTailwindクラスで装飾 */}
       {gameStatus === 'ready' && (
-        <div className={styles.startScreen}>
-          <h2 className={styles.startTitle}>SF タイピングゲーム</h2>
-          <div className={styles.startInstruction}>
-            <div className={styles.keyboardKey}>Space</div>
-            <p>を押してスタート</p>
+        <div className="bg-transparent rounded p-14 text-center w-full max-w-3xl animate-fadeIn min-h-[45vh] flex flex-col items-center justify-center relative overflow-hidden border-none shadow-none">
+          {/* スタート画面 */}
+          <h2 className="text-4xl font-bold mb-4">SF タイピングゲーム</h2>
+          <div className="flex items-center justify-center mb-4">
+            <div className="bg-white text-black rounded-full w-10 h-10 flex items-center justify-center font-bold text-lg mr-2">S</div>
+            <p className="text-xl">を押してスタート</p>
           </div>
-          <div className={styles.startScreenDecoration}></div>
+          <div className="absolute inset-0 bg-gradient-to-r from-purple-500 to-blue-500 opacity-30 rounded-lg"></div>
         </div>
       )}
-      {/* ゲーム画面 */}
-      {gameStatus === 'playing' && (
-        <GameScreen
-          currentWord={currentWord}
-          currentKanaIndex={kanaIndexRef.current}
-          currentKanaDisplay={kanaDisplay}
-        />
-      )}
-      {/* リザルト画面 */}
       {gameStatus === 'finished' && (
-        <div className={styles.finishScreen}>
-          <h2 className={styles.resultTitle}>MISSION COMPLETE</h2>
-          <div className={styles.scoreBoard}>
+        <div className="bg-transparent rounded p-14 text-center w-full max-w-3xl animate-fadeIn min-h-[45vh] flex flex-col items-center justify-center relative overflow-hidden border-none shadow-none">
+          {/* リザルト画面 */}
+          <h2 className="text-4xl font-bold mb-4">MISSION COMPLETE</h2>
+          <div className="grid grid-cols-2 gap-4 text-xl mb-4">
             {resultScore ? (
               <>
-                <div>KPM<br /><span>{Math.floor(resultScore.kpm)}</span></div>
-                <div>Accuracy<br /><span>{Math.floor(resultScore.accuracy)}%</span></div>
-                <div>Correct<br /><span>{resultScore.correct}</span></div>
-                <div>Miss<br /><span>{resultScore.miss}</span></div>
+                <div>KPM<br /><span className="text-3xl font-bold">{Math.floor(resultScore.kpm)}</span></div>
+                <div>Accuracy<br /><span className="text-3xl font-bold">{Math.floor(resultScore.accuracy)}%</span></div>
+                <div>Correct<br /><span className="text-3xl font-bold">{resultScore.correct}</span></div>
+                <div>Miss<br /><span className="text-3xl font-bold">{resultScore.miss}</span></div>
               </>
             ) : gameStatus === 'finished' && scoreLog.length > 0 ? (
-              <div className={styles.calculatingScore}>
+              <div className="text-lg">
                 計算中...
                 <button 
-                  className={styles.recalcButton}
+                  className="bg-blue-500 text-white rounded px-4 py-2 font-bold ml-2"
                   onClick={() => {
                     // 強制的に再計算を試みる
                     const dummyScore = {
@@ -368,62 +360,66 @@ const TypingGame: React.FC<{ onGoMenu?: () => void; onGoRanking?: () => void }> 
           </div>
           {/* ランキング登録ボタン */}
           {resultScore && !modalState.done && !isScoreRegistered && (
-            <button onClick={() => dispatchModal({ type: 'open' })} className={styles.resetButton} style={{marginTop: 12, background: '#f59e42'}}>
+            <button onClick={() => dispatchModal({ type: 'open' })} className="bg-orange-500 text-white rounded px-4 py-2 font-bold mt-4">
               ランキング登録
             </button>
           )}
           {isScoreRegistered && (
-            <div className={styles.registeredMessage}>このスコアは登録済みです</div>
+            <div className="text-green-400 mt-2">このスコアは登録済みです</div>
           )}
-          <button onClick={handleReset} className={styles.resetButton}>
+          <button onClick={handleReset} className="bg-gray-800 text-white rounded px-4 py-2 font-bold mt-4">
             もう一度プレイ
           </button>
-          <button onClick={handleGoRanking} className={styles.resetButton} style={{marginTop: 12, background: '#06b6d4'}}>
+          <button onClick={handleGoRanking} className="bg-teal-500 text-white rounded px-4 py-2 font-bold mt-4">
             ランキングへ
           </button>
-          <button onClick={handleGoMenu} className={styles.resetButton} style={{marginTop: 12, background: '#334155'}}>
+          <button onClick={handleGoMenu} className="bg-gray-700 text-white rounded px-4 py-2 font-bold mt-4">
             メニューへ
           </button>
           {/* ランキング登録モーダル（framer-motionでアニメーション） */}
           {modalState.show && typeof window !== 'undefined' && createPortal(
-            <div className={styles.modal}>
+            <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50 z-50">
               <AnimatePresence mode="wait">
                 <motion.div
                   key={modalState.done ? 'done' : 'form'}
-                  className={styles.modalContent}
+                  className="bg-white rounded-lg p-6 shadow-lg w-full max-w-md mx-4"
                   initial={{ opacity: 0, scale: 0.95 }}
                   animate={{ opacity: 1, scale: 1 }}
                   exit={{ opacity: 0, scale: 0.95 }}
                   transition={{ duration: 0.18 }}
                   layout // 高さ変化も滑らかに
                 >
-                  <h3 style={{color:'#f59e42',fontWeight:'bold'}}>ランキング登録</h3>
+                  <h3 className="text-xl font-semibold mb-4" style={{color:'#f59e42',fontWeight:'bold'}}>ランキング登録</h3>
                   {modalState.done ? (
-                    <div style={{minHeight: 120, display: 'flex', flexDirection: 'column', justifyContent: 'center', alignItems: 'center'}}>
-                      <div style={{color:'#22d3ee',fontWeight:'bold',marginBottom:8}}>登録が完了しました！</div>
-                      <button onClick={()=>dispatchModal({type:'close'})} style={{background:'#334155',color:'#fff',border:'none',borderRadius:8,padding:'0.5rem',cursor:'pointer'}}>閉じる</button>
-                      <div style={{height: 32}} />
+                    <div className="min-h-[120px] flex flex-col items-center justify-center">
+                      <div className="text-green-500 font-bold text-lg mb-2">登録が完了しました！</div>
+                      <button onClick={()=>dispatchModal({type:'close'})} className="bg-gray-800 text-white rounded px-4 py-2 font-bold">
+                        閉じる
+                      </button>
+                      <div className="h-8" />
                     </div>
                   ) : (
-                    <form style={{minHeight: 120, display: 'flex', flexDirection: 'column', justifyContent: 'center', alignItems: 'center'}} onSubmit={e => {e.preventDefault();handleRegisterRanking();}}>
+                    <form className="min-h-[120px] flex flex-col items-center justify-center" onSubmit={e => {e.preventDefault();handleRegisterRanking();}}>
                       <input
                         type="text"
                         placeholder="名前を入力（10文字以内）"
                         maxLength={10}
                         value={modalState.name}
                         onChange={e => dispatchModal({ type: 'setName', name: e.target.value })}
-                        style={{padding:'0.5rem',borderRadius:8,border:'1px solid #888',fontSize:'1.1rem',marginBottom:8}}
+                        className="p-2 rounded border border-gray-400 w-full text-center mb-2"
                         disabled={modalState.registering || isScoreRegistered}
                       />
                       <button
                         type="submit"
-                        style={{padding:'0.5rem',borderRadius:8,background:'#f59e42',color:'#fff',fontWeight:'bold',fontSize:'1.1rem',border:'none',cursor:'pointer',opacity:modalState.registering?0.6:1,marginBottom:8}}
+                        className="bg-orange-500 text-white rounded px-4 py-2 font-bold w-full mb-2"
                         disabled={modalState.registering || !modalState.name.trim() || isScoreRegistered}
                       >
                         {modalState.registering ? '登録中...' : '登録する'}
                       </button>
-                      {modalState.error && <div style={{color:'#f87171',marginBottom:8}}>{modalState.error}</div>}
-                      <button type="button" onClick={()=>dispatchModal({type:'close'})} style={{background:'#334155',color:'#fff',border:'none',borderRadius:8,padding:'0.5rem',cursor:'pointer'}}>キャンセル</button>
+                      {modalState.error && <div className="text-red-500 mb-2">{modalState.error}</div>}
+                      <button type="button" onClick={()=>dispatchModal({type:'close'})} className="bg-gray-700 text-white rounded px-4 py-2 font-bold w-full">
+                        キャンセル
+                      </button>
                     </form>
                   )}
                 </motion.div>
@@ -431,6 +427,18 @@ const TypingGame: React.FC<{ onGoMenu?: () => void; onGoRanking?: () => void }> 
             </div>,
             document.body
           )}
+          {/* グラデーション背景を追加 */}
+          <div className="absolute inset-0 bg-gradient-to-r from-purple-500 to-blue-500 opacity-30 rounded-lg pointer-events-none"></div>
+        </div>
+      )}
+      {gameStatus === 'playing' && (
+        <div className="bg-transparent rounded p-14 text-center w-full max-w-3xl animate-fadeIn min-h-[45vh] flex flex-col items-center justify-center relative overflow-hidden border-none shadow-none">
+          {/* ゲーム画面 */}
+          <GameScreen 
+            currentWord={currentWord}
+            currentKanaIndex={kanaIndexRef.current}
+            currentKanaDisplay={kanaDisplay}
+          />
         </div>
       )}
     </div>
