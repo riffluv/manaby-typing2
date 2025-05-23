@@ -7,9 +7,11 @@ import { useTypingGameStore } from '@/store/typingGameStore';
 import { getRankingEntries, RankingEntry } from '@/lib/rankingManaby2';
 
 function MainMenu({ onStart }: { onStart: () => void }) {
-  const { resetGame } = useTypingGameStore();
+  const { resetGame, setGameStatus } = useTypingGameStore();
   const handleStart = () => {
     resetGame();
+    // ゲーム開始時に直接playing状態にする
+    setGameStatus('playing');
     onStart();
   };
 
