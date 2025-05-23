@@ -11,14 +11,23 @@ function MainMenu({ onStart }: { onStart: () => void }) {
     onStart();
   };
   return (
-    <div className="panel">
-      <div style={{display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 32}}>
-        <h1 style={{fontSize: '2rem', fontWeight: 'bold', marginBottom: 8, color: '#67e8f9', textShadow: '0 0 8px #00f2ff88'}}>SFタイピングゲーム</h1>
-        <button onClick={handleStart} style={{padding: '1rem 2.5rem', borderRadius: 16, background: '#06b6d4', color: '#fff', fontWeight: 'bold', fontSize: '1.25rem', boxShadow: '0 0 32px #00f2ff88', border: 'none', marginBottom: 24, cursor: 'pointer'}}>スタート</button>
-        <div style={{width: '100%'}}>
-          <span style={{fontSize: '1.1rem', fontWeight: 600, color: '#a5f3fc', marginBottom: 8, display: 'block'}}>モード選択</span>
-          <button style={{width: '100%', padding: '0.75rem', borderRadius: 12, background: '#334155', color: '#fff', fontWeight: 'bold', border: '2px solid #67e8f9', cursor: 'pointer', opacity: 1}}>Normal</button>
-        </div>
+    <div className="panel bg-gradient-to-br from-cyan-900/80 to-blue-900/80 shadow-2xl rounded-2xl p-8 w-full max-w-md flex flex-col items-center gap-8">
+      <h1 className="text-3xl md:text-4xl font-extrabold mb-2 text-cyan-300 drop-shadow-lg tracking-wide text-center select-none">
+        SFタイピングゲーム
+      </h1>
+      <button
+        onClick={handleStart}
+        className="w-full py-3 md:py-4 bg-cyan-500 hover:bg-cyan-400 text-white font-bold rounded-xl text-lg md:text-2xl shadow-lg transition mb-4"
+      >
+        スタート
+      </button>
+      <div className="w-full">
+        <span className="text-base md:text-lg font-semibold text-cyan-200 mb-2 block">モード選択</span>
+        <button
+          className="w-full py-3 rounded-lg bg-slate-800 hover:bg-slate-700 text-white font-bold border-2 border-cyan-300 transition"
+        >
+          Normal
+        </button>
       </div>
     </div>
   );
@@ -37,40 +46,46 @@ function Ranking({ onGoMenu }: { onGoMenu: () => void }) {
       .catch(() => setError('ランキングの取得に失敗しました'))
       .finally(() => setLoading(false));
   }, []);
-
   return (
-    <div className="panel">
-      <div style={{display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 32, width: '100%'}}>
-        <h1 style={{fontSize:'2rem',fontWeight:'bold',marginBottom:8,color:'#67e8f9',textShadow:'0 0 8px #00f2ff88'}}>RANKING画面</h1>
-        {loading && <div style={{color:'#fff'}}>読み込み中...</div>}
-        {error && <div style={{color:'#f87171'}}>{error}</div>}
-        {!loading && !error && (
-          <table style={{width:'100%',maxWidth:400,background:'#222',borderRadius:12,overflow:'hidden',boxShadow:'0 0 16px #00f2ff44'}}>
+    <div className="panel bg-gradient-to-br from-cyan-900/80 to-blue-900/80 shadow-2xl rounded-2xl p-8 w-full max-w-md flex flex-col items-center gap-8">
+      <h1 className="text-2xl md:text-3xl font-bold mb-2 text-cyan-300 drop-shadow-lg text-center select-none">
+        RANKING画面
+      </h1>
+      {loading && <div className="text-white">読み込み中...</div>}
+      {error && <div className="text-red-400">{error}</div>}
+      {!loading && !error && (
+        <div className="w-full overflow-x-auto">
+          <table className="w-full max-w-lg bg-slate-900/80 rounded-xl overflow-hidden shadow-lg text-white text-center">
             <thead>
-              <tr style={{background:'#334155',color:'#67e8f9'}}>
-                <th style={{padding:'0.5rem'}}>順位</th>
-                <th style={{padding:'0.5rem'}}>名前</th>
-                <th style={{padding:'0.5rem'}}>KPM</th>
-                <th style={{padding:'0.5rem'}}>正確率</th>
+              <tr className="bg-slate-800 text-cyan-300">
+                <th className="py-2 px-3">順位</th>
+                <th className="py-2 px-3">名前</th>
+                <th className="py-2 px-3">KPM</th>
+                <th className="py-2 px-3">正確率</th>
               </tr>
             </thead>
             <tbody>
               {ranking.length === 0 && (
-                <tr><td colSpan={4} style={{color:'#fff',textAlign:'center',padding:'1rem'}}>データなし</td></tr>
+                <tr><td colSpan={4} className="text-white text-center py-4">データなし</td></tr>
               )}
               {ranking.map((r, i) => (
-                <tr key={i} style={{background:i%2?'#1e293b':'#222',color:'#fff'}}>
-                  <td style={{textAlign:'center',fontWeight:'bold'}}>{i+1}</td>
-                  <td style={{textAlign:'center'}}>{r.name}</td>
-                  <td style={{textAlign:'center'}}>{r.kpm}</td>
-                  <td style={{textAlign:'center'}}>{r.accuracy}%</td>
+                <tr key={i} className={i%2 ? "bg-slate-800" : "bg-slate-900"}>
+                  <td className="font-bold">{i+1}</td>
+                  <td>{r.name}</td>
+                  <td>{r.kpm}</td>
+                  <td>{r.accuracy}%</td>
                 </tr>
               ))}
             </tbody>
           </table>
-        )}
-        <button onClick={onGoMenu} style={{padding:'0.75rem 2rem',borderRadius:12,background:'#334155',color:'#fff',fontWeight:'bold',border:'2px solid #67e8f9',cursor:'pointer',opacity:1}}>メニューへ</button>
-      </div>
+        </div>
+      )}
+      <button
+        onClick={onGoMenu}
+        className="w-full py-3 rounded-lg bg-slate-800 hover:bg-slate-700 text-white font-bold border-2 border-cyan-300 transition"
+      >
+        メニューへ
+      </button>
     </div>
   );
 }
