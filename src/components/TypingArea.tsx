@@ -30,20 +30,26 @@ const TypingArea: React.FC<TypingAreaProps> = memo(({
     return styles.pending;
   }, [currentKanaIndex, kanaDisplay.acceptedText.length]);
 
+  // すべての文字を1つの配列にフラット化
+  const allChars = typingChars.map((typingChar, kanaIndex) => {
+    const displayText = displayChars[kanaIndex] || '';
+    return displayText.split('').map((char, charIndex) => ({
+      char,
+      kanaIndex,
+      charIndex
+    }));
+  }).flat();
+
   return (
     <div className={styles.typingArea}>
-      {typingChars.map((typingChar, kanaIndex) => {
-        const displayText = displayChars[kanaIndex] || '';
-        return (
-          <span key={kanaIndex} className={styles.kanaGroup}>
-            {displayText.split('').map((char, charIndex) => (
-              <span key={`${kanaIndex}-${charIndex}`} className={getCharClass(kanaIndex, charIndex)}>
-                {char}
-              </span>
-            ))}
-          </span>
-        );
-      })}
+      {allChars.map((item, index) => (
+        <span 
+          key={index} 
+          className={`${styles.typingChar} ${getCharClass(item.kanaIndex, item.charIndex)}`}
+        >
+          {item.char}
+        </span>
+      ))}
     </div>
   );
 });

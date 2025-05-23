@@ -17,15 +17,15 @@
 .startScreen, 
 .finishScreen, 
 .gameScreen {
-  /* よりミニマルなデザイン */
+  /* よりミニマルでバランスの取れたデザイン */
   background: rgba(16, 24, 39, 0.15);
   border-radius: 4px;
-  padding: 3rem 2rem;
+  padding: 3.5rem 1.5rem; /* 上下の余白を増やし、左右を減らして集中感を出す */
   text-align: center;
   width: 100%;
-  max-width: 900px; /* より固定的な幅 */
+  max-width: 900px;
   animation: fadeIn 0.5s ease-in-out;
-  min-height: 50vh;
+  min-height: 45vh; /* 高さを少し低く */
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -57,18 +57,24 @@
 }
 
 .wordJapanese {
-  font-size: 3.5rem;
+  font-family: var(--font-jp); /* 日本語専用フォント */
+  font-size: 2.5rem; /* さらに小さく調整 */
   font-weight: 200; /* 細めのフォントでモダンな印象に */
-  margin-bottom: 1rem;
+  margin-bottom: 0.5rem;
   color: #ffffff;
   text-shadow: 0 0 10px rgba(0, 195, 255, 0.5);
-  letter-spacing: 0.08em;
+  letter-spacing: 0.02em; /* 字間をもっと詰める */
+  line-height: 1.2; /* 行間調整で縦の圧縮感を出す */
   background: linear-gradient(to bottom, #ffffff 60%, #67e8f9 100%);
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
   background-clip: text;
   animation: shimmer 3s infinite;
   width: 100%;
+  max-width: 90%;
+  margin-left: auto;
+  margin-right: auto;
+  transform: scaleY(0.95); /* 縦方向に少し圧縮 */
   padding: 0;
 }
 
@@ -86,77 +92,93 @@
 
 /* ひらがな表示用のスタイル */
 .wordHiragana {
-  font-size: 1.2rem;
-  margin-bottom: 2.5rem;
+  font-family: var(--font-jp); /* 日本語専用フォント */
+  font-size: 0.9rem; /* さらに小さく */
+  margin-bottom: 1.75rem;
   color: rgba(187, 187, 255, 0.8);
-  letter-spacing: 0.1em;
-  font-weight: 300;
-  opacity: 0.9;
-  width: 100%;
+  letter-spacing: 0.04em;
+  font-weight: 200; /* より細く */
+  opacity: 0.85;
+  width: 90%;
+  transform: scaleY(0.95); /* 縦方向に少し圧縮 */
+  line-height: 1.2; /* 行間調整 */
 }
 
 .typingArea {
-  font-family: 'JetBrains Mono', 'SF Mono', 'Courier New', monospace; /* モダンなコーディングフォント */
-  font-size: 2.5rem; /* フォントサイズを少し大きく */
-  letter-spacing: 0.05em;
-  margin: 0 auto 2.5rem;
+  font-family: var(--font-mono);
+  font-size: 2rem; /* サイズを少し小さく */
+  font-weight: 300;
+  letter-spacing: 0.02em;
+  margin: 0 auto 2rem;
   min-height: 4rem;
   display: flex;
   flex-wrap: wrap;
   justify-content: center;
   align-items: center;
-  gap: 0.2rem; /* 文字間の隙間を調整 */
-  padding: 1rem;
+  gap: 0;
+  padding: 0.75rem;
   width: 100%;
-  max-width: 800px; /* 固定幅 */
+  max-width: 85%;
   position: relative;
-  /* 背景を取り除き、フォーカスをテキストのみに */
   background: transparent;
   border: none;
   box-shadow: none;
+  line-height: 1.1; /* 行間を詰める */
 }
 
-/* かなグループのスタイル */
+/* 個々の文字のスタイル */
+.typingChar {
+  display: inline-block;
+  position: relative;
+  margin: 0 0.02rem;
+  font-family: var(--font-mono);
+  font-feature-settings: "calt" 0, "liga" 0;
+  line-height: 1.1;
+  transform: scaleY(0.9); /* ローマ字も少し横長に */
+  transform-origin: center;
+}
+
+/* かなグループのスタイル - 不要になりましたが、互換性のために残します */
 .kanaGroup {
   display: inline-block;
   padding: 0;
   position: relative;
-  margin: 0 0.15rem;
+  margin: 0;
 }
 
 .completed {
   color: #7cffcb;
-  text-shadow: 0 0 8px rgba(124, 255, 203, 0.5);
+  text-shadow: 0 0 8px rgba(124, 255, 203, 0.4);
   position: relative;
   transition: all 0.2s ease;
-  opacity: 0.75; /* さらに控えめに */
-  font-weight: 300;
+  opacity: 0.75;
+  font-weight: 200; /* より細く */
   transform-origin: center;
 }
 
 .current {
-  color: #ffffff; /* 現在の文字は純白で目立たせる */
+  color: #ffffff;
   text-shadow: 0 0 12px rgba(255, 255, 255, 0.9), 0 0 20px rgba(255, 255, 255, 0.7);
   position: relative;
   animation: currentChar 1s ease-in-out infinite;
-  font-weight: 500;
-  transform: scale(1.3); /* スケールを少し大きく */
+  font-weight: 300; /* 普通の太さも少し細めに */
+  transform: scale(1.25); /* スケール調整 */
   transform-origin: center;
   opacity: 1;
   display: inline-block;
 }
 
 .pending {
-  color: rgba(170, 170, 170, 0.4); /* 未入力文字をより控えめに */
+  color: rgba(170, 170, 170, 0.4);
   opacity: 0.4;
   text-shadow: none;
-  font-weight: 200;
+  font-weight: 100; /* 極細に */
 }
 
 @keyframes currentChar {
   0%, 100% {
     text-shadow: 0 0 12px rgba(255, 255, 255, 0.8), 0 0 20px rgba(255, 255, 255, 0.4);
-    opacity: 0.9;
+    opacity: 0.95;
   }
   50% {
     text-shadow: 0 0 15px rgba(255, 255, 255, 1), 0 0 30px rgba(255, 255, 255, 0.8);
@@ -304,9 +326,9 @@
   display: flex;
   flex-wrap: wrap;
   justify-content: center;
-  gap: 4rem;
+  gap: 3.5rem; /* スコア間の間隔を調整 */
   margin: 2rem 0;
-  font-size: 0.9rem;
+  font-size: 0.85rem; /* 少し小さく */
   width: 100%;
   max-width: 800px;
   letter-spacing: 0.05em;
@@ -325,9 +347,9 @@
 .scoreBoard > div::after {
   content: '';
   position: absolute;
-  bottom: -10px;
+  bottom: -8px; /* 位置を少し上に */
   left: 50%;
-  width: 30px;
+  width: 25px; /* 少し短く */
   height: 1px;
   background: rgba(103, 232, 249, 0.2);
   transform: translateX(-50%);
@@ -338,12 +360,12 @@
   color: #fff;
 }
 .scoreBoard > div:hover::after {
-  width: 60px;
+  width: 50px;
   background: rgba(103, 232, 249, 0.8);
 }
 .scoreBoard span {
   display: block;
-  font-size: 3.5rem; /* 数字を大きく */
+  font-size: 3rem; /* 少し小さくして全体バランス調整 */
   font-weight: 200;
   color: #ffffff;
   margin-top: 0.25em;
@@ -385,6 +407,7 @@
 }
 
 .startTitle {
+  font-family: var(--font-mono);
   font-size: 4.5rem; /* さらに大きく */
   font-weight: 200;
   margin-bottom: 3rem;
@@ -420,7 +443,7 @@
   color: #ffffff;
   padding: 0.5rem 2rem;
   border-radius: 2px; /* より控えめな角丸 */
-  font-family: "JetBrains Mono", "SF Mono", "Courier New", monospace;
+  font-family: var(--font-mono); /* JetBrains Monoを使用 */
   font-weight: 400;
   border: 1px solid rgba(255, 255, 255, 0.15); /* より控えめなボーダー */
   text-shadow: 0 0 6px rgba(255, 255, 255, 0.4);
