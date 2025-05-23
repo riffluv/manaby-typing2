@@ -12,8 +12,8 @@ export type GameScreenProps = {
 const GameScreen: React.FC<GameScreenProps> = memo(({ currentWord, currentKanaIndex, currentKanaDisplay }) => {
   return (
     <div className={styles.gameScreen}>
-      <div className={styles.wordJapanese}>{currentWord.japanese}</div>
-      <div className={styles.wordHiragana}>{currentWord.hiragana}</div>
+      <div className={styles.wordJapanese} aria-label="日本語">{currentWord.japanese}</div>
+      <div className={styles.wordHiragana} aria-label="ひらがな">{currentWord.hiragana}</div>
       <TypingArea 
         currentKanaIndex={currentKanaIndex}
         typingChars={currentWord.typingChars}

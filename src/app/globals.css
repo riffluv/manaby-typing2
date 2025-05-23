@@ -28,7 +28,7 @@
 }
 
 body {
-  background: #080212; /* より暗い背景色 */
+  background: #080212; /* 元の背景色に戻す */
   min-height: 100vh;
   min-width: 100vw;
   display: flex;

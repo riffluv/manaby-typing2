@@ -12,93 +12,64 @@
   padding: 0;
   position: relative;
   z-index: 1;
+  overflow: hidden;
 }
 
 .startScreen, 
 .finishScreen, 
 .gameScreen {
-  /* よりミニマルでバランスの取れたデザイン */
-  background: rgba(16, 24, 39, 0.15);
+  /* シンプルでフィルター無しのコンテナ */
+  background: transparent;
   border-radius: 4px;
-  padding: 3.5rem 1.5rem; /* 上下の余白を増やし、左右を減らして集中感を出す */
+  padding: 3.5rem 1.5rem;
   text-align: center;
   width: 100%;
   max-width: 900px;
   animation: fadeIn 0.5s ease-in-out;
-  min-height: 45vh; /* 高さを少し低く */
+  min-height: 45vh;
   display: flex;
   flex-direction: column;
   align-items: center;
   justify-content: center;
-  backdrop-filter: blur(4px);
   position: relative;
   overflow: hidden;
   border: none;
   box-shadow: none;
 }
 
-/* 宇宙のきらめき効果 - 各画面に星のような光る点を追加 */
+/* 背景効果を削除 */
 .startScreen::before,
 .finishScreen::before,
 .gameScreen::before {
-  content: '';
-  position: absolute;
-  top: 0;
-  left: 0;
-  right: 0;
-  bottom: 0;
-  background-image: radial-gradient(circle at 20% 30%, rgba(255, 255, 255, 0.2) 1px, transparent 1px),
-                    radial-gradient(circle at 80% 10%, rgba(255, 255, 255, 0.2) 1px, transparent 1px),
-                    radial-gradient(circle at 40% 70%, rgba(255, 255, 255, 0.2) 1px, transparent 1px),
-                    radial-gradient(circle at 70% 60%, rgba(255, 255, 255, 0.2) 1px, transparent 1px);
-  background-size: 100px 100px;
-  z-index: -1;
-  opacity: 0.3;
+  content: none; /* 背景効果を削除 */
 }
 
 .wordJapanese {
   font-family: var(--font-jp); /* 日本語専用フォント */
-  font-size: 2.5rem; /* さらに小さく調整 */
-  font-weight: 200; /* 細めのフォントでモダンな印象に */
+  font-size: 2.5rem; /* サイズ調整 */
+  font-weight: 400; /* 標準的な太さに戻す */
   margin-bottom: 0.5rem;
-  color: #ffffff;
-  text-shadow: 0 0 10px rgba(0, 195, 255, 0.5);
+  color: #ffffff; /* 完全な白に戻す */
   letter-spacing: 0.02em; /* 字間をもっと詰める */
   line-height: 1.2; /* 行間調整で縦の圧縮感を出す */
-  background: linear-gradient(to bottom, #ffffff 60%, #67e8f9 100%);
-  -webkit-background-clip: text;
-  -webkit-text-fill-color: transparent;
-  background-clip: text;
-  animation: shimmer 3s infinite;
   width: 100%;
   max-width: 90%;
   margin-left: auto;
   margin-right: auto;
   transform: scaleY(0.95); /* 縦方向に少し圧縮 */
   padding: 0;
-}
-
-@keyframes shimmer {
-  0% {
-    background-position: 0% 50%;
-  }
-  50% {
-    background-position: 100% 50%;
-  }
-  100% {
-    background-position: 0% 50%;
-  }
+  text-shadow: 0 0 10px rgba(255, 255, 255, 0.5); /* 影を濃くする */
 }
 
 /* ひらがな表示用のスタイル */
 .wordHiragana {
   font-family: var(--font-jp); /* 日本語専用フォント */
   font-size: 0.9rem; /* さらに小さく */
-  margin-bottom: 1.75rem;
-  color: rgba(187, 187, 255, 0.8);
+  margin-bottom: 1.75rem; /* 元の余白に戻す */
+  color: rgba(187, 187, 255, 0.9); /* 明るくする */
   letter-spacing: 0.04em;
-  font-weight: 200; /* より細く */
-  opacity: 0.85;
+  font-weight: 300; /* 少し太めに */
+  opacity: 1; /* 完全に不透明に */
   width: 90%;
   transform: scaleY(0.95); /* 縦方向に少し圧縮 */
   line-height: 1.2; /* 行間調整 */
@@ -106,10 +77,10 @@
 
 .typingArea {
   font-family: var(--font-mono);
-  font-size: 2rem; /* サイズを少し小さく */
-  font-weight: 300;
+  font-size: 2rem;
+  font-weight: 400; /* 標準の太さに */
   letter-spacing: 0.02em;
-  margin: 0 auto 2rem;
+  margin: 0 auto 2rem; /* 余白を調整 */
   min-height: 4rem;
   display: flex;
   flex-wrap: wrap;
@@ -123,7 +94,7 @@
   background: transparent;
   border: none;
   box-shadow: none;
-  line-height: 1.1; /* 行間を詰める */
+  line-height: 1.1;
 }
 
 /* 個々の文字のスタイル */
@@ -134,7 +105,6 @@
   font-family: var(--font-mono);
   font-feature-settings: "calt" 0, "liga" 0;
   line-height: 1.1;
-  transform: scaleY(0.9); /* ローマ字も少し横長に */
   transform-origin: center;
 }
 
@@ -147,32 +117,32 @@
 }
 
 .completed {
-  color: #7cffcb;
-  text-shadow: 0 0 8px rgba(124, 255, 203, 0.4);
+  color: #7cffcb; /* 完全な色に戻す */
+  text-shadow: 0 0 8px rgba(124, 255, 203, 0.4); /* 影を濃くする */
   position: relative;
   transition: all 0.2s ease;
-  opacity: 0.75;
-  font-weight: 200; /* より細く */
+  opacity: 0.95; /* 明るく */
+  font-weight: 400; /* 標準的な太さに */
   transform-origin: center;
 }
 
 .current {
-  color: #ffffff;
-  text-shadow: 0 0 12px rgba(255, 255, 255, 0.9), 0 0 20px rgba(255, 255, 255, 0.7);
+  color: #ffffff; /* 完全な白 */
+  text-shadow: 0 0 12px rgba(255, 255, 255, 0.8), 0 0 20px rgba(255, 255, 255, 0.4);
   position: relative;
-  animation: currentChar 1s ease-in-out infinite;
-  font-weight: 300; /* 普通の太さも少し細めに */
-  transform: scale(1.25); /* スケール調整 */
+  animation: currentChar 1.2s ease-in-out infinite;
+  font-weight: 500; /* 少し太く */
+  transform: scale(1.2); /* スケール調整 */
   transform-origin: center;
-  opacity: 1;
+  opacity: 1; /* 完全に不透明 */
   display: inline-block;
 }
 
 .pending {
-  color: rgba(170, 170, 170, 0.4);
-  opacity: 0.4;
+  color: rgba(170, 170, 170, 0.6); /* より明るく */
+  opacity: 0.6; /* より明るく */
   text-shadow: none;
-  font-weight: 100; /* 極細に */
+  font-weight: 300; /* 標準的な細さに */
 }
 
 @keyframes currentChar {
@@ -188,23 +158,24 @@
 
 .progress {
   font-size: 1rem;
-  color: #67e8f9;
+  color: #67e8f9; /* 完全な色に */
   margin-top: 1.5rem;
   padding: 0.5rem 1.5rem;
-  background: rgba(16, 24, 39, 0.3);
+  background: rgba(16, 24, 39, 0.3); /* 元のスタイルに戻す */
   border-radius: 4px;
   box-shadow: none;
   border: none;
   letter-spacing: 0.05em;
-  text-shadow: 0 0 6px rgba(103, 232, 249, 0.6);
+  text-shadow: 0 0 6px rgba(103, 232, 249, 0.6); /* 影を濃くする */
   display: inline-block;
+  font-weight: 400; /* 標準の太さに */
 }
 
 .resetButton {
   background: transparent;
-  color: white;
-  border: none; /* ボーダーを削除 */
-  border-bottom: 1px solid rgba(255, 255, 255, 0.2); /* 下線のみ */
+  color: rgba(255, 255, 255, 0.85);
+  border: none;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.1);
   padding: 0.75rem 2rem;
   font-size: 0.95rem;
   cursor: pointer;
@@ -214,7 +185,7 @@
   overflow: hidden;
   min-width: 140px;
   letter-spacing: 0.05em;
-  font-weight: 300;
+  font-weight: 200;
   text-transform: uppercase;
 }
 
@@ -225,14 +196,14 @@
   left: 0;
   width: 0;
   height: 1px;
-  background: rgba(255, 255, 255, 0.8);
+  background: rgba(255, 255, 255, 0.4);
   transition: width 0.3s ease;
 }
 
 .resetButton:hover {
   background: transparent;
   transform: translateY(-2px);
-  color: #67e8f9;
+  color: rgba(103, 232, 249, 0.9);
 }
 
 .resetButton:hover::after {
@@ -295,12 +266,12 @@
 
 /* メニュー・リザルト・ランキング共通パネル */
 .panel {
-  background: rgba(20,30,60,0.3); /* より透明に */
-  border-radius: 4px; /* より控えめな角丸 */
-  box-shadow: none; /* シャドウを削除 */
+  background: rgba(20,30,60,0.5); /* よりはっきりした背景 */
+  border-radius: 8px; /* 標準的な角丸 */
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.2); /* 軽いシャドウを追加 */
   padding: 2rem 3rem;
   color: #fff;
-  backdrop-filter: blur(8px);
+  backdrop-filter: blur(6px); /* 少し薄めのブラー効果 */
   max-width: 400px;
   width: 100%;
   display: flex;
@@ -308,6 +279,7 @@
   align-items: center;
   gap: 2rem;
   margin: 0 auto;
+  border: 1px solid rgba(255, 255, 255, 0.1); /* 薄い境界線を追加 */
 }
 
 .mcpStatusWrapper {
@@ -324,10 +296,10 @@
 
 .scoreBoard {
   display: flex;
-  flex-wrap: wrap;
+  align-items: flex-start;
   justify-content: center;
   gap: 3.5rem; /* スコア間の間隔を調整 */
-  margin: 2rem 0;
+  margin: 2.5rem 0;
   font-size: 0.85rem; /* 少し小さく */
   width: 100%;
   max-width: 800px;
@@ -338,8 +310,8 @@
   padding: 0.5rem;
   min-width: 100px;
   text-align: center;
-  color: rgba(255, 255, 255, 0.6);
-  font-weight: 300;
+  color: rgba(255, 255, 255, 0.8);
+  font-weight: 400;
   position: relative;
   transition: all 0.3s ease; 
   text-transform: uppercase;
@@ -351,26 +323,27 @@
   left: 50%;
   width: 25px; /* 少し短く */
   height: 1px;
-  background: rgba(103, 232, 249, 0.2);
+  background: rgba(103, 232, 249, 0.15);
   transform: translateX(-50%);
   transition: width 0.3s ease, background-color 0.3s ease;
 }
 .scoreBoard > div:hover {
   transform: translateY(-5px);
-  color: #fff;
+  color: rgba(255, 255, 255, 0.8);
 }
 .scoreBoard > div:hover::after {
   width: 50px;
-  background: rgba(103, 232, 249, 0.8);
+  background: rgba(103, 232, 249, 0.3);
 }
 .scoreBoard span {
   display: block;
-  font-size: 3rem; /* 少し小さくして全体バランス調整 */
-  font-weight: 200;
-  color: #ffffff;
+  font-size: 3rem; /* 少し小さく */
+  font-weight: 500; /* より太く */
+  color: #ffffff; /* 完全な白に */
   margin-top: 0.25em;
   line-height: 1;
   letter-spacing: -0.03em;
+  text-shadow: 0 0 10px rgba(255, 255, 255, 0.5); /* はっきりとした影 */
 }
 
 /* --- ランキング登録モーダル用 --- */
@@ -390,32 +363,32 @@
 }
 
 .modalContent {
-  background: rgba(20, 30, 50, 0.85); /* よりシンプルな色合い */
+  background: rgba(20, 30, 50, 0.8); /* よりはっきりした色合い */
   padding: 2rem;
-  border-radius: 4px; /* より控えめな角丸 */
+  border-radius: 6px; /* 少し丸みを持たせる */
   min-width: 320px;
   min-height: 220px;
-  box-shadow: none; /* シャドウを削除 */
-  border: none; /* 境界線を削除 */
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3); /* シャドウを追加 */
+  border: 1px solid rgba(255, 255, 255, 0.1); /* 境界線を追加 */
   display: flex;
   flex-direction: column;
   gap: 16px;
   align-items: center;
   justify-content: center;
   transition: min-height 0.3s ease, transform 0.3s ease;
-  backdrop-filter: blur(10px);
+  backdrop-filter: blur(8px);
 }
 
 .startTitle {
   font-family: var(--font-mono);
-  font-size: 4.5rem; /* さらに大きく */
-  font-weight: 200;
-  margin-bottom: 3rem;
+  font-size: 4.5rem;
+  font-weight: 400; /* 標準の太さに */
+  margin-bottom: 3.5rem;
   margin-top: 0;
   color: #ffffff;
-  text-shadow: 0 0 15px rgba(0, 195, 255, 0.4);
-  letter-spacing: 0.15em; /* 少し字間を狭く */
-  background: linear-gradient(to bottom, #ffffff 60%, #67e8f9 100%);
+  text-shadow: 0 0 15px rgba(0, 195, 255, 0.5); /* 影を濃く */
+  letter-spacing: 0.15em;
+  background: linear-gradient(to bottom, #ffffff 60%, #67e8f9 100%); /* 不透明度を上げる */
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
   background-clip: text;
@@ -430,48 +403,33 @@
   gap: 1rem;
   margin-bottom: 4rem;
   font-size: 1.1rem;
-  opacity: 0.8;
-  letter-spacing: 0.1em;
-  font-weight: 300;
+  color: rgba(255, 255, 255, 0.9); /* より明るく */
+  font-weight: 400; /* 標準の太さに */
 }
 
 .keyboardKey {
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  background: transparent;
-  color: #ffffff;
-  padding: 0.5rem 2rem;
-  border-radius: 2px; /* より控えめな角丸 */
-  font-family: var(--font-mono); /* JetBrains Monoを使用 */
-  font-weight: 400;
-  border: 1px solid rgba(255, 255, 255, 0.15); /* より控えめなボーダー */
-  text-shadow: 0 0 6px rgba(255, 255, 255, 0.4);
-  min-width: 100px;
-  position: relative;
-  animation: keyGlow 2s infinite alternate;
-}
-
-@keyframes keyGlow {
-  0% {
-    box-shadow: 0 0 5px rgba(103, 232, 249, 0.2);
-  }
-  100% {
-    box-shadow: 0 0 10px rgba(103, 232, 249, 0.5);
-  }
+  display: inline-block;
+  padding: 0.2rem 0.8rem;
+  border: 1px solid rgba(103, 232, 249, 0.5); /* より明るい境界線 */
+  border-radius: 4px;
+  font-family: var(--font-mono);
+  font-size: 0.9rem;
+  color: #67e8f9; /* 完全な色に */
+  background: rgba(103, 232, 249, 0.1); /* わずかな背景色を追加 */
+  box-shadow: 0 0 10px rgba(103, 232, 249, 0.2); /* わずかな光彩を追加 */
 }
 
 .resultTitle {
   font-size: 2.5rem;
-  font-weight: 200; /* より細く */
-  margin-bottom: 2rem;
+  font-weight: 400; /* 標準の太さに */
+  margin-bottom: 2.5rem;
   margin-top: 1rem;
   letter-spacing: 0.1em;
   color: transparent;
-  background: linear-gradient(to bottom, #ffffff 30%, #67e8f9 100%);
+  background: linear-gradient(to bottom, #ffffff 30%, #67e8f9 100%); /* 不透明度を上げる */
   -webkit-background-clip: text;
   background-clip: text;
-  text-shadow: 0 0 15px rgba(0, 195, 255, 0.5);
+  text-shadow: 0 0 15px rgba(0, 195, 255, 0.5); /* 影を濃く */
   position: relative;
   display: inline-block;
 }
@@ -484,8 +442,8 @@
   transform: translateX(-50%);
   width: 120%;
   height: 1px;
-  background: linear-gradient(to right, rgba(0, 242, 255, 0), rgba(0, 242, 255, 0.8), rgba(0, 242, 255, 0));
-  box-shadow: none; /* シャドウを削除 */
+  background: linear-gradient(to right, rgba(0, 242, 255, 0), rgba(0, 242, 255, 0.8), rgba(0, 242, 255, 0)); /* より明るく */
+  box-shadow: 0 0 8px rgba(0, 242, 255, 0.3); /* シャドウを追加 */
 }
 
 .startScreenDecoration {
@@ -495,8 +453,8 @@
   transform: translateX(-50%);
   width: 80%;
   height: 1px;
-  background: linear-gradient(to right, rgba(0, 242, 255, 0), rgba(0, 242, 255, 0.4), rgba(0, 242, 255, 0));
-  box-shadow: none; /* シャドウを削除 */
+  background: linear-gradient(to right, rgba(0, 242, 255, 0), rgba(0, 242, 255, 0.7), rgba(0, 242, 255, 0)); /* より明るく */
+  box-shadow: 0 0 8px rgba(0, 242, 255, 0.3); /* シャドウを追加 */
 }
 
 .registeredMessage {
@@ -531,16 +489,20 @@
     gap: 0.5rem;
   }
   .wordJapanese {
-    font-size: 2.5rem;
+    font-size: 2rem;
   }
   .typingArea {
-    font-size: 1.8rem;
-    padding: 0.5rem;
+    font-size: 1.6rem;
+    padding: 0;
+    max-width: 95%;
   }
   .scoreBoard {
-    gap: 2rem;
+    gap: 1.5rem;
   }
   .scoreBoard span {
-    font-size: 2.5rem;
+    font-size: 2.2rem;
+  }
+  .scoreBoard > div {
+    min-width: 80px;
   }
 }

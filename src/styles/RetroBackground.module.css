@@ -14,7 +14,7 @@
   position: absolute;
   width: 100%;
   height: 100%;
-  background: radial-gradient(ellipse at center, #1a0a0f 0%, #0d0510 100%);
+  background: radial-gradient(ellipse at center, #1a0a0f 0%, #0d0510 100%); /* 元の色に戻す */
 }
 
 .gridOverlay {
@@ -24,15 +24,15 @@
   background-image: 
     linear-gradient(rgba(255, 140, 0, 0.02) 1px, transparent 1px),
     linear-gradient(90deg, rgba(255, 140, 0, 0.02) 1px, transparent 1px);
-  background-size: 24px 24px; /* グリッドサイズを少し大きく */
+  background-size: 24px 24px;
   background-position: center;
 }
 
 @keyframes blink {
   0%, 100% {
-    opacity: 0.05; /* より控えめな点滅 */
+    opacity: 0.05; /* 元に戻す */
   }
   50% {
-    opacity: 0.8; /* 最大輝度も抑える */
+    opacity: 0.8; /* 元に戻す */
   }
 }

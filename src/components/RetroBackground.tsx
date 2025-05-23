@@ -27,9 +27,7 @@ const RetroBackground = forwardRef<HTMLDivElement, RetroBackgroundProps>(({ clas
 
   // クライアントサイドでのみ実行
   useEffect(() => {
-    setIsClient(true);
-
-    // ドットデータを生成
+    setIsClient(true);    // ドットデータを生成
     const colors = [
       '#FF8C00', // ダークオレンジ
       '#FFA500', // オレンジ
@@ -39,7 +37,7 @@ const RetroBackground = forwardRef<HTMLDivElement, RetroBackgroundProps>(({ clas
       '#551800', // 暗いブラウン (アクセント)
     ];
 
-    const dotCount = 150; // ドットの数
+    const dotCount = 150; // 元のドット数に戻す
     const newDots = [];
 
     for (let i = 0; i < dotCount; i++) {

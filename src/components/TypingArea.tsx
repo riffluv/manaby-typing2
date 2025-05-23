@@ -1,7 +1,7 @@
-import React, { memo, useCallback } from 'react';
+import React, { memo, useMemo } from 'react';
 import styles from '@/styles/TypingGame.module.css';
-import { TypingChar } from '@/utils/japaneseUtils';
-import { KanaDisplay } from '@/types/typing';
+import type { TypingChar } from '@/utils/japaneseUtils';
+import type { KanaDisplay } from '@/types/typing';
 
 export type TypingAreaProps = {
   currentKanaIndex: number;
@@ -10,44 +10,71 @@ export type TypingAreaProps = {
   kanaDisplay: KanaDisplay;
 };
 
-const TypingArea: React.FC<TypingAreaProps> = memo(({ 
+// 1文字ごとの情報型
+type FlatChar = {
+  char: string;
+  kanaIndex: number;
+  charIndex: number;
+};
+
+/**
+ * 文字の状態に応じたクラス名を返す
+ */
+function getCharClass(
+  kanaIndex: number,
+  charIndex: number,
+  currentKanaIndex: number,
+  acceptedLength: number
+): string {
+  if (kanaIndex < currentKanaIndex) return styles.completed;
+  if (kanaIndex === currentKanaIndex) {
+    if (charIndex < acceptedLength) return styles.completed;
+    if (charIndex === acceptedLength) return styles.current;
+  }
+  return styles.pending;
+}
+
+/**
+ * TypingArea: タイピング中のローマ字を1文字ずつ表示
+ * - 最新のUI/UXベストプラクティスに基づきリファクタリング
+ */
+const TypingArea: React.FC<TypingAreaProps> = memo(({
   currentKanaIndex,
-  typingChars, 
-  displayChars, 
+  typingChars,
+  displayChars,
   kanaDisplay
 }) => {
-  const getCharClass = useCallback((kanaIndex: number, charIndex: number) => {
-    if (kanaIndex < currentKanaIndex) {
-      return styles.completed;
-    } else if (kanaIndex === currentKanaIndex) {
-      const acceptedLength = kanaDisplay.acceptedText.length;
-      if (charIndex < acceptedLength) {
-        return styles.completed;
-      } else if (charIndex === acceptedLength) {
-        return styles.current;
-      }
-    }
-    return styles.pending;
-  }, [currentKanaIndex, kanaDisplay.acceptedText.length]);
+  // すべての文字を1次元配列にフラット化（useMemoでパフォーマンス最適化）
+  const allChars: FlatChar[] = useMemo(() =>
+    typingChars.flatMap((_, kanaIndex) => {
+      const displayText = displayChars[kanaIndex] || '';
+      return [...displayText].map((char, charIndex) => ({ char, kanaIndex, charIndex }));
+    }),
+    [typingChars, displayChars]
+  );
 
-  // すべての文字を1つの配列にフラット化
-  const allChars = typingChars.map((typingChar, kanaIndex) => {
-    const displayText = displayChars[kanaIndex] || '';
-    return displayText.split('').map((char, charIndex) => ({
-      char,
-      kanaIndex,
-      charIndex
-    }));
-  }).flat();
+  const acceptedLength = kanaDisplay.acceptedText.length;
 
   return (
-    <div className={styles.typingArea}>
-      {allChars.map((item, index) => (
-        <span 
-          key={index} 
-          className={`${styles.typingChar} ${getCharClass(item.kanaIndex, item.charIndex)}`}
+    <div
+      className={styles.typingArea}
+      role="region"
+      aria-label="タイピング入力欄"
+    >
+      {allChars.map(({ char, kanaIndex, charIndex }, idx) => (
+        <span
+          key={idx}
+          className={
+            styles.typingChar + ' ' +
+            getCharClass(kanaIndex, charIndex, currentKanaIndex, acceptedLength)
+          }
+          aria-current={
+            kanaIndex === currentKanaIndex && charIndex === acceptedLength ? 'true' : undefined
+          }
+          data-typed={kanaIndex < currentKanaIndex || (kanaIndex === currentKanaIndex && charIndex < acceptedLength)}
+          data-active={kanaIndex === currentKanaIndex && charIndex === acceptedLength}
         >
-          {item.char}
+          {char}
         </span>
       ))}
     </div>
