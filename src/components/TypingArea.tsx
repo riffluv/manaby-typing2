@@ -31,7 +31,7 @@ const TypingArea: React.FC<TypingAreaProps> = memo(({
   }, [currentKanaIndex, kanaDisplay.acceptedText.length]);
 
   return (
-    <>
+    <div className={styles.typingArea}>
       {typingChars.map((typingChar, kanaIndex) => {
         const displayText = displayChars[kanaIndex] || '';
         return (
@@ -44,7 +44,7 @@ const TypingArea: React.FC<TypingAreaProps> = memo(({
           </span>
         );
       })}
-    </>
+    </div>
   );
 });
 TypingArea.displayName = 'TypingArea';

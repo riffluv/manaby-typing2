@@ -22,17 +22,17 @@
   width: 100%;
   height: 100%;
   background-image: 
-    linear-gradient(rgba(255, 140, 0, 0.03) 1px, transparent 1px),
-    linear-gradient(90deg, rgba(255, 140, 0, 0.03) 1px, transparent 1px);
-  background-size: 20px 20px;
+    linear-gradient(rgba(255, 140, 0, 0.02) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(255, 140, 0, 0.02) 1px, transparent 1px);
+  background-size: 24px 24px; /* グリッドサイズを少し大きく */
   background-position: center;
 }
 
 @keyframes blink {
   0%, 100% {
-    opacity: 0.1;
+    opacity: 0.05; /* より控えめな点滅 */
   }
   50% {
-    opacity: 1;
+    opacity: 0.8; /* 最大輝度も抑える */
   }
 }

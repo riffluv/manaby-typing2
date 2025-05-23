@@ -1,37 +1,40 @@
 .typingGameContainer {
-  background: rgba(20,30,60,0.7);
-  border-radius: 1.5rem;
-  box-shadow: 0 0 32px #00f2ff88;
-  padding: 2rem 3rem;
+  /* コンテナ自体は透明に */
+  background: transparent;
   color: #fff;
-  backdrop-filter: blur(8px);
-  max-width: 100%;
+  width: 100%;
+  height: 100vh;
   display: flex;
   flex-direction: column;
   align-items: center;
   justify-content: center;
   margin: 0 auto;
+  padding: 0;
+  position: relative;
+  z-index: 1;
 }
 
 .startScreen, 
 .finishScreen, 
 .gameScreen {
-  background: rgba(16, 24, 39, 0.75);
-  border-radius: 1.25rem;
-  padding: 2rem;
+  /* よりミニマルなデザイン */
+  background: rgba(16, 24, 39, 0.15);
+  border-radius: 4px;
+  padding: 3rem 2rem;
   text-align: center;
   width: 100%;
+  max-width: 900px; /* より固定的な幅 */
   animation: fadeIn 0.5s ease-in-out;
-  min-height: 480px; /* 最小の高さを指定し、コンテンツに合わせて拡張可能に */
+  min-height: 50vh;
   display: flex;
   flex-direction: column;
   align-items: center;
-  justify-content: flex-start;
-  box-shadow: 0 0 32px rgba(0, 242, 255, 0.4), inset 0 0 20px rgba(0, 242, 255, 0.1);
-  border: 1px solid rgba(0, 242, 255, 0.25);
-  backdrop-filter: blur(8px);
+  justify-content: center;
+  backdrop-filter: blur(4px);
   position: relative;
   overflow: hidden;
+  border: none;
+  box-shadow: none;
 }
 
 /* 宇宙のきらめき効果 - 各画面に星のような光る点を追加 */
@@ -44,27 +47,29 @@
   left: 0;
   right: 0;
   bottom: 0;
-  background-image: radial-gradient(circle at 20% 30%, rgba(255, 255, 255, 0.3) 1px, transparent 1px),
-                    radial-gradient(circle at 80% 10%, rgba(255, 255, 255, 0.3) 1px, transparent 1px),
-                    radial-gradient(circle at 40% 70%, rgba(255, 255, 255, 0.3) 1px, transparent 1px),
-                    radial-gradient(circle at 70% 60%, rgba(255, 255, 255, 0.3) 1px, transparent 1px);
+  background-image: radial-gradient(circle at 20% 30%, rgba(255, 255, 255, 0.2) 1px, transparent 1px),
+                    radial-gradient(circle at 80% 10%, rgba(255, 255, 255, 0.2) 1px, transparent 1px),
+                    radial-gradient(circle at 40% 70%, rgba(255, 255, 255, 0.2) 1px, transparent 1px),
+                    radial-gradient(circle at 70% 60%, rgba(255, 255, 255, 0.2) 1px, transparent 1px);
   background-size: 100px 100px;
   z-index: -1;
-  opacity: 0.4;
+  opacity: 0.3;
 }
 
 .wordJapanese {
-  font-size: 2.5rem;
-  font-weight: bold;
-  margin-bottom: 2rem;
+  font-size: 3.5rem;
+  font-weight: 200; /* 細めのフォントでモダンな印象に */
+  margin-bottom: 1rem;
   color: #ffffff;
-  text-shadow: 0 0 10px rgba(0, 195, 255, 0.8), 0 0 20px rgba(0, 100, 255, 0.4);
-  letter-spacing: 0.05em;
-  background: linear-gradient(to bottom, #ffffff 40%, #67e8f9 100%);
+  text-shadow: 0 0 10px rgba(0, 195, 255, 0.5);
+  letter-spacing: 0.08em;
+  background: linear-gradient(to bottom, #ffffff 60%, #67e8f9 100%);
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
   background-clip: text;
   animation: shimmer 3s infinite;
+  width: 100%;
+  padding: 0;
 }
 
 @keyframes shimmer {
@@ -81,58 +86,82 @@
 
 /* ひらがな表示用のスタイル */
 .wordHiragana {
-  font-size: 1.5rem;
-  margin-bottom: 1rem;
-  color: #bbbbff;
-  opacity: 0.8;
-  text-shadow: 0 0 8px rgba(187, 187, 255, 0.6);
-  letter-spacing: 0.05em;
+  font-size: 1.2rem;
+  margin-bottom: 2.5rem;
+  color: rgba(187, 187, 255, 0.8);
+  letter-spacing: 0.1em;
+  font-weight: 300;
+  opacity: 0.9;
+  width: 100%;
 }
 
 .typingArea {
-  font-family: 'Courier New', monospace;
-  font-size: 2rem;
-  letter-spacing: 0.05em; /* 文字間隔を均等に調整 */
-  margin-bottom: 2rem;
-  min-height: 3.5rem;
+  font-family: 'JetBrains Mono', 'SF Mono', 'Courier New', monospace; /* モダンなコーディングフォント */
+  font-size: 2.5rem; /* フォントサイズを少し大きく */
+  letter-spacing: 0.05em;
+  margin: 0 auto 2.5rem;
+  min-height: 4rem;
   display: flex;
   flex-wrap: wrap;
   justify-content: center;
-  gap: 0; /* 隙間をなくす */
-  padding: 1.5rem;
-  border-radius: 1rem;
-  background: rgba(16, 24, 39, 0.4);
-  box-shadow: 0 0 16px rgba(0, 242, 255, 0.2), inset 0 0 8px rgba(0, 242, 255, 0.1);
-  border: 1px solid rgba(0, 242, 255, 0.15);
+  align-items: center;
+  gap: 0.2rem; /* 文字間の隙間を調整 */
+  padding: 1rem;
+  width: 100%;
+  max-width: 800px; /* 固定幅 */
+  position: relative;
+  /* 背景を取り除き、フォーカスをテキストのみに */
+  background: transparent;
+  border: none;
+  box-shadow: none;
 }
 
 /* かなグループのスタイル */
 .kanaGroup {
   display: inline-block;
-  margin: 0; /* マージンを削除 */
+  padding: 0;
   position: relative;
+  margin: 0 0.15rem;
 }
 
 .completed {
-  color: #7bff7b;
-  text-shadow: 0 0 8px rgba(0, 255, 0, 0.7), 0 0 16px rgba(0, 255, 0, 0.4);
+  color: #7cffcb;
+  text-shadow: 0 0 8px rgba(124, 255, 203, 0.5);
   position: relative;
   transition: all 0.2s ease;
+  opacity: 0.75; /* さらに控えめに */
+  font-weight: 300;
+  transform-origin: center;
 }
 
 .current {
-  color: #ffef7b;
-  text-shadow: 0 0 10px rgba(255, 255, 0, 0.8), 0 0 20px rgba(255, 255, 0, 0.5);
+  color: #ffffff; /* 現在の文字は純白で目立たせる */
+  text-shadow: 0 0 12px rgba(255, 255, 255, 0.9), 0 0 20px rgba(255, 255, 255, 0.7);
   position: relative;
-  animation: pulse 1s infinite;
-  font-weight: bold;
-  transform: scale(1.2);
+  animation: currentChar 1s ease-in-out infinite;
+  font-weight: 500;
+  transform: scale(1.3); /* スケールを少し大きく */
+  transform-origin: center;
+  opacity: 1;
+  display: inline-block;
 }
 
 .pending {
-  color: #aaaaaa;
-  opacity: 0.8;
-  text-shadow: 0 0 6px rgba(170, 170, 170, 0.3);
+  color: rgba(170, 170, 170, 0.4); /* 未入力文字をより控えめに */
+  opacity: 0.4;
+  text-shadow: none;
+  font-weight: 200;
+}
+
+@keyframes currentChar {
+  0%, 100% {
+    text-shadow: 0 0 12px rgba(255, 255, 255, 0.8), 0 0 20px rgba(255, 255, 255, 0.4);
+    opacity: 0.9;
+  }
+  50% {
+    text-shadow: 0 0 15px rgba(255, 255, 255, 1), 0 0 30px rgba(255, 255, 255, 0.8);
+    opacity: 1;
+  }
 }
 
 .progress {
@@ -140,57 +169,56 @@
   color: #67e8f9;
   margin-top: 1.5rem;
   padding: 0.5rem 1.5rem;
-  background: rgba(16, 24, 39, 0.6);
-  border-radius: 0.75rem;
-  box-shadow: 0 0 10px rgba(0, 242, 255, 0.2);
-  border: 1px solid rgba(0, 242, 255, 0.15);
+  background: rgba(16, 24, 39, 0.3);
+  border-radius: 4px;
+  box-shadow: none;
+  border: none;
   letter-spacing: 0.05em;
   text-shadow: 0 0 6px rgba(103, 232, 249, 0.6);
   display: inline-block;
 }
 
 .resetButton {
-  background: linear-gradient(to bottom, rgba(37, 99, 235, 0.8), rgba(29, 78, 216, 0.9));
+  background: transparent;
   color: white;
-  border: 1px solid rgba(0, 242, 255, 0.3);
-  padding: 0.75rem 1.5rem;
-  border-radius: 0.5rem;
-  font-size: 1.1rem;
+  border: none; /* ボーダーを削除 */
+  border-bottom: 1px solid rgba(255, 255, 255, 0.2); /* 下線のみ */
+  padding: 0.75rem 2rem;
+  font-size: 0.95rem;
   cursor: pointer;
-  margin-top: 1rem;
-  transition: all 0.2s ease;
-  box-shadow: 0 0 12px rgba(0, 242, 255, 0.3);
-  text-shadow: 0 0 5px rgba(255, 255, 255, 0.5);
+  margin: 1.5rem;
+  transition: all 0.3s ease;
   position: relative;
   overflow: hidden;
-  min-width: 200px;
+  min-width: 140px;
+  letter-spacing: 0.05em;
+  font-weight: 300;
+  text-transform: uppercase;
 }
 
-.resetButton::before {
+.resetButton::after {
   content: '';
   position: absolute;
-  top: 0;
-  left: -100%;
-  width: 100%;
-  height: 100%;
-  background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.2), transparent);
-  transition: 0.5s;
-  pointer-events: none;
+  bottom: 0;
+  left: 0;
+  width: 0;
+  height: 1px;
+  background: rgba(255, 255, 255, 0.8);
+  transition: width 0.3s ease;
 }
 
 .resetButton:hover {
-  background: linear-gradient(to bottom, rgba(37, 99, 235, 0.9), rgba(29, 78, 216, 1));
-  box-shadow: 0 0 20px rgba(0, 242, 255, 0.5);
+  background: transparent;
   transform: translateY(-2px);
+  color: #67e8f9;
 }
 
-.resetButton:hover::before {
-  left: 100%;
+.resetButton:hover::after {
+  width: 100%;
 }
 
 .resetButton:active {
   transform: translateY(1px);
-  box-shadow: 0 0 8px rgba(0, 242, 255, 0.3);
 }
 
 /* スコア計算処理用のスタイル */
@@ -206,19 +234,18 @@
 }
 
 .recalcButton {
-  background-color: rgba(0, 242, 255, 0.3);
-  border: 2px solid #00f2ff;
-  border-radius: 0.5rem;
+  background-color: transparent;
+  border: none;
+  border-bottom: 1px solid rgba(0, 242, 255, 0.5);
   color: white;
   cursor: pointer;
   font-size: 0.9rem;
-  font-weight: bold;
   padding: 0.5rem 1.5rem;
-  transition: all 0.2s;
+  transition: all 0.3s ease;
 }
 
 .recalcButton:hover {
-  background-color: rgba(0, 242, 255, 0.5);
+  color: #00f2ff;
 }
 
 @keyframes pulse {
@@ -236,7 +263,7 @@
 @keyframes fadeIn {
   from {
     opacity: 0;
-    transform: translateY(20px);
+    transform: translateY(10px); /* より控えめなアニメーション */
   }
   to {
     opacity: 1;
@@ -246,9 +273,9 @@
 
 /* メニュー・リザルト・ランキング共通パネル */
 .panel {
-  background: rgba(20,30,60,0.7);
-  border-radius: 1.5rem;
-  box-shadow: 0 0 32px #00f2ff88;
+  background: rgba(20,30,60,0.3); /* より透明に */
+  border-radius: 4px; /* より控えめな角丸 */
+  box-shadow: none; /* シャドウを削除 */
   padding: 2rem 3rem;
   color: #fff;
   backdrop-filter: blur(8px);
@@ -277,35 +304,51 @@
   display: flex;
   flex-wrap: wrap;
   justify-content: center;
-  gap: 2.5rem 2rem;
-  margin: 2rem 0 1.5rem 0;
-  font-size: 1.1rem;
-  width: 100%; /* コンテナの幅いっぱいに */
+  gap: 4rem;
+  margin: 2rem 0;
+  font-size: 0.9rem;
+  width: 100%;
+  max-width: 800px;
+  letter-spacing: 0.05em;
 }
 .scoreBoard > div {
-  background: rgba(20, 30, 60, 0.6); /* より宇宙的な色合いに */
-  border-radius: 1rem;
-  padding: 1rem 2.2rem;
-  min-width: 120px;
+  background: transparent;
+  padding: 0.5rem;
+  min-width: 100px;
   text-align: center;
-  color: #fff;
-  font-weight: bold;
-  box-shadow: 0 0 16px rgba(0, 242, 255, 0.4); /* グローエフェクト強化 */
-  border: 1px solid rgba(0, 242, 255, 0.2); /* 境界線追加 */
-  backdrop-filter: blur(5px); /* 背景のぼかし効果 */
-  transition: transform 0.2s ease, box-shadow 0.2s ease; /* スムーズな変化 */
+  color: rgba(255, 255, 255, 0.6);
+  font-weight: 300;
+  position: relative;
+  transition: all 0.3s ease; 
+  text-transform: uppercase;
+}
+.scoreBoard > div::after {
+  content: '';
+  position: absolute;
+  bottom: -10px;
+  left: 50%;
+  width: 30px;
+  height: 1px;
+  background: rgba(103, 232, 249, 0.2);
+  transform: translateX(-50%);
+  transition: width 0.3s ease, background-color 0.3s ease;
 }
 .scoreBoard > div:hover {
-  transform: translateY(-2px);
-  box-shadow: 0 0 20px rgba(0, 242, 255, 0.6);
+  transform: translateY(-5px);
+  color: #fff;
+}
+.scoreBoard > div:hover::after {
+  width: 60px;
+  background: rgba(103, 232, 249, 0.8);
 }
 .scoreBoard span {
   display: block;
-  font-size: 2.1rem;
-  font-weight: bold;
-  color: #67e8f9;
-  margin-top: 0.2em;
-  text-shadow: 0 0 8px rgba(103, 232, 249, 0.5); /* 数字に光るエフェクト */
+  font-size: 3.5rem; /* 数字を大きく */
+  font-weight: 200;
+  color: #ffffff;
+  margin-top: 0.25em;
+  line-height: 1;
+  letter-spacing: -0.03em;
 }
 
 /* --- ランキング登録モーダル用 --- */
@@ -325,34 +368,36 @@
 }
 
 .modalContent {
-  background: rgba(20, 30, 50, 0.95); /* より宇宙感のある色合いへ変更 */
+  background: rgba(20, 30, 50, 0.85); /* よりシンプルな色合い */
   padding: 2rem;
-  border-radius: 1rem;
+  border-radius: 4px; /* より控えめな角丸 */
   min-width: 320px;
   min-height: 220px;
-  box-shadow: 0 0 32px #00f2ff88, inset 0 0 16px rgba(0, 242, 255, 0.2); /* 内側光彩も追加 */
-  border: 1px solid rgba(0, 242, 255, 0.3); /* 境界線で宇宙感を演出 */
+  box-shadow: none; /* シャドウを削除 */
+  border: none; /* 境界線を削除 */
   display: flex;
   flex-direction: column;
   gap: 16px;
   align-items: center;
   justify-content: center;
-  transition: min-height 0.3s ease, transform 0.3s ease; /* トランジションを滑らかに */
-  backdrop-filter: blur(10px); /* 背景のぼかし効果 */
+  transition: min-height 0.3s ease, transform 0.3s ease;
+  backdrop-filter: blur(10px);
 }
 
 .startTitle {
-  font-size: 2.5rem;
-  font-weight: bold;
+  font-size: 4.5rem; /* さらに大きく */
+  font-weight: 200;
   margin-bottom: 3rem;
-  margin-top: 2rem;
+  margin-top: 0;
   color: #ffffff;
-  text-shadow: 0 0 15px rgba(0, 195, 255, 0.8);
-  letter-spacing: 0.1em;
-  background: linear-gradient(to bottom, #ffffff 30%, #67e8f9 100%);
+  text-shadow: 0 0 15px rgba(0, 195, 255, 0.4);
+  letter-spacing: 0.15em; /* 少し字間を狭く */
+  background: linear-gradient(to bottom, #ffffff 60%, #67e8f9 100%);
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
   background-clip: text;
+  text-transform: uppercase;
+  line-height: 1.1;
 }
 
 .startInstruction {
@@ -360,29 +405,42 @@
   align-items: center;
   justify-content: center;
   gap: 1rem;
-  margin-bottom: 3rem;
-  font-size: 1.3rem;
+  margin-bottom: 4rem;
+  font-size: 1.1rem;
+  opacity: 0.8;
+  letter-spacing: 0.1em;
+  font-weight: 300;
 }
 
 .keyboardKey {
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  background: linear-gradient(to bottom, rgba(70, 80, 100, 0.9), rgba(40, 50, 70, 0.95));
-  color: #67e8f9;
-  padding: 0.5rem 1.5rem;
-  border-radius: 0.4rem;
-  font-family: "Courier New", monospace;
-  font-weight: bold;
-  box-shadow: 0 0.2rem 0 rgba(0, 0, 0, 0.3), 0 0 10px rgba(0, 242, 255, 0.4);
-  border: 1px solid rgba(0, 242, 255, 0.3);
-  text-shadow: 0 0 6px rgba(103, 232, 249, 0.6);
+  background: transparent;
+  color: #ffffff;
+  padding: 0.5rem 2rem;
+  border-radius: 2px; /* より控えめな角丸 */
+  font-family: "JetBrains Mono", "SF Mono", "Courier New", monospace;
+  font-weight: 400;
+  border: 1px solid rgba(255, 255, 255, 0.15); /* より控えめなボーダー */
+  text-shadow: 0 0 6px rgba(255, 255, 255, 0.4);
   min-width: 100px;
+  position: relative;
+  animation: keyGlow 2s infinite alternate;
+}
+
+@keyframes keyGlow {
+  0% {
+    box-shadow: 0 0 5px rgba(103, 232, 249, 0.2);
+  }
+  100% {
+    box-shadow: 0 0 10px rgba(103, 232, 249, 0.5);
+  }
 }
 
 .resultTitle {
-  font-size: 2.3rem;
-  font-weight: bold;
+  font-size: 2.5rem;
+  font-weight: 200; /* より細く */
   margin-bottom: 2rem;
   margin-top: 1rem;
   letter-spacing: 0.1em;
@@ -404,7 +462,7 @@
   width: 120%;
   height: 1px;
   background: linear-gradient(to right, rgba(0, 242, 255, 0), rgba(0, 242, 255, 0.8), rgba(0, 242, 255, 0));
-  box-shadow: 0 0 10px rgba(0, 242, 255, 0.8);
+  box-shadow: none; /* シャドウを削除 */
 }
 
 .startScreenDecoration {
@@ -414,18 +472,19 @@
   transform: translateX(-50%);
   width: 80%;
   height: 1px;
-  background: linear-gradient(to right, rgba(0, 242, 255, 0), rgba(0, 242, 255, 0.6), rgba(0, 242, 255, 0));
-  box-shadow: 0 0 10px rgba(0, 242, 255, 0.8), 0 0 20px rgba(0, 242, 255, 0.4);
+  background: linear-gradient(to right, rgba(0, 242, 255, 0), rgba(0, 242, 255, 0.4), rgba(0, 242, 255, 0));
+  box-shadow: none; /* シャドウを削除 */
 }
 
 .registeredMessage {
   color: #22d3ee;
   margin-top: 12px;
-  font-weight: bold;
+  font-weight: normal; /* 太字から通常に変更 */
   padding: 6px 14px;
-  border-radius: 8px;
-  background-color: rgba(34, 211, 238, 0.1);
-  border: 1px solid rgba(34, 211, 238, 0.3);
+  border-radius: 2px; /* より控えめな角丸 */
+  background-color: transparent;
+  border: none;
+  border-bottom: 1px solid rgba(34, 211, 238, 0.3);
   text-shadow: 0 0 6px rgba(34, 211, 238, 0.5);
   animation: fadeIn 0.5s ease-in-out;
 }
@@ -441,11 +500,24 @@
     padding: 1rem;
   }
   .startTitle {
-    font-size: 2rem;
+    font-size: 2.5rem;
     margin-bottom: 2rem;
   }
   .startInstruction {
     flex-direction: column;
     gap: 0.5rem;
+  }
+  .wordJapanese {
+    font-size: 2.5rem;
+  }
+  .typingArea {
+    font-size: 1.8rem;
+    padding: 0.5rem;
+  }
+  .scoreBoard {
+    gap: 2rem;
+  }
+  .scoreBoard span {
+    font-size: 2.5rem;
   }
 }
