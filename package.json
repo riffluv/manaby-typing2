@@ -7,7 +7,7 @@
     "build": "next build",
     "start": "next start",
     "lint": "next lint",
-    "mcp": "node mcp-server/index.js",
+    "mcp": "node mcp-server/index.cjs",
     "dev:full": "concurrently \"npm run dev\" \"npm run mcp\"",
     "dev:nodemon:mcp": "concurrently \"nodemon --watch src --exec npm run dev\" \"npm run mcp\"",
     "mcp:github": "npx @modelcontextprotocol/server-github",
