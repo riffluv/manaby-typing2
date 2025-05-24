@@ -15,8 +15,8 @@ const MonkeytypeHeader = () => {
       className="fixed z-50 flex items-center"
       style={{ top: '1.5rem', left: '1.5rem', right: 'auto', pointerEvents: 'none', minWidth: '320px' }}
     >
-      {/* ロゴ＋タイトルを一体感ある横並びで */}
-      <div className="flex items-center gap-2 bg-black/30 rounded-xl px-3 py-1 shadow-lg pointer-events-auto" style={{ backdropFilter: 'blur(2px)' }}>
+      {/* ロゴ＋タイトルを一体感ある横並びで（背景色なし） */}
+      <div className="flex items-center gap-2 rounded-xl px-3 py-1 shadow-lg pointer-events-auto" style={{ backdropFilter: 'blur(2px)' }}>
         <Image
           src="/images/manabyicon_01.png"
           alt="manabytype logo"
@@ -34,11 +34,11 @@ const MonkeytypeHeader = () => {
       </div>
       {/* タイトルとアイコン群の間に大きめの余白 */}
       <div style={{ width: '2.5rem' }} />
-      {/* アイコン群は右端に寄せてバランスよく配置 */}
-      <div className="flex items-center gap-4 md:gap-5 bg-black/20 rounded-xl px-2 py-1 shadow pointer-events-auto" style={{ backdropFilter: 'blur(2px)' }}>
+      {/* アイコン群は右端に寄せてバランスよく配置（背景色なし） */}
+      <div className="flex items-center gap-4 md:gap-5 rounded-xl px-2 py-1 shadow pointer-events-auto" style={{ backdropFilter: 'blur(2px)' }}>
         {icons.map((Icon, i) => (
           <span key={i} className="hover:text-amber-400 transition-colors duration-150 cursor-pointer">
-            <Icon className="align-middle" />
+            <Icon className="text-[28px]" />
           </span>
         ))}
       </div>
