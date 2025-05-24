@@ -35,7 +35,7 @@ const MainMenu: React.FC<MainMenuProps> = ({ onStart, onRanking, onRetry }) => {
   useGlobalShortcuts([
     {
       key: ' ',
-      handler: (e) => { e.preventDefault(); onStart(); },
+      handler: (e) => { e.preventDefault(); handleStart(); },
     },
     {
       key: 'r',
@@ -46,7 +46,7 @@ const MainMenu: React.FC<MainMenuProps> = ({ onStart, onRanking, onRetry }) => {
       key: 'r',
       handler: (e) => { e.preventDefault(); onRetry(); },
     },
-  ], [onStart, onRanking, onRetry]);
+  ], [handleStart, onRanking, onRetry]);
 
   return (
     <div className="w-full flex flex-col items-center justify-center">
