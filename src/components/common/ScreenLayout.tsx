@@ -16,9 +16,14 @@ const ScreenLayout: React.FC<ScreenLayoutProps> = ({
   children,
   variant = 'default',
   className = '',
-}) => {  // 画面タイプに応じた背景を表示
-  const showRetroBackground = variant === 'game';
-  const showDefaultBackground = variant !== 'game' && variant !== 'result' && variant !== 'ranking';
+}) => {
+  // 画面タイプごとの背景コンポーネントをマッピング
+  const backgroundComponents = {
+    default: <BackgroundEffect />,
+    game: <RetroBackground />,
+    result: null,
+    ranking: null
+  };
 
   return (
     <div 
@@ -26,8 +31,7 @@ const ScreenLayout: React.FC<ScreenLayoutProps> = ({
       style={{ border: 'none' }}
     >
       {/* 画面タイプに応じた背景 */}
-      {showRetroBackground && <RetroBackground />}
-      {showDefaultBackground && <BackgroundEffect />}
+      {backgroundComponents[variant]}
       
       {/* コンテンツエリア */}
       <div 
