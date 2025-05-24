@@ -12,29 +12,32 @@ const icons = [FiMonitor, FiBarChart2, FiInfo, FiSettings, FiUser];
 const MonkeytypeHeader = () => {
   return (
     <header
-      className="fixed z-50 w-full max-w-xs md:max-w-sm flex items-center gap-2 md:gap-4 p-0 md:p-0 bg-transparent select-none pointer-events-none"
-      style={{ top: '1.5rem', left: '1.5rem', right: 'auto', pointerEvents: 'none' }}
+      className="fixed z-50 flex items-center"
+      style={{ top: '1.5rem', left: '1.5rem', right: 'auto', pointerEvents: 'none', minWidth: '320px' }}
     >
-      <div className="flex items-center gap-2 pointer-events-auto m-0">
+      {/* ロゴ＋タイトルを一体感ある横並びで */}
+      <div className="flex items-center gap-2 bg-black/30 rounded-xl px-3 py-1 shadow-lg pointer-events-auto" style={{ backdropFilter: 'blur(2px)' }}>
         <Image
           src="/images/manabyicon_01.png"
           alt="manabytype logo"
-          width={36}
-          height={36}
-          className="rounded-md shadow m-0"
+          width={34}
+          height={34}
+          className="rounded-md shadow"
           priority
         />
         <span
-          className="font-mono font-black text-2xl lg:text-3xl tracking-tight drop-shadow-sm m-0"
+          className="font-mono font-black text-2xl lg:text-3xl tracking-tight drop-shadow-sm select-none"
+          style={{ letterSpacing: '-0.04em' }}
         >
           manabytype
         </span>
       </div>
-      <div className="flex-1 min-w-[32px]" />
-      <div className="flex items-center gap-4 md:gap-6 text-gray-300 text-xl pointer-events-auto m-0">
-        {/* アイコン群 */}
+      {/* タイトルとアイコン群の間に大きめの余白 */}
+      <div style={{ width: '2.5rem' }} />
+      {/* アイコン群は右端に寄せてバランスよく配置 */}
+      <div className="flex items-center gap-4 md:gap-5 bg-black/20 rounded-xl px-2 py-1 shadow pointer-events-auto" style={{ backdropFilter: 'blur(2px)' }}>
         {icons.map((Icon, i) => (
-          <span key={i} className="hover:text-amber-400 transition-colors duration-150 cursor-pointer m-0">
+          <span key={i} className="hover:text-amber-400 transition-colors duration-150 cursor-pointer">
             <Icon className="align-middle" />
           </span>
         ))}
