@@ -300,25 +300,31 @@ export const convertHiraganaToRomaji = (hiragana: string) => {
     }
   }
   
-  // 「ん」の特殊処理 (n + 母音 or n + y の場合は "n'" にする)
-  for (let i = 0; i < result.length - 1; i++) {
+  // 「ん」の特殊処理 (IMEと同じ自然な判定)
+  for (let i = 0; i < result.length; i++) {
     if (result[i].kana === 'ん') {
-      const nextRomaji = result[i + 1].romaji;
-      if (nextRomaji && nextRomaji.length > 0) {
-        const firstChar = nextRomaji[0];
-        if ('aeiouyn'.includes(firstChar)) {
-          // n' を追加
-          if (!result[i].alternatives.includes("n'")) {
-            result[i].alternatives.push("n'");
-          }
-          
-          // 最後の「ん」の場合はnnを優先せず、nだけにする
-          if (i === result.length - 2) {
-            const nnIndex = result[i].alternatives.indexOf('nn');
-            if (nnIndex !== -1) {
-              result[i].alternatives.splice(nnIndex, 1);
-            }
-          }
+      const isLast = i === result.length - 1;
+      let nextKana = '';
+      let nextRomaji = '';
+      if (!isLast) {
+        nextKana = result[i + 1].kana;
+        nextRomaji = result[i + 1].romaji;
+      }
+      // 文末 or 次があ行・な行・や行・ん の場合は n 単独不可
+      const isAgyo = nextRomaji && 'aiueo'.includes(nextRomaji[0]);
+      const isN = nextRomaji && nextRomaji[0] === 'n';
+      const isY = nextRomaji && nextRomaji[0] === 'y';
+      const isNa = nextKana && ['な','に','ぬ','ね','の'].includes(nextKana);
+      const isYa = nextKana && ['や','ゆ','よ'].includes(nextKana);
+      const isNn = nextKana && nextKana === 'ん';
+      if (isLast || isAgyo || isN || isY || isNa || isYa || isNn) {
+        // n単独を除外（nn/xnのみ許可）
+        result[i].alternatives = result[i].alternatives.filter(a => a !== 'n');
+      }
+      // n'は従来通り追加
+      if (!isLast && (isAgyo || isN || isY)) {
+        if (!result[i].alternatives.includes("n'")) {
+          result[i].alternatives.push("n'");
         }
       }
     }
