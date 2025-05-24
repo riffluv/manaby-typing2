@@ -4,6 +4,7 @@ import { motion } from 'framer-motion';
 import { getRankingEntries, RankingEntry } from '@/lib/rankingManaby2';
 import ShortcutFooter, { Shortcut } from './ShortcutFooter';
 import { useGlobalShortcuts } from '@/hooks/useGlobalShortcuts';
+import { containerVariants, itemVariants, tableRowVariants } from '@/styles/animations';
 
 interface NewRankingScreenProps {
   onGoMenu: () => void;
@@ -14,53 +15,6 @@ const NewRankingScreen: React.FC<NewRankingScreenProps> = ({ onGoMenu }) => {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState('');
   const [activeDifficulty, setActiveDifficulty] = useState<string>('normal');
-
-  // アニメーション効果用のバリアント
-  const containerVariants = {
-    hidden: { opacity: 0 },
-    visible: {
-      opacity: 1,
-      transition: {
-        when: 'beforeChildren',
-        staggerChildren: 0.08,
-        duration: 0.5,
-        ease: [0.22, 1, 0.36, 1]
-      },
-    }
-  };
-
-  const itemVariants = {
-    hidden: { y: 20, opacity: 0 },
-    visible: { 
-      y: 0, 
-      opacity: 1,
-      transition: {
-        duration: 0.5,
-        ease: [0.22, 1, 0.36, 1]
-      }
-    }
-  };
-  
-  // テーブル行のアニメーション用バリアント
-  const tableRowVariants = {
-    hidden: { opacity: 0, y: 10 },
-    visible: (custom: number) => ({ 
-      opacity: 1, 
-      y: 0,
-      transition: { 
-        delay: custom * 0.05,
-        duration: 0.4,
-        ease: [0.22, 1, 0.36, 1]
-      }
-    }),
-    hover: {
-      backgroundColor: 'rgba(55, 65, 81, 0.5)',
-      scale: 1.01,
-      transition: {
-        duration: 0.2
-      }
-    }
-  };
 
   useEffect(() => {
     setLoading(true);
@@ -88,13 +42,11 @@ const NewRankingScreen: React.FC<NewRankingScreenProps> = ({ onGoMenu }) => {
       handler: (e) => { e.preventDefault(); onGoMenu(); },
     },
   ], [onGoMenu]);
-  
-  return (
-    <div className="w-full h-full flex flex-col items-center justify-center relative py-10">
-      {/* 背景なし - ボーダーなし */}
-      
+    return (
+    <div className="w-full max-w-3xl mx-auto">
       <motion.div
-        className="w-full max-w-3xl bg-transparent rounded-lg p-8 relative overflow-hidden flex flex-col items-center"
+        className="w-full bg-transparent rounded-lg p-8 relative overflow-hidden flex flex-col items-center"
+        style={{ border: 'none' }} // ボーダーを明示的に無効化
         initial="hidden"
         animate="visible"
         variants={containerVariants}
@@ -256,7 +208,7 @@ const NewRankingScreen: React.FC<NewRankingScreenProps> = ({ onGoMenu }) => {
           </motion.button>
         </motion.div>
       </motion.div>
-
+      
       <ShortcutFooter shortcuts={shortcuts} />
     </div>
   );

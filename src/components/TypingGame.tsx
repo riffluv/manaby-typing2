@@ -1,14 +1,17 @@
 'use client';
 
 import { useState, useEffect, useCallback } from 'react';
+import { motion } from 'framer-motion';
 import { useRouter } from 'next/navigation';
 import { useGameStatus, useTypingGameStore, useCurrentWord } from '@/store/typingGameStore';
 import { useAudioStore } from '@/store/audioStore';
 import { useTypingGameLifecycle } from '@/hooks/useTypingGameLifecycle';
 import { TypingWord, KanaDisplay } from '@/types/typing';
 import { PerWordScoreLog, GameScoreLog } from '@/types/score';
+import { useSceneNavigationStore } from '@/store/sceneNavigationStore'; 
+import { containerVariants, itemVariants } from '@/styles/animations';
 
-// 新しく作成したカスタムフックとコンポーネントのインポート
+// カスタムフックとコンポーネントのインポート
 import { useTypingKeyboardHandler } from '@/hooks/useTypingKeyboardHandler';
 import { useScoreCalculation } from '@/hooks/useScoreCalculation';
 import { useRankingModal } from '@/hooks/useRankingModal';
@@ -29,6 +32,7 @@ const TypingGame: React.FC<{ onGoMenu?: () => void; onGoRanking?: () => void }> 
   const { setGameStatus, resetGame, setupCurrentWord } = useTypingGameStore();
   const storeWord = useCurrentWord();
   const { playSound } = useAudioStore();
+  const { goToResult } = useSceneNavigationStore();
   
   // ゲームライフサイクルフックの使用
   useTypingGameLifecycle();
@@ -129,7 +133,12 @@ const TypingGame: React.FC<{ onGoMenu?: () => void; onGoRanking?: () => void }> 
   }, [handleGoMenu]);
 
   return (
-    <div className="w-full h-screen min-h-[400px] flex flex-col items-center justify-center bg-transparent text-white relative z-10 overflow-y-auto overflow-x-hidden">
+    <motion.div 
+      className="w-full max-w-4xl mx-auto flex flex-col items-center justify-center py-5"
+      initial="hidden"
+      animate="visible"
+      variants={containerVariants}
+    >
       {/* ゲームプレイ中の画面 */}
       {gameStatus === 'playing' && (
         <GamePlayingScreen
@@ -169,7 +178,7 @@ const TypingGame: React.FC<{ onGoMenu?: () => void; onGoRanking?: () => void }> 
         onChangeName={(name) => dispatch({ type: 'setName', name })}
         onClose={() => dispatch({ type: 'close' })}
       />
-    </div>
+    </motion.div>
   );
 };
 

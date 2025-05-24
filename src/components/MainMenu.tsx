@@ -1,0 +1,109 @@
+import React from 'react';
+import { motion } from 'framer-motion';
+import { useTypingGameStore } from '@/store/typingGameStore';
+import ShortcutFooter, { Shortcut } from '@/components/ShortcutFooter';
+import { useGlobalShortcuts } from '@/hooks/useGlobalShortcuts';
+import { containerVariants, itemVariants, buttonVariants } from '@/styles/animations';
+
+interface MainMenuProps {
+  onStart: () => void;
+  onRanking: () => void;
+  onRetry: () => void;
+}
+
+/**
+ * メインメニュー画面コンポーネント
+ */
+const MainMenu: React.FC<MainMenuProps> = ({ onStart, onRanking, onRetry }) => {
+  const { resetGame, setGameStatus } = useTypingGameStore();
+  
+  // ゲーム開始ハンドラー
+  const handleStart = () => {
+    resetGame();
+    setGameStatus('playing');
+    onStart();
+  };
+  
+  // ショートカット案内
+  const shortcuts: Shortcut[] = [
+    { key: 'Space', label: 'スタート' },
+    { key: 'Alt+R', label: 'ランキング' },
+    { key: 'R', label: 'リトライ' },
+  ];
+
+  // ショートカット定義
+  useGlobalShortcuts([
+    {
+      key: ' ',
+      handler: (e) => { e.preventDefault(); onStart(); },
+    },
+    {
+      key: 'r',
+      altKey: true,
+      handler: (e) => { e.preventDefault(); onRanking(); },
+    },
+    {
+      key: 'r',
+      handler: (e) => { e.preventDefault(); onRetry(); },
+    },
+  ], [onStart, onRanking, onRetry]);
+
+  return (
+    <div className="w-full flex flex-col items-center justify-center">
+      <motion.div
+        className="w-full max-w-xl bg-transparent rounded-lg p-8 relative overflow-hidden flex flex-col items-center"
+        initial="hidden"
+        animate="visible"
+        variants={containerVariants}
+      >
+        {/* ゲームロゴ/タイトル */}
+        <motion.div variants={itemVariants} className="mb-12 text-center">
+          <h1 className="text-6xl font-mono font-bold mb-2 text-amber-400 tracking-tight">
+            manaby typing
+          </h1>
+        </motion.div>
+        
+        {/* スタートボタン */}
+        <motion.div variants={itemVariants} className="w-full mb-10">
+          <motion.button
+            onClick={handleStart}
+            className="w-full py-4 bg-amber-500 hover:bg-amber-600 text-gray-900 font-bold rounded-md text-xl shadow-md transition-all duration-200"
+            whileHover={buttonVariants.hover}
+            whileTap={buttonVariants.tap}
+          >
+            スタート
+          </motion.button>
+        </motion.div>
+        
+        {/* モード選択 */}
+        <motion.div variants={itemVariants} className="w-full">
+          <h2 className="text-amber-400 font-mono text-lg mb-3">モード選択</h2>
+          <div className="grid grid-cols-1 gap-3">
+            <button
+              className="py-3 px-6 rounded-md bg-gray-800 hover:bg-gray-700 text-white font-medium border border-gray-700 hover:border-amber-500/30 transition-all duration-200 flex items-center justify-between"
+            >
+              <span>Normal</span>
+              <span className="text-amber-400">●</span>
+            </button>
+            <button
+              className="py-3 px-6 rounded-md bg-gray-800/50 hover:bg-gray-800 text-gray-400 font-medium border border-gray-800 transition-all duration-200 flex items-center justify-between opacity-70"
+              disabled
+            >
+              <span>Hard</span>
+              <span className="text-xs">近日公開</span>
+            </button>
+          </div>
+        </motion.div>
+        
+        {/* バージョン情報 */}
+        <motion.div variants={itemVariants} className="mt-12 text-gray-500 text-xs">
+          v2.0.0 | monkeytype UI
+        </motion.div>
+      </motion.div>
+
+      <ShortcutFooter shortcuts={shortcuts} />
+    </div>
+  );
+};
+
+export default MainMenu;
