@@ -1,12 +1,14 @@
 'use client';
-import { useEffect, useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { motion } from 'framer-motion';
 import TypingGame from '@/components/TypingGame';
 import RetroBackground from '@/components/RetroBackground';
 import { useTypingGameStore } from '@/store/typingGameStore';
 import { getRankingEntries, RankingEntry } from '@/lib/rankingManaby2';
+import ShortcutFooter, { Shortcut } from '@/components/ShortcutFooter';
+import { useGlobalShortcuts, ShortcutConfig } from '@/hooks/useGlobalShortcuts';
 
-function MainMenu({ onStart }: { onStart: () => void }) {
+function MainMenu({ onStart, onRanking, onRetry }: { onStart: () => void, onRanking: () => void, onRetry: () => void }) {
   const { resetGame, setGameStatus } = useTypingGameStore();
   const handleStart = () => {
     resetGame();
@@ -41,6 +43,36 @@ function MainMenu({ onStart }: { onStart: () => void }) {
     }
   };
   
+  // ショートカット案内
+  const shortcuts: Shortcut[] = [
+    { key: 'Space', label: 'スタート' },
+    { key: 'Alt+R', label: 'ランキング' },
+    { key: 'R', label: 'リトライ' },
+  ];
+
+  // ショートカット定義
+  useGlobalShortcuts([
+    {
+      key: ' ',
+      handler: (e) => { e.preventDefault(); onStart(); },
+    },
+    {
+      key: 'r',
+      altKey: true,
+      handler: (e) => {
+        e.preventDefault();
+        onRanking();
+      },
+    },
+    {
+      key: 'r',
+      handler: (e) => {
+        e.preventDefault();
+        onRetry();
+      },
+    },
+  ], [onStart, onRanking, onRetry]);
+
   return (
     <div className="w-full min-h-screen flex flex-col items-center justify-center bg-gray-900 text-white font-mono relative py-10">
       {/* 背景エフェクト */}
@@ -100,6 +132,8 @@ function MainMenu({ onStart }: { onStart: () => void }) {
           v2.0.0 | monkeytype UI
         </motion.div>
       </motion.div>
+
+      <ShortcutFooter shortcuts={shortcuts} />
     </div>
   );
 }
@@ -187,6 +221,16 @@ function Ranking({ onGoMenu }: { onGoMenu: () => void }) {
     setActiveDifficulty(difficulty);
   };
 
+  // ショートカット案内
+  const shortcuts: Shortcut[] = [
+    { key: 'Esc', label: 'メニューに戻る' },
+  ];
+  useGlobalShortcuts([
+    {
+      key: 'Escape',
+      handler: (e) => { e.preventDefault(); onGoMenu(); },
+    },
+  ], [onGoMenu]);
   return (
     <div className="w-full min-h-screen flex flex-col items-center justify-center bg-gray-900 text-white font-mono relative py-10">
       {/* 背景エフェクト */}
@@ -360,21 +404,20 @@ function Ranking({ onGoMenu }: { onGoMenu: () => void }) {
           </motion.button>
         </motion.div>
       </motion.div>
+
+      <ShortcutFooter shortcuts={shortcuts} />
     </div>
   );
 }
 
 export default function Home() {
   const [scene, setScene] = useState<'menu'|'game'|'ranking'>('menu');
-  
   return (
     <div className="min-h-screen w-full flex items-center justify-center relative bg-gray-900 overflow-hidden">
       {/* レトロな宇宙背景 - メニュー画面とランキング画面では新しいスタイルを適用するため非表示 */}
       {scene === 'game' && <RetroBackground />}
-      
-      {/* コンテンツコンテナ */}
       <div className="relative z-10 w-full flex items-center justify-center">
-        {scene === 'menu' && <MainMenu onStart={() => setScene('game')} />}
+        {scene === 'menu' && <MainMenu onStart={() => setScene('game')} onRanking={() => setScene('ranking')} onRetry={() => {/* リトライ処理をここに実装 */}} />}
         {scene === 'game' && <TypingGame onGoMenu={() => setScene('menu')} onGoRanking={() => setScene('ranking')} />}
         {scene === 'ranking' && <Ranking onGoMenu={() => setScene('menu')} />}
       </div>

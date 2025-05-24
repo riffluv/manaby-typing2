@@ -4,6 +4,8 @@ import { useState, useEffect } from 'react';
 import { motion } from 'framer-motion';
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
+import { useGlobalShortcuts, ShortcutConfig } from '@/hooks/useGlobalShortcuts';
+import ShortcutFooter, { Shortcut } from '@/components/ShortcutFooter';
 
 // ランキングのデータ型
 type RankingEntry = {
@@ -156,6 +158,16 @@ export default function RankingPage() {
     router.push('/');
   };
 
+  // ショートカット案内
+  const shortcuts: Shortcut[] = [
+    { key: 'Esc', label: 'メニューに戻る' },
+  ];
+  useGlobalShortcuts([
+    {
+      key: 'Escape',
+      handler: (e) => { e.preventDefault(); handleBackToMenu(); },
+    },
+  ], []);
   return (
     <div className="w-full min-h-screen flex flex-col items-center justify-center bg-gray-900 text-white font-mono relative py-10">
       {/* 背景エフェクト */}
@@ -323,6 +335,7 @@ export default function RankingPage() {
           </Link>
         </motion.div>
       </motion.div>
+      <ShortcutFooter shortcuts={shortcuts} />
     </div>
   );
 }

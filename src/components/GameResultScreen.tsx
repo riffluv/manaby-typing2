@@ -3,6 +3,9 @@
 import { motion } from 'framer-motion';
 import type { GameScoreLog } from '@/types/score';
 import type { PerWordScoreLog } from '@/types/score';
+import { useEffect } from 'react';
+import ShortcutFooter, { Shortcut } from './ShortcutFooter';
+import { useGlobalShortcuts } from '@/hooks/useGlobalShortcuts';
 
 interface GameResultScreenProps {
   resultScore: GameScoreLog['total'] | null;
@@ -28,6 +31,29 @@ export default function GameResultScreen({
   onGoRanking,
   onGoMenu
 }: GameResultScreenProps) {
+  // ショートカット案内内容
+  const shortcuts: Shortcut[] = [
+    { key: 'R', label: 'リトライ' },
+    { key: 'Alt+R', label: 'ランキング' },
+    { key: 'Esc', label: 'メニューへ' },
+  ];
+
+  useGlobalShortcuts([
+    {
+      key: 'r',
+      handler: (e) => { e.preventDefault(); onReset(); },
+    },
+    {
+      key: 'r',
+      altKey: true,
+      handler: (e) => { e.preventDefault(); onGoRanking(); },
+    },
+    {
+      key: 'Escape',
+      handler: (e) => { e.preventDefault(); onGoMenu(); },
+    },
+  ], [onReset, onGoRanking, onGoMenu]);
+
   return (
     <motion.div 
       className="bg-transparent rounded p-4 md:p-8 text-center w-full max-w-screen-sm max-w-[95vw] animate-fadeIn min-h-[40vh] flex flex-col items-center justify-center relative overflow-hidden"
@@ -107,6 +133,7 @@ export default function GameResultScreen({
       
       {/* 背景 */}
       <div className="absolute inset-0 bg-gradient-to-r from-purple-500 to-blue-500 opacity-30 rounded-lg pointer-events-none"></div>
+      <ShortcutFooter shortcuts={shortcuts} />
     </motion.div>
   );
 }
