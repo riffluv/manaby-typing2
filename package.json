@@ -22,6 +22,7 @@
     "postcss": "^8.5.3",
     "react": "^19.0.0",
     "react-dom": "^19.0.0",
+    "react-icons": "^5.5.0",
     "swr": "^2.3.3",
     "wanakana": "^5.3.1",
     "zustand": "^5.0.4"

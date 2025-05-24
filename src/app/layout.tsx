@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import { Geist, Geist_Mono } from "next/font/google";
 import "./globals.css";
 import MCPStatus from "@/components/MCPStatus";
+import MonkeytypeHeader from '@/components/common/MonkeytypeHeader';
 import styles from "@/styles/TypingGame.module.css";
 
 const geistSans = Geist({
@@ -30,6 +31,7 @@ export default function RootLayout({
         className={`${geistSans.variable} ${geistMono.variable} antialiased`}
         suppressHydrationWarning
       >
+        <MonkeytypeHeader />
         {children}
         <div className={styles.mcpStatusWrapper}>
           <MCPStatus position="bottom-right" />
