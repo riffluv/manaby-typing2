@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { motion } from 'framer-motion';
 import { useTypingGameStore } from '@/store/typingGameStore';
 import ShortcutFooter, { Shortcut } from '@/components/ShortcutFooter';
@@ -15,11 +15,13 @@ interface MainMenuProps {
  * メインメニュー画面コンポーネント
  */
 const MainMenu: React.FC<MainMenuProps> = ({ onStart, onRanking, onRetry }) => {
-  const { resetGame, setGameStatus } = useTypingGameStore();
-  
+  const { resetGame, setGameStatus, setMode } = useTypingGameStore();
+  const [selectedMode, setSelectedMode] = useState<'normal' | 'hard'>('normal');
+
   // ゲーム開始ハンドラー
   const handleStart = () => {
     resetGame();
+    setMode(selectedMode);
     setGameStatus('playing');
     onStart();
   };
@@ -80,17 +82,18 @@ const MainMenu: React.FC<MainMenuProps> = ({ onStart, onRanking, onRetry }) => {
           <h2 className="text-amber-400 font-mono text-lg mb-3">モード選択</h2>
           <div className="grid grid-cols-1 gap-3">
             <button
-              className="py-3 px-6 rounded-md bg-gray-800 hover:bg-gray-700 text-white font-medium border border-gray-700 hover:border-amber-500/30 transition-all duration-200 flex items-center justify-between"
+              className={`py-3 px-6 rounded-md border flex items-center justify-between transition-all duration-200 font-medium ${selectedMode === 'normal' ? 'bg-amber-500 text-gray-900 border-amber-500' : 'bg-gray-800 text-white border-gray-700 hover:bg-gray-700 hover:border-amber-500/30'}`}
+              onClick={() => setSelectedMode('normal')}
             >
               <span>Normal</span>
-              <span className="text-amber-400">●</span>
+              {selectedMode === 'normal' && <span className="text-amber-400">●</span>}
             </button>
             <button
-              className="py-3 px-6 rounded-md bg-gray-800/50 hover:bg-gray-800 text-gray-400 font-medium border border-gray-800 transition-all duration-200 flex items-center justify-between opacity-70"
-              disabled
+              className={`py-3 px-6 rounded-md border flex items-center justify-between transition-all duration-200 font-medium ${selectedMode === 'hard' ? 'bg-amber-500 text-gray-900 border-amber-500' : 'bg-gray-800 text-white border-gray-700 hover:bg-gray-700 hover:border-amber-500/30'}`}
+              onClick={() => setSelectedMode('hard')}
             >
               <span>Hard</span>
-              <span className="text-xs">近日公開</span>
+              {selectedMode === 'hard' && <span className="text-amber-400">●</span>}
             </button>
           </div>
         </motion.div>

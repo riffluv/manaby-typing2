@@ -38,7 +38,7 @@ const MonkeytypeHeader = () => {
       <div className="flex items-center gap-4 md:gap-5 rounded-xl px-2 py-1 shadow pointer-events-auto" style={{ backdropFilter: 'blur(2px)' }}>
         {icons.map((Icon, i) => (
           <span key={i} className="hover:text-amber-400 transition-colors duration-150 cursor-pointer">
-            <Icon className="text-[28px]" />
+            <Icon className="text-[20px]" />
           </span>
         ))}
       </div>

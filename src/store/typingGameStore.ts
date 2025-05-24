@@ -16,14 +16,19 @@ interface TypingGameState {
     typingChars: TypingChar[];
     displayChars: string[];
   };
+  mode: TypingMode;
   
   // アクション
   setGameStatus: (status: 'ready' | 'playing' | 'finished') => void;
   setCurrentWordIndex: (index: number) => void;
+  setMode: (mode: TypingMode) => void;
   resetGame: () => void;
   advanceToNextWord: () => void;
   setupCurrentWord: () => void; // 現在の単語をセットアップする
 }
+
+// --- 追加: モード管理 ---
+export type TypingMode = 'normal' | 'hard';
 
 // 現在の単語の初期状態
 const initialCurrentWord = {
@@ -38,7 +43,8 @@ const initialCurrentWord = {
 const initialTypingGameState = {
   gameStatus: 'ready' as const,
   currentWordIndex: 0,
-  currentWord: initialCurrentWord
+  currentWord: initialCurrentWord,
+  mode: 'normal' as TypingMode
 };
 
 // Zustandストアの作成
@@ -54,6 +60,8 @@ const useTypingGameStoreBase = create<TypingGameState>((set, get) => ({
     get().setupCurrentWord();
   },
   
+  setMode: (mode) => set({ mode }),
+  
   resetGame: () => {
     set({ 
       gameStatus: 'ready',
@@ -63,9 +71,10 @@ const useTypingGameStoreBase = create<TypingGameState>((set, get) => ({
   },
   
   advanceToNextWord: () => {
-    const { currentWordIndex } = get();
+    const { currentWordIndex, mode } = get();
+    const list = mode === 'hard' ? require('@/data/hardQuestions').hardQuestions : wordList;
     // 8問で終了（0〜7まで出題、8問目終了でリザルト）
-    if (currentWordIndex + 1 >= 8 || currentWordIndex + 1 >= wordList.length) {
+    if (currentWordIndex + 1 >= 8 || currentWordIndex + 1 >= list.length) {
       set({ gameStatus: 'finished' });
     } else {
       set({ currentWordIndex: currentWordIndex + 1 });
@@ -74,10 +83,11 @@ const useTypingGameStoreBase = create<TypingGameState>((set, get) => ({
   },
   
   setupCurrentWord: () => {
-    const { currentWordIndex } = get();
+    const { currentWordIndex, mode } = get();
+    const list = mode === 'hard' ? require('@/data/hardQuestions').hardQuestions : wordList;
     
-    if (wordList.length > 0 && currentWordIndex < wordList.length) {
-      const word = wordList[currentWordIndex];
+    if (list.length > 0 && currentWordIndex < list.length) {
+      const word = list[currentWordIndex];
       // タイピング文字オブジェクトの配列を作成
       const typingChars = createTypingChars(word.hiragana);
       // 表示用のローマ字の配列を作成
@@ -85,7 +95,7 @@ const useTypingGameStoreBase = create<TypingGameState>((set, get) => ({
       
       set({
         currentWord: {
-          japanese: word.japanese,
+          japanese: word.japanese || word.kanji,
           hiragana: word.hiragana,
           romaji: displayChars.join(''),
           typingChars: typingChars,
