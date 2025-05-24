@@ -1,23 +1,23 @@
 /**
  * ひらがなとローマ字の変換テーブル
- * typingmania-refの実装を参考にした
+ * etypping-refの実装を参考に拡充
  */
 export const japaneseToRomajiMap: { [key: string]: string[] } = {
   // 基本的なひらがな
   'あ': ['a'],
-  'い': ['i'],
-  'う': ['u'],
+  'い': ['i', 'yi'],
+  'う': ['u', 'wu'],
   'え': ['e'],
   'お': ['o'],
-  'か': ['ka'],
+  'か': ['ka', 'ca'],
   'き': ['ki'],
-  'く': ['ku'],
+  'く': ['ku', 'cu', 'qu'],
   'け': ['ke'],
-  'こ': ['ko'],
+  'こ': ['ko', 'co'],
   'さ': ['sa'],
-  'し': ['si', 'shi'],
+  'し': ['si', 'shi', 'ci'],
   'す': ['su'],
-  'せ': ['se'],
+  'せ': ['se', 'ce'],
   'そ': ['so'],
   'た': ['ta'],
   'ち': ['ti', 'chi'],
@@ -49,7 +49,7 @@ export const japaneseToRomajiMap: { [key: string]: string[] } = {
   'ろ': ['ro'],
   'わ': ['wa'],
   'を': ['wo'],
-  'ん': ['n', 'nn'],
+  'ん': ['nn', 'xn', 'n'],
   'が': ['ga'],
   'ぎ': ['gi'],
   'ぐ': ['gu'],
@@ -78,73 +78,138 @@ export const japaneseToRomajiMap: { [key: string]: string[] } = {
   
   // 拗音
   'きゃ': ['kya'],
+  'きぃ': ['kyi'],
   'きゅ': ['kyu'],
+  'きぇ': ['kye'],
   'きょ': ['kyo'],
   'しゃ': ['sya', 'sha'],
+  'しぃ': ['syi'],
   'しゅ': ['syu', 'shu'],
+  'しぇ': ['sye', 'she'],
   'しょ': ['syo', 'sho'],
   'ちゃ': ['tya', 'cha'],
+  'ちぃ': ['tyi'],
   'ちゅ': ['tyu', 'chu'],
+  'ちぇ': ['tye', 'che'],
   'ちょ': ['tyo', 'cho'],
   'にゃ': ['nya'],
+  'にぃ': ['nyi'],
   'にゅ': ['nyu'],
+  'にぇ': ['nye'],
   'にょ': ['nyo'],
   'ひゃ': ['hya'],
+  'ひぃ': ['hyi'],
   'ひゅ': ['hyu'],
+  'ひぇ': ['hye'],
   'ひょ': ['hyo'],
   'みゃ': ['mya'],
+  'みぃ': ['myi'],
   'みゅ': ['myu'],
+  'みぇ': ['mye'],
   'みょ': ['myo'],
   'りゃ': ['rya'],
+  'りぃ': ['ryi'],
   'りゅ': ['ryu'],
+  'りぇ': ['rye'],
   'りょ': ['ryo'],
   'ぎゃ': ['gya'],
+  'ぎぃ': ['gyi'],
   'ぎゅ': ['gyu'],
+  'ぎぇ': ['gye'],
   'ぎょ': ['gyo'],
   'じゃ': ['ja', 'zya'],
+  'じぃ': ['jyi', 'zyi'],
   'じゅ': ['ju', 'zyu'],
+  'じぇ': ['je', 'zye'],
   'じょ': ['jo', 'zyo'],
   'びゃ': ['bya'],
+  'びぃ': ['byi'],
   'びゅ': ['byu'],
+  'びぇ': ['bye'],
   'びょ': ['byo'],
   'ぴゃ': ['pya'],
+  'ぴぃ': ['pyi'],
   'ぴゅ': ['pyu'],
+  'ぴぇ': ['pye'],
   'ぴょ': ['pyo'],
   
   // 促音 (小さいつ)
   'っ': ['xtu', 'xtsu', 'ltu'],
   
   // 小さい文字
-  'ぁ': ['xa'],
-  'ぃ': ['xi'],
-  'ぅ': ['xu'],
-  'ぇ': ['xe'],
-  'ぉ': ['xo'],
-  'ゃ': ['xya'],
-  'ゅ': ['xyu'],
-  'ょ': ['xyo'],
+  'ぁ': ['xa', 'la'],
+  'ぃ': ['xi', 'li'],
+  'ぅ': ['xu', 'lu'],
+  'ぇ': ['xe', 'le'],
+  'ぉ': ['xo', 'lo'],
+  'ゃ': ['xya', 'lya'],
+  'ゅ': ['xyu', 'lyu'],
+  'ょ': ['xyo', 'lyo'],
   
   // 特殊なケース
   'ふぁ': ['fa'],
   'ふぃ': ['fi'],
   'ふぇ': ['fe'],
   'ふぉ': ['fo'],
-  'うぁ': ['wa'],
-  'うぃ': ['wi'],
-  'うぇ': ['we'],
-  'うぉ': ['wo'],
+  'うぁ': ['wha', 'wa'],
+  'うぃ': ['whi', 'wi'],
+  'うぇ': ['whe', 'we'],
+  'うぉ': ['who', 'wo'],
   'ゔぁ': ['va'],
   'ゔぃ': ['vi'],
   'ゔぇ': ['ve'],
   'ゔぉ': ['vo'],
   'ゔ': ['vu'],
   
+  // 拡張パターン (etypping-refより)
+  'くぁ': ['qa', 'qwa'],
+  'くぃ': ['qi', 'qwi'],
+  'くぇ': ['qe', 'qwe'],
+  'くぉ': ['qo', 'qwo'],
+  'くゃ': ['qya'],
+  'くゅ': ['qyu'],
+  'くょ': ['qyo'],
+  'つぁ': ['tsa'],
+  'つぃ': ['tsi'],
+  'つぇ': ['tse'],
+  'つぉ': ['tso'],
+  'てゃ': ['tha'],
+  'てぃ': ['thi'],
+  'てゅ': ['thu'],
+  'てぇ': ['the'],
+  'てょ': ['tho'],
+  'とぁ': ['twa'],
+  'とぃ': ['twi'],
+  'とぅ': ['twu'],
+  'とぇ': ['twe'],
+  'とぉ': ['two'],
+  'でゃ': ['dha'],
+  'でぃ': ['dhi'],
+  'でゅ': ['dhu'],
+  'でぇ': ['dhe'],
+  'でょ': ['dho'],
+  'ぢゃ': ['dya'],
+  'ぢぃ': ['dyi'],
+  'ぢゅ': ['dyu'],
+  'ぢぇ': ['dye'],
+  'ぢょ': ['dyo'],
+  'ぐぁ': ['gwa'],
+  'ぐぃ': ['gwi'],
+  'ぐぅ': ['gwu'],
+  'ぐぇ': ['gwe'],
+  'ぐぉ': ['gwo'],
+  
   // 長音
   'ー': ['-'],
   
-  // 空白
+  // 空白と記号
   '　': [' '],
   ' ': [' '],
+  ',': [','],
+  '.': ['.'],
+  '、': [','],
+  '。': ['.'],
+  '・': ['/'],
 };
 
 /**
@@ -210,13 +275,26 @@ export const convertHiraganaToRomaji = (hiragana: string) => {
   // 促音（っ）の特殊処理
   for (let i = 0; i < result.length - 1; i++) {
     if (result[i].kana === 'っ') {
-      // 次の文字の最初の子音を重ねる一般的なパターン
       const nextRomaji = result[i + 1].romaji;
-      if (nextRomaji && nextRomaji.length > 0) {
+      const nextKana = result[i + 1].kana;
+      
+      // 次の文字が存在しない場合やカンマ、ピリオドの場合は通常の処理
+      if (!nextRomaji || nextRomaji.match(/[,.]/) || 
+          nextRomaji[0].match(/^[aiueon]/)) {
+        // デフォルトのままでOK
+      } else {
+        // 次の文字の最初の子音を重ねる
         const firstChar = nextRomaji[0];
         if ('bcdfghjklmnpqrstvwxyz'.includes(firstChar)) {
+          const doubledCons = Array.from(result[i + 1].alternatives).map(alt => 
+            alt.length > 0 ? firstChar + alt : alt
+          );
+          
           result[i].romaji = firstChar;
-          result[i].alternatives.push(firstChar);
+          result[i].alternatives = [...new Set([firstChar, ...result[i].alternatives])];
+          
+          // 次の文字の代替入力も更新
+          result[i + 1].alternatives = doubledCons;
         }
       }
     }
@@ -229,7 +307,18 @@ export const convertHiraganaToRomaji = (hiragana: string) => {
       if (nextRomaji && nextRomaji.length > 0) {
         const firstChar = nextRomaji[0];
         if ('aeiouyn'.includes(firstChar)) {
-          result[i].alternatives.push("n'");
+          // n' を追加
+          if (!result[i].alternatives.includes("n'")) {
+            result[i].alternatives.push("n'");
+          }
+          
+          // 最後の「ん」の場合はnnを優先せず、nだけにする
+          if (i === result.length - 2) {
+            const nnIndex = result[i].alternatives.indexOf('nn');
+            if (nnIndex !== -1) {
+              result[i].alternatives.splice(nnIndex, 1);
+            }
+          }
         }
       }
     }
@@ -268,10 +357,14 @@ export class TypingChar {
   acceptedInput: string = '';
   remainingText: string = '';
   completed: boolean = false;
+  // 複数パターンのうち現在有効なパターンのインデックス
+  activePatternIndices: number[] = [];
   
   constructor(kana: string, patterns: string[]) {
     this.kana = kana;
     this.patterns = patterns;
+    // 最初はすべてのパターンが有効
+    this.activePatternIndices = Array.from({ length: patterns.length }, (_, i) => i);
     this.calculateRemainingText();
   }
   
@@ -279,9 +372,12 @@ export class TypingChar {
    * 特定の文字列を受け入れ可能かどうかをチェック
    */
   canAccept(character: string): boolean {
-    const newInput = this.acceptedInput + character.toLowerCase();
+    const char = character.toLowerCase();
+    const newInput = this.acceptedInput + char;
     
-    for (const pattern of this.patterns) {
+    // 活性なパターンだけをチェック
+    for (const patternIndex of this.activePatternIndices) {
+      const pattern = this.patterns[patternIndex];
       if (newInput.length <= pattern.length && newInput === pattern.substring(0, newInput.length)) {
         return true;
       }
@@ -294,15 +390,35 @@ export class TypingChar {
    * 入力を受け入れて、完了したかどうかを返す
    */
   accept(character: string): boolean {
-    character = character.toLowerCase();
+    const char = character.toLowerCase();
     
-    if (this.canAccept(character)) {
-      this.acceptedInput += character;
+    if (this.canAccept(char)) {
+      this.acceptedInput += char;
+      
+      // 入力後に有効なパターンを更新
+      this.updateActivePatterns();
       this.calculateRemainingText();
       return true;
     }
     
     return false;
+  }
+  
+  /**
+   * 現在の入力に基づいて有効なパターンを更新
+   */
+  updateActivePatterns(): void {
+    const validPatternIndices: number[] = [];
+    
+    for (let i = 0; i < this.patterns.length; i++) {
+      const pattern = this.patterns[i];
+      if (this.acceptedInput.length <= pattern.length && 
+          this.acceptedInput === pattern.substring(0, this.acceptedInput.length)) {
+        validPatternIndices.push(i);
+      }
+    }
+    
+    this.activePatternIndices = validPatternIndices;
   }
   
   /**
@@ -314,21 +430,27 @@ export class TypingChar {
       return;
     }
     
-    // 最短の残りの表現を検索
-    this.remainingText = this.patterns[this.patterns.length - 1];
+    // 最短の残りの表現を検索（活性パターンの中から）
+    let shortestRemaining = '';
+    let shortestLength = Infinity;
     
-    for (const pattern of this.patterns) {
-      if (this.acceptedInput.length <= pattern.length && 
-          this.acceptedInput === pattern.substring(0, this.acceptedInput.length)) {
+    for (const patternIndex of this.activePatternIndices) {
+      const pattern = this.patterns[patternIndex];
+      if (this.acceptedInput.length <= pattern.length) {
         const remaining = pattern.substring(this.acceptedInput.length);
-        if (remaining.length < this.remainingText.length) {
-          this.remainingText = remaining;
+        if (remaining.length < shortestLength) {
+          shortestRemaining = remaining;
+          shortestLength = remaining.length;
         }
       }
     }
     
-    if (this.remainingText === '') {
+    this.remainingText = shortestRemaining;
+    
+    // どのパターンも完了した場合は完了フラグをセット
+    if (this.activePatternIndices.length === 0 || this.remainingText === '') {
       this.completed = true;
+      this.remainingText = '';
     }
   }
   
@@ -342,11 +464,18 @@ export class TypingChar {
     isCompleted: boolean;
   } {
     return {
-      displayText: this.patterns[0], // 表示用テキスト
+      displayText: this.patterns[0], // 表示用テキスト（最初のパターン）
       acceptedText: this.acceptedInput,
       remainingText: this.remainingText,
       isCompleted: this.completed
     };
+  }
+  
+  /**
+   * 活性なパターンを取得
+   */
+  getActivePatterns(): string[] {
+    return this.activePatternIndices.map(i => this.patterns[i]);
   }
 }
 

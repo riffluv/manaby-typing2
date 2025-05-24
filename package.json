@@ -44,5 +44,6 @@
     "tailwindcss": "^4.1.7",
     "ts-jest": "^29.3.4",
     "typescript": "^5"
-  }
+  },
+  "type": "module"
 }
