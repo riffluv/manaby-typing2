@@ -34,11 +34,13 @@ body {
   display: flex;
   align-items: center;
   justify-content: center;
+  background: transparent;
 }
 
 .flex-column {
   display: flex;
   flex-direction: column;
+  background: transparent;
 }
 
 /* テキスト折り返し設定 */

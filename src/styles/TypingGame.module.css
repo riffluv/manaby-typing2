@@ -77,6 +77,7 @@
   font-weight: 400; /* 標準の太さに */
   letter-spacing: 0.02em;
   margin: 0 auto;
+  margin-top: 20vh; /* モンキータイプのようにセンタリング */
   margin-bottom: calc(var(--progress-bottom-position) + 2rem); /* プログレスバーより上に配置 */
   display: flex;
   flex-wrap: wrap;
@@ -85,12 +86,12 @@
   gap: 0;
   padding: 0.75rem;
   width: 100%;
-  max-width: var(--container-width);
+  max-width: 80ch; /* テキスト幅を制限 */
   position: relative;
   background: transparent;
   border: none;
   box-shadow: none;
-  line-height: 1.1;
+  line-height: 1.4; /* 行間を広げる */
   overflow-wrap: break-word; /* 長いテキストの折り返し */
   white-space: normal; /* テキスト折り返しを許可 */
 }
@@ -101,17 +102,18 @@
   margin: 0 0.02rem;
   font-family: var(--font-mono);
   font-feature-settings: "calt" 0, "liga" 0;
-  line-height: 1.1;
+  line-height: 1.4; /* モンキータイプ風に行間を広げる */
   transform-origin: center;
+  min-width: 0.5em; /* 幅を確保 */
 }
 
 /* 入力完了した文字 */
 .completed {
   color: var(--typing-typed-color); /* タイプ済み - 水色 */
-  text-shadow: 0 0 8px var(--typing-shadow-color);
+  text-shadow: 0 0 5px var(--typing-shadow-color);
   position: relative;
   transition: all 0.2s ease;
-  opacity: 0.95; /* 明るく */
+  opacity: 1; /* 完全に不透明に */
   font-weight: 400; /* 標準的な太さに */
   transform-origin: center;
 }
@@ -119,22 +121,29 @@
 /* 現在入力中の文字 */
 .current {
   color: var(--typing-focus-color); /* フォーカス中 - 白色 */
-  text-shadow: 0 0 12px var(--typing-focus-shadow-color), 0 0 20px rgba(255, 255, 255, 0.4);
+  text-shadow: 0 0 8px var(--typing-focus-shadow-color);
   position: relative;
-  animation: currentChar 1.2s ease-in-out infinite;
   font-weight: 500; /* 少し太く */
-  transform: scale(1.2); /* スケール調整 */
   transform-origin: center;
   opacity: 1; /* 完全に不透明 */
   display: inline-block;
+  border-left: 2px solid var(--typing-focus-color); /* カーソル表示 */
+  padding-left: 0.1rem;
+  margin-left: 0.1rem;
+  animation: cursorBlink 1s ease-in-out infinite;
 }
 
 /* 未入力の文字 */
 .pending {
   color: var(--typing-untyped-color); /* 未入力 - 薄いグレー */
-  opacity: 0.6; /* より明るく */
+  opacity: 0.8; /* より明るく */
   text-shadow: none;
-  font-weight: 300; /* 標準的な細さに */
+  font-weight: 400; /* 標準的な太さに */
+}
+
+@keyframes cursorBlink {
+  0%, 100% { border-left-color: var(--typing-focus-color); }
+  50% { border-left-color: transparent; }
 }
 
 /* エラーの文字 */
@@ -175,11 +184,13 @@
   max-width: var(--container-width);
   padding: 0 var(--spacing-md);
   z-index: var(--z-above);
+  opacity: 0.8;
 }
 
 .progressBar {
   height: 100%;
-  background: var(--progress-bar-color);
+  background: var(--typing-typed-color); /* MonkeytypeのようにプログレスバーColor統一 */
+  transition: width 0.2s ease-in-out;
 }
 
 .statusContainer {
@@ -200,10 +211,12 @@
 }
 
 /* レスポンシブ調整 */
-@media (max-width: var(--breakpoint-md)) {
+@media (max-width: 768px) {
   .typingArea {
     font-size: 1.75rem;
     margin-bottom: calc(var(--progress-bottom-position) + 1.5rem);
+    margin-top: 15vh; /* モバイルでは上部マージンを小さく */
+    max-width: 95%;
   }
   
   .wordJapanese {
@@ -215,10 +228,11 @@
   }
 }
 
-@media (max-width: var(--breakpoint-sm)) {
+@media (max-width: 640px) {
   .typingArea {
     font-size: 1.5rem;
     padding: 0.5rem;
+    margin-top: 10vh; /* さらに小さく */
   }
   
   .wordJapanese {
@@ -229,5 +243,10 @@
   .wordHiragana {
     font-size: 1.25rem;
     max-width: 90%;
+  }
+  
+  .progressBarTrack {
+    height: 3px; /* モバイルではより薄く */
+    padding: 0 var(--spacing-sm);
   }
 }

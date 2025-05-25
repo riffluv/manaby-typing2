@@ -1,6 +1,4 @@
 import React from 'react';
-import BackgroundEffect from './BackgroundEffect';
-import RetroBackground from '@/components/RetroBackground';
 import styles from '@/styles/ScreenLayout.module.css';
 
 type ScreenLayoutProps = {
@@ -18,10 +16,10 @@ const ScreenLayout: React.FC<ScreenLayoutProps> = ({
   variant = 'default',
   className = '',
 }) => {
-  // 画面タイプごとの背景コンポーネントをマッピング
+  // 背景コンポーネントは使用しない
   const backgroundComponents = {
-    default: <BackgroundEffect />,
-    game: <RetroBackground />,
+    default: null,
+    game: null,
     result: null,
     ranking: null
   };

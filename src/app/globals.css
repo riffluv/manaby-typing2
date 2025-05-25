@@ -86,17 +86,18 @@
 }
 
 body {
-  background: #080212; /* 元の背景色に戻す */
+  background: var(--color-bg, #323437); /* Monkeytypeのような暗い背景色 */
   min-height: 100vh;
   min-width: 100vw;
   display: flex;
   align-items: center;
   justify-content: center;
   overflow-x: hidden;
-  color: var(--foreground);
-  font-family: var(--font-sans);
+  color: var(--color-light-text, #D1D0C5);
+  font-family: var(--font-mono);
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
+  padding: 0; /* パディングを削除 */
 }
 
 /* モノスペースフォントのクラス - タイピングエリアで使用 */

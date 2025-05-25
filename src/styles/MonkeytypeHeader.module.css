@@ -7,29 +7,39 @@
   left: 1.5rem;
   pointer-events: none;
   min-width: 320px;
+  width: calc(100% - 3rem);
+  justify-content: space-between;
 }
 
 .logoContainer {
   display: flex;
-  align-items: center;
+  align-items: center;  /* 中央揃えに変更 */
   gap: 0.5rem;
   padding: 0.25rem 0.75rem;
   border-radius: 0.75rem;
-  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-  backdrop-filter: blur(2px);
+  user-select: none;
+  pointer-events: all;
 }
 
 .logoImage {
   border-radius: 0.25rem;
-  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
 }
+
+.logoTextContainer {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+}
+
+/* バナーテキストを削除 */
 
 .logoText {
   font-family: var(--font-mono);
   font-weight: 900;
   font-size: 1.5rem;
   letter-spacing: -0.04em;
-  text-shadow: 0 1px 2px rgba(0, 0, 0, 0.1);
+  text-shadow: none;
+  line-height: 1.1;  /* 行の高さを調整 */
 }
 
 .iconGroup {
@@ -37,21 +47,49 @@
   align-items: center;
   gap: 1rem;
   padding: 0.25rem 0.5rem;
+  margin-left: 1rem;
   border-radius: 0.75rem;
-  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-  backdrop-filter: blur(2px);
+  user-select: none;
+  pointer-events: all;
 }
 
 .icon {
-  color: #9ca3af;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: var(--color-soft-text, #9ca3af);
   transition: color 0.15s;
   cursor: pointer;
+  padding: 0.375rem;
+  border-radius: 0.25rem;
 }
 
 .icon:hover {
-  color: #f59e0b;
+  color: var(--color-highlight, #7cffcb);
+  background-color: rgba(255, 255, 255, 0.05);
 }
 
 .iconSvg {
   font-size: 1.25rem;
+  stroke-width: 2px;
+}
+
+@media (max-width: 640px) {
+  .header {
+    top: 1rem;
+    left: 1rem;
+    width: calc(100% - 2rem);
+  }
+  
+  .iconGroup {
+    gap: 0.5rem;
+  }
+  
+  .icon {
+    padding: 0.25rem;
+  }
+  
+  .iconSvg {
+    font-size: 1.125rem;
+  }
 }

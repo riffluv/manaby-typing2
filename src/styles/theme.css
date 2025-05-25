@@ -1,5 +1,5 @@
 :root {  /* カラーパレット */
-  --color-primary: #f59e0b;
+  --color-primary: #7cffcb; /* メインカラーを水色に設定 */
   --color-secondary: #374151;
   --color-accent: #10b981;
   --color-danger: #ef4444;
@@ -8,7 +8,14 @@
   --color-muted: #9ca3af;
   --color-white: #ffffff;
   --color-hiragana: rgba(187, 187, 255, 0.9);
-    /* タイピング用の色 - コミット7e66856d01a4a65491c5ad6625f7c99b649d9350の色に正確に戻す */
+  /* Monkeytypeのテーマカラーに合わせた色設定 */
+  --color-bg: #323437;
+  --color-bg2: #2C2E31;
+  --color-soft-text: #646669;
+  --color-light-text: #D1D0C5;
+  --color-highlight: #7cffcb;
+  
+  /* タイピング用の色 - コミット7e66856d01a4a65491c5ad6625f7c99b649d9350の色に正確に戻す */
   --typing-typed-color: #7cffcb;  /* 入力済み文字の色（水色） */
   --typing-untyped-color: rgba(170, 170, 170, 0.6); /* 未入力文字の色（薄いグレー） */
   --typing-error-color: #ef4444;  /* エラー文字の色（赤） */

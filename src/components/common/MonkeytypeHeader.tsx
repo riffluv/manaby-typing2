@@ -13,7 +13,7 @@ const icons = [FiMonitor, FiBarChart2, FiInfo, FiSettings, FiUser];
 const MonkeytypeHeader = () => {
   return (
     <header className={styles.header}>
-      <div className={styles.logoContainer}>
+    <div className={styles.logoContainer}>
         <Image
           src="/images/manabyicon_01.png"
           alt="manabytype logo"
@@ -22,7 +22,9 @@ const MonkeytypeHeader = () => {
           className={styles.logoImage}
           priority
         />
-        <span className={styles.logoText}>manabytype</span>
+        <div className={styles.logoTextContainer}>
+          <span className={styles.logoText}>manabytype</span>
+        </div>
       </div>
       <div className={styles.iconGroup}>
         {icons.map((Icon, i) => (
