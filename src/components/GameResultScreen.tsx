@@ -1,4 +1,5 @@
-'use client';
+"use client";
+import MinimalShortcut from '@/components/MinimalShortcut';
 
 import { motion } from 'framer-motion';
 import type { GameScoreLog } from '@/types/score';
@@ -130,6 +131,10 @@ export default function GameResultScreen({
       {/* 背景 */}
       <div className={styles.background}></div>
       {/* <ShortcutFooter shortcuts={shortcuts} /> */}
+      <MinimalShortcut shortcuts={[
+        { key: 'R', label: 'リトライ' },
+        { key: 'Esc', label: '戻る' }
+      ]} />
     </motion.div>
   );
 }

@@ -1,4 +1,5 @@
-'use client';
+"use client";
+import MinimalShortcut from '@/components/MinimalShortcut';
 import React, { useEffect, useState } from 'react';
 import { motion } from 'framer-motion';
 import { getRankingEntries, RankingEntry } from '@/lib/rankingManaby2';
@@ -190,23 +191,11 @@ const NewRankingScreen: React.FC<NewRankingScreenProps> = ({ onGoMenu }) => {
           )}
         </motion.div>
         
-        {/* ボタン */}
-        <motion.div 
-          variants={itemVariants} 
-          className="flex flex-wrap justify-center gap-4 relative z-10 w-full max-w-md mx-auto pt-2"
-        >
-          <motion.button
-            onClick={onGoMenu}
-            className="w-full px-6 py-2.5 bg-amber-500 hover:bg-amber-600 text-gray-900 font-bold rounded-md transition-all duration-200 shadow-md hover:shadow-lg"
-            whileHover={{ scale: 1.03 }}
-            whileTap={{ scale: 0.98 }}
-          >
-            <span className="relative z-10">メニューに戻る</span>
-          </motion.button>
-        </motion.div>
+
       </motion.div>
       
       {/* <ShortcutFooter shortcuts={shortcuts} /> */}
+      <MinimalShortcut shortcuts={[{ key: 'Esc', label: '戻る' }]} />
     </div>
   );
 };

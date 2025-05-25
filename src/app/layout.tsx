@@ -35,7 +35,7 @@ export default function RootLayout({
         <div className={styles.appContainer}>
           <MonkeytypeHeader />
           {children}
-          <MinimalShortcut />
+          {/* 画面ごとのショートカット表示に統一するため削除 */}
           <div className={styles.mcpStatusWrapper}>
             <MCPStatus position="bottom-right" />
           </div>

@@ -1,3 +1,4 @@
+import MinimalShortcut from '@/components/MinimalShortcut';
 import React, { useState } from 'react';
 import { motion } from 'framer-motion';
 import { useTypingGameStore } from '@/store/typingGameStore';
@@ -94,6 +95,12 @@ const MainMenu: React.FC<MainMenuProps> = ({ onStart, onRanking, onRetry }) => {
       </motion.div>
 
       {/* <ShortcutFooter shortcuts={shortcuts} /> */}
+      {/* メインメニュー用ショートカット（Space, Alt+R, Esc） */}
+      <MinimalShortcut shortcuts={[
+        { key: 'Space', label: 'スタート' },
+        { key: ['Alt', 'R'], label: 'ランキング' },
+        { key: 'Esc', label: '戻る' }
+      ]} />
     </div>
   );
 };

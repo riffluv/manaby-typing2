@@ -30,7 +30,8 @@ export default function GamePlayingScreen({
       animate={{ opacity: 1 }}
       transition={{ duration: 0.3 }}
     >
-      {/* ミニマルなEscキーショートカット表示（全画面共通化のため削除） */}
+      {/* ゲーム画面はEscのみ */}
+      <MinimalShortcut shortcuts={[{ key: 'Esc', label: '戻る' }]} />
       {/* ゲーム画面 */}
       <GameScreen 
         currentWord={currentWord}
