@@ -31,10 +31,12 @@ export default function RootLayout({
         className={`${geistSans.variable} ${geistMono.variable} antialiased`}
         suppressHydrationWarning
       >
-        <MonkeytypeHeader />
-        {children}
-        <div className={styles.mcpStatusWrapper}>
-          <MCPStatus position="bottom-right" />
+        <div className={styles.appContainer}>
+          <MonkeytypeHeader />
+          {children}
+          <div className={styles.mcpStatusWrapper}>
+            <MCPStatus position="bottom-right" />
+          </div>
         </div>
       </body>
     </html>
