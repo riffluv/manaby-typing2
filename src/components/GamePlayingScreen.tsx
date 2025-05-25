@@ -4,6 +4,7 @@ import { motion } from 'framer-motion';
 import GameScreen from '@/components/GameScreen';
 import { TypingWord, KanaDisplay } from '@/types/typing';
 import { PerWordScoreLog } from '@/types/score';
+import styles from '@/styles/GamePlayingScreen.module.css';
 
 interface GamePlayingScreenProps {
   currentWord: TypingWord;
@@ -23,7 +24,7 @@ export default function GamePlayingScreen({
 }: GamePlayingScreenProps) {
   return (
     <motion.div 
-      className="bg-transparent rounded p-4 md:p-8 text-center w-full max-w-screen-md max-w-[98vw] animate-fadeIn min-h-[40vh] flex flex-col items-center justify-center relative overflow-hidden"
+      className={styles.container}
       initial={{ opacity: 0 }}
       animate={{ opacity: 1 }}
       transition={{ duration: 0.3 }}
@@ -36,16 +37,16 @@ export default function GamePlayingScreen({
       />
 
       {/* プログレスバーとステータス */}
-      <div className="w-full max-w-md mx-auto mt-6">
-        <div className="h-1 w-full bg-gray-700 rounded-full overflow-hidden">
+      <div className={styles.progressContainer}>
+        <div className={styles.progressBarTrack}>
           <motion.div 
-            className="h-full bg-amber-400"
+            className={styles.progressBar}
             initial={{ width: '0%' }}
             animate={{ width: `${Math.min((scoreLog.length / 10) * 100, 100)}%` }}
             transition={{ duration: 0.2 }}
           />
         </div>
-        <div className="flex justify-between text-xs md:text-sm text-gray-400 mt-2 font-mono">
+        <div className={styles.statusText}>
           <div>WORDS: {scoreLog.length}</div>
           {scoreLog.length > 0 && (
             <>

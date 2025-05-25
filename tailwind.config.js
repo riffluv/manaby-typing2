@@ -1,7 +1,7 @@
 module.exports = {
   content: [
     "./src/**/*.{js,jsx,ts,tsx}",
-    // 他のパス
+    "./src/**/*.{css,scss}", // CSSモジュールを含む
   ],
   theme: {
     extend: {
@@ -10,6 +10,16 @@ module.exports = {
       },
       boxShadow: {
         'sf-glow': '0 0 32px #00f2ff88',
+      },
+      colors: {
+        primary: '#f59e0b',
+        secondary: '#374151',
+        accent: '#10b981',
+        danger: '#ef4444',
+      },
+      fontFamily: {
+        mono: ['Roboto Mono', 'JetBrains Mono', 'monospace'],
+        sans: ['Noto Sans JP', 'sans-serif'],
       },
     },
   },

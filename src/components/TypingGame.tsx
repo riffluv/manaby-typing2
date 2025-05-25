@@ -10,6 +10,7 @@ import { TypingWord, KanaDisplay } from '@/types/typing';
 import { PerWordScoreLog, GameScoreLog } from '@/types/score';
 import { useSceneNavigationStore } from '@/store/sceneNavigationStore'; 
 import { containerVariants, itemVariants } from '@/styles/animations';
+import styles from '@/styles/TypingGame.module.css';
 
 // カスタムフックとコンポーネントのインポート
 import { useTypingKeyboardHandler } from '@/hooks/useTypingKeyboardHandler';
@@ -134,7 +135,7 @@ const TypingGame: React.FC<{ onGoMenu?: () => void; onGoRanking?: () => void }> 
 
   return (
     <motion.div 
-      className="w-full max-w-4xl mx-auto flex flex-col items-center justify-center py-5"
+      className={styles.container}
       initial="hidden"
       animate="visible"
       variants={containerVariants}

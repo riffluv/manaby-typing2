@@ -1,0 +1,30 @@
+.typingArea {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  align-items: center;
+  padding: 1rem;
+  background: #1f2937;
+  border-radius: 0.5rem;
+  color: #ffffff;
+}
+
+.typingChar {
+  font-size: 1.25rem;
+  font-family: var(--font-mono);
+  margin: 0 0.1rem;
+  transition: color 0.2s, transform 0.2s;
+}
+
+.typingChar.completed {
+  color: #10b981;
+}
+
+.typingChar.current {
+  color: #f59e0b;
+  transform: scale(1.2);
+}
+
+.typingChar.pending {
+  color: #6b7280;
+}

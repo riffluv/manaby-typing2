@@ -1,5 +1,5 @@
 import React, { useEffect, useCallback, memo } from 'react';
-import styles from '@/styles/TypingGame.module.css';
+import styles from '@/styles/TypingGameRefactored.module.css';
 import MCPStatus from '@/components/MCPStatus';
 import { useTypingGameStore, useGameStatus, useDisplayWord, useCurrentWord, useCurrentWordIndex, useWordListLength } from '@/store/typingGameStore';
 import { useAudioStore } from '@/store/audioStore';

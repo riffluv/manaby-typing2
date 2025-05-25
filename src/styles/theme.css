@@ -1,0 +1,13 @@
+:root {
+  --color-primary: #f59e0b;
+  --color-secondary: #374151;
+  --color-accent: #10b981;
+  --color-danger: #ef4444;
+
+  --font-mono: 'Roboto Mono', 'JetBrains Mono', monospace;
+  --font-sans: 'Noto Sans JP', sans-serif;
+
+  --spacing-small: 0.5rem;
+  --spacing-medium: 1rem;
+  --spacing-large: 2rem;
+}

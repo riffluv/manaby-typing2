@@ -16,8 +16,7 @@
 }
 
 .startScreen, 
-.finishScreen, 
-.gameScreen {
+.finishScreen {
   /* シンプルでフィルター無しのコンテナ */
   background: transparent;
   border-radius: 4px;
@@ -39,8 +38,7 @@
 
 /* 背景効果を削除 */
 .startScreen::before,
-.finishScreen::before,
-.gameScreen::before {
+.finishScreen::before {
   content: none; /* 背景効果を削除 */
 }
 
@@ -70,7 +68,7 @@
   letter-spacing: 0.04em;
   font-weight: 300; /* 少し太めに */
   opacity: 1; /* 完全に不透明に */
-  width: 90%;
+  width: 100%;
   transform: scaleY(0.95); /* 縦方向に少し圧縮 */
   line-height: 1.2; /* 行間調整 */
 }
@@ -89,7 +87,7 @@
   gap: 0;
   padding: 0.75rem;
   width: 100%;
-  max-width: 85%;
+  max-width: 800px;
   position: relative;
   background: transparent;
   border: none;

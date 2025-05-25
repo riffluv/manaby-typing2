@@ -6,6 +6,11 @@
 /* 日本語フォントの追加 - 横長でモダンなフォント */
 @import url('https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@100;200;300;400;500&display=swap');
 
+/* グローバルスタイルを分割したため、以下のファイルをインポート */
+@import "../styles/base.css";
+@import "../styles/components.css";
+@import "../styles/theme.css";
+
 :root {
   --background: #ffffff;
   --foreground: #171717;

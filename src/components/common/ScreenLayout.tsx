@@ -1,6 +1,7 @@
 import React from 'react';
 import BackgroundEffect from './BackgroundEffect';
 import RetroBackground from '@/components/RetroBackground';
+import styles from '@/styles/ScreenLayout.module.css';
 
 type ScreenLayoutProps = {
   children: React.ReactNode;
@@ -27,17 +28,14 @@ const ScreenLayout: React.FC<ScreenLayoutProps> = ({
 
   return (
     <div 
-      className={`min-h-screen w-full flex items-center justify-center relative bg-gray-900 text-white font-mono overflow-hidden ${className}`}
+      className={`${styles.screenLayout} ${className}`}
       style={{ border: 'none' }}
     >
       {/* 画面タイプに応じた背景 */}
       {backgroundComponents[variant]}
       
       {/* コンテンツエリア */}
-      <div 
-        className="relative z-10 w-full flex items-center justify-center py-10"
-        style={{ border: 'none' }}
-      >
+      <div className={styles.contentArea}>
         {children}
       </div>
     </div>

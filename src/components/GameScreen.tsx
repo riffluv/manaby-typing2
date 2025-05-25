@@ -1,5 +1,5 @@
 import React, { memo } from 'react';
-import styles from '@/styles/TypingGame.module.css';
+import styles from '@/styles/GameScreen.module.css';
 import TypingArea from './TypingArea';
 import { TypingWord, KanaDisplay } from '@/types/typing';
 
