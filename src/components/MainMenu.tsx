@@ -58,47 +58,42 @@ const MainMenu: React.FC<MainMenuProps> = ({ onStart, onRanking, onRetry }) => {
         initial="hidden"
         animate="visible"
         variants={containerVariants}
-      >
-        {/* ゲームロゴ/タイトル */}
-        <motion.div variants={itemVariants} className={styles.logoContainer}>
-          <h1 className={styles.logoText}>manaby typing</h1>
+      >        {/* ゲームロゴ/タイトル */}
+        <motion.div variants={itemVariants} className={styles.MainMenu_logoContainer}>
+          <h1 className={styles.MainMenu_logoText}>manaby typing</h1>
         </motion.div>
-        
-        {/* スタートボタン */}
-        <motion.div variants={itemVariants} className={styles.startButtonContainer}>
+          {/* スタートボタン */}
+        <motion.div variants={itemVariants} className={styles.MainMenu_startButtonContainer}>
           <motion.button
             onClick={handleStart}
-            className={styles.startButton}
+            className={styles.MainMenu_startButton}
             whileHover={buttonVariants.hover}
             whileTap={buttonVariants.tap}
           >
             スタート
           </motion.button>
         </motion.div>
-        
-        {/* モード選択 */}
-        <motion.div variants={itemVariants} className={styles.modeSelectionContainer}>
-          <h2 className={styles.modeTitle}>モード選択</h2>
-          <div className={styles.modeButtonsGrid}>
-            <button
-              className={`${styles.modeButton} ${selectedMode === 'normal' ? styles.modeButtonActive : styles.modeButtonInactive}`}
+          {/* モード選択 */}
+        <motion.div variants={itemVariants} className={styles.MainMenu_modeSelectionContainer}>
+          <h2 className={styles.MainMenu_modeTitle}>モード選択</h2>
+          <div className={styles.MainMenu_modeButtonsGrid}>            <button
+              className={`${styles.MainMenu_modeButton} ${selectedMode === 'normal' ? styles.MainMenu_modeButtonActive : styles.MainMenu_modeButtonInactive}`}
               onClick={() => setSelectedMode('normal')}
             >
               <span>Normal</span>
-              {selectedMode === 'normal' && <span className={styles.activeIndicator}>●</span>}
+              {selectedMode === 'normal' && <span className={styles.MainMenu_activeIndicator}>●</span>}
             </button>
             <button
-              className={`${styles.modeButton} ${selectedMode === 'hard' ? styles.modeButtonActive : styles.modeButtonInactive}`}
+              className={`${styles.MainMenu_modeButton} ${selectedMode === 'hard' ? styles.MainMenu_modeButtonActive : styles.MainMenu_modeButtonInactive}`}
               onClick={() => setSelectedMode('hard')}
             >
               <span>Hard</span>
-              {selectedMode === 'hard' && <span className={styles.activeIndicator}>●</span>}
+              {selectedMode === 'hard' && <span className={styles.MainMenu_activeIndicator}>●</span>}
             </button>
           </div>
         </motion.div>
-        
-        {/* バージョン情報 */}
-        <motion.div variants={itemVariants} className={styles.versionInfo}>
+          {/* バージョン情報 */}
+        <motion.div variants={itemVariants} className={styles.MainMenu_versionInfo}>
           v2.0.0 | monkeytype UI
         </motion.div>
       </motion.div>

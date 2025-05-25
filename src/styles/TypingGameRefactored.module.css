@@ -1,4 +1,4 @@
-.TypingGameRefactored_typingGameContainer {
+.typingGameContainer {
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -37,6 +37,8 @@
   text-transform: uppercase;
   min-width: 140px;
 }
+
+/* TypingGame.module.cssのスタイルを使用 */
 
 .resetButton::after {
   content: '';

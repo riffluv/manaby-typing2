@@ -1,5 +1,6 @@
 import React, { useEffect, useCallback, memo } from 'react';
 import styles from '@/styles/TypingGameRefactored.module.css';
+import typingStyles from '@/styles/TypingGame.module.css';
 import MCPStatus from '@/components/MCPStatus';
 import { useTypingGameStore, useGameStatus, useDisplayWord, useCurrentWord, useCurrentWordIndex, useWordListLength } from '@/store/typingGameStore';
 import { useAudioStore } from '@/store/audioStore';
@@ -24,17 +25,17 @@ const TypingArea = memo(({
   // 文字のスタイルを決定
   const getCharClass = useCallback((kanaIndex: number, charIndex: number) => {
     if (kanaIndex < currentKanaIndex) {
-      return styles.completed; // 入力済みのかな
+      return typingStyles.completed; // 入力済みのかな
     } else if (kanaIndex === currentKanaIndex) {
       const acceptedLength = kanaDisplay.acceptedText.length;
       
       if (charIndex < acceptedLength) {
-        return styles.completed; // 入力済みの文字
+        return typingStyles.completed; // 入力済みの文字
       } else if (charIndex === acceptedLength) {
-        return styles.current; // 現在の文字
+        return typingStyles.current; // 現在の文字
       }
     }
-    return styles.pending; // 未入力
+    return typingStyles.pending; // 未入力
   }, [currentKanaIndex, kanaDisplay.acceptedText.length]);
 
   return (
@@ -44,11 +45,11 @@ const TypingArea = memo(({
         const displayText = displayChars[kanaIndex] || '';
         
         return (
-          <span key={kanaIndex} className={styles.kanaGroup}>
+          <span key={kanaIndex}>
             {displayText.split('').map((char, charIndex) => (
               <span 
                 key={`${kanaIndex}-${charIndex}`} 
-                className={getCharClass(kanaIndex, charIndex)}
+                className={typingStyles.typingChar + ' ' + getCharClass(kanaIndex, charIndex)}
               >
                 {char}
               </span>
@@ -77,7 +78,7 @@ const GameScreen = memo(() => {
     <div className={styles.gameScreen}>
       <div className={styles.wordJapanese}>{japanese}</div>
       <div className={styles.wordHiragana}>{hiragana}</div>
-      <div className={styles.typingArea}>
+      <div className={typingStyles.typingArea}>
         <TypingArea 
           currentKanaIndex={currentKanaIndexRef.current}
           typingChars={currentWord.typingChars}

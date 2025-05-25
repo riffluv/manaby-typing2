@@ -126,10 +126,9 @@
   transform-origin: center;
   opacity: 1; /* 完全に不透明 */
   display: inline-block;
-  border-left: 2px solid var(--typing-focus-color); /* カーソル表示 */
   padding-left: 0.1rem;
   margin-left: 0.1rem;
-  animation: cursorBlink 1s ease-in-out infinite;
+  animation: currentChar 1s ease-in-out infinite;
 }
 
 /* 未入力の文字 */
@@ -138,11 +137,6 @@
   opacity: 0.8; /* より明るく */
   text-shadow: none;
   font-weight: 400; /* 標準的な太さに */
-}
-
-@keyframes cursorBlink {
-  0%, 100% { border-left-color: var(--typing-focus-color); }
-  50% { border-left-color: transparent; }
 }
 
 /* エラーの文字 */
