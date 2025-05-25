@@ -24,12 +24,9 @@ export default function GamePlayingScreen({
   kanaDisplay,
   scoreLog
 }: GamePlayingScreenProps) {  // スコア計算ロジック
-  const averageKpm = scoreLog.length > 0 
-    ? Math.round(scoreLog.reduce((sum, log) => sum + log.kpm, 0) / scoreLog.length) 
-    : 0;
-  const averageAccuracy = scoreLog.length > 0
-    ? Math.round(scoreLog.reduce((sum, log) => sum + log.accuracy, 0) / scoreLog.length)
-    : 0;
+  // 直近のお題のKPMと正確率
+  const latestKpm = scoreLog.length > 0 ? Math.round(scoreLog[scoreLog.length - 1].kpm) : 0;
+  const latestAccuracy = scoreLog.length > 0 ? Math.round(scoreLog[scoreLog.length - 1].accuracy) : 0;
 
   // プログレス計算
   const progressPercentage = Math.min((scoreLog.length / 10) * 100, 100);
@@ -100,15 +97,14 @@ export default function GamePlayingScreen({
                 animate={{ opacity: 1 }}
                 transition={{ delay: 0.5, duration: 0.3 }}
               >
-                KPM: <span style={{ color: averageKpm > 50 ? '#7cffcb' : 'inherit' }}>{averageKpm}</span>
+                KPM: <span style={{ color: latestKpm > 50 ? '#7cffcb' : 'inherit' }}>{latestKpm}</span>
               </motion.div>
-              
               <motion.div
                 initial={{ opacity: 0 }}
                 animate={{ opacity: 1 }}
                 transition={{ delay: 0.6, duration: 0.3 }}
               >
-                ACC: <span style={{ color: averageAccuracy > 90 ? '#7cffcb' : 'inherit' }}>{averageAccuracy}%</span>
+                ACC: <span style={{ color: latestAccuracy > 90 ? '#7cffcb' : 'inherit' }}>{latestAccuracy}%</span>
               </motion.div>
             </>
           )}
