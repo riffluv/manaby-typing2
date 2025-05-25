@@ -2,87 +2,127 @@
  * TypingCharacters.module.css
  * このファイルはタイピング文字（ローマ字）の表示に関するスタイルのみを定義します。
  * リファクタリング時にこのスタイルが変更されないよう、独立したファイルとして管理します。
+ * 
+ * BEMライクな命名規則を採用し、セレクタの詳細度を均一に保ちます
+ * - .typing-area（Block）: タイピングエリア全体
+ * - .typing-char（Element）: 個々の文字
+ * - .typing-char--state（Modifier）: 状態による変化（completed, current, pending, error）
  */
 
-/* タイピング文字の表示エリア */
+/**
+ * メインコンポーネント: タイピングエリア全体
+ * コンテナ要素として機能し、文字のレイアウトを担当
+ */
 .typingArea {
+  /* フォントと表示の基本設定 */
   font-family: var(--font-mono);
-  font-size: 2rem;
-  font-weight: 400;
+  font-size: var(--typing-font-size, 2rem);
+  font-weight: var(--typing-font-weight-normal, 400);
   letter-spacing: 0.02em;
-  margin: 0 auto;
-  margin-bottom: calc(var(--progress-bottom-position) + 2rem);
+  line-height: var(--typing-line-height, 1.4);
+  
+  /* レイアウト */
   display: flex;
   flex-wrap: wrap;
   justify-content: center;
   align-items: center;
-  gap: 0;
-  padding: 0.75rem;
   width: 100%;
   max-width: 80ch;
+  
+  /* 余白と位置調整 */
+  margin: 0 auto;
+  margin-bottom: calc(var(--progress-bottom-position) + 2rem);
+  padding: 0.75rem;
   position: relative;
-  background: transparent;
-  border: none;
-  box-shadow: none;
-  line-height: 1.4;
+  
+  /* テキスト処理 */
   overflow-wrap: break-word;
   white-space: normal;
   overflow: visible;
+  
+  /* 装飾のリセット */
+  background: transparent;
+  border: none;
+  box-shadow: none;
+  gap: 0;
 }
 
-/* 個々のタイピング文字 */
+/**
+ * 文字要素: 個々のタイピング文字
+ * すべての状態の基本となるスタイル
+ */
 .typingChar {
+  /* 表示方法 */
   display: inline-block;
-  transition: color 0.15s ease-in-out, transform 0.1s ease;
-  margin: 0 0.02rem;
-  font-family: var(--font-mono);
-  font-feature-settings: "calt" 0, "liga" 0;
-  line-height: 1.4;
-  transform-origin: center;
   min-width: 0.5em;
+  margin: 0 0.02rem;
+  
+  /* フォント設定 */
+  font-family: var(--font-mono);
+  font-feature-settings: "calt" 0, "liga" 0; /* 合字を無効化 */
+  line-height: var(--typing-line-height, 1.4);
+  
+  /* アニメーション設定 */
+  transform-origin: center;
+  transition: color 0.15s ease-in-out, transform 0.1s ease;
 }
 
-/* 入力完了した文字 */
+/**
+ * 状態修飾子: 入力済みの文字
+ * 入力が完了した文字のスタイル
+ */
 .completed {
   color: var(--typing-typed-color);
   text-shadow: 0 0 5px var(--typing-shadow-color);
-  position: relative;
-  transition: all 0.2s ease;
   opacity: 1;
   font-weight: 400;
+  position: relative;
   transform-origin: center;
+  transition: all 0.2s ease;
 }
 
-/* 現在入力中の文字 */
+/**
+ * 状態修飾子: 現在フォーカス中の文字
+ * 入力待ちのカレント文字のスタイル
+ */
 .current {
   color: var(--typing-focus-color);
   text-shadow: 0 0 8px var(--typing-focus-shadow-color);
-  position: relative;
-  font-weight: 500;
-  transform-origin: center;
   opacity: 1;
+  font-weight: var(--typing-font-weight-focus, 500);
+  position: relative;
+  transform-origin: center;
   display: inline-block;
   padding-left: 0.1rem;
   margin-left: 0.1rem;
-  animation: currentChar 1s ease-in-out infinite;
+  animation: currentChar var(--typing-animation-duration, 1s) var(--typing-animation-timing, ease-in-out) infinite;
 }
 
-/* 未入力の文字 */
+/**
+ * 状態修飾子: 未入力の文字
+ * まだ入力していない将来の文字のスタイル
+ */
 .pending {
   color: var(--typing-untyped-color);
   opacity: 0.8;
   text-shadow: none;
-  font-weight: 300;
+  font-weight: var(--typing-font-weight-pending, 300);
 }
 
-/* エラーの文字 */
+/**
+ * 状態修飾子: エラー文字
+ * 入力ミスがあった場合の文字スタイル
+ */
 .error {
   color: var(--typing-error-color);
   text-decoration: underline wavy;
   animation: shake 0.2s ease-in-out;
 }
 
-/* アニメーション定義 */
+/**
+ * アニメーション: カレント文字の点滅効果
+ * フォーカス中の文字に適用される呼吸するような効果
+ */
 @keyframes currentChar {
   0%, 100% {
     text-shadow: 0 0 8px var(--typing-focus-shadow-color);
@@ -92,6 +132,10 @@
   }
 }
 
+/**
+ * アニメーション: エラー時の振動効果
+ * タイプミス発生時に適用される左右の揺れ
+ */
 @keyframes shake {
   0%, 100% { transform: translateX(0); }
   25% { transform: translateX(-5px); }

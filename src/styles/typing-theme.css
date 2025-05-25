@@ -1,0 +1,48 @@
+/**
+ * typing-theme.css
+ * タイピングゲーム専用のテーマ変数
+ * 
+ * このファイルは製品版のタイピングゲーム用のスタイル変数を一元管理します。
+ * カラー、サイズ、アニメーションなど、タイピング表示の視覚的な要素を定義します。
+ * 
+ * theme.cssから@importされ、プロジェクト全体で一貫したスタイルを提供します。
+ */
+
+:root {
+  /* カラーパレット - 視認性とアクセシビリティを考慮 */
+  --typing-typed-color: #7cffcb;           /* 入力済み文字（水色） */
+  --typing-untyped-color: rgba(170, 170, 170, 0.7); /* 未入力文字（薄いグレー） */
+  --typing-error-color: #ff5252;           /* エラー文字（明るい赤） */
+  --typing-focus-color: #ffffff;           /* フォーカス中（純白） */
+  
+  /* エフェクト - パフォーマンスとユーザー体験を考慮 */
+  --typing-shadow-color: rgba(124, 255, 203, 0.4);  /* タイプ済み文字のグロー */
+  --typing-focus-shadow-color: rgba(255, 255, 255, 0.8); /* フォーカス文字のグロー */
+  --typing-error-shadow-color: rgba(255, 82, 82, 0.4);   /* エラー時のグロー */
+  
+  /* アニメーション - 流動的で自然な動きを実現 */
+  --typing-animation-duration: 1s;         /* アニメーション時間 */
+  --typing-animation-timing: cubic-bezier(0.4, 0.0, 0.2, 1); /* マテリアルデザイン風イージング */
+  --typing-transition-speed: 150ms;        /* 状態遷移の速さ */
+  
+  /* タイポグラフィ - 読みやすさと一貫性を維持 */
+  --typing-font-size: 2rem;                /* 基本フォントサイズ */
+  --typing-font-weight-normal: 400;        /* 通常の太さ */
+  --typing-font-weight-focus: 500;         /* フォーカス時の太さ */
+  --typing-font-weight-pending: 300;       /* 未入力時の太さ */
+  --typing-line-height: 1.4;               /* 行の高さ */
+  --typing-letter-spacing: 0.02em;         /* 文字間隔 */
+  
+  /* スペーシング - 文字の配置と余白 */
+  --typing-char-margin: 0.02rem;           /* 文字間の余白 */
+  --typing-area-padding: 0.75rem;          /* タイピングエリアの内部余白 */
+}
+
+/* ダークテーマ用の調整が必要な場合は以下に追加 
+@media (prefers-color-scheme: dark) {
+  :root {
+    --typing-focus-color: #ffffff;
+    --typing-shadow-color: rgba(124, 255, 203, 0.5);
+  }
+}
+*/

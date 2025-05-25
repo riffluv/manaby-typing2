@@ -1,0 +1,151 @@
+/*
+ * TypingModule.module.css
+ * タイピングゲームのコアスタイル定義
+ * 
+ * このファイルは製品版のタイピングゲーム用に最適化されたスタイルを定義します。
+ * パフォーマンス、アクセシビリティ、レスポンシブデザイン、視覚的一貫性を重視しています。
+ * 
+ * リファクタリング時の注意: このファイルの変更は慎重に行ってください。
+ * タイピングエクスペリエンスの中核を担うスタイルです。
+ */
+
+/* タイピングエリア: タイピング文字を配置するコンテナ */
+.typingArea {
+  /* レイアウト */
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  align-items: center;
+  width: 100%;
+  max-width: 80ch;
+  
+  /* スペーシング */
+  padding: 0.75rem;
+  margin: 0 auto;
+  margin-bottom: calc(var(--progress-bottom-position) + 2rem);
+  gap: 0;
+  
+  /* 装飾リセット */
+  background: transparent;
+  border: none;
+  box-shadow: none;
+  position: relative;
+  
+  /* テキスト関連 */
+  font-family: var(--font-mono);
+  font-size: var(--typing-font-size);
+  font-weight: var(--typing-font-weight-normal);
+  letter-spacing: 0.02em;
+  line-height: var(--typing-line-height);
+  overflow-wrap: break-word;
+  white-space: normal;
+  overflow: visible;
+  text-align: center;
+  
+  /* パフォーマンス最適化 */
+  contain: content;
+  z-index: 1;
+}
+
+/* 個別の文字: すべてのタイピング文字の基本スタイル */
+.typingChar {
+  /* 表示スタイル */
+  display: inline-block;
+  min-width: 0.5em;
+  margin: 0 0.02rem;
+  padding: 0.05rem;
+  
+  /* フォント */
+  font-family: var(--font-mono);
+  font-feature-settings: "calt" 0, "liga" 0; /* 合字を無効化 */
+  line-height: var(--typing-line-height);
+  
+  /* アニメーション設定 */
+  transform-origin: center;
+  transition: 
+    color 0.15s var(--typing-animation-timing),
+    text-shadow 0.15s var(--typing-animation-timing),
+    transform 0.1s var(--typing-animation-timing);
+  will-change: transform, color, text-shadow;
+  
+  /* アクセシビリティ向上 */
+  user-select: none;
+  position: relative;
+}
+
+/* 入力済みの文字 */
+.completed {
+  color: var(--typing-typed-color);
+  text-shadow: 0 0 5px var(--typing-shadow-color);
+  opacity: 1;
+  font-weight: var(--typing-font-weight-normal);
+  transform-origin: center;
+}
+
+/* 現在入力中の文字 */
+.current {
+  color: var(--typing-focus-color);
+  text-shadow: 0 0 8px var(--typing-focus-shadow-color);
+  opacity: 1;
+  font-weight: var(--typing-font-weight-focus);
+  transform-origin: center;
+  display: inline-block;
+  padding-left: 0.1rem;
+  margin-left: 0.1rem;
+  
+  /* 最適化されたアニメーション */
+  animation: typingCurrentChar var(--typing-animation-duration) var(--typing-animation-timing) infinite;
+  will-change: text-shadow, transform;
+}
+
+/* 未入力の文字 */
+.pending {
+  color: var(--typing-untyped-color);
+  opacity: 0.8;
+  text-shadow: none;
+  font-weight: var(--typing-font-weight-pending);
+}
+
+/* エラーの文字 */
+.error {
+  color: var(--typing-error-color);
+  text-decoration: underline wavy;
+  animation: typingShake 0.2s ease-in-out;
+  will-change: transform;
+}
+
+/* アニメーション定義 */
+@keyframes typingCurrentChar {
+  0%, 100% {
+    text-shadow: 0 0 8px var(--typing-focus-shadow-color);
+  }
+  50% {
+    text-shadow: 0 0 12px var(--typing-focus-shadow-color), 0 0 20px rgba(255, 255, 255, 0.4);
+  }
+}
+
+@keyframes typingShake {
+  0%, 100% { transform: translateX(0); }
+  25% { transform: translateX(-5px); }
+  75% { transform: translateX(5px); }
+}
+
+/* レスポンシブ対応 */
+@media (max-width: 768px) {
+  .typingArea {
+    font-size: calc(var(--typing-font-size) * 0.9);
+    padding: 0.5rem;
+  }
+}
+
+@media (max-width: 480px) {
+  .typingArea {
+    font-size: calc(var(--typing-font-size) * 0.75);
+    padding: 0.25rem;
+    max-width: 95%;
+  }
+  
+  .typingChar {
+    margin: 0 0.01rem;
+  }
+}

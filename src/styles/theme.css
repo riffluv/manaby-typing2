@@ -1,3 +1,6 @@
+/* タイピングゲーム専用のテーマをインポート */
+@import './typing-theme.css';
+
 :root {  /* カラーパレット */
   --color-primary: #7cffcb; /* メインカラーを水色に設定 */
   --color-secondary: #374151;
@@ -15,13 +18,7 @@
   --color-light-text: #D1D0C5;
   --color-highlight: #7cffcb;
   
-  /* タイピング用の色 - コミット7e66856d01a4a65491c5ad6625f7c99b649d9350の色に正確に戻す */
-  --typing-typed-color: #7cffcb;  /* 入力済み文字の色（水色） */
-  --typing-untyped-color: rgba(170, 170, 170, 0.6); /* 未入力文字の色（薄いグレー） */
-  --typing-error-color: #ef4444;  /* エラー文字の色（赤） */
-  --typing-focus-color: #ffffff;  /* フォーカス中の色（白） */
-  --typing-shadow-color: rgba(124, 255, 203, 0.4); /* タイプ済み影の色 */
-  --typing-focus-shadow-color: rgba(255, 255, 255, 0.8); /* フォーカス影の色 */
+  /* タイピング用の色の参照は typing-theme.css に移動しました */
   
   /* コンポーネント固有の色 */
   --progress-track-color: #4b5563;
