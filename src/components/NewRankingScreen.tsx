@@ -2,7 +2,7 @@
 import React, { useEffect, useState } from 'react';
 import { motion } from 'framer-motion';
 import { getRankingEntries, RankingEntry } from '@/lib/rankingManaby2';
-import ShortcutFooter, { Shortcut } from './ShortcutFooter';
+
 import { useGlobalShortcuts } from '@/hooks/useGlobalShortcuts';
 import { containerVariants, itemVariants, tableRowVariants } from '@/styles/animations';
 
@@ -31,10 +31,7 @@ const NewRankingScreen: React.FC<NewRankingScreenProps> = ({ onGoMenu }) => {
     setActiveDifficulty(difficulty);
   };
 
-  // ショートカット案内
-  const shortcuts: Shortcut[] = [
-    { key: 'Esc', label: 'メニューに戻る' },
-  ];
+
   
   useGlobalShortcuts([
     {
@@ -209,7 +206,7 @@ const NewRankingScreen: React.FC<NewRankingScreenProps> = ({ onGoMenu }) => {
         </motion.div>
       </motion.div>
       
-      <ShortcutFooter shortcuts={shortcuts} />
+      {/* <ShortcutFooter shortcuts={shortcuts} /> */}
     </div>
   );
 };

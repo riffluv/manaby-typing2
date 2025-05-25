@@ -3,6 +3,7 @@ import { Geist, Geist_Mono } from "next/font/google";
 import "./globals.css";
 import MCPStatus from "@/components/MCPStatus";
 import MonkeytypeHeader from '@/components/common/MonkeytypeHeader';
+import MinimalShortcut from '@/components/MinimalShortcut';
 import styles from "@/styles/TypingGame.module.css";
 
 const geistSans = Geist({
@@ -34,6 +35,7 @@ export default function RootLayout({
         <div className={styles.appContainer}>
           <MonkeytypeHeader />
           {children}
+          <MinimalShortcut />
           <div className={styles.mcpStatusWrapper}>
             <MCPStatus position="bottom-right" />
           </div>

@@ -5,6 +5,7 @@ import GameScreen from '@/components/GameScreen';
 import { TypingWord, KanaDisplay } from '@/types/typing';
 import { PerWordScoreLog } from '@/types/score';
 import styles from '@/styles/GamePlayingScreen.module.css';
+import MinimalShortcut from '@/components/MinimalShortcut';
 
 interface GamePlayingScreenProps {
   currentWord: TypingWord;
@@ -29,6 +30,7 @@ export default function GamePlayingScreen({
       animate={{ opacity: 1 }}
       transition={{ duration: 0.3 }}
     >
+      {/* ミニマルなEscキーショートカット表示（全画面共通化のため削除） */}
       {/* ゲーム画面 */}
       <GameScreen 
         currentWord={currentWord}

@@ -4,7 +4,7 @@ import { motion } from 'framer-motion';
 import type { GameScoreLog } from '@/types/score';
 import type { PerWordScoreLog } from '@/types/score';
 import { useEffect } from 'react';
-import ShortcutFooter, { Shortcut } from './ShortcutFooter';
+
 import { useGlobalShortcuts } from '@/hooks/useGlobalShortcuts';
 import styles from '@/styles/GameResultScreen.module.css';
 
@@ -32,12 +32,7 @@ export default function GameResultScreen({
   onGoRanking,
   onGoMenu
 }: GameResultScreenProps) {
-  // ショートカット案内内容
-  const shortcuts: Shortcut[] = [
-    { key: 'R', label: 'リトライ' },
-    { key: 'Alt+R', label: 'ランキング' },
-    { key: 'Esc', label: 'メニューへ' },
-  ];
+
 
   useGlobalShortcuts([
     {
@@ -134,7 +129,7 @@ export default function GameResultScreen({
       
       {/* 背景 */}
       <div className={styles.background}></div>
-      <ShortcutFooter shortcuts={shortcuts} />
+      {/* <ShortcutFooter shortcuts={shortcuts} /> */}
     </motion.div>
   );
 }

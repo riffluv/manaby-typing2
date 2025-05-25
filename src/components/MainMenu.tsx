@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { motion } from 'framer-motion';
 import { useTypingGameStore } from '@/store/typingGameStore';
-import ShortcutFooter, { Shortcut } from '@/components/ShortcutFooter';
+
 import { useGlobalShortcuts } from '@/hooks/useGlobalShortcuts';
 import { containerVariants, itemVariants, buttonVariants } from '@/styles/animations';
 import styles from '@/styles/MainMenu.module.css';
@@ -27,12 +27,7 @@ const MainMenu: React.FC<MainMenuProps> = ({ onStart, onRanking, onRetry }) => {
     onStart();
   };
   
-  // ショートカット案内
-  const shortcuts: Shortcut[] = [
-    { key: 'Space', label: 'スタート' },
-    { key: 'Alt+R', label: 'ランキング' },
-    { key: 'R', label: 'リトライ' },
-  ];
+
 
   // ショートカット定義
   useGlobalShortcuts([
@@ -98,7 +93,7 @@ const MainMenu: React.FC<MainMenuProps> = ({ onStart, onRanking, onRetry }) => {
         </motion.div>
       </motion.div>
 
-      <ShortcutFooter shortcuts={shortcuts} />
+      {/* <ShortcutFooter shortcuts={shortcuts} /> */}
     </div>
   );
 };
