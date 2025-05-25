@@ -40,7 +40,8 @@
   font-family: var(--font-jp); /* 日本語専用フォント */
   font-size: 2.5rem; /* サイズ調整 */
   font-weight: 400; /* 標準的な太さに戻す */
-  margin-bottom: 0.5rem;  color: var(--color-white); /* 完全な白に戻す */
+  margin-bottom: 0.5rem;
+  color: #ffffff; /* 完全な白に戻す */
   letter-spacing: 0.02em; /* 字間をもっと詰める */
   line-height: 1.2; /* 行間調整で縦の圧縮感を出す */
   width: 100%;
@@ -58,7 +59,7 @@
   font-family: var(--font-jp); /* 日本語専用フォント */
   font-size: 1.75rem; /* オリジナルサイズに近づける */
   margin-bottom: 1.75rem; /* 元の余白に戻す */
-  color: var(--color-hiragana); /* 明るくする */
+  color: rgba(187, 187, 255, 0.9); /* 明るくする */
   letter-spacing: 0.04em;
   font-weight: 300; /* 少し太めに */
   opacity: 1; /* 完全に不透明に */

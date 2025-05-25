@@ -4,33 +4,59 @@
   align-items: center;
   justify-content: center;
   width: 100%;
-  height: 100vh;
-  background: var(--color-secondary);
-  color: var(--color-primary);
+  min-height: 100vh;
+  background: transparent;
+  color: #ffffff;
 }
 
 .startScreen {
   text-align: center;
   margin-bottom: 2rem;
+  width: 100%;
+  max-width: 900px;
 }
 
 .finishScreen {
   text-align: center;
   margin-top: 2rem;
+  width: 100%;
+  max-width: 900px;
 }
 
 .resetButton {
-  padding: 0.5rem 1rem;
-  background: var(--color-accent);
-  color: #fff;
+  padding: 0.75rem 1.5rem;
+  background: transparent;
+  color: rgba(255, 255, 255, 0.85);
   border: none;
-  border-radius: 0.25rem;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.1);
   cursor: pointer;
-  transition: background-color 0.3s;
+  transition: all 0.3s ease;
+  font-size: 0.95rem;
+  letter-spacing: 0.05em;
+  font-weight: 200;
+  text-transform: uppercase;
+  min-width: 140px;
+}
+
+.resetButton::after {
+  content: '';
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  width: 0;
+  height: 1px;
+  background: rgba(255, 255, 255, 0.4);
+  transition: width 0.3s ease;
 }
 
 .resetButton:hover {
-  background: var(--color-danger);
+  background: transparent;
+  transform: translateY(-2px);
+  color: rgba(103, 232, 249, 0.9);
+}
+
+.resetButton:hover::after {
+  width: 100%;
 }
 
 .gameScreen {
@@ -39,28 +65,42 @@
   flex-direction: column;
   align-items: center;
   justify-content: center;
-  padding: var(--spacing-lg);
   width: 100%;
-  max-width: var(--container-width);
+  max-width: 900px;
+  padding: 2rem;
+  min-height: 240px; /* 最小高さを設定 */
 }
 
 .wordJapanese {
-  font-size: var(--font-size-2xl);
-  font-weight: bold;
-  margin-bottom: var(--spacing-sm);
+  font-size: 2.5rem; /* オリジナルサイズに戻す */
+  font-weight: 400;
+  margin-bottom: 0.5rem;
   width: 100%;
   text-align: center;
-  color: var(--color-foreground);
+  color: #ffffff;
   overflow-wrap: break-word;
+  white-space: normal;
+  font-family: var(--font-jp);
+  letter-spacing: 0.02em;
+  line-height: 1.2;
+  transform: scaleY(0.95);
+  text-shadow: 0 0 10px rgba(255, 255, 255, 0.5);
 }
 
 .wordHiragana {
-  font-size: var(--font-size-xl);
-  color: var(--color-accent);
-  margin-bottom: var(--spacing-md);
+  font-size: 1.75rem; /* オリジナルサイズに戻す */
+  color: rgba(187, 187, 255, 0.9);
+  margin-bottom: 1.75rem;
   width: 100%;
   text-align: center;
   overflow-wrap: break-word;
+  white-space: normal;
+  font-family: var(--font-jp);
+  letter-spacing: 0.04em;
+  font-weight: 300;
+  opacity: 1;
+  transform: scaleY(0.95);
+  line-height: 1.2;
 }
 
 .typingArea {
@@ -68,56 +108,88 @@
   flex-wrap: wrap;
   justify-content: center;
   align-items: center;
-  padding: var(--spacing-md);
-  background: var(--color-secondary);
-  border-radius: var(--border-radius-md);
-  margin-bottom: var(--spacing-lg);
+  padding: 0.75rem;
+  background: transparent;
+  margin-bottom: 2rem;
   width: 100%;
+  max-width: 800px;
   font-family: var(--font-mono);
-  font-size: var(--font-size-lg);
+  font-size: 2rem;
+  font-weight: 400;
+  letter-spacing: 0.02em;
+  line-height: 1.1;
+  min-height: 4rem;
 }
 
 /* タイピング文字のスタイル */
 .kanaGroup {
-  display: inline-flex;
-  margin: 0 2px;
+  display: inline-block;
+  padding: 0;
+  position: relative;
+  margin: 0;
 }
 
 .completed {
-  color: var(--typing-typed-color); /* タイプ済み - オレンジ */
+  color: #7cffcb; /* オリジナルの水色 */
+  text-shadow: 0 0 8px rgba(124, 255, 203, 0.4);
+  position: relative;
+  transition: all 0.2s ease;
+  opacity: 0.95;
+  font-weight: 400;
+  transform-origin: center;
 }
 
 .current {
-  color: var(--typing-focus-color); /* 現在の文字 - 緑 */
-  text-decoration: underline;
+  color: #ffffff; /* オリジナルの白色 */
+  text-shadow: 0 0 12px rgba(255, 255, 255, 0.8), 0 0 20px rgba(255, 255, 255, 0.4);
   position: relative;
-  animation: pulse 0.8s infinite;
+  animation: currentChar 1.2s ease-in-out infinite;
+  font-weight: 500;
+  transform: scale(1.2);
+  transform-origin: center;
+  opacity: 1;
+  display: inline-block;
 }
 
 .pending {
-  color: var(--typing-untyped-color); /* 未タイプ - 白 */
+  color: rgba(170, 170, 170, 0.6); /* オリジナルの薄いグレー */
+  opacity: 0.6;
+  text-shadow: none;
+  font-weight: 300;
 }
 
 .error {
-  color: var(--typing-error-color); /* エラー - 赤 */
-  text-decoration: underline;
+  color: #ef4444; /* エラーは赤色 */
+  text-decoration: underline wavy;
+  animation: shake 0.2s ease-in-out;
 }
 
 .progress {
-  margin-top: var(--spacing-md);
-  font-size: var(--font-size-base);
-  color: var(--color-primary);
+  margin-top: 1.5rem;
+  font-size: 1rem;
+  color: #67e8f9;
+  padding: 0.5rem 1.5rem;
+  background: rgba(16, 24, 39, 0.3);
+  border-radius: 4px;
+  letter-spacing: 0.05em;
+  text-shadow: 0 0 6px rgba(103, 232, 249, 0.6);
   font-family: var(--font-mono);
 }
 
-@keyframes pulse {
-  0% {
-    opacity: 1;
+/* アニメーション定義 */
+@keyframes currentChar {
+  0%, 100% {
+    text-shadow: 0 0 12px rgba(255, 255, 255, 0.8), 0 0 20px rgba(255, 255, 255, 0.4);
+    opacity: 0.95;
   }
   50% {
-    opacity: 0.6;
-  }
-  100% {
+    text-shadow: 0 0 15px rgba(255, 255, 255, 1), 0 0 30px rgba(255, 255, 255, 0.8);
     opacity: 1;
   }
+}
+
+@keyframes shake {
+  0%, 100% { transform: translateX(0); }
+  25% { transform: translateX(-2px); }
+  75% { transform: translateX(2px); }
 }

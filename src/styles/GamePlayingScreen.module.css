@@ -1,58 +1,75 @@
 .container {
   background: transparent;
-  border-radius: var(--border-radius-lg);
-  padding: var(--spacing-lg);
   text-align: center;
   width: 100%;
-  max-width: var(--container-width);
+  max-width: var(--container-width); /* 変数を使用 */
   min-width: var(--container-min-width);
   margin: 0 auto;
-  animation: fadeIn var(--transition-speed) var(--transition-timing);
-  min-height: 45vh;
+  animation: fadeIn 0.3s ease-in-out;
   display: flex;
   flex-direction: column;
   align-items: center;
   justify-content: center;
   position: relative;
-  overflow: hidden;
+  overflow: visible; /* オーバーフローを許可 */
+  padding: 1rem 1rem 5rem; /* 下部に十分な余白を確保 */
 }
 
 .progressContainer {
+  /* グローバルレイアウトに準拠 */
   width: 100%;
-  margin: var(--spacing-xl) auto 0;
+  max-width: var(--container-width);
+  position: fixed;
+  bottom: var(--progress-bottom-position);
+  left: 0;
+  right: 0;
+  margin: 0 auto;
+  padding: 0 var(--spacing-md);
+  z-index: var(--z-above);
 }
 
 .progressBarTrack {
-  height: var(--spacing-xs);
+  height: 0.35rem; /* やや太い */
   width: 100%;
   background: var(--progress-track-color);
-  border-radius: var(--border-radius-sm);
+  border-radius: 0.25rem;
   overflow: hidden;
 }
 
 .progressBar {
   height: 100%;
   background: var(--progress-bar-color);
+  transition: width 0.3s ease-in-out;
 }
 
 .statusText {
   display: flex;
   justify-content: space-between;
-  font-size: var(--font-size-xs);
-  margin-top: var(--spacing-sm);
+  font-size: 0.9rem; /* やや大きめ */
+  margin-top: 0.75rem;
   color: var(--color-muted);
   font-family: var(--font-mono);
   width: 100%;
 }
 
 /* レスポンシブ調整 */
+@media (max-width: var(--breakpoint-md)) {
+  .container {
+    padding: 1rem 1rem 4rem;
+  }
+  
+  .progressContainer {
+    bottom: calc(var(--progress-bottom-position) - 2vh);
+  }
+}
+
 @media (max-width: var(--breakpoint-sm)) {
   .container {
-    min-height: 40vh;
-    padding: var(--spacing-md);
+    padding: 0.75rem 0.75rem 3rem;
   }
-
+  
   .progressContainer {
-    margin: var(--spacing-lg) auto 0;
+    bottom: calc(var(--progress-bottom-position) - 3vh);
+    padding: 0 var(--spacing-sm);
   }
 }
