@@ -1,3 +1,11 @@
+/* 共通ロゴテキストスタイル */
+.logoTextCommon {
+  font-family: var(--font-mono);
+  font-weight: 900;
+  letter-spacing: -0.04em;
+  text-shadow: none;
+  color: var(--color-light-text);
+}
 /* コンポーネント固有のスタイル */
 
 /* フォント設定クラス */

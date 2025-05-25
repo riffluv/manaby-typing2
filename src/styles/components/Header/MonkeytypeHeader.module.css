@@ -1,4 +1,5 @@
-.header {
+/* Header specific styles */
+ .Header_header {
   position: fixed;
   z-index: 50;
   display: flex;
@@ -9,40 +10,43 @@
   min-width: 320px;
   width: calc(100% - 3rem);
   justify-content: space-between;
+  background: transparent; /* 明示的に背景を透明に */
 }
 
-.logoContainer {
+ .Header_logoContainer {
   display: flex;
-  align-items: center;  /* 中央揃えに変更 */
+  align-items: center;
   gap: 0.5rem;
   padding: 0.25rem 0.75rem;
   border-radius: 0.75rem;
   user-select: none;
   pointer-events: all;
+  background: transparent; /* 明示的に背景を透明に */
 }
 
-.logoImage {
+ .Header_logoImage {
   border-radius: 0.25rem;
 }
 
-.logoTextContainer {
+ .Header_logoTextContainer {
   display: flex;
   flex-direction: column;
   align-items: flex-start;
+  background: transparent; /* 明示的に背景を透明に */
 }
 
-/* バナーテキストを削除 */
-
-.logoText {
+ /* 共通化できる部分はcomponents.cssへ */
+ .Header_logoText {
   font-family: var(--font-mono);
   font-weight: 900;
   font-size: 1.5rem;
   letter-spacing: -0.04em;
   text-shadow: none;
-  line-height: 1.1;  /* 行の高さを調整 */
+  line-height: 1.1;
+  color: var(--color-light-text); /* テーマ変数を使用 */
 }
 
-.iconGroup {
+ .Header_iconGroup {
   display: flex;
   align-items: center;
   gap: 1rem;
@@ -51,42 +55,48 @@
   border-radius: 0.75rem;
   user-select: none;
   pointer-events: all;
+  background: transparent; /* 明示的に背景を透明に */
 }
 
-.MonkeytypeHeader_icon {
+ .Header_icon {
   display: flex;
   align-items: center;
   justify-content: center;
-  color: var(--color-soft-text, #9ca3af);
+  color: var(--color-soft-text);
   transition: color 0.15s;
   cursor: pointer;
   padding: 0.375rem;
   border-radius: 0.25rem;
+  background: transparent; /* 明示的に背景を透明に */
 }
 
-.MonkeytypeHeader_icon:hover {
-  color: var(--color-highlight, #7cffcb);
+ .Header_icon:hover {
+  color: var(--color-highlight);
   background-color: rgba(255, 255, 255, 0.05);
 }
 
-.MonkeytypeHeader_iconSvg {
+ .Header_iconSvg {
   font-size: 1.25rem;
   stroke-width: 2px;
 }
 
+/* Responsive adjustments */
 @media (max-width: 640px) {
-  .MonkeytypeHeader_header {
+  .Header_header {
     top: 1rem;
     left: 1rem;
     width: calc(100% - 2rem);
   }
-  .MonkeytypeHeader_iconGroup {
+  
+  .Header_iconGroup {
     gap: 0.5rem;
   }
-  .MonkeytypeHeader_icon {
+  
+  .Header_icon {
     padding: 0.25rem;
   }
-  .MonkeytypeHeader_iconSvg {
+  
+  .Header_iconSvg {
     font-size: 1.125rem;
   }
 }

@@ -19,18 +19,19 @@
   align-items: center;
 }
 
-.logoContainer {
+.MainMenu_logoContainer {
   margin-bottom: var(--spacing-3xl);
   text-align: center;
 }
 
-.logoText {
-  font-size: var(--font-size-4xl);
+.MainMenu_logoText {
   font-family: var(--font-mono);
   font-weight: 900;
+  font-size: var(--font-size-4xl);
   margin-bottom: var(--spacing-sm);
-  color: var(--color-light-text, #D1D0C5); /* Monkeytype風の配色 */
+  color: var(--color-light-text, #D1D0C5);
   letter-spacing: -0.02em;
+  text-shadow: none;
 }
 
 .startButtonContainer {
