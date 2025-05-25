@@ -5,18 +5,41 @@
   align-items: center;
   justify-content: center;
   position: relative;
-  background: #1f2937;
-  color: #ffffff;
-  font-family: var(--font-mono);
+  background: var(--color-secondary);
+  color: var(--color-foreground);
+  font-family: var(--font-sans);
   overflow: hidden;
 }
 
 .contentArea {
   position: relative;
-  z-index: 10;
+  z-index: var(--z-normal);
   width: 100%;
   display: flex;
+  flex-direction: column;
   align-items: center;
   justify-content: center;
-  padding: 2.5rem 0;
+  padding: var(--spacing-2xl) var(--spacing-md);
+  max-width: var(--main-content-max-width);
+}
+
+.fullWidth {
+  max-width: 100%;
+}
+
+.centered {
+  text-align: center;
+}
+
+/* レスポンシブ調整 */
+@media (max-width: var(--breakpoint-md)) {
+  .contentArea {
+    padding: var(--spacing-xl) var(--spacing-md);
+  }
+}
+
+@media (max-width: var(--breakpoint-sm)) {
+  .contentArea {
+    padding: var(--spacing-lg) var(--spacing-sm);
+  }
 }

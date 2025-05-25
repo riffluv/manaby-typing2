@@ -1,15 +1,66 @@
 @import "tailwindcss";
 
-/* Roboto Monoフォントをすべてのウェイトでインポート - 特に細い100と200を含む */
+/* フォントのインポート */
 @import url('https://fonts.googleapis.com/css2?family=Roboto+Mono:wght@100;200;300;400;500&display=swap');
 @import url('https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@100;200;300;400;500&display=swap');
-/* 日本語フォントの追加 - 横長でモダンなフォント */
 @import url('https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@100;200;300;400;500&display=swap');
 
-/* グローバルスタイルを分割したため、以下のファイルをインポート */
-@import "../styles/base.css";
-@import "../styles/components.css";
-@import "../styles/theme.css";
+/* グローバルスタイルのインポート順序を明確にする */
+@import "../styles/theme.css";  /* 1. まずテーマ変数を読み込み */
+@import "../styles/base.css";   /* 2. 次にベーススタイルを読み込み */
+@import "../styles/components.css";  /* 3. 最後にコンポーネントスタイルを読み込み */
+
+/* グローバルなアニメーション定義 */
+@keyframes fadeIn {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
+@keyframes slideUp {
+  from {
+    transform: translateY(20px);
+    opacity: 0;
+  }
+  to {
+    transform: translateY(0);
+    opacity: 1;
+  }
+}
+
+@keyframes pulse {
+  0% {
+    transform: scale(1);
+    opacity: 1;
+  }
+  50% {
+    transform: scale(1.05);
+    opacity: 0.7;
+  }
+  100% {
+    transform: scale(1);
+    opacity: 1;
+  }
+}
+
+/* CSS変数のフォールバック対策 */
+:root {
+  /* 重要な変数が読み込めない場合のフォールバック */
+  --typing-typed-color: #f59e0b;  /* 入力済み文字の色（オレンジ） */
+  --typing-untyped-color: #ededed; /* 未入力文字の色（白） */
+  --typing-error-color: #ef4444;  /* エラー文字の色（赤） */
+  --typing-focus-color: #10b981;  /* フォーカス中の色（緑） */
+}
+
+/* スクリーン全体のフォーカス状態で枠線を消す */
+*:focus {
+  outline: none;
+}
+
+/* フォーカス可能な要素のアクセシビリティのために、キーボードフォーカス時のみ表示 */
+*:focus-visible {
+  outline: 2px solid var(--color-primary);
+  outline-offset: 2px;
+}
 
 :root {
   --background: #ffffff;

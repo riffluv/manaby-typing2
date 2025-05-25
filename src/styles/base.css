@@ -1,22 +1,6 @@
 /* ベーススタイル: リセットや基本的な設定 */
 @import "tailwindcss";
 
-:root {
-  --background: #ffffff;
-  --foreground: #171717;
-  --font-mono: 'Roboto Mono', 'JetBrains Mono', ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, 'Liberation Mono', 'Courier New', monospace;
-  --font-sans: 'Noto Sans JP', system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
-  --font-jp: 'Noto Sans JP', sans-serif;
-  --screen-border-color: transparent;
-}
-
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
-  }
-}
-
 * {
   box-sizing: border-box;
   margin: 0;
@@ -24,15 +8,42 @@
 }
 
 body {
-  background: #080212;
+  background: var(--color-background);
   min-height: 100vh;
-  min-width: 100vw;
+  width: 100%;
   display: flex;
   align-items: center;
   justify-content: center;
   overflow-x: hidden;
-  color: var(--foreground);
+  color: var(--color-foreground);
   font-family: var(--font-sans);
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
+}
+
+/* コンテナの基本設定 */
+.container-standard {
+  width: 100%;
+  max-width: var(--container-width);
+  min-width: var(--container-min-width);
+  margin: 0 auto;
+}
+
+/* レイアウトの基本設定 */
+.flex-center {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.flex-column {
+  display: flex;
+  flex-direction: column;
+}
+
+/* テキスト折り返し設定 */
+.text-wrap {
+  width: 100%;
+  overflow-wrap: break-word;
+  word-break: break-word;
 }

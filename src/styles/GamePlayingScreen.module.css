@@ -1,12 +1,14 @@
 .container {
   background: transparent;
-  border-radius: 0.5rem;
-  padding: 1rem;
+  border-radius: var(--border-radius-lg);
+  padding: var(--spacing-lg);
   text-align: center;
   width: 100%;
-  max-width: 800px;
-  animation: fadeIn 0.3s ease-in-out;
-  min-height: 40vh;
+  max-width: var(--container-width);
+  min-width: var(--container-min-width);
+  margin: 0 auto;
+  animation: fadeIn var(--transition-speed) var(--transition-timing);
+  min-height: 45vh;
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -17,28 +19,40 @@
 
 .progressContainer {
   width: 100%;
-  max-width: 24rem;
-  margin: 1.5rem auto 0;
+  margin: var(--spacing-xl) auto 0;
 }
 
 .progressBarTrack {
-  height: 0.25rem;
+  height: var(--spacing-xs);
   width: 100%;
-  background: #4b5563;
-  border-radius: 0.25rem;
+  background: var(--progress-track-color);
+  border-radius: var(--border-radius-sm);
   overflow: hidden;
 }
 
 .progressBar {
   height: 100%;
-  background: #f59e0b;
+  background: var(--progress-bar-color);
 }
 
 .statusText {
   display: flex;
   justify-content: space-between;
-  font-size: 0.75rem;
-  margin-top: 0.5rem;
-  color: #9ca3af;
+  font-size: var(--font-size-xs);
+  margin-top: var(--spacing-sm);
+  color: var(--color-muted);
   font-family: var(--font-mono);
+  width: 100%;
+}
+
+/* レスポンシブ調整 */
+@media (max-width: var(--breakpoint-sm)) {
+  .container {
+    min-height: 40vh;
+    padding: var(--spacing-md);
+  }
+
+  .progressContainer {
+    margin: var(--spacing-lg) auto 0;
+  }
 }

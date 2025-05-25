@@ -8,10 +8,10 @@
 
 .mainContent {
   width: 100%;
-  max-width: 40rem;
+  max-width: var(--main-content-max-width);
   background: transparent;
-  border-radius: 0.5rem;
-  padding: 2rem;
+  border-radius: var(--border-radius-lg);
+  padding: var(--spacing-xl);
   position: relative;
   overflow: hidden;
   display: flex;
@@ -20,91 +20,174 @@
 }
 
 .logoContainer {
-  margin-bottom: 3rem;
+  margin-bottom: var(--spacing-3xl);
   text-align: center;
 }
 
 .logoText {
-  font-size: 3.75rem;
+  font-size: var(--font-size-4xl);
   font-family: var(--font-mono);
   font-weight: bold;
-  margin-bottom: 0.5rem;
-  color: #f59e0b;
+  margin-bottom: var(--spacing-sm);
+  color: var(--color-primary);
   letter-spacing: -0.02em;
 }
 
 .startButtonContainer {
   width: 100%;
-  margin-bottom: 2.5rem;
+  margin-bottom: var(--spacing-2xl);
 }
 
 .startButton {
   width: 100%;
-  padding: 1rem 0;
-  background: #f59e0b;
-  color: #1f2937;
+  padding: var(--spacing-md) 0;
+  background: var(--color-primary);
+  color: var(--color-secondary);
   font-weight: bold;
-  border-radius: 0.375rem;
-  font-size: 1.25rem;
+  border-radius: var(--border-radius-md);
+  font-size: var(--font-size-lg);
   box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-  transition: all 0.2s;
+  transition: all var(--transition-speed) var(--transition-timing);
 }
 
 .startButton:hover {
-  background: #d97706;
+  transform: translateY(-2px);
+  box-shadow: 0 6px 8px rgba(0, 0, 0, 0.15);
 }
 
+.startButton:active {
+  transform: translateY(0);
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+/* モード選択スタイル */
 .modeSelectionContainer {
   width: 100%;
+  margin-bottom: var(--spacing-xl);
 }
 
 .modeTitle {
-  color: #f59e0b;
+  font-size: var(--font-size-lg);
+  color: var(--color-foreground);
+  text-align: center;
+  margin-bottom: var(--spacing-md);
   font-family: var(--font-mono);
-  font-size: 1.125rem;
-  margin-bottom: 0.75rem;
 }
 
 .modeButtonsGrid {
   display: grid;
-  grid-template-columns: 1fr;
-  gap: 0.75rem;
+  grid-template-columns: repeat(2, 1fr);
+  gap: var(--spacing-md);
+  width: 100%;
 }
 
 .modeButton {
-  padding: 0.75rem 1.5rem;
-  border-radius: 0.375rem;
-  border: 1px solid;
+  padding: var(--spacing-md);
+  border-radius: var(--border-radius-md);
+  font-size: var(--font-size-base);
+  transition: all var(--transition-speed) var(--transition-timing);
+  font-family: var(--font-mono);
   display: flex;
+  justify-content: center;
   align-items: center;
-  justify-content: space-between;
-  font-weight: medium;
-  transition: all 0.2s;
+  gap: var(--spacing-sm);
+  font-weight: bold;
+  cursor: pointer;
 }
 
 .modeButtonActive {
-  background: #f59e0b;
-  color: #1f2937;
-  border-color: #f59e0b;
+  background: var(--color-secondary);
+  color: var(--color-primary);
+  border: 2px solid var(--color-primary);
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
 }
 
 .modeButtonInactive {
-  background: #1f2937;
-  color: #ffffff;
-  border-color: #374151;
-}
-
-.modeButtonInactive:hover {
-  background: #374151;
-  border-color: rgba(245, 158, 11, 0.3);
+  background: transparent;
+  color: var(--color-muted);
+  border: 2px solid var(--color-muted);
 }
 
 .activeIndicator {
-  color: #f59e0b;
+  color: var(--color-primary);
 }
 
-.versionInfo {
-  margin-top: 3rem;
-  color: #6b7280;
-  font-size: 0.75rem;
+.buttons {
+  width: 100%;
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+  gap: var(--spacing-md);
+}
+
+.buttonItem {
+  margin-bottom: var(--spacing-md);
+}
+
+.menuButton {
+  width: 100%;
+  padding: var(--spacing-lg) var(--spacing-sm);
+  background: var(--color-secondary);
+  color: var(--color-foreground);
+  border-radius: var(--border-radius-md);
+  font-weight: bold;
+  transition: all var(--transition-speed) var(--transition-timing);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  height: 100%;
+}
+
+.menuButton:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+}
+
+.menuButton:active {
+  transform: translateY(0);
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.icon {
+  margin-bottom: var(--spacing-sm);
+  font-size: var(--font-size-xl);
+  color: var(--color-primary);
+}
+
+.buttonLabel {
+  text-transform: uppercase;
+  font-size: var(--font-size-sm);
+  letter-spacing: 0.05em;
+}
+
+.versionText {
+  margin-top: var(--spacing-xl);
+  font-size: var(--font-size-xs);
+  color: var(--color-muted);
+  font-family: var(--font-mono);
+}
+
+/* レスポンシブ調整 */
+@media (max-width: var(--breakpoint-md)) {
+  .mainContent {
+    padding: var(--spacing-lg);
+  }
+
+  .buttons {
+    grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+  }
+}
+
+@media (max-width: var(--breakpoint-sm)) {
+  .logoText {
+    font-size: var(--font-size-3xl);
+  }
+
+  .mainContent {
+    padding: var(--spacing-md);
+  }
+
+  .buttons {
+    grid-template-columns: 1fr;
+  }
 }
