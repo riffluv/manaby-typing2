@@ -1,0 +1,19 @@
+#shortcut-portal-container {
+  position: fixed;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  z-index: 9999;
+  pointer-events: none; /* コンテナ自体はクリックを通す */
+  display: flex;
+  justify-content: center;
+  align-items: flex-end;
+  contain: layout style; /* パフォーマンス最適化 */
+  transform: translateZ(0); /* GPUアクセラレーション */
+  will-change: transform; /* ブラウザに変形を事前通知 */
+}
+
+/* ポータル内のショートカットアイテムはクリック可能に */
+#shortcut-portal-container > * {
+  pointer-events: auto;
+}

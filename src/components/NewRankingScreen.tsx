@@ -1,5 +1,6 @@
 "use client";
 import MinimalShortcut from '@/components/MinimalShortcut';
+import PortalShortcut from '@/components/PortalShortcut';
 import React, { useEffect, useState } from 'react';
 import { motion } from 'framer-motion';
 import { getRankingEntries, RankingEntry } from '@/lib/rankingManaby2';
@@ -195,7 +196,7 @@ const NewRankingScreen: React.FC<NewRankingScreenProps> = ({ onGoMenu }) => {
       </motion.div>
       
       {/* <ShortcutFooter shortcuts={shortcuts} /> */}
-      <MinimalShortcut shortcuts={[{ key: 'Esc', label: '戻る' }]} />
+      <PortalShortcut shortcuts={[{ key: 'Esc', label: '戻る' }]} />
     </div>
   );
 };

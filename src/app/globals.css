@@ -10,6 +10,7 @@
 @import "../styles/base.css";   /* 2. 次にベーススタイルを読み込み */
 @import "../styles/components.css";  /* 3. コンポーネントスタイルを読み込み */
 @import "../styles/layout.css";  /* 4. レイアウト関連のスタイルを読み込み */
+@import "../styles/portal.css";  /* 5. ポータル関連のスタイルを読み込み */
 
 /* グローバルなアニメーション定義 */
 @keyframes fadeIn {

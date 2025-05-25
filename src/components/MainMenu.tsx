@@ -1,4 +1,4 @@
-import MinimalShortcut from '@/components/MinimalShortcut';
+import PortalShortcut from '@/components/PortalShortcut';
 import React, { useState, useEffect } from 'react';
 import { motion } from 'framer-motion';
 import { useTypingGameStore } from '@/store/typingGameStore';
@@ -172,17 +172,11 @@ const MainMenu: React.FC<MainMenuProps> = ({ onStart, onRanking, onRetry }) => {
       </motion.div>
 
       {/* メインメニュー用ショートカット（Space, Alt+R, Esc） */}
-      <motion.div
-        initial={{ opacity: 0, y: 20 }}
-        animate={{ opacity: 1, y: 0 }}
-        transition={{ delay: 0.8, duration: 0.5 }}
-      >
-        <MinimalShortcut shortcuts={[
-          { key: 'Space', label: 'スタート' },
-          { key: ['Alt', 'R'], label: 'ランキング' },
-          { key: 'Esc', label: '戻る' }
-        ]} />
-      </motion.div>
+      <PortalShortcut shortcuts={[
+        { key: 'Space', label: 'スタート' },
+        { key: ['Alt', 'R'], label: 'ランキング' },
+        { key: 'Esc', label: '戻る' }
+      ]} />
     </div>
   );
 };

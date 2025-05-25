@@ -1,78 +1,221 @@
-/* より広く・中央寄せ・幅固定 - オリジナルデザイン */
+/* モダンでミニマリストなゲーム画面 - Finals × MonkeyType インスパイアド */
 .gameScreen {
   display: flex;
   flex-direction: column;
   align-items: center;
   width: 100%;
-  max-width: var(--container-width);
+  max-width: 1200px; /* 幅を広げる */
   min-width: var(--container-min-width);
   margin: 0 auto;
-  padding: var(--spacing-xl) var(--spacing-md);
+  padding: var(--spacing-xl) var(--spacing-sm);
   position: relative;
   color: var(--color-primary);
   text-align: center;
   background: transparent;
   margin-bottom: calc(var(--progress-bottom-position) + 5rem); /* プログレスバーの位置を考慮 */
+  animation: fadeInUp 0.6s cubic-bezier(0.165, 0.84, 0.44, 1);
+  isolation: isolate;
+  box-sizing: border-box;
+}
+
+.gameScreen::before {
+  content: '';
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: 80%;
+  height: 80%;
+  transform: translate(-50%, -50%);
+  background: radial-gradient(
+    circle at center,
+    rgba(124, 255, 203, 0.04) 0%,
+    rgba(0, 0, 0, 0) 70%
+  );
+  filter: blur(20px);
+  z-index: -1;
+  pointer-events: none;
 }
 
 .wordJapanese {
-  font-size: 2.5rem; /* オリジナルの大きなサイズ */
-  font-weight: 400; /* 標準的な太さ */
-  margin-bottom: 0.75rem;
+  font-size: 1.75rem; /* より洗練された小さめサイズにさらに縮小 */
+  font-weight: 400;
+  margin-bottom: 0.8rem;
   width: 100%;
-  overflow-wrap: break-word; /* 長いテキストの折り返し */
-  white-space: normal; /* テキスト折り返しを許可 */  font-family: var(--font-jp);
-  color: var(--color-white); /* 完全な白色 */
-  letter-spacing: 0.02em; /* 字間を詰める */
-  line-height: 1.3; /* 行間をやや広げる */
-  transform: scaleY(0.95); /* 縦方向に少し圧縮 */
-  text-shadow: 0 0 10px rgba(255, 255, 255, 0.5); /* 影を追加 */
-  margin-top: 1rem; /* 上部に余白を追加 */
+  max-width: none; /* 制限を解除 */
+  overflow-wrap: break-word;
+  white-space: normal;
+  font-family: var(--font-jp);
+  color: var(--color-white);
+  letter-spacing: 0.05em;
+  line-height: 1.2;
+  text-shadow: 0 0 10px rgba(255, 255, 255, 0.1); /* より繊細な影 */
+  margin-top: 1rem;
+  position: relative;
+  transform: translateZ(0);
+  transition: transform 0.3s ease;
+  padding: 0 2rem; /* 左右に余裕を持たせる */
+}
+
+.wordJapanese::after {
+  content: '';
+  position: absolute;
+  bottom: -10px;
+  left: 50%;
+  width: 40px; /* 小さくして繊細に */
+  height: 1px; /* 細くして繊細に */
+  background: linear-gradient(90deg, 
+    rgba(124, 255, 203, 0), 
+    rgba(124, 255, 203, 0.5), 
+    rgba(124, 255, 203, 0)
+  );
+  transform: translateX(-50%);
 }
 
 .wordHiragana {
-  font-size: 1.75rem; /* オリジナルの大きなサイズ */
-  color: var(--color-hiragana); /* 明るい色に */
-  margin-bottom: 1.75rem;
+  font-size: 1.2rem; /* より洗練された小さめサイズにさらに縮小 */
+  color: rgba(187, 187, 255, 0.7); /* 少し透明度を上げてスタイリッシュに */
+  margin-bottom: 2rem;
   width: 100%;
-  overflow-wrap: break-word; /* 長いテキストの折り返し */
-  white-space: normal; /* テキスト折り返しを許可 */
+  max-width: none; /* 制限を解除 */
+  overflow-wrap: break-word;
+  white-space: normal;
   font-family: var(--font-jp);
-  letter-spacing: 0.04em;
-  font-weight: 300; /* 少し太めに */
-  opacity: 1; /* 完全に不透明に */
-  transform: scaleY(0.95); /* 縦方向に少し圧縮 */
-  line-height: 1.2; /* 行間調整 */
+  letter-spacing: 0.06em;
+  font-weight: 300;
+  opacity: 0.8;
+  line-height: 1.3;
+  text-shadow: 0 0 6px rgba(187, 187, 255, 0.2); /* より繊細な影 */
+  position: relative;
+  transform: translateZ(0);
+  transition: all 0.3s ease;
+  padding: 0 2rem; /* 左右に余裕を持たせる */
 }
 
-.progressBarTrack {
-  width: 100%;
-  height: 0.35rem; /* やや太い */
-  background: var(--progress-track-color);
-  border-radius: 0.25rem;
-  overflow: hidden;
-  margin: 1rem auto 0;
-  max-width: 800px; /* 最大幅を設定して一定に保つ */
+@keyframes fadeInUp {
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
 }
 
-.progressBar {
-  height: 100%;
-  background: var(--progress-bar-color);
-  transition: width 0.3s ease-in-out;
+.gameScreen::after {
+  content: '';
+  position: absolute;
+  bottom: -30px;
+  left: 50%;
+  width: 180px;
+  height: 1px;
+  background: linear-gradient(90deg, 
+    rgba(124, 255, 203, 0), 
+    rgba(124, 255, 203, 0.2), 
+    rgba(124, 255, 203, 0)
+  );
+  transform: translateX(-50%);
+  pointer-events: none;
 }
 
-/* レスポンシブ調整 */
-@media (max-width: var(--breakpoint-sm)) {
+/* キーボードショートカット表示位置の最適化 */
+.keyboardShortcuts {
+  position: fixed; /* absoluteからfixedに変更 */
+  bottom: 20px;
+  left: 50%;
+  transform: translateX(-50%) translateZ(0); /* GPUアクセラレーション追加 */
+  display: flex;
+  gap: 1rem;
+  opacity: 0.7;
+  transition: opacity 0.3s ease;
+  will-change: transform, opacity; /* パフォーマンス最適化 */
+  z-index: 2000; /* 十分高いz-index */
+  backface-visibility: hidden; /* レンダリング最適化 */
+}
+
+.keyboardShortcuts:hover {
+  opacity: 1;
+}
+
+/* 文字入力のフィードバック表示 */
+.typingFeedback {
+  position: absolute;
+  top: -20px;
+  left: 50%;
+  transform: translateX(-50%);
+  font-size: 0.9rem;
+  font-family: var(--font-mono);
+  opacity: 0;
+  transition: all 0.3s ease;
+  color: #7cffcb;
+}
+
+.typingFeedbackVisible {
+  opacity: 1;
+  top: -30px;
+}
+
+/* レスポンシブ調整 - プロフェッショナルレベルの対応 */
+@media (max-width: 1024px) {
   .wordJapanese {
-    font-size: 2rem;
+    font-size: 1.6rem;
+    padding: 0 1rem;
   }
 
   .wordHiragana {
+    font-size: 1.1rem;
+    margin-bottom: 1.8rem;
+    padding: 0 1rem;
+  }
+  
+  .gameScreen {
+    max-width: 100%;
+  }
+}
+
+@media (max-width: 768px) {
+  .wordJapanese {
     font-size: 1.5rem;
+    padding: 0 0.75rem;
+  }
+
+  .wordHiragana {
+    font-size: 1rem;
+    margin-bottom: 1.6rem;
+    padding: 0 0.75rem;
   }
 
   .gameScreen {
-    padding: 1.5rem 1rem;
-    min-height: 200px; /* モバイル向けに少し小さく */
+    padding: 1.5rem 0.75rem;
+    min-height: 220px;
+    max-width: 100%;
+  }
+  
+  .gameScreen::after {
+    width: 140px;
+    bottom: -20px;
+  }
+}
+
+@media (max-width: 480px) {
+  .wordJapanese {
+    font-size: 1.4rem;
+    padding: 0 0.5rem;
+  }
+
+  .wordHiragana {
+    font-size: 0.9rem;
+    margin-bottom: 1.4rem;
+    padding: 0 0.5rem;
+  }
+
+  .gameScreen {
+    padding: 1.2rem 0.5rem;
+    min-height: 180px;
+    max-width: 100%;
+  }
+  
+  .gameScreen::before {
+    opacity: 0.5;
   }
 }

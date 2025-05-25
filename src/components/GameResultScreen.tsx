@@ -1,4 +1,5 @@
 "use client";
+import PortalShortcut from '@/components/PortalShortcut';
 import MinimalShortcut from '@/components/MinimalShortcut';
 
 import { motion } from 'framer-motion';
@@ -131,7 +132,7 @@ export default function GameResultScreen({
       {/* 背景 */}
       <div className={styles.background}></div>
       {/* <ShortcutFooter shortcuts={shortcuts} /> */}
-      <MinimalShortcut shortcuts={[
+      <PortalShortcut shortcuts={[
         { key: 'R', label: 'リトライ' },
         { key: 'Esc', label: '戻る' }
       ]} />

@@ -2,74 +2,211 @@
   background: transparent;
   text-align: center;
   width: 100%;
-  max-width: var(--container-width); /* 変数を使用 */
+  max-width: 100%; /* フル幅を使用 */
   min-width: var(--container-min-width);
   margin: 0 auto;
-  animation: fadeIn 0.3s ease-in-out;
+  animation: fadeIn 0.5s cubic-bezier(0.165, 0.84, 0.44, 1);
   display: flex;
   flex-direction: column;
   align-items: center;
   justify-content: center;
   position: relative;
   overflow: visible; /* オーバーフローを許可 */
-  padding: 1rem 1rem 5rem; /* 下部に十分な余白を確保 */
+  padding: 2rem 1rem 6rem; /* 下部に十分な余白を確保 */
+  min-height: 80vh;
+  position: relative;
+}
+
+.container::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: radial-gradient(
+    circle at 50% 30%,
+    rgba(124, 255, 203, 0.03) 0%,
+    rgba(0, 0, 0, 0) 70%
+  );
+  pointer-events: none;
+  z-index: -1;
 }
 
 .progressContainer {
   /* グローバルレイアウトに準拠 */
-  width: 100%;
-  max-width: var(--container-width);
+  width: 95%;
+  max-width: 900px;
   position: fixed;
   bottom: var(--progress-bottom-position);
   left: 0;
   right: 0;
   margin: 0 auto;
-  padding: 0 var(--spacing-md);
+  padding: 0.75rem 1.5rem 1rem;
   z-index: var(--z-above);
+  backdrop-filter: blur(8px);
+  background: rgba(20, 20, 25, 0.4);
+  border-radius: 12px;
+  border: 1px solid rgba(255, 255, 255, 0.05);
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+  transition: transform 0.3s ease, opacity 0.3s ease;
+}
+
+.progressContainer:hover {
+  transform: translateY(-4px);
 }
 
 .progressBarTrack {
-  height: 0.35rem; /* やや太い */
+  height: 0.25rem; /* 洗練された薄さ */
   width: 100%;
-  background: var(--progress-track-color);
-  border-radius: 0.25rem;
+  background: rgba(75, 85, 99, 0.3);
+  border-radius: 4px;
   overflow: hidden;
+  box-shadow: inset 0 1px 3px rgba(0, 0, 0, 0.2);
 }
 
 .progressBar {
   height: 100%;
-  background: var(--progress-bar-color);
-  transition: width 0.3s ease-in-out;
+  background: linear-gradient(90deg, 
+    rgba(124, 255, 203, 0.8), 
+    rgba(124, 255, 203, 1)
+  );
+  border-radius: 4px;
+  transition: width 0.3s cubic-bezier(0.165, 0.84, 0.44, 1);
+  box-shadow: 0 0 8px rgba(124, 255, 203, 0.5);
+  position: relative;
+}
+
+/* プログレスバーのアニメーション */
+.progressBar::after {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: linear-gradient(90deg, 
+    transparent 0%,
+    rgba(255, 255, 255, 0.15) 50%,
+    transparent 100%
+  );
+  animation: progressGlow 1.5s ease-in-out infinite;
+}
+
+@keyframes progressGlow {
+  0% {
+    transform: translateX(-100%);
+  }
+  100% {
+    transform: translateX(100%);
+  }
 }
 
 .statusText {
   display: flex;
   justify-content: space-between;
-  font-size: 0.9rem; /* やや大きめ */
-  margin-top: 0.75rem;
-  color: var(--color-muted);
+  align-items: center;
+  font-size: 0.85rem;
+  margin-top: 0.8rem;
+  color: rgba(209, 208, 197, 0.9);
   font-family: var(--font-mono);
   width: 100%;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  font-weight: 500;
 }
 
-/* レスポンシブ調整 */
-@media (max-width: var(--breakpoint-md)) {
+/* 拡張スタイル - ゲーム体験向上のための視覚効果 */
+.statusText div {
+  position: relative;
+  transition: all 0.3s ease;
+  padding: 0 0.5rem;
+}
+
+.statusText div:hover {
+  color: rgba(255, 255, 255, 0.95);
+  transform: translateY(-1px);
+}
+
+.statusText div span {
+  transition: all 0.3s ease;
+}
+
+/* カウントダウンアニメーション用のクラス */
+.countAnimation {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  font-size: 8rem;
+  color: rgba(124, 255, 203, 0.8);
+  opacity: 0;
+  font-family: var(--font-mono);
+  text-shadow: 0 0 20px rgba(124, 255, 203, 0.6);
+  z-index: 100;
+}
+
+/* フォーカスモード - 集中力を高める視覚効果 */
+.focusMode .statusText {
+  opacity: 0.5;
+}
+
+.focusMode:hover .statusText {
+  opacity: 1;
+}
+
+/* レスポンシブ調整 - Finals/MonkeyType風のエレガントなデザイン */
+@media (max-width: 1024px) {
   .container {
-    padding: 1rem 1rem 4rem;
+    padding: 1.5rem 1rem 5rem;
+  }
+  
+  .progressContainer {
+    width: 90%;
+    bottom: calc(var(--progress-bottom-position) - 1vh);
+    padding: 0.75rem 1.25rem 0.9rem;
+  }
+  
+  .statusText {
+    font-size: 0.8rem;
+  }
+}
+
+@media (max-width: 768px) {
+  .container {
+    padding: 1.5rem 1rem 4.5rem;
   }
   
   .progressContainer {
     bottom: calc(var(--progress-bottom-position) - 2vh);
+    padding: 0.6rem 1rem 0.8rem;
+    border-width: 1px;
+  }
+  
+  .progressBarTrack {
+    height: 0.2rem;
+  }
+  
+  .statusText {
+    margin-top: 0.6rem;
+    letter-spacing: 0.05em;
   }
 }
 
-@media (max-width: var(--breakpoint-sm)) {
+@media (max-width: 480px) {
   .container {
-    padding: 0.75rem 0.75rem 3rem;
+    padding: 1rem 0.75rem 4rem;
   }
   
   .progressContainer {
     bottom: calc(var(--progress-bottom-position) - 3vh);
-    padding: 0 var(--spacing-sm);
+    padding: 0.5rem 0.8rem 0.7rem;
+    width: 92%;
+    border-radius: 10px;
+  }
+  
+  .statusText {
+    font-size: 0.75rem;
+    margin-top: 0.5rem;
   }
 }
