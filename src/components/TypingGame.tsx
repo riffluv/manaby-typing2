@@ -135,7 +135,7 @@ const TypingGame: React.FC<{ onGoMenu?: () => void; onGoRanking?: () => void }> 
 
   return (
     <motion.div 
-      className={styles.TypingGame_container}
+      className={styles.container}
       initial="hidden"
       animate="visible"
       variants={containerVariants}
