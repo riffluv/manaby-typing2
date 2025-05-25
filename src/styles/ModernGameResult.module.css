@@ -1,0 +1,536 @@
+/* ModernGameResult.module.css */
+/* MonkeyType + Finals inspired modern UI design */
+
+.container {
+  width: 100%;
+  max-width: 900px;
+  max-height: 76vh; /* さらに高さ制限を調整 */
+  padding: 1.5rem 2rem; /* 上下のパディングを調整 */
+  margin-bottom: 4rem; /* ショートカットキー用の余白を増やす */
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  background: rgba(35, 36, 43, 0.7);
+  border-radius: 12px;
+  border: 1px solid rgba(124, 255, 203, 0.1);
+  backdrop-filter: blur(10px);
+  box-shadow: 0 20px 40px rgba(0, 0, 0, 0.2);
+  position: relative;
+  overflow: auto; /* スクロール可能に変更 */
+  animation: fadeIn 0.4s ease-out;
+  transition: all 0.3s cubic-bezier(0.165, 0.84, 0.44, 1);
+  z-index: 1; /* z-indexを設定 */
+}
+
+.container::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 2px;
+  background: linear-gradient(90deg, 
+    rgba(124, 255, 203, 0), 
+    rgba(124, 255, 203, 0.6), 
+    rgba(124, 255, 203, 0)
+  );
+  z-index: 1;
+}
+
+.title {
+  font-family: var(--font-mono);
+  font-weight: 700;
+  font-size: 1.5rem; /* フォントサイズを小さく */
+  letter-spacing: 1px;
+  margin-bottom: 1.5rem; /* 余白を縮める */
+  color: var(--color-light-text);
+  text-transform: lowercase;
+  position: relative;
+  text-align: center;
+}
+
+.title::after {
+  content: '';
+  position: absolute;
+  bottom: -10px;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 40px;
+  height: 2px;
+  background-color: var(--color-primary);
+}
+
+/* Main stats grid layout */
+.statsContainer {
+  width: 100%;
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 1rem; /* 間隔を縮める */
+  margin-bottom: 1.5rem; /* 下マージンを縮める */
+}
+
+/* Primary stats style */
+.statCard {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 1rem; /* パディングを縮める */
+  background: rgba(28, 29, 34, 0.7);
+  border-radius: 10px;
+  border: 1px solid rgba(255, 255, 255, 0.05);
+  transition: all 0.3s ease;
+}
+
+.statCard:hover {
+  transform: translateY(-3px);
+  box-shadow: 0 10px 20px rgba(0, 0, 0, 0.15);
+  border-color: rgba(124, 255, 203, 0.2);
+}
+
+.statLabel {
+  font-family: var(--font-mono);
+  font-size: 0.85rem;
+  font-weight: 400;
+  color: var(--color-soft-text);
+  text-transform: lowercase;
+  letter-spacing: 1px;
+  margin-bottom: 0.5rem;
+}
+
+.statValue {
+  font-family: var(--font-mono);
+  font-size: 2.5rem; /* サイズを小さく */
+  font-weight: 700;
+  letter-spacing: -1px;
+}
+
+/* Stat value colors */
+.valueAmber {
+  color: var(--color-primary);
+  text-shadow: 0 0 10px rgba(124, 255, 203, 0.3);
+}
+
+.valueGreen {
+  color: #10b981;
+  text-shadow: 0 0 10px rgba(16, 185, 129, 0.3);
+}
+
+.valueRed {
+  color: #ef4444;
+  text-shadow: 0 0 10px rgba(239, 68, 68, 0.3);
+}
+
+/* Action buttons container */
+.buttonContainer {
+  display: flex;
+  flex-direction: column;
+  gap: 0.3rem; /* 間隔を縮める */
+  width: 100%;
+  max-width: 400px;
+  position: relative;
+  margin-top: 0.5rem; /* 上マージンを追加 */
+}
+
+/* Button base styles */
+.actionButton {
+  width: 100%;
+  padding: 0.6rem 1rem; /* パディングを縮める */
+  margin-bottom: 0.3rem; /* ボタン間の余白を追加 */
+  border-radius: 8px;
+  font-family: var(--font-mono);
+  font-weight: 600;
+  font-size: 0.9rem; /* フォントサイズを小さく */
+  letter-spacing: 0.5px;
+  text-transform: lowercase;
+  border: 1px solid transparent;
+  transition: all 0.2s cubic-bezier(0.165, 0.84, 0.44, 1);
+  position: relative;
+  overflow: hidden;
+  cursor: pointer;
+}
+
+.actionButton:hover {
+  transform: translateY(-2px);
+}
+
+.actionButton:active {
+  transform: translateY(1px);
+}
+
+/* Register button */
+.registerButton {
+  background: linear-gradient(90deg, #10b981, #7cffcb);
+  color: #121212;
+}
+
+.registerButton:hover {
+  box-shadow: 0 5px 15px rgba(124, 255, 203, 0.4);
+}
+
+/* Retry button */
+.retryButton {
+  background: rgba(124, 255, 203, 0.2);
+  color: var(--color-light-text);
+  border: 1px solid rgba(124, 255, 203, 0.3);
+}
+
+.retryButton:hover {
+  background: rgba(124, 255, 203, 0.3);
+  box-shadow: 0 5px 15px rgba(124, 255, 203, 0.2);
+}
+
+/* Ranking button */
+.rankingButton {
+  background: rgba(255, 255, 255, 0.03);
+  color: var(--color-light-text);
+  border: 1px solid rgba(255, 255, 255, 0.07);
+}
+
+.rankingButton:hover {
+  background: rgba(255, 255, 255, 0.07);
+}
+
+/* Menu button */
+.menuButton {
+  background: transparent;
+  color: var(--color-soft-text);
+  border: 1px solid rgba(255, 255, 255, 0.05);
+}
+
+.menuButton:hover {
+  background: rgba(255, 255, 255, 0.03);
+  color: var(--color-light-text);
+}
+
+/* Status messages */
+.registeredText {
+  color: #10b981;
+  font-family: var(--font-mono);
+  font-weight: 500;
+  letter-spacing: 0.5px;
+  text-align: center;
+  margin-bottom: 0.5rem; /* 余白を縮める */
+  padding: 0.4rem 0.75rem; /* パディングを縮める */
+  background: rgba(16, 185, 129, 0.1);
+  border-radius: 6px;
+  border: 1px solid rgba(16, 185, 129, 0.2);
+  font-size: 0.85rem; /* フォントサイズを小さく */
+}
+
+.calculatingContainer {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 1rem;
+  width: 100%;
+  grid-column: span 2;
+}
+
+.calculatingText {
+  color: var(--color-soft-text);
+  font-family: var(--font-mono);
+  font-weight: 500;
+  animation: pulse 1.5s infinite;
+}
+
+.calculateButton {
+  background: linear-gradient(90deg, #10b981, #7cffcb);
+  color: #121212;
+  padding: 0.75rem 1.5rem;
+  border-radius: 6px;
+  font-weight: 600;
+  transition: all 0.2s ease;
+}
+
+.calculateButton:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 5px 15px rgba(124, 255, 203, 0.4);
+}
+
+/* パフォーマンスメッセージスタイル */
+.perfMessageContainer {
+  margin-top: 0.5rem;
+  margin-bottom: 1rem; /* 下マージンを縮める */
+  padding: 0.5rem 1rem; /* パディングを縮める */
+  border-radius: 8px;
+  background: rgba(124, 255, 203, 0.05);
+  border: 1px solid rgba(124, 255, 203, 0.1);
+  text-align: center;
+  max-width: 400px;
+}
+
+.perfMessage {
+  font-family: var(--font-mono);
+  font-size: 1rem;
+  font-weight: 500;
+  color: var(--color-light-text);
+  letter-spacing: 0.5px;
+}
+
+.perfMessageHighlight {
+  color: var(--color-primary);
+  font-weight: 700;
+}
+
+/* 追加のアニメーション効果 */
+@keyframes gradientShift {
+  0% { background-position: 0% 50%; }
+  50% { background-position: 100% 50%; }
+  100% { background-position: 0% 50%; }
+}
+
+.statCard:nth-child(1) {
+  border-bottom: 2px solid rgba(124, 255, 203, 0.3);
+}
+
+.statCard:nth-child(2) {
+  border-bottom: 2px solid rgba(124, 255, 203, 0.3);
+}
+
+.statCard:nth-child(3) {
+  border-bottom: 2px solid rgba(16, 185, 129, 0.3);
+}
+
+.statCard:nth-child(4) {
+  border-bottom: 2px solid rgba(239, 68, 68, 0.3);
+}
+
+/* カウントアップアニメーション用スタイル */
+.countNumber {
+  display: inline-block;
+  position: relative;
+}
+
+.buttonContainer::before {
+  content: '';
+  position: absolute;
+  top: -1.5rem;
+  left: 50%;
+  width: 80%;
+  height: 1px;
+  background: linear-gradient(90deg, 
+    rgba(124, 255, 203, 0), 
+    rgba(124, 255, 203, 0.1), 
+    rgba(124, 255, 203, 0)
+  );
+  transform: translateX(-50%);
+}
+
+/* Background floating elements */
+.backgroundElements {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  overflow: hidden;
+  pointer-events: none;
+  z-index: -1;
+}
+
+.glowElement {
+  position: absolute;
+  width: 150px;
+  height: 150px;
+  border-radius: 50%;
+  background: radial-gradient(circle, rgba(124, 255, 203, 0.2) 0%, rgba(124, 255, 203, 0) 70%);
+  filter: blur(20px);
+  animation-duration: 10s;
+  animation-iteration-count: infinite;
+  animation-timing-function: ease-in-out;
+  animation-name: float;
+}
+
+.glow1 {
+  top: -50px;
+  left: 20%;
+  animation-delay: 0s;
+}
+
+.glow2 {
+  bottom: -70px;
+  right: 25%;
+  animation-delay: 2s;
+}
+
+/* グリッドパターンの追加 */
+.grid {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-image: 
+    linear-gradient(to right, rgba(255, 255, 255, 0.03) 1px, transparent 1px),
+    linear-gradient(to bottom, rgba(255, 255, 255, 0.03) 1px, transparent 1px);
+  background-size: 20px 20px;
+  z-index: -2;
+}
+
+/* Finalsインスパイアードの装飾要素 */
+.accent {
+  position: absolute;
+  height: 3px;
+  width: 50px;
+  background: linear-gradient(90deg, rgba(124, 255, 203, 0), rgba(124, 255, 203, 0.8), rgba(124, 255, 203, 0));
+}
+
+.accentTop {
+  top: 0;
+  left: 10%;
+  width: 80%;
+}
+
+.accentBottom {
+  bottom: 0;
+  right: 10%;
+  width: 80%;
+}
+
+.corner {
+  position: absolute;
+  width: 15px;
+  height: 15px;
+  border-color: rgba(124, 255, 203, 0.4);
+  opacity: 0.6;
+}
+
+.cornerTopLeft {
+  top: 0;
+  left: 0;
+  border-top: 2px solid;
+  border-left: 2px solid;
+}
+
+.cornerTopRight {
+  top: 0;
+  right: 0;
+  border-top: 2px solid;
+  border-right: 2px solid;
+}
+
+.cornerBottomLeft {
+  bottom: 0;
+  left: 0;
+  border-bottom: 2px solid;
+  border-left: 2px solid;
+}
+
+.cornerBottomRight {
+  bottom: 0;
+  right: 0;
+  border-bottom: 2px solid;
+  border-right: 2px solid;
+}
+
+/* Responsive styles */
+@media (max-height: 700px) {
+  /* 縦サイズが小さい画面向けの最適化 */
+  .container {
+    padding: 1rem;
+    margin-bottom: 2.5rem;
+    max-height: 75vh;
+  }
+  
+  .title {
+    font-size: 1.2rem;
+    margin-bottom: 0.8rem;
+  }
+  
+  .title::after {
+    bottom: -6px;
+    height: 1px;
+    width: 30px;
+  }
+  
+  .statsContainer {
+    gap: 0.5rem;
+    margin-bottom: 0.8rem;
+  }
+  
+  .statCard {
+    padding: 0.5rem;
+  }
+  
+  .statValue {
+    font-size: 1.8rem;
+  }
+  
+  .perfMessageContainer {
+    margin-top: 0.3rem;
+    margin-bottom: 0.5rem;
+    padding: 0.3rem 0.5rem;
+  }
+  
+  .perfMessage {
+    font-size: 0.8rem;
+  }
+  
+  .buttonContainer {
+    gap: 0.2rem;
+  }
+  
+  .actionButton {
+    padding: 0.4rem 0.6rem;
+    font-size: 0.8rem;
+    margin-bottom: 0.2rem;
+  }
+}
+
+@media (max-width: 768px) {
+  .container {
+    padding: 1.25rem;
+  }
+  
+  .statsContainer {
+    gap: 0.8rem;
+  }
+  
+  .statCard {
+    padding: 0.8rem;
+  }
+  
+  .statValue {
+    font-size: 2.2rem;
+  }
+}
+
+@media (max-width: 480px) {
+  .title {
+    font-size: 1.3rem;
+    margin-bottom: 1.2rem;
+  }
+  
+  .statsContainer {
+    grid-template-columns: 1fr;
+    gap: 0.5rem;
+    margin-bottom: 0.8rem;
+  }
+  
+  .buttonContainer {
+    gap: 0.25rem;
+  }
+  
+  .actionButton {
+    padding: 0.5rem 0.8rem;
+    font-size: 0.85rem;
+  }
+}
+
+/* Animation keyframes */
+@keyframes pulse {
+  0% { opacity: 0.5; }
+  50% { opacity: 1; }
+  100% { opacity: 0.5; }
+}
+
+@keyframes float {
+  0% { transform: translateY(0px); }
+  50% { transform: translateY(-10px); }
+  100% { transform: translateY(0px); }
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(20px); }
+  to { opacity: 1; transform: translateY(0); }
+}

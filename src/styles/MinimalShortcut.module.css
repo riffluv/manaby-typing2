@@ -2,17 +2,17 @@
   position: fixed;
   left: 0;
   right: 0;
-  bottom: 1.5rem;
+  bottom: 0.8rem; /* 位置を下げる */
   margin: 0 auto;
   display: flex;
   justify-content: center;
   align-items: center;
-  gap: 1.8rem;
+  gap: 1.2rem; /* ギャップを小さくする */
   background: none;
   border-radius: 12px;
-  padding: 0.75rem 1.5rem;
+  padding: 0.5rem 1rem; /* パディングを小さくする */
   box-shadow: none;
-  z-index: 2000; /* z-indexを高めに設定 */
+  z-index: 10000; /* z-indexをさらに高く設定 */
   width: fit-content;
   min-width: 0;
   backdrop-filter: blur(10px);
@@ -88,15 +88,15 @@
   font-weight: 600;
   background: rgba(35, 36, 43, 0.9);
   color: #7cffcb;
-  border-radius: 6px;
-  padding: 0.2rem 0.55rem;
-  font-size: 0.72rem;
+  border-radius: 4px; /* 角丸を小さく */
+  padding: 0.15rem 0.4rem; /* パディングを小さく */
+  font-size: 0.68rem; /* フォントサイズを小さく */
   border: 1px solid rgba(255, 255, 255, 0.08);
   font-family: var(--font-mono, monospace);
-  box-shadow: 0 3px 0 rgba(0, 0, 0, 0.2), inset 0 1px 0 rgba(255, 255, 255, 0.05);
-  min-width: 1.7rem;
+  box-shadow: 0 2px 0 rgba(0, 0, 0, 0.2), inset 0 1px 0 rgba(255, 255, 255, 0.05); /* 影を小さく */
+  min-width: 1.5rem; /* 最小幅を小さく */
   text-align: center;
-  letter-spacing: 0.5px;
+  letter-spacing: 0.3px; /* 文字間隔を小さく */
   text-transform: uppercase;
   transition: all 0.2s cubic-bezier(0.165, 0.84, 0.44, 1);
   position: relative;

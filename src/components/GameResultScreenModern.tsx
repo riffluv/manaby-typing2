@@ -3,7 +3,7 @@ import PortalShortcut from '@/components/PortalShortcut';
 import { motion, AnimatePresence } from 'framer-motion';
 import type { GameScoreLog } from '@/types/score';
 import type { PerWordScoreLog } from '@/types/score';
-import { useEffect, useState, useRef } from 'react';
+import { useEffect, useState } from 'react';
 import { useGlobalShortcuts } from '@/hooks/useGlobalShortcuts';
 import styles from '@/styles/ModernGameResult.module.css';
 
@@ -34,57 +34,6 @@ export default function GameResultScreen({
 }: GameResultScreenProps) {
   // アニメーションのための状態
   const [showContent, setShowContent] = useState(false);
-  
-  // カウントアップアニメーション用の状態
-  const [kpmCount, setKpmCount] = useState(0);
-  const [accuracyCount, setAccuracyCount] = useState(0);
-  const [correctCount, setCorrectCount] = useState(0);
-  const [missCount, setMissCount] = useState(0);
-  
-  // アニメーションの実行状態を管理
-  const animationCompleted = useRef(false);
-  
-  // パフォーマンスメッセージを決定する関数
-  const getPerformanceMessage = () => {
-    if (!resultScore) return { message: "", level: "" };
-    
-    const { kpm, accuracy } = resultScore;
-    
-    if (kpm > 300 && accuracy > 98) {
-      return {
-        message: "伝説級タイピング！神の領域です！",
-        level: "legendary"
-      };
-    } else if (kpm > 250 && accuracy > 95) {
-      return {
-        message: "プロ級の素晴らしいタイピングです！",
-        level: "amazing"
-      };
-    } else if (kpm > 200 && accuracy > 90) {
-      return {
-        message: "素晴らしい速度と精度です！",
-        level: "excellent"
-      };
-    } else if (kpm > 150 && accuracy > 85) {
-      return {
-        message: "とても良いパフォーマンスです！",
-        level: "great"
-      };
-    } else if (kpm > 100) {
-      return {
-        message: "良いペースですね！",
-        level: "good"
-      };
-    } else {
-      return {
-        message: "次は自己ベストを目指しましょう！",
-        level: "normal"
-      };
-    }
-  };
-  
-  // パフォーマンスメッセージの取得
-  const perfMessage = getPerformanceMessage();
 
   // ショートカットのセットアップ
   useGlobalShortcuts([
@@ -108,47 +57,6 @@ export default function GameResultScreen({
     const timer = setTimeout(() => setShowContent(true), 100);
     return () => clearTimeout(timer);
   }, []);
-  
-  // スコアカウントアップアニメーション
-  useEffect(() => {
-    if (showContent && resultScore && !animationCompleted.current) {
-      animationCompleted.current = true;
-      
-      const targetKpm = Math.floor(resultScore.kpm);
-      const targetAccuracy = Math.floor(resultScore.accuracy);
-      const targetCorrect = resultScore.correct;
-      const targetMiss = resultScore.miss;
-        // アニメーション時間（ミリ秒）- 短くして高速に
-      const animationDuration = 1000;
-      const framesPerSecond = 60;
-      const totalFrames = animationDuration / (1000 / framesPerSecond);
-      
-      let frame = 0;
-      
-      const animate = () => {
-        if (frame <= totalFrames) {
-          const progress = frame / totalFrames;
-          const easedProgress = 1 - Math.pow(1 - progress, 3); // イージング関数（cubic-out）
-          
-          setKpmCount(Math.floor(targetKpm * easedProgress));
-          setAccuracyCount(Math.floor(targetAccuracy * easedProgress));
-          setCorrectCount(Math.floor(targetCorrect * easedProgress));
-          setMissCount(Math.floor(targetMiss * easedProgress));
-          
-          frame++;
-          requestAnimationFrame(animate);
-        } else {
-          // 最終値で確実に終了
-          setKpmCount(targetKpm);
-          setAccuracyCount(targetAccuracy);
-          setCorrectCount(targetCorrect);
-          setMissCount(targetMiss);
-        }
-      };
-      
-      requestAnimationFrame(animate);
-    }
-  }, [showContent, resultScore]);
 
   // 各スタットの表示用バリアント
   const statVariants = {
@@ -184,17 +92,11 @@ export default function GameResultScreen({
       initial={{ opacity: 0, scale: 0.98 }}
       animate={{ opacity: 1, scale: 1 }}
       transition={{ duration: 0.4, ease: [0.165, 0.84, 0.44, 1] }}
-    >      {/* 背景の装飾要素 */}
+    >
+      {/* 背景の装飾要素 */}
       <div className={styles.backgroundElements}>
-        <div className={styles.grid}></div>
         <div className={`${styles.glowElement} ${styles.glow1}`}></div>
         <div className={`${styles.glowElement} ${styles.glow2}`}></div>
-        <div className={`${styles.accent} ${styles.accentTop}`}></div>
-        <div className={`${styles.accent} ${styles.accentBottom}`}></div>
-        <div className={`${styles.corner} ${styles.cornerTopLeft}`}></div>
-        <div className={`${styles.corner} ${styles.cornerTopRight}`}></div>
-        <div className={`${styles.corner} ${styles.cornerBottomLeft}`}></div>
-        <div className={`${styles.corner} ${styles.cornerBottomRight}`}></div>
       </div>
       
       {/* タイトル */}
@@ -219,8 +121,9 @@ export default function GameResultScreen({
                 animate={showContent ? "visible" : "hidden"}
                 variants={statVariants}
               >
-                <div className={styles.statLabel}>kpm</div>                <div className={`${styles.statValue} ${styles.valueAmber}`}>
-                  <span className={styles.countNumber}>{kpmCount}</span>
+                <div className={styles.statLabel}>kpm</div>
+                <div className={`${styles.statValue} ${styles.valueAmber}`}>
+                  {Math.floor(resultScore.kpm)}
                 </div>
               </motion.div>
               
@@ -233,7 +136,7 @@ export default function GameResultScreen({
               >
                 <div className={styles.statLabel}>accuracy</div>
                 <div className={`${styles.statValue} ${styles.valueAmber}`}>
-                  <span className={styles.countNumber}>{accuracyCount}</span>%
+                  {Math.floor(resultScore.accuracy)}%
                 </div>
               </motion.div>
               
@@ -246,7 +149,7 @@ export default function GameResultScreen({
               >
                 <div className={styles.statLabel}>correct</div>
                 <div className={`${styles.statValue} ${styles.valueGreen}`}>
-                  <span className={styles.countNumber}>{correctCount}</span>
+                  {resultScore.correct}
                 </div>
               </motion.div>
               
@@ -259,7 +162,7 @@ export default function GameResultScreen({
               >
                 <div className={styles.statLabel}>miss</div>
                 <div className={`${styles.statValue} ${styles.valueRed}`}>
-                  <span className={styles.countNumber}>{missCount}</span>
+                  {resultScore.miss}
                 </div>
               </motion.div>
             </>
@@ -292,18 +195,6 @@ export default function GameResultScreen({
           )}
         </AnimatePresence>
       </div>
-        {/* パフォーマンスメッセージ */}
-      {resultScore && (
-        <motion.div 
-          className={styles.perfMessageContainer}          initial={{ opacity: 0, y: 10 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ delay: 1.2, duration: 0.4 }} /* 表示を早める */
-        >
-          <p className={styles.perfMessage}>
-            <span className={styles.perfMessageHighlight}>{perfMessage.message}</span>
-          </p>
-        </motion.div>
-      )}
       
       {/* アクションボタン */}
       <div className={styles.buttonContainer}>
