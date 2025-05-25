@@ -1,5 +1,6 @@
 import React, { memo, useMemo } from 'react';
-import styles from '@/styles/TypingGame.module.css';
+// 分離したスタイルシートを使用
+import styles from '@/styles/TypingCharacters.module.css';
 import type { TypingChar } from '@/utils/japaneseUtils';
 import type { KanaDisplay } from '@/types/typing';
 
@@ -36,7 +37,8 @@ function getCharClass(
 
 /**
  * TypingArea: タイピング中のローマ字を1文字ずつ表示
- * - 最新のUI/UXベストプラクティスに基づきリファクタリング
+ * - 分離したスタイル(TypingCharacters.module.css)を使用し、リファクタリングの影響を受けないように設計
+ * - スタイルは固定され、TypingCharacters.module.cssで完全に定義されています
  */
 const TypingArea: React.FC<TypingAreaProps> = memo(({
   currentKanaIndex,
