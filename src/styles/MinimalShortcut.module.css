@@ -8,42 +8,60 @@
   display: flex;
   justify-content: center;
   align-items: center;
-  gap: 1.2rem;
+  gap: 1.5rem;
   background: none;
   border-radius: 0;
-  padding: 0;
+  padding: 0.75rem 1.25rem;
   box-shadow: none;
   z-index: 100;
   width: fit-content;
   min-width: 0;
+  backdrop-filter: blur(5px);
+  background: rgba(20, 20, 25, 0.4);
+  border-radius: 8px;
+  border: 1px solid rgba(255, 255, 255, 0.05);
+  transition: all 0.3s ease;
+}
+
+.minimalShortcut:hover {
+  background: rgba(20, 20, 25, 0.6);
 }
 
 .shortcutItem {
   display: flex;
   align-items: center;
-  gap: 0.3rem;
+  gap: 0.5rem;
+  position: relative;
 }
 
 .plus {
-  color: #aaa;
-  font-size: 0.9em;
-  margin: 0 0.1em;
+  color: rgba(255, 255, 255, 0.5);
+  font-size: 0.8em;
+  margin: 0 0.05em;
 }
 
 .key {
-  font-weight: bold;
-  background: #23242b;
-  color: #f59e0b;
-  border-radius: 0.25rem;
-  padding: 0.125rem 0.5rem;
-  font-size: 0.9rem;
-  border: 1px solid #23242b;
+  font-weight: 600;
+  background: rgba(35, 36, 43, 0.9);
+  color: #7cffcb;
+  border-radius: 4px;
+  padding: 0.2rem 0.5rem;
+  font-size: 0.75rem;
+  border: 1px solid rgba(255, 255, 255, 0.1);
   font-family: var(--font-mono, monospace);
+  box-shadow: 0 2px 0 rgba(0, 0, 0, 0.2);
+  min-width: 1.6rem;
+  text-align: center;
+  letter-spacing: 0.5px;
+  text-transform: uppercase;
 }
 
 .label {
-  color: #e5e7eb;
-  font-size: 0.85rem;
+  color: rgba(255, 255, 255, 0.8);
+  font-size: 0.75rem;
   font-family: var(--font-mono, monospace);
   background: none;
+  font-weight: 400;
+  letter-spacing: 0.5px;
+  opacity: 0.9;
 }
