@@ -14,31 +14,6 @@ export type GameScreenProps = {
  * MonkeyType + Finals インスパイアードのモダンなゲーム画面
  */
 const GameScreen: React.FC<GameScreenProps> = memo(({ currentWord, currentKanaIndex, currentKanaDisplay }) => {
-  const [showFeedback, setShowFeedback] = useState(false);
-  const [feedbackText, setFeedbackText] = useState('');
-  const [previousWord, setPreviousWord] = useState<string>('');
-  
-  // 新しい単語が表示された時にアニメーション効果
-  useEffect(() => {
-    if (previousWord && previousWord !== currentWord.japanese) {
-      // 単語が変わった場合の処理
-      const accuracy = currentKanaDisplay?.acceptedText?.length || 0;
-      if (accuracy > 0) {
-        // フィードバック表示
-        setFeedbackText('Nice!');
-        setShowFeedback(true);
-        
-        // 3秒後に非表示
-        const timer = setTimeout(() => {
-          setShowFeedback(false);
-        }, 1000);
-        
-        return () => clearTimeout(timer);
-      }
-    }
-    
-    setPreviousWord(currentWord.japanese);
-  }, [currentWord.japanese, currentKanaDisplay, previousWord]);
 
   return (
     <motion.div 
@@ -47,19 +22,7 @@ const GameScreen: React.FC<GameScreenProps> = memo(({ currentWord, currentKanaIn
       animate={{ opacity: 1, y: 0 }}
       transition={{ duration: 0.5 }}
     >
-      {/* フィードバック表示 */}
-      <AnimatePresence>
-        {showFeedback && (
-          <motion.div
-            className={`${styles.typingFeedback} ${styles.typingFeedbackVisible}`}
-            initial={{ opacity: 0, y: 10 }}
-            animate={{ opacity: 1, y: 0 }}
-            exit={{ opacity: 0, y: -10 }}
-          >
-            {feedbackText}
-          </motion.div>
-        )}
-      </AnimatePresence>
+      {/* ...existing code... */}
       
       {/* 日本語単語 */}
       <motion.div 

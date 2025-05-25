@@ -1,6 +1,7 @@
 'use client';
 
 import { motion } from 'framer-motion';
+import React, { useState, useEffect } from 'react';
 import GameScreen from '@/components/GameScreen';
 import { TypingWord, KanaDisplay } from '@/types/typing';
 import { PerWordScoreLog } from '@/types/score';
@@ -26,14 +27,25 @@ export default function GamePlayingScreen({
   const averageKpm = scoreLog.length > 0 
     ? Math.round(scoreLog.reduce((sum, log) => sum + log.kpm, 0) / scoreLog.length) 
     : 0;
-    
   const averageAccuracy = scoreLog.length > 0
     ? Math.round(scoreLog.reduce((sum, log) => sum + log.accuracy, 0) / scoreLog.length)
     : 0;
 
   // プログレス計算
   const progressPercentage = Math.min((scoreLog.length / 10) * 100, 100);
-  
+
+  // 初回表示時はアニメーションなし
+  const [hasStarted, setHasStarted] = useState(false);
+  // scoreLog.lengthが1以上になったらアニメーションを有効化
+  useEffect(() => {
+    if (scoreLog.length > 0 && !hasStarted) {
+      setHasStarted(true);
+    }
+    if (scoreLog.length === 0 && hasStarted) {
+      setHasStarted(false);
+    }
+  }, [scoreLog.length, hasStarted]);
+
   return (
     <motion.div 
       className={styles.container}
@@ -60,16 +72,16 @@ export default function GamePlayingScreen({
       {/* プログレスバーとステータス */}
       <motion.div 
         className={styles.progressContainer}
-        initial={{ opacity: 0, y: 20 }}
-        animate={{ opacity: 1, y: 0 }}
+        initial={{ opacity: 0 }}
+        animate={{ opacity: 1 }}
         transition={{ delay: 0.3, duration: 0.5 }}
       >
         <div className={styles.progressBarTrack}>
           <motion.div 
             className={styles.progressBar}
-            initial={{ width: '0%' }}
-            animate={{ width: `${progressPercentage}%` }}
-            transition={{ duration: 0.3, ease: "easeOut" }}
+            style={{ width: !hasStarted ? `${progressPercentage}%` : undefined }}
+            animate={hasStarted ? { width: `${progressPercentage}%` } : false}
+            transition={hasStarted ? { duration: 0.3, ease: "easeOut" } : {}}
           />
         </div>
         <div className={styles.statusText}>

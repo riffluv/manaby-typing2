@@ -1,0 +1,21 @@
+'use client';
+
+import { useRouter } from 'next/navigation';
+import RankingScreen from '@/components/RankingScreen';
+
+/**
+ * ランキングページ
+ * コンポーネントを利用して表示する
+ */
+export default function RankingPage() {
+  const router = useRouter();
+  
+  // メインメニューに戻る処理
+  const handleGoMenu = () => {
+    router.push('/');
+  };
+  
+  return (
+    <RankingScreen onGoMenu={handleGoMenu} standalone={true} />
+  );
+}
