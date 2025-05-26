@@ -1,6 +1,5 @@
 import React, { memo, useMemo } from 'react';
-// 製品版用に最適化されたスタイル
-import styles from '@/styles/TypingModule.module.css';
+import styles from '@/styles/TypingCharacters.module.css';
 import type { TypingChar } from '@/utils/japaneseUtils';
 import type { KanaDisplay } from '@/types/typing';
 
@@ -110,7 +109,10 @@ const TypingArea: React.FC<TypingAreaProps> = memo(({
         return (
           <span
             key={idx}
-            className={`${styles.typingChar} ${stateClass}`}
+            className={[
+              styles.typingChar,
+              isCurrent ? styles.current : isCompleted ? styles.completed : styles.pending
+            ].join(' ')}
             aria-current={isCurrent ? 'true' : undefined}
             aria-label={`${char} (${stateText})`}
             data-state={isCurrent ? 'current' : isCompleted ? 'completed' : 'pending'}

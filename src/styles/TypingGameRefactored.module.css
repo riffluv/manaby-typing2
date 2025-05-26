@@ -41,14 +41,6 @@
   font-weight: 300;
 }
 
-.typingAreaContainer {
-  width: 100%;
-  max-width: 80ch;
-  margin: 0 auto;
-  position: relative;
-  overflow: visible;
-}
-
 .progress {
   font-size: 0.9rem;
   color: var(--color-muted);
@@ -150,24 +142,6 @@
   opacity: 1;
   transform: scaleY(0.95);
   line-height: 1.2;
-}
-
-.typingArea {
-  display: flex;
-  flex-wrap: wrap;
-  justify-content: center;
-  align-items: center;
-  padding: 0.75rem;
-  background: transparent;
-  margin-bottom: 2rem;
-  width: 100%;
-  max-width: 800px;
-  font-family: var(--font-mono);
-  font-size: 2rem;
-  font-weight: 400;
-  letter-spacing: 0.02em;
-  line-height: 1.1;
-  min-height: 4rem;
 }
 
 /* タイピング文字のスタイル */
