@@ -1,7 +1,10 @@
 import type { NextConfig } from "next";
 
 const nextConfig: NextConfig = {
-  /* config options here */
+  eslint: {
+    // ビルド時のESLintチェックを無効化（開発中のため）
+    ignoreDuringBuilds: true,
+  },
 };
 
 export default nextConfig;

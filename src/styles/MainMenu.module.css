@@ -372,8 +372,14 @@
   .MainMenu_modeSelectionContainer {
     padding: var(--spacing-md);
   }
-  
   .container {
     min-height: 70vh;
   }
+}
+
+/* スタートボタンコンテナ */
+.MainMenu_startButtonContainer {
+  width: 100%;
+  max-width: 400px;
+  margin-bottom: var(--spacing-lg);
 }

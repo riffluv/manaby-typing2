@@ -7,14 +7,14 @@ import styles from '@/styles/MainMenu.module.css';
 
 interface MainMenuProps {
   onStart: () => void;
-  onRanking: () => void;
   onRetry: () => void;
+  onRanking: () => void;
 }
 
 /**
  * モダンなメインメニュー画面コンポーネント（MonkeyTypeとFinalsのデザインを参考）
  */
-const MainMenu: React.FC<MainMenuProps> = ({ onStart, onRanking, onRetry }) => {
+const MainMenu: React.FC<MainMenuProps> = ({ onStart, onRetry, onRanking }) => {
   const { resetGame, setGameStatus, setMode } = useTypingGameStore();
   const [selectedMode, setSelectedMode] = useState<'normal' | 'hard'>('normal');
   const [logoHovered, setLogoHovered] = useState(false);
@@ -102,9 +102,7 @@ const MainMenu: React.FC<MainMenuProps> = ({ onStart, onRanking, onRetry }) => {
           >
             manaby typing
           </motion.h1>
-        </motion.div>
-
-        {/* スタートボタン */}
+        </motion.div>        {/* メインボタンエリア */}
         <motion.div 
           variants={itemVariants} 
           className={styles.MainMenu_startButtonContainer}
@@ -169,12 +167,10 @@ const MainMenu: React.FC<MainMenuProps> = ({ onStart, onRanking, onRetry }) => {
         >
           v2.0.0 | Monkeytype × Finals
         </motion.div>
-      </motion.div>
-
-      {/* メインメニュー用ショートカット（Space, Alt+R, Esc） */}
+      </motion.div>      {/* メインメニュー用ショートカット（Space, Esc, Alt+R） */}
       <PortalShortcut shortcuts={[
         { key: 'Space', label: 'スタート' },
-        { key: ['Alt', 'R'], label: 'ランキング' },
+        { key: 'Alt+R', label: 'ランキング' },
         { key: 'Esc', label: '戻る' }
       ]} />
     </div>
