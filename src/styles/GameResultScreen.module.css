@@ -64,11 +64,11 @@
 .buttonContainer {
   display: flex;
   flex-direction: column;
-  gap: var(--spacing-md);
+  gap: var(--spacing-sm); /* 余白を縮小 */
   width: 100%;
   max-width: 30rem;
   justify-content: center;
-  margin-top: var(--spacing-xl);
+  margin-top: var(--spacing-md); /* 余白を縮小 */
 }
 
 /* リザルト画面のボタンスタイル */
@@ -76,15 +76,23 @@
 .retryButton,
 .rankingButton,
 .menuButton,
-.calculateButton {
-  padding: var(--spacing-md);
+.calculateButton,
+.actionButton {
+  all: unset;
+  box-sizing: border-box;
+  padding: 0.6rem 1.1rem;
   border-radius: var(--border-radius-md);
   font-weight: bold;
   transition: all var(--transition-speed) var(--transition-timing);
   width: 100%;
   font-size: var(--font-size-base);
-  margin-bottom: var(--spacing-sm);
+  margin-bottom: var(--spacing-xs); /* 余白を縮小 */
   cursor: pointer;
+  font-family: var(--font-mono);
+  text-align: center;
+  display: flex;
+  justify-content: center;
+  align-items: center;
 }
 
 .registerButton {
@@ -115,16 +123,22 @@
   margin-top: var(--spacing-md);
 }
 
+.perfMessageContainer {
+  margin-top: 0.3rem;
+  margin-bottom: 0.5rem;
+  padding: 0.4rem 0.8rem;
+}
+
 .registeredText {
   color: var(--color-accent);
   font-family: var(--font-mono);
-  margin-bottom: var(--spacing-md);
+  margin-bottom: var(--spacing-xs);
 }
 
 .calculatingText {
   color: var(--color-muted);
   font-family: var(--font-mono);
-  margin: var(--spacing-md) 0;
+  margin: var(--spacing-xs) 0;
 }
 
 .registerButton:hover,

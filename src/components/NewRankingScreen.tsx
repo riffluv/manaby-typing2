@@ -63,31 +63,19 @@ const NewRankingScreen: React.FC<NewRankingScreenProps> = ({ onGoMenu }) => {
         >
           <button
             onClick={() => handleDifficultyChange('easy')}
-            className={`px-5 py-2 font-mono text-sm rounded-md transition-all duration-200 
-              ${activeDifficulty === 'easy'
-                ? 'bg-amber-500 text-gray-900 font-semibold shadow-lg'
-                : 'bg-gray-800 text-gray-400 hover:bg-gray-700 border border-gray-700 hover:border-amber-500/30'
-              }`}
+            className="button"
           >
             やさしい
           </button>
           <button
             onClick={() => handleDifficultyChange('normal')}
-            className={`px-5 py-2 font-mono text-sm rounded-md transition-all duration-200
-              ${activeDifficulty === 'normal'
-                ? 'bg-amber-500 text-gray-900 font-semibold shadow-lg'
-                : 'bg-gray-800 text-gray-400 hover:bg-gray-700 border border-gray-700 hover:border-amber-500/30'
-              }`}
+            className="button"
           >
             ふつう
           </button>
           <button
             onClick={() => handleDifficultyChange('hard')}
-            className={`px-5 py-2 font-mono text-sm rounded-md transition-all duration-200
-              ${activeDifficulty === 'hard'
-                ? 'bg-amber-500 text-gray-900 font-semibold shadow-lg'
-                : 'bg-gray-800 text-gray-400 hover:bg-gray-700 border border-gray-700 hover:border-amber-500/30'
-              }`}
+            className="button"
           >
             むずかしい
           </button>
@@ -124,7 +112,7 @@ const NewRankingScreen: React.FC<NewRankingScreenProps> = ({ onGoMenu }) => {
                     .catch(() => setError('ランキングの取得に失敗しました'))
                     .finally(() => setLoading(false));
                 }}
-                className="px-4 py-2 bg-gray-700 hover:bg-gray-600 rounded-md text-white"
+                className="button"
               >
                 リトライ
               </button>

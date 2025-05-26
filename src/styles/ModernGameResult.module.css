@@ -5,8 +5,8 @@
   width: 100%;
   max-width: 900px;
   max-height: 76vh; /* さらに高さ制限を調整 */
-  padding: 1.5rem 2rem; /* 上下のパディングを調整 */
-  margin-bottom: 4rem; /* ショートカットキー用の余白を増やす */
+  padding: 1rem 1.2rem; /* 上下のパディングを調整 */
+  margin-bottom: 2rem; /* ショートカットキー用の余白を増やす */
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -42,7 +42,7 @@
   font-weight: 700;
   font-size: 1.5rem; /* フォントサイズを小さく */
   letter-spacing: 1px;
-  margin-bottom: 1.5rem; /* 余白を縮める */
+  margin-bottom: 0.7rem; /* 余白を縮める */
   color: var(--color-light-text);
   text-transform: lowercase;
   position: relative;
@@ -65,8 +65,8 @@
   width: 100%;
   display: grid;
   grid-template-columns: repeat(2, 1fr);
-  gap: 1rem; /* 間隔を縮める */
-  margin-bottom: 1.5rem; /* 下マージンを縮める */
+  gap: 0.5rem; /* 間隔を縮める */
+  margin-bottom: 0.7rem; /* 下マージンを縮める */
 }
 
 /* Primary stats style */
@@ -74,7 +74,7 @@
   display: flex;
   flex-direction: column;
   align-items: center;
-  padding: 1rem; /* パディングを縮める */
+  padding: 0.7rem; /* パディングを縮める */
   background: rgba(28, 29, 34, 0.7);
   border-radius: 10px;
   border: 1px solid rgba(255, 255, 255, 0.05);
@@ -124,29 +124,36 @@
 .buttonContainer {
   display: flex;
   flex-direction: column;
-  gap: 0.3rem; /* 間隔を縮める */
+  gap: 0.2rem; /* さらに余白を縮小 */
   width: 100%;
   max-width: 400px;
   position: relative;
-  margin-top: 0.5rem; /* 上マージンを追加 */
+  margin-top: 0.3rem;
 }
 
 /* Button base styles */
 .actionButton {
+  all: unset;
+  box-sizing: border-box;
   width: 100%;
-  padding: 0.6rem 1rem; /* パディングを縮める */
-  margin-bottom: 0.3rem; /* ボタン間の余白を追加 */
+  padding: 0.6rem 1.1rem;
   border-radius: 8px;
   font-family: var(--font-mono);
   font-weight: 600;
-  font-size: 0.9rem; /* フォントサイズを小さく */
+  font-size: 0.98rem;
   letter-spacing: 0.5px;
-  text-transform: lowercase;
-  border: 1px solid transparent;
-  transition: all 0.2s cubic-bezier(0.165, 0.84, 0.44, 1);
-  position: relative;
-  overflow: hidden;
   cursor: pointer;
+  background: var(--color-bg2, #2C2E31);
+  color: var(--color-light-text, #D1D0C5);
+  transition: background 0.2s;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.actionButton:focus {
+  outline: none;
+  box-shadow: 0 0 0 2px var(--color-highlight, #7cffcb);
 }
 
 .actionButton:hover {
@@ -161,6 +168,9 @@
 .registerButton {
   background: linear-gradient(90deg, #10b981, #7cffcb);
   color: #121212;
+  display: flex;
+  justify-content: center;
+  align-items: center;
 }
 
 .registerButton:hover {
@@ -172,6 +182,9 @@
   background: rgba(124, 255, 203, 0.2);
   color: var(--color-light-text);
   border: 1px solid rgba(124, 255, 203, 0.3);
+  display: flex;
+  justify-content: center;
+  align-items: center;
 }
 
 .retryButton:hover {
@@ -184,6 +197,9 @@
   background: rgba(255, 255, 255, 0.03);
   color: var(--color-light-text);
   border: 1px solid rgba(255, 255, 255, 0.07);
+  display: flex;
+  justify-content: center;
+  align-items: center;
 }
 
 .rankingButton:hover {
@@ -195,6 +211,9 @@
   background: transparent;
   color: var(--color-soft-text);
   border: 1px solid rgba(255, 255, 255, 0.05);
+  display: flex;
+  justify-content: center;
+  align-items: center;
 }
 
 .menuButton:hover {
@@ -209,7 +228,7 @@
   font-weight: 500;
   letter-spacing: 0.5px;
   text-align: center;
-  margin-bottom: 0.5rem; /* 余白を縮める */
+  margin-bottom: var(--spacing-xs);
   padding: 0.4rem 0.75rem; /* パディングを縮める */
   background: rgba(16, 185, 129, 0.1);
   border-radius: 6px;
@@ -231,6 +250,7 @@
   font-family: var(--font-mono);
   font-weight: 500;
   animation: pulse 1.5s infinite;
+  margin: var(--spacing-xs) 0;
 }
 
 .calculateButton {
@@ -240,6 +260,9 @@
   border-radius: 6px;
   font-weight: 600;
   transition: all 0.2s ease;
+  display: flex;
+  justify-content: center;
+  align-items: center;
 }
 
 .calculateButton:hover {
@@ -249,9 +272,9 @@
 
 /* パフォーマンスメッセージスタイル */
 .perfMessageContainer {
-  margin-top: 0.5rem;
-  margin-bottom: 1rem; /* 下マージンを縮める */
-  padding: 0.5rem 1rem; /* パディングを縮める */
+  margin-top: 0.3rem;
+  margin-bottom: 0.5rem;
+  padding: 0.4rem 0.8rem;
   border-radius: 8px;
   background: rgba(124, 255, 203, 0.05);
   border: 1px solid rgba(124, 255, 203, 0.1);

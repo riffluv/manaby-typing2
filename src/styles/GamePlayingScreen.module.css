@@ -12,9 +12,8 @@
   justify-content: center;
   position: relative;
   overflow: visible; /* オーバーフローを許可 */
-  padding: 2rem 1rem 6rem; /* 下部に十分な余白を確保 */
-  min-height: 80vh;
-  position: relative;
+  padding: 1.2rem 0.7rem 3.5rem; /* 余白を縮小 */
+  min-height: 75vh;
 }
 
 .container::before {
@@ -42,11 +41,11 @@
   left: 0;
   right: 0;
   margin: 0 auto;
-  padding: 0.75rem 1.5rem 1rem;
+  padding: 0.5rem 1rem 0.7rem; /* 余白を縮小 */
   z-index: var(--z-above);
   backdrop-filter: blur(8px);
   background: rgba(20, 20, 25, 0.4);
-  border-radius: 12px;
+  border-radius: 10px;
   border: 1px solid rgba(255, 255, 255, 0.05);
   box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
   transition: transform 0.3s ease, opacity 0.3s ease;
@@ -107,13 +106,14 @@
   justify-content: space-between;
   align-items: center;
   font-size: 0.85rem;
-  margin-top: 0.8rem;
+  margin-top: 0.5rem; /* 余白を縮小 */
   color: rgba(209, 208, 197, 0.9);
   font-family: var(--font-mono);
   width: 100%;
   text-transform: uppercase;
   letter-spacing: 0.08em;
   font-weight: 500;
+  gap: 0.3rem;
 }
 
 /* 拡張スタイル - ゲーム体験向上のための視覚効果 */
@@ -153,6 +153,26 @@
 
 .focusMode:hover .statusText {
   opacity: 1;
+}
+
+/* ボタンスタイル */
+.button {
+  all: unset;
+  box-sizing: border-box;
+  padding: 0.6rem 1.1rem;
+  border-radius: 8px;
+  font-size: 1rem;
+  font-family: var(--font-mono);
+  font-weight: 600;
+  cursor: pointer;
+  background: var(--color-bg2, #2C2E31);
+  color: var(--color-light-text, #D1D0C5);
+  transition: background 0.2s;
+}
+
+.button:focus {
+  outline: none;
+  box-shadow: 0 0 0 2px var(--color-highlight, #7cffcb);
 }
 
 /* レスポンシブ調整 - Finals/MonkeyType風のエレガントなデザイン */
