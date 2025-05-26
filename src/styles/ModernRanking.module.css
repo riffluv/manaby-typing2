@@ -2,15 +2,35 @@
 /* DPI125%環境での高品質表示を考慮したrem単位使用 */
 
 .container {
-  width: 100%;
+  width: 100vw;
+  height: 100vh;
   display: flex;
   flex-direction: column;
   align-items: center;
   justify-content: center;
-  background: transparent;
-  color: var(--color-light-text, #D1D0C5);
-  font-family: var(--font-mono);
+  background: rgba(35, 36, 43, 0.7);
   position: relative;
+  overflow: auto;
+}
+
+.content {
+  width: 100%;
+  max-width: 900px;
+  max-height: 90vh;
+  min-width: 320px;
+  padding: 2.5rem 2vw 2.5rem 2vw;
+  margin: 0 auto;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: flex-start;
+  background: rgba(35, 36, 43, 0.7);
+  border-radius: 16px;
+  border: 1px solid rgba(124, 255, 203, 0.1);
+  backdrop-filter: blur(10px);
+  box-shadow: 0 20px 40px rgba(0, 0, 0, 0.2);
+  position: relative;
+  overflow: hidden;
 }
 
 /* Finalsインスパイアードの背景エフェクト */
@@ -55,38 +75,24 @@
 .content {
   width: 100%;
   max-width: 900px;
-  max-height: 76vh;
-  padding: 1rem 1.2rem;
-  margin-bottom: 2rem;
+  max-height: 90vh;
+  min-width: 320px;
+  padding: 2.5rem 2vw 2.5rem 2vw;
+  margin: 0 auto;
   display: flex;
   flex-direction: column;
   align-items: center;
-  position: relative;
-  z-index: 1;
+  justify-content: flex-start;
   background: rgba(35, 36, 43, 0.7);
-  border-radius: 12px;
+  border-radius: 16px;
   border: 1px solid rgba(124, 255, 203, 0.1);
   backdrop-filter: blur(10px);
   box-shadow: 0 20px 40px rgba(0, 0, 0, 0.2);
-  overflow: auto;
-  animation: fadeIn 0.4s ease-out;
-  transition: all 0.3s cubic-bezier(0.165, 0.84, 0.44, 1);
+  position: relative;
+  overflow: hidden;
 }
 
-.content::before {
-  content: '';
-  position: absolute;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 2px;
-  background: linear-gradient(90deg, 
-    rgba(124, 255, 203, 0), 
-    rgba(124, 255, 203, 0.6), 
-    rgba(124, 255, 203, 0)
-  );
-  z-index: 1;
-}
+/* Remove or relax any other max-width/min-width/max-height/min-height in this file for full-screen effect */
 
 /* ヘッダーセクション */
 .header {
@@ -188,13 +194,12 @@
 /* ランキングテーブルエリア */
 .rankingContainer {
   width: 100%;
-  max-height: 50vh;
+  max-height: 48vh;
+  overflow-y: auto;
+  overflow-x: auto;
   background: rgba(28, 29, 34, 0.7);
   border-radius: 0.75rem;
   border: 1px solid rgba(255, 255, 255, 0.05);
-  overflow-y: auto;
-  overflow-x: hidden;
-  position: relative;
   margin-bottom: 0.5rem;
 }
 
@@ -305,6 +310,7 @@
 /* テーブルスタイル */
 .table {
   width: 100%;
+  min-width: 600px;
   border-collapse: collapse;
 }
 

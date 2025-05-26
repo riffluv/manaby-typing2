@@ -4,7 +4,7 @@ import "./globals.css";
 import MCPStatus from "@/components/MCPStatus";
 import MonkeytypeHeader from '@/components/common/MonkeytypeHeader';
 import MinimalShortcut from '@/components/MinimalShortcut';
-import styles from "@/styles/TypingGame.module.css";
+import AppLayout from '@/components/AppLayout';
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -32,13 +32,13 @@ export default function RootLayout({
         className={`${geistSans.variable} ${geistMono.variable} antialiased`}
         suppressHydrationWarning
       >
-        <div className={styles.appContainer}>
-          <MonkeytypeHeader />
+        <MonkeytypeHeader />
+        <AppLayout>
           {children}
-          {/* 画面ごとのショートカット表示に統一するため削除 */}
-          <div className={styles.mcpStatusWrapper}>
-            <MCPStatus position="bottom-right" />
-          </div>
+        </AppLayout>
+        <MinimalShortcut shortcuts={[]} />
+        <div>
+          <MCPStatus position="bottom-right" />
         </div>
       </body>
     </html>
