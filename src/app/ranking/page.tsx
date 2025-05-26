@@ -128,8 +128,7 @@ export default function RankingPage() {
   ], []);  return (
     <div className={styles.container}>
       {/* 背景エフェクト */}
-      <div className={styles.backgroundEffects}></div>
-      
+      <div className={styles.backgroundElements}></div>
       <motion.div
         className={styles.content}
         initial="hidden"

@@ -77,20 +77,20 @@ const NewRankingScreen: React.FC<NewRankingScreenProps> = ({ onGoMenu }) => {
       handler: (e) => { e.preventDefault(); onGoMenu(); },
     },
   ], [onGoMenu]);
-
   return (
     <div className={styles.container}>
       {/* 背景エフェクト */}
-      <div className={styles.backgroundEffects}></div>
-      
+      <div className={styles.backgroundElements}></div>
       <motion.div
         className={styles.content}
         initial="hidden"
         animate="visible"
         variants={containerVariants}
-      >        {/* ヘッダー */}
+      >
+        {/* ヘッダー */}
         <motion.div variants={itemVariants} className={styles.header}>
           <h1 className={styles.title}>ranking</h1>
+          <p className={styles.subtitle}>MonkeyType + Finals inspired</p>
         </motion.div>
         
         {/* 難易度選択 */}
