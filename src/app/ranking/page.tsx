@@ -1,22 +1,29 @@
-"use client";
-import React, { useEffect, useState, useCallback } from 'react';
+'use client';
+
+import { useState, useEffect, useCallback } from 'react';
 import { motion } from 'framer-motion';
-import { getRankingEntries, RankingEntry } from '@/lib/rankingManaby2';
+import Link from 'next/link';
+import { useRouter } from 'next/navigation';
 import { useGlobalShortcuts } from '@/hooks/useGlobalShortcuts';
-import PortalShortcut from '@/components/PortalShortcut';
+import ShortcutFooter, { Shortcut } from '@/components/ShortcutFooter';
 import styles from '@/styles/ModernRanking.module.css';
 
-interface NewRankingScreenProps {
-  onGoMenu: () => void;
-}
+// ランキングのデータ型
+type RankingEntry = {
+  id: string;
+  name: string;
+  kpm: number;
+  accuracy: number;
+  correct: number;
+  miss: number;
+  date: number;
+};
 
-const NewRankingScreen: React.FC<NewRankingScreenProps> = ({ onGoMenu }) => {
+export default function RankingPage() {
+  const router = useRouter();
   const [rankings, setRankings] = useState<RankingEntry[]>([]);
-  const [loading, setLoading] = useState(true);
-  const [error, setError] = useState('');
   const [activeDifficulty, setActiveDifficulty] = useState<string>('normal');
-
-  // アニメーション設定
+  const [isLoading, setIsLoading] = useState<boolean>(true);  // シンプルなアニメーション設定 - フレーマーモーション
   const containerVariants = {
     hidden: { opacity: 0 },
     visible: {
@@ -40,45 +47,85 @@ const NewRankingScreen: React.FC<NewRankingScreenProps> = ({ onGoMenu }) => {
         ease: [0.22, 1, 0.36, 1]
       }
     },
-  };  // ランキングデータを取得する（実際のデータ使用）
+  };  // ランキングデータを取得する（リアルなダミーデータ生成）
   const fetchRankings = useCallback(async () => {
-    setLoading(true);
+    setIsLoading(true);
     try {
-      // 実際のランキングデータを取得
-      const realRankingData = await getRankingEntries();
+      // 難易度に応じたダミーデータの調整
+      const difficultyKpmBase = {
+        easy: { min: 100, max: 300 },
+        normal: { min: 180, max: 450 },
+        hard: { min: 250, max: 550 }
+      };
       
-      // 全てのデータを表示（難易度フィルタリングは現在未対応）
-      // 注意: RankingEntry型にmodeプロパティがないため、全データを表示
-      const displayData = realRankingData.slice(0, 15); // 表示数を15件に制限
+      const range = difficultyKpmBase[activeDifficulty as keyof typeof difficultyKpmBase];
       
-      setRankings(displayData);
-      setError(''); // エラーをクリア
+      // リアルなプレイヤー名
+      const playerNames = [
+        'monkeyTyper', 'Keymaster', 'SpeedFingers',
+        'TypeNinja', 'TypeLord', 'KeyboardWarrior',
+        'SwiftKeys', 'FlashType', 'RapidType',
+        'KeyWizard', 'SpeedHero', 'PreciseTypist',
+        'TypeStorm', 'QuickTap', 'CodeTyper'
+      ];
+      
+      // 仮のデータを生成（実際のAPIを使う場合は置き換え）
+      const dummyData = Array.from({ length: 10 }, (_, i) => {
+        const kpm = Math.floor(Math.random() * (range.max - range.min)) + range.min;
+        const accuracy = Math.floor(Math.random() * 20) + 80; // 80-100%
+        const correct = Math.floor(kpm * (Math.random() * 0.5 + 0.5)); // KPMに基づく正解数
+        const miss = Math.floor(correct * (100 - accuracy) / accuracy); // 正確率に基づくミス数
+        
+        return {
+          id: `id-${i}`,
+          name: playerNames[Math.floor(Math.random() * playerNames.length)],
+          kpm,
+          accuracy,
+          correct,
+          miss,
+          date: Date.now() - (Math.random() * 10000000),
+        };
+      });
+      
+      // スコア順にソート
+      dummyData.sort((a, b) => b.kpm - a.kpm);
+      
+      // 擬似的な遅延を挿入して、ロード感を出す（実際のAPI呼び出しでは不要）
+      await new Promise(resolve => setTimeout(resolve, 800));
+      
+      setRankings(dummyData);
     } catch (error) {
       console.error('ランキングデータの取得に失敗しました:', error);
-      setError('ランキングの取得に失敗しました');
-      setRankings([]); // エラー時は空配列を設定
     } finally {
-      setLoading(false);
+      setIsLoading(false);
     }
   }, [activeDifficulty]);
-
+  // マウント時およびdifficulty変更時にデータ取得
   useEffect(() => {
     fetchRankings();
-  }, [fetchRankings]);
+  }, [activeDifficulty, fetchRankings]);
 
   // 難易度変更ハンドラ
   const handleDifficultyChange = (difficulty: string) => {
     if (difficulty === activeDifficulty) return;
     setActiveDifficulty(difficulty);
   };
+
+  // メニュー画面に戻る
+  const handleBackToMenu = () => {
+    router.push('/');
+  };
+
+  // ショートカット案内
+  const shortcuts: Shortcut[] = [
+    { key: 'Esc', label: 'メニューに戻る' },
+  ];
   useGlobalShortcuts([
     {
       key: 'Escape',
-      handler: (e) => { e.preventDefault(); onGoMenu(); },
+      handler: (e) => { e.preventDefault(); handleBackToMenu(); },
     },
-  ], [onGoMenu]);
-
-  return (
+  ], []);  return (
     <div className={styles.container}>
       {/* 背景エフェクト */}
       <div className={styles.backgroundEffects}></div>
@@ -88,9 +135,11 @@ const NewRankingScreen: React.FC<NewRankingScreenProps> = ({ onGoMenu }) => {
         initial="hidden"
         animate="visible"
         variants={containerVariants}
-      >        {/* ヘッダー */}
+      >
+        {/* ヘッダー */}
         <motion.div variants={itemVariants} className={styles.header}>
           <h1 className={styles.title}>ranking</h1>
+          <p className={styles.subtitle}>タイピングスコアランキング</p>
         </motion.div>
         
         {/* 難易度選択 */}
@@ -111,20 +160,10 @@ const NewRankingScreen: React.FC<NewRankingScreenProps> = ({ onGoMenu }) => {
         
         {/* ランキングテーブル */}
         <motion.div variants={itemVariants} className={styles.rankingContainer}>
-          {loading ? (
+          {isLoading ? (
             <div className={styles.loadingContainer}>
               <div className={styles.loadingText}>ランキング読み込み中</div>
               <div className={styles.loadingSpinner}></div>
-            </div>
-          ) : error ? (
-            <div className={styles.errorContainer}>
-              <div className={styles.errorText}>{error}</div>
-              <button 
-                onClick={fetchRankings}
-                className={styles.retryButton}
-              >
-                リトライ
-              </button>
             </div>
           ) : rankings.length === 0 ? (
             <div className={styles.emptyContainer}>
@@ -132,8 +171,14 @@ const NewRankingScreen: React.FC<NewRankingScreenProps> = ({ onGoMenu }) => {
               <p className={styles.emptyMessage}>
                 ゲームをプレイして最初のランキング入りを目指しましょう！
               </p>
+              <Link href="/game">
+                <button className={styles.playButton}>
+                  プレイする
+                </button>
+              </Link>
             </div>
-          ) : (            <table className={styles.table}>
+          ) : (
+            <table className={styles.table}>
               <thead className={styles.tableHeader}>
                 <tr>
                   <th className={styles.tableHeaderCell}>順位</th>
@@ -144,9 +189,10 @@ const NewRankingScreen: React.FC<NewRankingScreenProps> = ({ onGoMenu }) => {
                   <th className={styles.tableHeaderCell}>ミス</th>
                 </tr>
               </thead>
-              <tbody>{rankings.map((entry, index) => (
+              <tbody>
+                {rankings.map((entry, index) => (
                   <motion.tr 
-                    key={index}
+                    key={entry.id}
                     className={`
                       ${styles.tableRow} 
                       ${styles.fadeIn}
@@ -185,15 +231,30 @@ const NewRankingScreen: React.FC<NewRankingScreenProps> = ({ onGoMenu }) => {
                       {entry.miss}
                     </td>
                   </motion.tr>
-                ))}</tbody>
+                ))}
+              </tbody>
             </table>
           )}
         </motion.div>
+        
+        {/* アクションボタン */}
+        <motion.div variants={itemVariants} className={styles.actions}>
+          <button
+            onClick={handleBackToMenu}
+            className={`${styles.actionButton} ${styles.backButton}`}
+          >
+            メニューに戻る
+          </button>
+          
+          <Link href="/game">
+            <button className={`${styles.actionButton} ${styles.playButton}`}>
+              ゲームをプレイ
+            </button>
+          </Link>
+        </motion.div>
       </motion.div>
       
-      <PortalShortcut shortcuts={[{ key: 'Esc', label: '戻る' }]} />
+      <ShortcutFooter shortcuts={shortcuts} />
     </div>
   );
-};
-
-export default NewRankingScreen;
+}

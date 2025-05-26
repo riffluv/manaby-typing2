@@ -3,18 +3,15 @@
 
 .container {
   width: 100%;
-  min-height: 100vh;
-  max-height: 100vh;
   display: flex;
   flex-direction: column;
   align-items: center;
-  justify-content: flex-start;
-  background: var(--color-bg, #323437);
+  justify-content: center;
+  min-height: 80vh;
+  background: transparent;
   color: var(--color-light-text, #D1D0C5);
   font-family: var(--font-mono);
   position: relative;
-  padding: 1rem;
-  overflow: hidden;
 }
 
 /* Finalsインスパイアードの背景エフェクト */
@@ -59,7 +56,6 @@
 .content {
   width: 100%;
   max-width: 75rem;
-  height: calc(100vh - 2rem);
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -70,24 +66,23 @@
   border: 1px solid rgba(124, 255, 203, 0.1);
   backdrop-filter: blur(0.625rem);
   box-shadow: 0 1.25rem 2.5rem rgba(0, 0, 0, 0.2);
-  padding: 1.5rem;
-  overflow: hidden;
+  padding: 0.75rem;
 }
 
 /* ヘッダーセクション */
 .header {
   width: 100%;
   text-align: center;
-  margin-bottom: 1rem;
+  margin-bottom: 0.5rem;
   position: relative;
 }
 
 .title {
   font-family: var(--font-mono);
   font-weight: 700;
-  font-size: 2.5rem;
+  font-size: 2rem;
   letter-spacing: -0.02em;
-  margin-bottom: 0.3rem;
+  margin-bottom: 0.2rem;
   color: var(--color-light-text);
   text-transform: lowercase;
   position: relative;
@@ -115,14 +110,14 @@
   display: flex;
   justify-content: center;
   gap: 0.5rem;
-  margin-bottom: 2rem;
+  margin-bottom: 1rem;
   position: relative;
 }
 
 .difficultyButton {
   all: unset;
   box-sizing: border-box;
-  padding: 0.75rem 1.5rem;
+  padding: 0.5rem 1rem;
   font-family: var(--font-mono);
   font-size: 0.875rem;
   font-weight: 500;
@@ -174,14 +169,14 @@
 /* ランキングテーブルエリア */
 .rankingContainer {
   width: 100%;
-  max-height: 60vh;
+  max-height: 40vh;
   background: rgba(28, 29, 34, 0.7);
   border-radius: 0.75rem;
   border: 1px solid rgba(255, 255, 255, 0.05);
   overflow-y: auto;
   overflow-x: hidden;
   position: relative;
-  margin-bottom: 1rem;
+  margin-bottom: 0.5rem;
 }
 
 .rankingContainer::before {
@@ -204,7 +199,7 @@
   flex-direction: column;
   align-items: center;
   justify-content: center;
-  padding: 4rem 2rem;
+  padding: 2rem 1rem;
   color: var(--color-soft-text);
 }
 
@@ -236,8 +231,44 @@
   flex-direction: column;
   align-items: center;
   justify-content: center;
-  padding: 4rem 2rem;
+  padding: 2rem 1rem;
   text-align: center;
+}
+
+/* エラー状態 */
+.errorContainer {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 2rem 1rem;
+  text-align: center;
+}
+
+.errorText {
+  font-size: 1rem;
+  color: var(--color-danger);
+  margin-bottom: 1rem;
+  font-weight: 500;
+}
+
+.retryButton {
+  all: unset;
+  box-sizing: border-box;
+  padding: 0.5rem 1rem;
+  font-family: var(--font-mono);
+  font-size: 0.875rem;
+  font-weight: 500;
+  cursor: pointer;
+  border-radius: 0.5rem;
+  background: var(--color-primary);
+  color: var(--color-bg);
+  transition: all 0.2s ease;
+}
+
+.retryButton:hover {
+  transform: translateY(-0.125rem);
+  box-shadow: 0 0.25rem 1rem rgba(124, 255, 203, 0.3);
 }
 
 .emptyTitle {
@@ -265,7 +296,7 @@
 }
 
 .tableHeaderCell {
-  padding: 1rem;
+  padding: 0.75rem;
   text-align: center;
   font-family: var(--font-mono);
   font-size: 0.875rem;
@@ -311,7 +342,7 @@
 }
 
 .tableCell {
-  padding: 1rem;
+  padding: 0.75rem;
   text-align: center;
   font-family: var(--font-mono);
   border-right: 1px solid rgba(255, 255, 255, 0.05);
