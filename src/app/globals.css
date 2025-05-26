@@ -86,6 +86,10 @@
   padding: 0;
 }
 
+html {
+  font-size: 16px;
+}
+
 body {
   background: var(--color-bg, #323437); /* Monkeytypeのような暗い背景色 */
   height: 100vh;
