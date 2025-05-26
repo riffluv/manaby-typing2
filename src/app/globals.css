@@ -1,9 +1,10 @@
-@import "tailwindcss";
-
 /* フォントのインポート */
 @import url('https://fonts.googleapis.com/css2?family=Roboto+Mono:wght@100;200;300;400;500&display=swap');
 @import url('https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@100;200;300;400;500&display=swap');
 @import url('https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@100;200;300;400;500&display=swap');
+
+/* Tailwind CSS */
+@import "tailwindcss";
 
 /* グローバルスタイルのインポート順序を明確にする */
 @import "../styles/theme.css";  /* 1. まずテーマ変数を読み込み */
@@ -44,15 +45,6 @@
   }
 }
 
-/* CSS変数のフォールバック対策 */
-:root {
-  /* 重要な変数が読み込めない場合のフォールバック */
-  --typing-typed-color: #f59e0b;  /* 入力済み文字の色（オレンジ） */
-  --typing-untyped-color: #ededed; /* 未入力文字の色（白） */
-  --typing-error-color: #ef4444;  /* エラー文字の色（赤） */
-  --typing-focus-color: #10b981;  /* フォーカス中の色（緑） */
-}
-
 /* スクリーン全体のフォーカス状態で枠線を消す */
 *:focus {
   outline: none;
@@ -62,22 +54,6 @@
 *:focus-visible {
   outline: 2px solid var(--color-primary);
   outline-offset: 2px;
-}
-
-:root {
-  --background: #ffffff;
-  --foreground: #171717;
-  --font-mono: 'Roboto Mono', 'JetBrains Mono', ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, 'Liberation Mono', 'Courier New', monospace;
-  --font-sans: 'Noto Sans JP', system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
-  --font-jp: 'Noto Sans JP', sans-serif;
-  --screen-border-color: transparent; /* ボーダーを非表示にするため透明に設定 */
-}
-
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
-  }
 }
 
 * {
@@ -91,18 +67,18 @@ html {
 }
 
 body {
-  background: var(--color-bg, #323437); /* Monkeytypeのような暗い背景色 */
+  background: var(--color-bg-primary, #323437); /* 統一したCSS変数を使用 */
   height: 100vh;
   width: 100vw;
   display: flex;
   align-items: center;
   justify-content: center;
   overflow: hidden;
-  color: var(--color-light-text, #D1D0C5);
+  color: var(--color-text-primary, #D1D0C5); /* 統一したCSS変数を使用 */
   font-family: var(--font-mono);
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
-  padding: 0; /* パディングを削除 */
+  padding: 0;
   margin: 0;
 }
 

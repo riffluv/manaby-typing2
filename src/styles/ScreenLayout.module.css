@@ -5,8 +5,8 @@
   align-items: center;
   justify-content: center;
   position: relative;
-  background: var(--color-secondary);
-  color: var(--color-foreground);
+  background: var(--color-bg-secondary);
+  color: var(--color-text-primary);
   font-family: var(--font-sans);
   overflow: hidden;
 }

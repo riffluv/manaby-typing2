@@ -4,7 +4,7 @@
   font-weight: 900;
   letter-spacing: -0.04em;
   text-shadow: none;
-  color: var(--color-light-text);
+  color: var(--color-text-primary);
 }
 /* コンポーネント固有のスタイル */
 

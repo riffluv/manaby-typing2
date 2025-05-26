@@ -165,7 +165,7 @@
   font-family: var(--font-mono);
   font-weight: 600;
   cursor: pointer;
-  background: var(--color-bg2, #2C2E31);
+  background: var(--color-bg-tertiary, #2C2E31);
   color: var(--color-light-text, #D1D0C5);
   transition: background 0.2s;
 }

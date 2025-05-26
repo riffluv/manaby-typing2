@@ -40,10 +40,10 @@
 .title {
   font-family: var(--font-mono);
   font-weight: 700;
-  font-size: 1.5rem; /* フォントサイズを小さく */
+  font-size: 1.5rem;
   letter-spacing: 1px;
-  margin-bottom: 0.7rem; /* 余白を縮める */
-  color: var(--color-light-text);
+  margin-bottom: 0.7rem;
+  color: var(--color-text-primary);
   text-transform: lowercase;
   position: relative;
   text-align: center;
@@ -143,7 +143,7 @@
   font-size: 0.98rem;
   letter-spacing: 0.5px;
   cursor: pointer;
-  background: var(--color-bg2, #2C2E31);
+  background: var(--color-bg-tertiary, #2C2E31);
   color: var(--color-light-text, #D1D0C5);
   transition: background 0.2s;
   display: flex;

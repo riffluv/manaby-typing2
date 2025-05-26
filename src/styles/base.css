@@ -1,5 +1,4 @@
 /* ベーススタイル: リセットや基本的な設定 */
-@import "tailwindcss";
 
 * {
   box-sizing: border-box;
@@ -16,7 +15,7 @@ html {
 }
 
 body {
-  background: var(--color-background);
+  background: var(--color-bg-primary);
   min-height: 100vh;
   height: 100%;
   width: 100%;
@@ -24,7 +23,7 @@ body {
   align-items: center;
   justify-content: center;
   overflow: hidden; /* スクロールを完全に無効化 */
-  color: var(--color-foreground);
+  color: var(--color-text-primary);
   font-family: var(--font-sans);
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;

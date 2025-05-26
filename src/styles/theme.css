@@ -1,29 +1,40 @@
 /* タイピングゲーム専用のテーマをインポート */
 @import './typing-theme.css';
 
-:root {  /* カラーパレット */
-  --color-primary: #7cffcb; /* メインカラーを水色に設定 */
-  --color-secondary: #374151;
+:root {
+  /* === PRIMARY COLOR SYSTEM === */
+  --color-primary: #7cffcb;
+  --color-primary-hover: rgba(124, 255, 203, 0.8);
+  --color-primary-alpha-10: rgba(124, 255, 203, 0.1);
+  --color-primary-alpha-30: rgba(124, 255, 203, 0.3);
+  
+  /* === SEMANTIC COLORS === */
   --color-accent: #10b981;
   --color-danger: #ef4444;
-  --color-background: #080212;
-  --color-foreground: #ededed;
-  --color-muted: #9ca3af;
-  --color-white: #ffffff;
+  --color-warning: #f59e0b;
+  --color-success: #22c55e;
+  
+  /* === BACKGROUND SYSTEM === */
+  --color-bg-primary: #323437;      /* メイン背景（旧 --color-bg） */
+  --color-bg-secondary: #374151;    /* セカンダリ背景（旧 --color-secondary） */
+  --color-bg-tertiary: #2C2E31;     /* 3番目の背景（旧 --color-bg2） */
+  --color-bg-overlay: rgba(35, 36, 43, 0.4); /* オーバーレイ用 */
+  
+  /* === TEXT COLORS === */
+  --color-text-primary: #D1D0C5;    /* メインテキスト（旧 --color-light-text） */
+  --color-text-secondary: #646669;  /* セカンダリテキスト（旧 --color-soft-text） */
+  --color-text-muted: #9ca3af;
+  --color-text-white: #ffffff;
+  
+  /* === SPECIALIZED COLORS === */
   --color-hiragana: rgba(187, 187, 255, 0.9);
-  /* Monkeytypeのテーマカラーに合わせた色設定 */
-  --color-bg: #323437;
-  --color-bg2: #2C2E31;
-  --color-soft-text: #646669;
-  --color-light-text: #D1D0C5;
-  --color-highlight: #7cffcb;
+  --color-highlight: var(--color-primary);
   
-  /* タイピング用の色の参照は typing-theme.css に移動しました */
-  
-  /* コンポーネント固有の色 */
-  --progress-track-color: #4b5563;
-  --progress-bar-color: var(--color-primary);
-  --screen-border-color: transparent;
+  /* === COMPONENT COLORS === */
+  --color-progress-track: #4b5563;
+  --color-progress-bar: var(--color-primary);
+  --color-border: rgba(255, 255, 255, 0.1);
+  --color-border-focus: var(--color-primary);
   
   /* フォント設定 */
   --font-mono: 'Roboto Mono', 'JetBrains Mono', ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, 'Liberation Mono', 'Courier New', monospace;
@@ -74,20 +85,11 @@
   /* アニメーション */
   --transition-speed: 0.2s;
   --transition-timing: ease-in-out;
-  
-  /* Z-インデックス */
+    /* Z-インデックス */
   --z-behind: -1;
   --z-normal: 1;
   --z-above: 10;
   --z-modal: 100;
-}
-
-/* ダークモード設定（必要に応じて) */
-@media (prefers-color-scheme: dark) {
-  :root {
-    --color-background: #0a0a0a;
-    --color-foreground: #ededed;
-  }
 }
 
 /* ブレークポイント変数 */
