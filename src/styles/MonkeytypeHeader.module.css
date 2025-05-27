@@ -2,13 +2,18 @@
 
 /* ヘッダー全体 */
 .header {
+  display: flex;
+  align-items: center;
   position: fixed;
   top: 20px;
   left: 20px;
+  z-index: 10000;
   width: calc(100% - 40px);
-  display: flex;
-  justify-content: space-between;
-  z-index: 1000; /* 他の要素より前面に表示 */
+  background: none;
+  box-shadow: none;
+  border: none;
+  padding: 0;
+  margin: 0;
 }
 
 /* ロゴ部分のコンテナ */
@@ -34,15 +39,5 @@
   font-size: 28px;
   color: #d1d0c5;
   text-shadow: 0 0 2px rgba(0, 0, 0, 0.5); /* テキストをより読みやすく */
-}
-
-/* アイコングループ - 非表示 */
-.iconGroup {
-  display: none;
-}
-
-/* アイコン - 非表示 */
-.icon {
-  display: none;
 }
 

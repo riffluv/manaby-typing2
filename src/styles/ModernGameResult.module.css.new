@@ -1,0 +1,166 @@
+/* filepath: c:\Users\hr-hm\Desktop\manaby-coffee\src\styles\ModernGameResult.module.css */
+/* ModernGameResult.module.css */
+/* MonkeyType + Finals風ゲームリザルト画面スタイル */
+
+/* === リザルトコンテナ === */
+.container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  min-height: 100vh;
+  width: 100%;
+  padding: var(--spacing-xl);
+  background: var(--color-bg-primary);
+  position: relative;
+}
+
+/* === 背景エレメント === */
+.backgroundElements {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  overflow: hidden;
+  z-index: 0;
+}
+
+.grid {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-image: linear-gradient(var(--grid-color) 1px, transparent 1px),
+                    linear-gradient(90deg, var(--grid-color) 1px, transparent 1px);
+  background-size: 40px 40px;
+  opacity: 0.3;
+}
+
+/* === リザルトコンテンツ === */
+.title {
+  font-size: var(--font-size-xxxl);
+  font-weight: var(--font-weight-bold);
+  color: var(--color-text-primary);
+  margin-bottom: var(--spacing-xl);
+  text-align: center;
+  z-index: 1;
+}
+
+/* === 統計情報コンテナ === */
+.statsContainer {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: var(--spacing-lg);
+  margin-bottom: var(--spacing-xl);
+  max-width: 1000px;
+  width: 100%;
+  z-index: 1;
+}
+
+/* === 統計カード === */
+.statCard {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  background: var(--color-bg-secondary);
+  border: 1px solid var(--color-border-primary);
+  border-radius: var(--border-radius-md);
+  padding: var(--spacing-md) var(--spacing-lg);
+  min-width: 120px;
+  transition: all var(--transition-normal);
+}
+
+.statCard:hover {
+  transform: translateY(-5px);
+  box-shadow: var(--shadow-accent);
+}
+
+.statLabel {
+  font-size: var(--font-size-xs);
+  color: var(--color-text-secondary);
+  margin-bottom: var(--spacing-xs);
+  text-transform: lowercase;
+}
+
+.statValue {
+  font-size: var(--font-size-xxl);
+  font-weight: var(--font-weight-bold);
+  color: var(--color-text-primary);
+}
+
+.countNumber {
+  font-family: var(--font-primary);
+  font-variant-numeric: tabular-nums;
+}
+
+.valueAmber {
+  color: var(--color-accent-primary);
+}
+
+/* === 計算中表示 === */
+.calculatingContainer {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: var(--spacing-md);
+}
+
+.calculatingText {
+  font-size: var(--font-size-lg);
+  color: var(--color-text-secondary);
+}
+
+.calculateButton {
+  padding: var(--spacing-sm) var(--spacing-lg);
+  background-color: var(--color-accent-primary);
+  color: var(--color-bg-primary);
+  border: none;
+  border-radius: var(--border-radius-sm);
+  font-size: var(--font-size-md);
+  cursor: pointer;
+  transition: all var(--transition-fast);
+}
+
+.calculateButton:hover {
+  background-color: var(--color-text-primary);
+}
+
+/* === パフォーマンスメッセージ === */
+.perfMessageContainer {
+  margin: var(--spacing-lg) 0;
+  text-align: center;
+  z-index: 1;
+}
+
+.perfMessage {
+  font-size: var(--font-size-lg);
+  color: var(--color-text-secondary);
+}
+
+.perfMessageHighlight {
+  color: var(--color-accent-primary);
+  font-weight: var(--font-weight-bold);
+}
+
+/* === ボタンコンテナ === */
+.buttonContainer {
+  display: flex;
+  gap: var(--spacing-md);
+  margin-top: var(--spacing-xl);
+  z-index: 1;
+}
+
+/* === 登録済みテキスト === */
+.registeredText {
+  font-size: var(--font-size-sm);
+  color: var(--color-accent-secondary);
+  margin-top: var(--spacing-md);
+}
+
+/* ファイルのリセット完了 - ModernGameResult.module.css */
+/* MonkeyType + Finals風デザインに再構築済み */

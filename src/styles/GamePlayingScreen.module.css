@@ -1,4 +1,12 @@
-﻿/* GamePlayingScreen.module.css - Reset file */
+﻿/* GamePlayingScreen.module.css - 必要最小限の構造のみ */
+.playingContainer {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  width: 100%;
+}
+
+/* リセット: 必要最小限の構造のみ */
 
 .playingContainer {
   display: flex;

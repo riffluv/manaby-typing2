@@ -6,7 +6,7 @@ import Link from 'next/link';
 import { useRouter } from 'next/navigation';
 import { useGlobalShortcuts } from '@/hooks/useGlobalShortcuts';
 import ShortcutFooter, { Shortcut } from '@/components/ShortcutFooter';
-import styles from '@/styles/ModernRanking.module.css';
+import styles from '@/styles/NewRankingScreen.module.css';
 
 // ランキングのデータ型
 type RankingEntry = {

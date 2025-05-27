@@ -1,57 +1,40 @@
-﻿/* NewRankingScreen.module.css - Reset file */
+﻿/* NewRankingScreen.module.css - 必要最小限の構造のみ */
 
 .rankingContainer {
   display: flex;
   flex-direction: column;
   width: 100%;
-  max-width: 800px;
-  margin: 0 auto;
-  padding: 2rem 1rem;
 }
 
 .rankingHeader {
-  margin-bottom: 2rem;
   text-align: center;
 }
 
 .rankingTitle {
   font-size: 1.75rem;
   font-weight: bold;
-  color: #d1d0c5;
-  margin-bottom: 0.5rem;
 }
 
 .rankingDescription {
-  color: #646669;
   font-size: 0.875rem;
 }
 
 .rankingList {
   width: 100%;
-  background-color: #1e1e1e;
-  border-radius: 0.5rem;
-  overflow: hidden;
 }
 
 .rankingItem {
   display: grid;
   grid-template-columns: 0.5fr 2fr 1fr 1fr;
-  padding: 0.75rem 1rem;
-  border-bottom: 1px solid #2c2c2c;
-}
-
-.rankingItem:last-child {
-  border-bottom: none;
 }
 
 .rankingHeader .rankingItem {
   font-weight: bold;
-  color: #d1d0c5;
-  background-color: #2c2c2c;
 }
 
 .rankPosition {
   font-weight: bold;
+  color: inherit;
 }
 
 .rankUser {
@@ -69,7 +52,6 @@
   .rankingItem {
     grid-template-columns: 0.5fr 1.5fr 1fr 1fr;
     font-size: 0.875rem;
-    padding: 0.5rem 0.75rem;
   }
 }
 

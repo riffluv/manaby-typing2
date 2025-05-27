@@ -4,7 +4,7 @@ import { motion } from 'framer-motion';
 import { getRankingEntries, RankingEntry } from '@/lib/rankingManaby2';
 import { useGlobalShortcuts } from '@/hooks/useGlobalShortcuts';
 import PortalShortcut from '@/components/PortalShortcut';
-import styles from '@/styles/ModernRanking.module.css';
+import styles from '@/styles/NewRankingScreen.module.css';
 
 interface NewRankingScreenProps {
   onGoMenu: () => void;

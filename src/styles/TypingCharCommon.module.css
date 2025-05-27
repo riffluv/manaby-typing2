@@ -1,53 +1,8 @@
-﻿/* TypingCharCommon.module.css - Reset file */
-
+﻿/* TypingCharCommon.module.css - 必要最小限の構造のみ */
 .charContainer {
   display: inline-block;
-  position: relative;
-  font-family: monospace;
-  transition: color 0.1s;
 }
-
 .char {
-  position: relative;
   display: inline-block;
 }
-
-.typed {
-  color: #d1d0c5;
-}
-
-.untyped {
-  color: #646669;
-}
-
-.current {
-  position: relative;
-}
-
-.current::after {
-  content: '';
-  position: absolute;
-  left: 0;
-  bottom: 0;
-  width: 100%;
-  height: 2px;
-  background-color: #d1d0c5;
-  animation: cursorBlink 1s infinite;
-}
-
-.error {
-  color: #f44336;
-  text-decoration: underline;
-  text-decoration-color: #f44336;
-}
-
-@keyframes cursorBlink {
-  0%, 100% {
-    opacity: 1;
-  }
-  50% {
-    opacity: 0;
-  }
-}
-/* MonkeyType + Finals・ｽ・ｽ・ｽf・ｽU・ｽC・ｽ・ｽ・ｽﾉ再構・ｽz・ｽ\・ｽ・ｽ */
 

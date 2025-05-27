@@ -1,55 +1,7 @@
-﻿/* TypingCharacters.module.css */
-/* 繧ｷ繝ｳ繝励Ν蛹悶＆繧後◆繧ｿ繧､繝斐Φ繧ｰ譁・ｭ苓｡ｨ遉ｺ繧ｹ繧ｿ繧､繝ｫ */
-
-/* 繧ｿ繧､繝斐Φ繧ｰ繧ｨ繝ｪ繧｢蜈ｨ菴・*/
+﻿/* TypingCharacters.module.css - 必要最小限の構造のみ */
 .typingArea {
   display: flex;
   flex-wrap: wrap;
   justify-content: center;
-  gap: 0.25rem;
-  font-size: 1.5rem;
-  font-family: sans-serif;
-  max-width: 800px;
-  margin: 0 auto;
-  padding: 1rem;
-  line-height: 2;
-}
-
-/* 蜈･蜉帶ｸ医∩譁・ｭ・*/
-.completed {
-  color: #4caf50;
-}
-
-/* 迴ｾ蝨ｨ蜈･蜉帑ｸｭ縺ｮ譁・ｭ・*/
-.current {
-  color: #2196f3;
-  position: relative;
-}
-
-.current::after {
-  content: '';
-  position: absolute;
-  left: 0;
-  bottom: -2px;
-  width: 100%;
-  height: 2px;
-  background-color: #2196f3;
-  animation: blink 1s infinite;
-}
-
-/* 譛ｪ蜈･蜉帙・譁・ｭ・*/
-.pending {
-  color: #9e9e9e;
-}
-
-/* 隱､蜈･蜉帙・譁・ｭ・*/
-.error {
-  color: #f44336;
-  text-decoration: underline wavy #f44336;
-}
-
-@keyframes blink {
-  0%, 100% { opacity: 1; }
-  50% { opacity: 0; }
 }
 

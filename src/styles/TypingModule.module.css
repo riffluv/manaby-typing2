@@ -1,11 +1,9 @@
-﻿/* TypingModule.module.css - Reset file */
+﻿/* TypingModule.module.css - 必要最小限の構造のみ */
 
 .typingModule {
   display: flex;
   flex-direction: column;
   width: 100%;
-  max-width: 800px;
-  margin: 0 auto;
 }
 
 .typingArea {

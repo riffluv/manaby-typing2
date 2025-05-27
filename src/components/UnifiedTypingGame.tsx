@@ -224,14 +224,14 @@ const UnifiedTypingGame: React.FC<{ onGoMenu?: () => void; onGoRanking?: () => v
                     animate={{ opacity: 1 }}
                     transition={{ delay: 0.5, duration: 0.3 }}
                   >
-                    KPM: <span style={{ color: latestKpm > 50 ? '#7cffcb' : 'inherit' }}>{latestKpm}</span>
+                    KPM: <span>{latestKpm}</span>
                   </motion.div>
                   <motion.div
                     initial={{ opacity: 0 }}
                     animate={{ opacity: 1 }}
                     transition={{ delay: 0.6, duration: 0.3 }}
                   >
-                    ACC: <span style={{ color: latestAccuracy > 90 ? '#7cffcb' : 'inherit' }}>{latestAccuracy}%</span>
+                    ACC: <span>{latestAccuracy}%</span>
                   </motion.div>
                 </>
               )}

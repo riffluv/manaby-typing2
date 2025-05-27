@@ -4,7 +4,6 @@
 .appBackground {
   min-height: 100vh;
   width: 100%;
-  background: #323437; /* シンプルな背景色 */
   position: relative;
 }
 

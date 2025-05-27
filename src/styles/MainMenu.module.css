@@ -1,4 +1,4 @@
-﻿/* MainMenu.module.css - 最小限のシンプルなバージョン */
+﻿/* MainMenu.module.css - 必要最小限の構造のみ */
 
 /* メインコンテナ */
 .container {
@@ -34,11 +34,6 @@
 .menuButton {
   padding: 1rem;
   width: 100%;
-  background: #2c2c2c;
-  border: 1px solid #3a3a3a;
-  color: #d1d0c5;
-  cursor: pointer;
-  text-align: center;
 }
 
 /* 設定セクション */
@@ -52,6 +47,5 @@
 .footer {
   margin-top: 2rem;
   text-align: center;
-  color: #646669;
 }
 
