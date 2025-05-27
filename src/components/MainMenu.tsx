@@ -51,7 +51,6 @@ const MainMenu: React.FC<MainMenuProps> = ({ onStart, onRetry, onRanking }) => {
   const logoVariants = {
     hover: {
       scale: 1.02,
-      color: "#7cffcb",
       transition: { duration: 0.3 }
     }
   };
@@ -96,8 +95,6 @@ const MainMenu: React.FC<MainMenuProps> = ({ onStart, onRetry, onRanking }) => {
             className={styles.logoText}
             variants={logoVariants}
             whileHover="hover"
-            onHoverStart={() => setLogoHovered(true)}
-            onHoverEnd={() => setLogoHovered(false)}
           >
             manaby typing
           </motion.h1>
