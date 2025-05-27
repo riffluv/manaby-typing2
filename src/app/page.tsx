@@ -1,7 +1,7 @@
 'use client';
 import React, { useEffect } from 'react';
 import { AnimatePresence } from 'framer-motion';
-import TypingGame from '@/components/TypingGame';
+import UnifiedTypingGame from '@/components/UnifiedTypingGame';
 import MainMenu from '@/components/MainMenu';
 import NewRankingScreen from '@/components/NewRankingScreen';
 import { useSceneNavigationStore, SceneType } from '@/store/sceneNavigationStore';
@@ -25,9 +25,8 @@ export default function Home() {
       <ScreenLayout 
         variant={getLayoutVariant(currentScene)}
         key={currentScene}
-      >
-        {currentScene === 'menu' && <MainMenu onStart={goToGame} onRanking={goToRanking} onRetry={goToGame} />}
-        {currentScene === 'game' && <TypingGame onGoMenu={goToMenu} onGoRanking={goToRanking} />}
+      >        {currentScene === 'menu' && <MainMenu onStart={goToGame} onRanking={goToRanking} onRetry={goToGame} />}
+        {currentScene === 'game' && <UnifiedTypingGame onGoMenu={goToMenu} onGoRanking={goToRanking} />}
         {currentScene === 'ranking' && <NewRankingScreen onGoMenu={goToMenu} />}
         {/* GameResultScreenは直接使用せず、TypingGameコンポーネント内で管理します */}
       </ScreenLayout>

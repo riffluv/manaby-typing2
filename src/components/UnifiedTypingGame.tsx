@@ -11,19 +11,25 @@ import { PerWordScoreLog, GameScoreLog } from '@/types/score';
 import { useSceneNavigationStore } from '@/store/sceneNavigationStore'; 
 import { containerVariants, itemVariants } from '@/styles/animations';
 
-// カスタムフックとコンポーネントのインポート
-import { useTypingKeyboardHandler } from '@/hooks/useTypingKeyboardHandler';
+// 統合されたカスタムフックとコンポーネントのインポート
+import { useUnifiedTypingProcessor } from '@/hooks/useUnifiedTypingProcessor';
 import { useScoreCalculation } from '@/hooks/useScoreCalculation';
 import { useRankingModal } from '@/hooks/useRankingModal';
-import GamePlayingScreen from '@/components/GamePlayingScreen';
 import GameResultScreen from '@/components/GameResultScreen';
 import RankingModal from '@/components/RankingModal';
+import PortalShortcut from '@/components/PortalShortcut';
+import GameScreen from '@/components/GameScreen';
+
+// スタイルのインポート
+import styles from '@/styles/GamePlayingScreen.module.css';
 
 /**
- * タイピングゲームのメインコンポーネント
- * 画面遷移、スコア管理、ゲームライフサイクルを制御
+ * 統合されたタイピングゲームコンポーネント
+ * - TypingGame.tsxとGamePlayingScreen.tsxの機能を統合
+ * - WebWorkerスコア計算とKeyboardSoundUtilsを保持
+ * - 無限ループ防止と依存関係の最適化
  */
-const TypingGame: React.FC<{ onGoMenu?: () => void; onGoRanking?: () => void }> = ({ 
+const UnifiedTypingGame: React.FC<{ onGoMenu?: () => void; onGoRanking?: () => void }> = ({ 
   onGoMenu, 
   onGoRanking 
 }) => {
@@ -54,6 +60,9 @@ const TypingGame: React.FC<{ onGoMenu?: () => void; onGoRanking?: () => void }> 
   const [resultScore, setResultScore] = useState<GameScoreLog['total'] | null>(null);
   const [isScoreRegistered, setIsScoreRegistered] = useState(false);
 
+  // プログレス表示用の状態
+  const [hasStarted, setHasStarted] = useState(false);
+
   // 直アクセス防止機能
   useEffect(() => {
     if (typeof window !== 'undefined') {
@@ -83,10 +92,14 @@ const TypingGame: React.FC<{ onGoMenu?: () => void; onGoRanking?: () => void }> 
     }
   }, [storeWord, currentWord.japanese]);
 
-  // タイピングキーボード入力のハンドリング
-  const { currentKanaIndex } = useTypingKeyboardHandler(currentWord, setKanaDisplay, setScoreLog);
+  // 統合されたタイピング処理フックの使用
+  const { currentKanaIndex, wordStats, resetProgress } = useUnifiedTypingProcessor(
+    currentWord, 
+    setKanaDisplay, 
+    setScoreLog
+  );
 
-  // スコア計算処理
+  // スコア計算処理（WebWorker使用）
   const { calculateFallbackScore } = useScoreCalculation(
     gameStatus, 
     scoreLog, 
@@ -100,7 +113,8 @@ const TypingGame: React.FC<{ onGoMenu?: () => void; onGoRanking?: () => void }> 
     setScoreLog([]);
     setResultScore(null);
     setIsScoreRegistered(false);
-  }, [resetGame, setupCurrentWord]);
+    resetProgress();
+  }, [resetGame, setupCurrentWord, resetProgress]);
 
   // ランキングモーダル管理
   const { modalState, dispatch, handleRegisterRanking } = useRankingModal(
@@ -118,8 +132,10 @@ const TypingGame: React.FC<{ onGoMenu?: () => void; onGoRanking?: () => void }> 
     if (onGoMenu) onGoMenu();
   }, [onGoMenu]);
 
-  // ESCキーでメニューに戻る
+  // ESCキーでメニューに戻る（ゲーム中のみ）
   useEffect(() => {
+    if (gameStatus !== 'playing') return;
+    
     const handleKeyDown = (e: KeyboardEvent) => {
       if (e.key === 'Escape') {
         handleGoMenu();
@@ -130,7 +146,22 @@ const TypingGame: React.FC<{ onGoMenu?: () => void; onGoRanking?: () => void }> 
     return () => {
       window.removeEventListener('keydown', handleKeyDown);
     };
-  }, [handleGoMenu]);
+  }, [handleGoMenu, gameStatus]);
+
+  // アニメーション制御
+  useEffect(() => {
+    if (scoreLog.length > 0 && !hasStarted) {
+      setHasStarted(true);
+    }
+    if (scoreLog.length === 0 && hasStarted) {
+      setHasStarted(false);
+    }
+  }, [scoreLog.length, hasStarted]);
+
+  // スコア計算ロジック
+  const latestKpm = scoreLog.length > 0 ? Math.round(scoreLog[scoreLog.length - 1].kpm) : 0;
+  const latestAccuracy = scoreLog.length > 0 ? Math.round(scoreLog[scoreLog.length - 1].accuracy) : 0;
+  const progressPercentage = Math.min((scoreLog.length / 10) * 100, 100);
 
   return (
     <motion.div 
@@ -140,12 +171,73 @@ const TypingGame: React.FC<{ onGoMenu?: () => void; onGoRanking?: () => void }> 
     >
       {/* ゲームプレイ中の画面 */}
       {gameStatus === 'playing' && (
-        <GamePlayingScreen
-          currentWord={currentWord}
-          currentKanaIndex={currentKanaIndex}
-          kanaDisplay={kanaDisplay}
-          scoreLog={scoreLog}
-        />
+        <motion.div 
+          className={styles.container}
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.5, ease: [0.165, 0.84, 0.44, 1] }}
+        >
+          {/* ゲーム画面はEscのみ */}
+          <PortalShortcut shortcuts={[{ key: 'Esc', label: '戻る' }]} />
+          
+          {/* ゲーム画面 */}
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ delay: 0.1, duration: 0.6 }}
+          >
+            <GameScreen 
+              currentWord={currentWord}
+              currentKanaIndex={currentKanaIndex}
+              currentKanaDisplay={kanaDisplay}
+            />
+          </motion.div>
+
+          {/* プログレスバーとステータス */}
+          <motion.div 
+            className={styles.progressContainer}
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            transition={{ delay: 0.3, duration: 0.5 }}
+          >
+            <div className={styles.progressBarTrack}>
+              <motion.div 
+                className={styles.progressBar}
+                style={{ width: !hasStarted ? `${progressPercentage}%` : undefined }}
+                animate={hasStarted ? { width: `${progressPercentage}%` } : false}
+                transition={hasStarted ? { duration: 0.3, ease: "easeOut" } : {}}
+              />
+            </div>
+            <div className={styles.statusText}>
+              <motion.div 
+                initial={{ opacity: 0 }}
+                animate={{ opacity: 1 }}
+                transition={{ delay: 0.4, duration: 0.3 }}
+              >
+                WORDS: {scoreLog.length}/10
+              </motion.div>
+              
+              {scoreLog.length > 0 && (
+                <>
+                  <motion.div
+                    initial={{ opacity: 0 }}
+                    animate={{ opacity: 1 }}
+                    transition={{ delay: 0.5, duration: 0.3 }}
+                  >
+                    KPM: <span style={{ color: latestKpm > 50 ? '#7cffcb' : 'inherit' }}>{latestKpm}</span>
+                  </motion.div>
+                  <motion.div
+                    initial={{ opacity: 0 }}
+                    animate={{ opacity: 1 }}
+                    transition={{ delay: 0.6, duration: 0.3 }}
+                  >
+                    ACC: <span style={{ color: latestAccuracy > 90 ? '#7cffcb' : 'inherit' }}>{latestAccuracy}%</span>
+                  </motion.div>
+                </>
+              )}
+            </div>
+          </motion.div>
+        </motion.div>
       )}
       
       {/* ゲーム終了後の結果画面 */}
@@ -181,4 +273,4 @@ const TypingGame: React.FC<{ onGoMenu?: () => void; onGoRanking?: () => void }> 
   );
 };
 
-export default TypingGame;
+export default UnifiedTypingGame;
