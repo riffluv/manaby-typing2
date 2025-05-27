@@ -1,44 +1,4 @@
-/* シンプルなショートカットフッター - Monkeytypeスタイル */
-
-.shortcut-footer {
-  position: fixed;
-  left: 0;
-  right: 0;
-  bottom: 0;
-  z-index: 50;
-  background: rgba(24, 26, 32, 0.95);
-  backdrop-filter: blur(8px);
-  border-top: 1px solid #404040;
-  height: 1.75rem;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  gap: 1.5rem;
-  padding: 0 1rem;
-}
-
-.shortcut-item {
-  display: flex;
-  align-items: center;
-  gap: 0.5rem;
-}
-
-.shortcut-key {
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  padding: 0.125rem 0.375rem;
-  min-width: 1.5rem;
-  height: 1.125rem;
-  font-size: 0.75rem;
-  font-family: ui-monospace, SFMono-Regular, monospace;
-  font-weight: 500;
-  color: #e5e7eb;
-  background: #404040;
-  border: 1px solid #525252;
-  border-radius: 0.25rem;
-  box-shadow: 0 1px 1px rgba(0, 0, 0, 0.1);
-}
+/* リセット済み - 最小限のスタイル定義から始めます */
 
 .shortcut-description {
   font-size: 0.75rem;

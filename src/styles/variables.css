@@ -1,0 +1,83 @@
+/* 
+変数（variables.css）
+デザイントークンとカラースキーム
+MonkeyType + Finals風のカラースキームを定義
+*/
+
+:root {
+  /* カラーパレット - MonkeyType + Finals風 */
+  --color-bg-primary: #232426;
+  --color-bg-secondary: #2c2e31;
+  --color-bg-tertiary: #323437;
+  --color-bg-accent: #2c2e31;
+  
+  /* テキストカラー */
+  --color-text-primary: #d1d0c5;
+  --color-text-secondary: #646669;
+  --color-text-accent: #e2b714;
+  
+  /* アクセントカラー */
+  --color-accent-primary: #e2b714;  /* 黄色系アクセント */
+  --color-accent-secondary: #4cbf56;  /* 緑系アクセント */
+  --color-accent-error: #ca4754;    /* エラー用赤系 */
+  
+  /* タイピングゲーム特有の色 */
+  --typing-untyped-color: #646669;   /* 未入力テキスト */
+  --typing-typed-color: #d1d0c5;    /* 正確に入力されたテキスト */
+  --typing-cursor-color: #e2b714;   /* カーソル */
+  --typing-error-color: #ca4754;    /* 誤入力テキスト */
+  
+  /* エフェクト関連 */
+  --grid-color: rgba(100, 102, 105, 0.15);
+  --accent-line-color: rgba(226, 183, 20, 0.5);
+  --gradient-overlay: linear-gradient(45deg, rgba(226, 183, 20, 0.03), rgba(226, 183, 20, 0.01));
+  
+  /* スペーシング */
+  --spacing-xxs: 0.25rem;
+  --spacing-xs: 0.5rem;
+  --spacing-sm: 0.75rem;
+  --spacing-md: 1rem;
+  --spacing-lg: 1.5rem;
+  --spacing-xl: 2rem;
+  --spacing-xxl: 3rem;
+  
+  /* フォント */
+  --font-primary: 'Roboto Mono', monospace;
+  --font-secondary: 'JetBrains Mono', monospace;
+  --font-japanese: 'Noto Sans JP', sans-serif;
+  
+  /* フォントサイズ */
+  --font-size-xs: 0.75rem;
+  --font-size-sm: 0.875rem;
+  --font-size-md: 1rem;
+  --font-size-lg: 1.125rem;
+  --font-size-xl: 1.25rem;
+  --font-size-xxl: 1.5rem;
+  --font-size-display: 2.25rem;
+  
+  /* フォントウェイト */
+  --font-weight-thin: 100;
+  --font-weight-extralight: 200;
+  --font-weight-light: 300;
+  --font-weight-normal: 400;
+  --font-weight-medium: 500;
+  --font-weight-bold: 700;
+  --font-weight-extrabold: 800;
+  
+  /* ボーダーラディウス */
+  --border-radius-sm: 0.25rem;
+  --border-radius-md: 0.5rem;
+  --border-radius-lg: 0.75rem;
+  --border-radius-xl: 1rem;
+  
+  /* アニメーション */
+  --transition-fast: 0.15s ease;
+  --transition-normal: 0.3s ease;
+  --transition-slow: 0.5s ease;
+  
+  /* Z-index */
+  --z-index-low: 10;
+  --z-index-mid: 50;
+  --z-index-high: 100;
+  --z-index-modal: 1000;
+}

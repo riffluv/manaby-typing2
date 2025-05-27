@@ -1,4 +1,10 @@
-.header {
+/* 
+保持する要素のスタイル（preserved-elements.css）
+MonkeytypeHeader と React Icons に関するスタイルを保持
+*/
+
+/* ヘッダー全体のスタイル */
+.preserved-header {
   position: fixed;
   z-index: var(--z-index-mid);
   display: flex;
@@ -12,7 +18,8 @@
   will-change: transform;
 }
 
-.logoContainer {
+/* ロゴコンテナ */
+.preserved-logo-container {
   display: flex;
   align-items: flex-end;
   gap: 0.7rem;
@@ -23,90 +30,87 @@
   margin-left: 1rem;
 }
 
-.logoImage {
+/* ロゴ画像 */
+.preserved-logo-image {
   border-radius: var(--border-radius-sm);
   margin-bottom: 0.2rem;
 }
 
-.logoTextContainer {
+/* テキストコンテナ */
+.preserved-logo-text-container {
   display: flex;
   flex-direction: column;
   align-items: flex-start;
   padding-bottom: 0.1rem;
 }
 
-.logoText {
-  font-family: var(--font-geist-mono);
+/* ロゴテキスト */
+.preserved-logo-text {
+  font-family: var(--font-geist-mono), var(--font-primary);
   font-weight: 900;
   font-size: var(--font-size-display);
   letter-spacing: -0.04em;
   text-shadow: none;
   line-height: 1;
-  color: var(--typing-typed-color, #D1D0C5);
+  color: var(--typing-typed-color);
 }
 
-.iconGroup {
+/* アイコングループ */
+.preserved-icon-group {
   display: flex;
-  align-items: flex-end; /* 下端揃えに変更してmanabtypeとラインを揃える */
+  align-items: flex-end;
   gap: 1rem;
   padding: 0.25rem 0.5rem;
   margin-left: 1rem;
-  margin-bottom: 0.15rem; /* ベースラインを微調整 */
-  border-radius: 0.75rem;
+  margin-bottom: 0.15rem;
+  border-radius: var(--border-radius-lg);
   user-select: none;
   pointer-events: all;
 }
 
-.icon {
+/* 個々のアイコン */
+.preserved-icon {
   display: flex;
   align-items: center;
   justify-content: center;
-  color: var(--typing-untyped-color, #646669);
-  transition: color 0.15s, background-color 0.15s;
+  color: var(--typing-untyped-color);
+  transition: color var(--transition-fast), background-color var(--transition-fast);
   cursor: pointer;
   padding: 0.375rem;
-  border-radius: 0.25rem;
-  transform: translateY(-0.1rem); /* アイコンを少し上に調整してテキストとラインを揃える */
+  border-radius: var(--border-radius-sm);
+  transform: translateY(-0.1rem);
 }
 
-.icon:hover {
-  color: var(--typing-typed-color, #D1D0C5);
+.preserved-icon:hover {
+  color: var(--typing-typed-color);
   background-color: rgba(255, 255, 255, 0.05);
 }
 
-.iconSvg {
+/* アイコンSVG */
+.preserved-icon-svg {
   font-size: 1.25rem;
   stroke-width: 1.75px;
 }
 
 /* モバイルデバイス向けのスタイル調整 */
-@media (max-width: 40rem) { /* 640pxを等価なremに変換 */
-  .header {
+@media (max-width: 40rem) {
+  .preserved-header {
     top: 1rem;
     left: 1.25rem;
     width: calc(100% - 2.5rem);
   }
   
-  .logoContainer {
+  .preserved-logo-container {
     margin-top: 0.3rem;
     margin-left: 0.5rem;
   }
   
-  .iconGroup {
+  .preserved-icon-group {
     gap: 0.4rem;
-    margin-bottom: 0.1rem; /* モバイルでの位置調整 */
+    margin-bottom: 0.1rem;
   }
   
-  .icon {
+  .preserved-icon {
     padding: 0.2rem;
-    transform: translateY(-0.05rem); /* モバイルでの調整 */
-  }
-  
-  .iconSvg {
-    font-size: 1.125rem;
-  }
-  
-  .logoText {
-    font-size: 1.75rem;
   }
 }

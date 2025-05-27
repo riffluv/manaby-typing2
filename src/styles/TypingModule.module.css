@@ -1,14 +1,2 @@
-/*
- * TypingModule.module.css
- * タイピングゲームのコアスタイル定義
- * 
- * このファイルは製品版のタイピングゲーム用に最適化されたスタイルを定義します。
- * パフォーマンス、アクセシビリティ、レスポンシブデザイン、視覚的一貫性を重視しています。
- * 
- * リファクタリング時の注意: このファイルの変更は慎重に行ってください。
- * タイピングエクスペリエンスの中核を担うスタイルです。
- */
-
-/* TypingArea関連の競合クラスを削除（.typingArea, .typingChar, .completed, .current, .pending, .error） */
-
-/* ...他の既存コードはそのまま... */
+/* �t�@�C���̓��Z�b�g����܂��� - TypingModule.module.css */
+/* MonkeyType + Finals���f�U�C���ɍč\�z�\�� */

@@ -1,33 +1,4 @@
-/* ベーススタイル: リセットや基本的な設定 */
-
-* {
-  box-sizing: border-box;
-  margin: 0;
-  padding: 0;
-}
-
-html {
-  overflow: hidden; /* HTMLレベルでスクロールを無効化 */
-  height: 100%;
-  width: 100%;
-  margin: 0;
-  padding: 0;
-}
-
-body {
-  background: var(--color-bg-primary);
-  min-height: 100vh;
-  height: 100%;
-  width: 100%;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  overflow: hidden; /* スクロールを完全に無効化 */
-  color: var(--color-text-primary);
-  font-family: var(--font-sans);
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
-}
+/* リセット済み - 最小限のスタイル定義から始めます */
 
 /* コンテナの基本設定 */
 .container-standard {

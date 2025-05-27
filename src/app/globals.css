@@ -1,17 +1,19 @@
 /* フォントのインポート */
-@import url('https://fonts.googleapis.com/css2?family=Roboto+Mono:wght@100;200;300;400;500&display=swap');
-@import url('https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@100;200;300;400;500&display=swap');
-@import url('https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@100;200;300;400;500&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Roboto+Mono:wght@100;200;300;400;500;700;900&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@100;200;300;400;500;700;900&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@100;200;300;400;500;700;900&display=swap');
 
 /* Tailwind CSS */
 @import "tailwindcss";
 
-/* グローバルスタイルのインポート順序を明確にする */
-@import "../styles/theme.css";  /* 1. まずテーマ変数を読み込み */
-@import "../styles/base.css";   /* 2. 次にベーススタイルを読み込み */
-@import "../styles/components.css";  /* 3. コンポーネントスタイルを読み込み */
-@import "../styles/layout.css";  /* 4. レイアウト関連のスタイルを読み込み */
-@import "../styles/portal.css";  /* 5. ポータル関連のスタイルを読み込み */
+/* リセットされたグローバルスタイルのインポート順序 */
+@import "../styles/reset.css";          /* 1. まずCSSリセット */
+@import "../styles/variables.css";      /* 2. 変数・デザイントークン */
+@import "../styles/typography.css";     /* 3. タイポグラフィ */
+@import "../styles/components.css";     /* 4. コンポーネント */
+@import "../styles/layouts.css";        /* 5. レイアウト */
+@import "../styles/utilities.css";      /* 6. ユーティリティ */
+@import "../styles/preserved-elements.css";  /* 7. 保持する要素 */
 
 /* グローバルなアニメーション定義 */
 @keyframes fadeIn {
