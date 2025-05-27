@@ -1,0 +1,41 @@
+﻿/* ModernRanking.module.css - 必要最小限の構造のみ。装飾なし */
+
+.container {}
+.backgroundElements {}
+.content {}
+.header {}
+.title {}
+.subtitle {}
+.difficultySelector {}
+.difficultyButton {}
+.difficultyButtonActive {}
+.rankingContainer {}
+.loadingContainer {}
+.loadingText {}
+.loadingSpinner {}
+.errorContainer {}
+.errorText {}
+.retryButton {}
+.emptyContainer {}
+.emptyTitle {}
+.emptyMessage {}
+.table {}
+.tableHeader {}
+.tableHeaderCell {}
+.tableRow {}
+.fadeIn {}
+.tableRowTop3 {}
+.tableRowFirst {}
+.tableRowSecond {}
+.tableRowThird {}
+.tableCell {}
+.rankCell {}
+.rankCellFirst {}
+.rankCellSecond {}
+.rankCellThird {}
+.nameCell {}
+.kpmCell {}
+.accuracyCell {}
+.correctCell {}
+.missCell {}
+
