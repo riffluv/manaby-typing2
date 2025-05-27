@@ -35,10 +35,9 @@ const PortalShortcut: React.FC<PortalShortcutProps> = ({ shortcuts }) => {
       setMounted(false);
     };
   }, []);
-  
-  // ショートカット表示のコンテンツ
+    // ショートカット表示のコンテンツ
   const content = (
-    <div className={styles.minimalShortcut}>
+    <div className={styles.shortcutContainer}>
       {shortcuts.map((s, i) => (
         <span className={styles.shortcutItem} key={i}>
           {Array.isArray(s.key)

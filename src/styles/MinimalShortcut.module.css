@@ -1,2 +1,58 @@
-/* �t�@�C���̓��Z�b�g����܂��� - MinimalShortcut.module.css */
-/* MonkeyType + Finals���f�U�C���ɍč\�z�\�� */
+﻿/* MinimalShortcut.module.css */
+/* シンプル化されたミニマルショートカット */
+
+/* ショートカットコンテナ */
+.shortcutContainer {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 1rem;
+  padding: 0.5rem 1rem;
+  background-color: rgba(240, 240, 240, 0.9);
+  border: 1px solid #ddd;
+  border-radius: 4px;
+  position: fixed;
+  bottom: 1rem;
+  left: 50%;
+  transform: translateX(-50%);
+  z-index: 100;
+}
+
+/* ショートカットアイテム */
+.shortcutItem {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+/* キー表示 */
+.key {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 22px;
+  height: 22px;
+  padding: 0 0.25rem;
+  background-color: #f5f5f5;
+  border: 1px solid #ddd;
+  border-radius: 3px;
+  color: #333;
+  font-size: 0.85rem;
+  line-height: 1;
+  user-select: none;
+}
+
+/* 区切り文字 */
+.plus {
+  color: #666;
+  margin: 0 2px;
+}
+
+/* ラベル */
+.label {
+  color: #666;
+  font-size: 0.85rem;
+}
+
+
+

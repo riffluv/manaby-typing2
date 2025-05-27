@@ -1,2 +1,19 @@
-/* �t�@�C���̓��Z�b�g����܂��� - AppLayout.module.css */
-/* MonkeyType + Finals���f�U�C���ɍč\�z�\�� */
+﻿/* AppLayout.module.css - 最小限のシンプルなレイアウト */
+
+/* メインレイアウト */
+.appBackground {
+  min-height: 100vh;
+  width: 100%;
+  background: #323437; /* シンプルな背景色 */
+  position: relative;
+}
+
+/* センターパネル - コンテンツを中央に配置 */
+.centerPanel {
+  width: 100%;
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  padding-top: 80px; /* ヘッダーの下に余白 */
+}
+

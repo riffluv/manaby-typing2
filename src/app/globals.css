@@ -1,51 +1,14 @@
-/* フォントのインポート */
-@import url('https://fonts.googleapis.com/css2?family=Roboto+Mono:wght@100;200;300;400;500;700;900&display=swap');
-@import url('https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@100;200;300;400;500;700;900&display=swap');
-@import url('https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@100;200;300;400;500;700;900&display=swap');
+/* フォントのインポート - シンプルにするために残すのは基本フォントだけ */
+@import url('https://fonts.googleapis.com/css2?family=Roboto+Mono:wght@400;700&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@400;700&display=swap');
 
-/* Tailwind CSS */
-@import "tailwindcss";
+/* リセットCSS */
+@import "../styles/reset.css";          /* 基本的なリセット */
 
-/* リセットされたグローバルスタイルのインポート順序 */
-@import "../styles/reset.css";          /* 1. まずCSSリセット */
-@import "../styles/variables.css";      /* 2. 変数・デザイントークン */
-@import "../styles/typography.css";     /* 3. タイポグラフィ */
-@import "../styles/components.css";     /* 4. コンポーネント */
-@import "../styles/layouts.css";        /* 5. レイアウト */
-@import "../styles/utilities.css";      /* 6. ユーティリティ */
-@import "../styles/preserved-elements.css";  /* 7. 保持する要素 */
+/* ロゴ用のスタイル */
+@import "../styles/preserved-elements.css";  /* ヘッダーロゴのみ保持 */
 
-/* グローバルなアニメーション定義 */
-@keyframes fadeIn {
-  from { opacity: 0; }
-  to { opacity: 1; }
-}
-
-@keyframes slideUp {
-  from {
-    transform: translateY(20px);
-    opacity: 0;
-  }
-  to {
-    transform: translateY(0);
-    opacity: 1;
-  }
-}
-
-@keyframes pulse {
-  0% {
-    transform: scale(1);
-    opacity: 1;
-  }
-  50% {
-    transform: scale(1.05);
-    opacity: 0.7;
-  }
-  100% {
-    transform: scale(1);
-    opacity: 1;
-  }
-}
+/* アニメーションを削除してシンプル化 */
 
 /* スクリーン全体のフォーカス状態で枠線を消す */
 *:focus {
@@ -54,7 +17,7 @@
 
 /* フォーカス可能な要素のアクセシビリティのために、キーボードフォーカス時のみ表示 */
 *:focus-visible {
-  outline: 2px solid var(--color-primary);
+  outline: 2px solid #e2b714;
   outline-offset: 2px;
 }
 
@@ -69,50 +32,40 @@ html {
 }
 
 body {
-  background: var(--color-bg-primary, #323437); /* 統一したCSS変数を使用 */
+  background: #323437; /* 変数を使わずに直接指定 */
   height: 100vh;
   width: 100vw;
   display: flex;
   align-items: center;
   justify-content: center;
-  overflow: hidden;
-  color: var(--color-text-primary, #D1D0C5); /* 統一したCSS変数を使用 */
-  font-family: var(--font-mono);
+  /* overflow: hiddenを削除してヘッダーが表示されるようにする */
+  position: relative; /* ヘッダーの配置のため相対位置に設定 */
+  color: #D1D0C5; /* 変数を使わずに直接指定 */
+  font-family: 'Roboto Mono', monospace;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
   padding: 0;
   margin: 0;
 }
 
-/* モノスペースフォントのクラス - タイピングエリアで使用 */
-.font-mono {
-  font-family: var(--font-mono);
-}
-
-/* ボタンスタイルのリセット */
+/* シンプルなリセット */
 button {
   background: none;
   border: none;
-  font: inherit;
-  color: inherit;
+  padding: 0;
   cursor: pointer;
 }
 
-/* スクロールバーをより控えめに */
+/* シンプルなスクロールバースタイル */
 ::-webkit-scrollbar {
-  width: 8px;
-  height: 8px;
+  width: 6px;
+  height: 6px;
 }
 
 ::-webkit-scrollbar-track {
-  background: rgba(10, 10, 10, 0.2);
+  background: #2c2c2c;
 }
 
 ::-webkit-scrollbar-thumb {
-  background: rgba(100, 100, 100, 0.2);
-  border-radius: 4px;
-}
-
-::-webkit-scrollbar-thumb:hover {
-  background: rgba(100, 100, 100, 0.4);
+  background: #555;
 }

@@ -1,112 +1,48 @@
+﻿/* MonkeytypeHeader.module.css - 極めてシンプルな基本スタイル */
+
+/* ヘッダー全体 */
 .header {
   position: fixed;
-  z-index: var(--z-index-mid);
+  top: 20px;
+  left: 20px;
+  width: calc(100% - 40px);
   display: flex;
-  align-items: center;
-  top: 1.25rem;
-  left: 2rem;
-  pointer-events: none;
-  min-width: 20rem;
-  width: calc(100% - 4rem);
   justify-content: space-between;
-  will-change: transform;
+  z-index: 1000; /* 他の要素より前面に表示 */
 }
 
+/* ロゴ部分のコンテナ */
 .logoContainer {
   display: flex;
-  align-items: flex-end;
-  gap: 0.7rem;
-  padding: 0.4rem 0.75rem;
-  user-select: none;
-  pointer-events: all;
-  margin-top: 0.5rem;
-  margin-left: 1rem;
+  align-items: center;
+  gap: 10px;
 }
 
+/* ロゴイメージ */
 .logoImage {
-  border-radius: var(--border-radius-sm);
-  margin-bottom: 0.2rem;
+  display: block;
 }
 
+/* ロゴテキスト用コンテナ */
 .logoTextContainer {
   display: flex;
-  flex-direction: column;
-  align-items: flex-start;
-  padding-bottom: 0.1rem;
 }
 
+/* ロゴテキスト */
 .logoText {
-  font-family: var(--font-geist-mono);
-  font-weight: 900;
-  font-size: var(--font-size-display);
-  letter-spacing: -0.04em;
-  text-shadow: none;
-  line-height: 1;
-  color: var(--typing-typed-color, #D1D0C5);
+  font-weight: bold;
+  font-size: 28px;
+  color: #d1d0c5;
+  text-shadow: 0 0 2px rgba(0, 0, 0, 0.5); /* テキストをより読みやすく */
 }
 
+/* アイコングループ - 非表示 */
 .iconGroup {
-  display: flex;
-  align-items: flex-end; /* 下端揃えに変更してmanabtypeとラインを揃える */
-  gap: 1rem;
-  padding: 0.25rem 0.5rem;
-  margin-left: 1rem;
-  margin-bottom: 0.15rem; /* ベースラインを微調整 */
-  border-radius: 0.75rem;
-  user-select: none;
-  pointer-events: all;
+  display: none;
 }
 
+/* アイコン - 非表示 */
 .icon {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  color: var(--typing-untyped-color, #646669);
-  transition: color 0.15s, background-color 0.15s;
-  cursor: pointer;
-  padding: 0.375rem;
-  border-radius: 0.25rem;
-  transform: translateY(-0.1rem); /* アイコンを少し上に調整してテキストとラインを揃える */
+  display: none;
 }
 
-.icon:hover {
-  color: var(--typing-typed-color, #D1D0C5);
-  background-color: rgba(255, 255, 255, 0.05);
-}
-
-.iconSvg {
-  font-size: 1.25rem;
-  stroke-width: 1.75px;
-}
-
-/* モバイルデバイス向けのスタイル調整 */
-@media (max-width: 40rem) { /* 640pxを等価なremに変換 */
-  .header {
-    top: 1rem;
-    left: 1.25rem;
-    width: calc(100% - 2.5rem);
-  }
-  
-  .logoContainer {
-    margin-top: 0.3rem;
-    margin-left: 0.5rem;
-  }
-  
-  .iconGroup {
-    gap: 0.4rem;
-    margin-bottom: 0.1rem; /* モバイルでの位置調整 */
-  }
-  
-  .icon {
-    padding: 0.2rem;
-    transform: translateY(-0.05rem); /* モバイルでの調整 */
-  }
-  
-  .iconSvg {
-    font-size: 1.125rem;
-  }
-  
-  .logoText {
-    font-size: 1.75rem;
-  }
-}

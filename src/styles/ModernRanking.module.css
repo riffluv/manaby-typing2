@@ -1,2 +1,166 @@
-/* �t�@�C���̓��Z�b�g����܂��� - ModernRanking.module.css */
-/* MonkeyType + Finals���f�U�C���ɍč\�z�\�� */
+﻿/* ModernRanking.module.css */
+/* 繧ｷ繝ｳ繝励Ν蛹悶＆繧後◆繝ｩ繝ｳ繧ｭ繝ｳ繧ｰ逕ｻ髱｢繧ｹ繧ｿ繧､繝ｫ */
+
+/* 繝ｩ繝ｳ繧ｭ繝ｳ繧ｰ繧ｳ繝ｳ繝・リ */
+.container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  min-height: 100vh;
+  width: 100%;
+  padding: 2rem;
+  background: #ffffff;
+  position: relative;
+}
+
+/* 閭梧勹繧ｨ繝ｬ繝｡繝ｳ繝・*/
+.backgroundElements {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  z-index: 0;
+}
+
+/* 繧ｳ繝ｳ繝・Φ繝・お繝ｪ繧｢ */
+.content {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  max-width: 800px;
+  width: 100%;
+  z-index: 1;
+}
+
+/* 繝倥ャ繝繝ｼ */
+.header {
+  text-align: center;
+  margin-bottom: 2rem;
+}
+
+.title {
+  font-size: 2.5rem;
+  font-weight: bold;
+  color: #333;
+  margin-bottom: 0.5rem;
+}
+
+.subtitle {
+  color: #666;
+  font-size: 1rem;
+}
+
+/* 髮｣譏灘ｺｦ繧ｻ繝ｬ繧ｯ繧ｿ繝ｼ */
+.difficultySelector {
+  display: flex;
+  gap: 1rem;
+  margin-bottom: 2rem;
+}
+
+/* 繝ｩ繝ｳ繧ｭ繝ｳ繧ｰ繧ｳ繝ｳ繝・リ */
+.rankingContainer {
+  width: 100%;
+  background: #f5f5f5;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+  overflow: hidden;
+}
+
+/* 繝・・繝悶Ν繧ｹ繧ｿ繧､繝ｫ */
+.table {
+  width: 100%;
+  border-collapse: collapse;
+}
+
+.tableHeader {
+  background: #eaeaea;
+}
+
+.tableHeaderCell {
+  padding: 1rem;
+  color: #666;
+  font-weight: 500;
+  text-align: left;
+  border-bottom: 1px solid #ddd;
+}
+
+.tableRow {
+  border-bottom: 1px solid #eee;
+  transition: background-color 0.2s;
+}
+
+.tableRow:hover {
+  background-color: rgba(0, 0, 0, 0.02);
+}
+
+.tableCell {
+  padding: 1rem;
+  color: #333;
+}
+
+.rankCell {
+  font-weight: bold;
+  color: #3498db;
+}
+
+/* 隱ｭ縺ｿ霎ｼ縺ｿ荳ｭ陦ｨ遉ｺ */
+.loadingContainer {
+  padding: 2rem;
+  text-align: center;
+}
+
+.loadingText {
+  color: #666;
+  margin-bottom: 1rem;
+}
+
+.loadingSpinner {
+  display: inline-block;
+  width: 40px;
+  height: 40px;
+  border: 3px solid rgba(0, 0, 0, 0.1);
+  border-radius: 50%;
+  border-top-color: #3498db;
+  animation: spin 1s ease-in-out infinite;
+}
+
+@keyframes spin {
+  to { transform: rotate(360deg); }
+}
+
+/* 繧ｨ繝ｩ繝ｼ陦ｨ遉ｺ */
+.errorContainer {
+  padding: 2rem;
+  text-align: center;
+}
+
+.errorText {
+  color: #e74c3c;
+  margin-bottom: 1rem;
+}
+
+.retryButton {
+  padding: 0.5rem 1rem;
+  background-color: #3498db;
+  color: white;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+}
+
+/* 遨ｺ陦ｨ遉ｺ */
+.emptyContainer {
+  padding: 2rem;
+  text-align: center;
+}
+
+.emptyTitle {
+  color: #333;
+  margin-bottom: 0.5rem;
+}
+
+.emptyMessage {
+  color: #666;
+}
+

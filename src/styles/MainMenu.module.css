@@ -1,2 +1,57 @@
-/* �t�@�C���̓��Z�b�g����܂��� - MainMenu.module.css */
-/* MonkeyType + Finals���f�U�C���ɍč\�z�\�� */
+﻿/* MainMenu.module.css - 最小限のシンプルなバージョン */
+
+/* メインコンテナ */
+.container {
+  min-height: calc(100vh - 80px);
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+}
+
+/* メインコンテンツ */
+.mainContent {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  width: 100%;
+  max-width: 800px;
+  margin: 0 auto;
+}
+
+/* ボタングリッド - シンプルにする */
+.buttonGrid {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+  width: 100%;
+  max-width: 400px;
+  margin: 0 auto;
+}
+
+/* メインメニューボタン - 最小限のスタイル */
+.menuButton {
+  padding: 1rem;
+  width: 100%;
+  background: #2c2c2c;
+  border: 1px solid #3a3a3a;
+  color: #d1d0c5;
+  cursor: pointer;
+  text-align: center;
+}
+
+/* 設定セクション */
+.settingsSection {
+  margin-top: 2rem;
+  width: 100%;
+  max-width: 400px;
+}
+
+/* フッター */
+.footer {
+  margin-top: 2rem;
+  text-align: center;
+  color: #646669;
+}
+
