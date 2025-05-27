@@ -6,6 +6,7 @@ import type { PerWordScoreLog } from '@/types/score';
 import { useEffect, useState, useRef } from 'react';
 import { useGlobalShortcuts } from '@/hooks/useGlobalShortcuts';
 import styles from '@/styles/ModernGameResult.module.css';
+import GameResultStat from './GameResultStat';
 
 interface GameResultScreenProps {
   resultScore: GameScoreLog['total'] | null;
@@ -212,56 +213,10 @@ export default function GameResultScreen({
         <AnimatePresence>
           {resultScore ? (
             <>
-              <motion.div 
-                className={styles.statCard}
-                custom={0}
-                initial="hidden"
-                animate={showContent ? "visible" : "hidden"}
-                variants={statVariants}
-              >
-                <div className={styles.statLabel}>kpm</div>                <div className={`${styles.statValue} ${styles.valueAmber}`}>
-                  <span className={styles.countNumber}>{kpmCount}</span>
-                </div>
-              </motion.div>
-              
-              <motion.div 
-                className={styles.statCard}
-                custom={1}
-                initial="hidden"
-                animate={showContent ? "visible" : "hidden"}
-                variants={statVariants}
-              >
-                <div className={styles.statLabel}>accuracy</div>
-                <div className={`${styles.statValue} ${styles.valueAmber}`}>
-                  <span className={styles.countNumber}>{accuracyCount}</span>%
-                </div>
-              </motion.div>
-              
-              <motion.div 
-                className={styles.statCard}
-                custom={2}
-                initial="hidden"
-                animate={showContent ? "visible" : "hidden"}
-                variants={statVariants}
-              >
-                <div className={styles.statLabel}>correct</div>
-                <div className={`${styles.statValue} ${styles.valueGreen}`}>
-                  <span className={styles.countNumber}>{correctCount}</span>
-                </div>
-              </motion.div>
-              
-              <motion.div 
-                className={styles.statCard}
-                custom={3}
-                initial="hidden"
-                animate={showContent ? "visible" : "hidden"}
-                variants={statVariants}
-              >
-                <div className={styles.statLabel}>miss</div>
-                <div className={`${styles.statValue} ${styles.valueRed}`}>
-                  <span className={styles.countNumber}>{missCount}</span>
-                </div>
-              </motion.div>
+              <GameResultStat label="kpm" value={kpmCount} valueClass={styles.valueAmber} custom={0} showContent={showContent} statVariants={statVariants} />
+              <GameResultStat label="accuracy" value={accuracyCount} valueClass={styles.valueAmber} custom={1} showContent={showContent} statVariants={statVariants} />
+              <GameResultStat label="correct" value={correctCount} valueClass={styles.valueGreen} custom={2} showContent={showContent} statVariants={statVariants} />
+              <GameResultStat label="miss" value={missCount} valueClass={styles.valueRed} custom={3} showContent={showContent} statVariants={statVariants} />
             </>
           ) : scoreLog.length > 0 ? (
             <motion.div 
@@ -274,7 +229,7 @@ export default function GameResultScreen({
               <motion.button 
                 className={styles.calculateButton}
                 onClick={onCalculateFallbackScore}
-                whileHover={{ y: -3, boxShadow: "0 5px 15px rgba(124, 255, 203, 0.4)" }}
+                whileHover={{ y: -3 }}
                 whileTap={{ y: 0 }}
               >
                 スコアを表示
@@ -315,7 +270,7 @@ export default function GameResultScreen({
             initial="hidden"
             animate={showContent ? "visible" : "hidden"}
             variants={buttonVariants}
-            whileHover={{ y: -3, boxShadow: "0 5px 15px rgba(124, 255, 203, 0.4)" }}
+            whileHover={{ y: -3 }}
             whileTap={{ y: 0 }}
           >
             ランキング登録
@@ -340,7 +295,7 @@ export default function GameResultScreen({
           initial="hidden"
           animate={showContent ? "visible" : "hidden"}
           variants={buttonVariants}
-          whileHover={{ y: -3, boxShadow: "0 5px 15px rgba(124, 255, 203, 0.2)" }}
+          whileHover={{ y: -3 }}
           whileTap={{ y: 0 }}
         >
           もう一度プレイ
@@ -353,7 +308,7 @@ export default function GameResultScreen({
           initial="hidden"
           animate={showContent ? "visible" : "hidden"}
           variants={buttonVariants}
-          whileHover={{ y: -3, boxShadow: "0 4px 12px rgba(0, 0, 0, 0.15)" }}
+          whileHover={{ y: -3 }}
           whileTap={{ y: 0 }}
         >
           ランキングへ

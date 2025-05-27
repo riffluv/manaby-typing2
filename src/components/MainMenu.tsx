@@ -54,11 +54,6 @@ const MainMenu: React.FC<MainMenuProps> = ({ onStart, onRetry, onRanking }) => {
     }
   };
 
-  const buttonVariants = {
-    hover: { scale: 1.03, transition: { duration: 0.2 } },
-    tap: { scale: 0.98, transition: { duration: 0.1 } }
-  };
-
   // ショートカット定義
   useGlobalShortcuts([
     {
@@ -105,7 +100,7 @@ const MainMenu: React.FC<MainMenuProps> = ({ onStart, onRetry, onRanking }) => {
           animate={{ opacity: 1, y: 0 }}
           transition={{ delay: 0.3, duration: 0.6, ease: "easeOut" }}
         >
-          <motion.button
+          <MainMenuButton
             onClick={handleStart}
             className={styles.startButton}
             whileHover={{ 
@@ -115,7 +110,7 @@ const MainMenu: React.FC<MainMenuProps> = ({ onStart, onRetry, onRanking }) => {
             whileTap={{ scale: 0.98, boxShadow: "0 2px 4px rgba(0, 0, 0, 0.1)" }}
           >
             スタート
-          </motion.button>
+          </MainMenuButton>
         </motion.div>        {/* モード選択 */}
         <motion.div 
           variants={itemVariants} 
@@ -165,5 +160,9 @@ const MainMenu: React.FC<MainMenuProps> = ({ onStart, onRetry, onRanking }) => {
     </div>
   );
 };
+
+const MainMenuButton: React.FC<React.ComponentProps<typeof motion.button>> = ({ children, ...props }) => (
+  <motion.button {...props}>{children}</motion.button>
+);
 
 export default MainMenu;
