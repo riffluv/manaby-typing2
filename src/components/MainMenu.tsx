@@ -1,5 +1,5 @@
 import PortalShortcut from '@/components/PortalShortcut';
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
 import { motion } from 'framer-motion';
 import { useTypingGameStore } from '@/store/typingGameStore';
 import { useGlobalShortcuts } from '@/hooks/useGlobalShortcuts';
@@ -17,7 +17,6 @@ interface MainMenuProps {
 const MainMenu: React.FC<MainMenuProps> = ({ onStart, onRetry, onRanking }) => {
   const { resetGame, setGameStatus, setMode } = useTypingGameStore();
   const [selectedMode, setSelectedMode] = useState<'normal' | 'hard'>('normal');
-  const [logoHovered, setLogoHovered] = useState(false);
 
   // ゲーム開始ハンドラー
   const handleStart = () => {
