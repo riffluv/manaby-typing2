@@ -1,36 +1,56 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# タイピングゲーム（monkeytype × THE FINALS サイバーパンクUI）
 
-## Getting Started
+## プロジェクト概要
+- サイバーパンクな世界観（monkeytype + THE FINALS風UI）で遊べるタイピングゲームです。
+- タイピングロジックの基盤とランキング登録機能を実装済み。
+- CSSは全面リセットし、`globals.css`一本でデザインを統一。
 
-First, run the development server:
+## 主な機能
+- 日本語ワードのタイピングゲーム
+- リアルタイムスコア・KPM・正確性表示
+- ゲーム終了後のリザルト画面
+- ランキング登録・表示機能
+- サイバーパンクなアニメーション・UI
 
-```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
+## セットアップ方法
+1. 依存パッケージのインストール
+   ```powershell
+   npm install
+   ```
+2. 開発サーバー起動
+   ```powershell
+   npm run dev
+   ```
+3. ブラウザで [http://localhost:3000](http://localhost:3000) を開く
+
+## ディレクトリ構成（抜粋）
+```
+src/
+  app/
+    globals.css         # 唯一のグローバルCSS（全UIデザインここに集約）
+    layout.tsx, page.tsx
+  components/          # UIコンポーネント群
+  hooks/               # Reactカスタムフック
+  store/               # Zustand等の状態管理
+  ...
+public/
+  images/, sounds/     # 画像・効果音アセット
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+## スタイリング方針
+- CSSは`src/app/globals.css`に集約（他のCSSは原則使わない）
+- クラス名・変数はセクションごとに整理
+- 追加・修正はglobals.cssに追記
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+## 今後の開発方針・TODO
+- UI/UXのさらなる強化（アニメーション、レスポンシブ等）
+- 難易度選択やワード追加
+- テーマ切り替え機能
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+## 主な変更履歴
+- 2025/05/28 CSS全面リセット＆globals.css一本化、不要CSS削除
+- 2025/05/28 タイピングロジック・ランキング登録の基盤完成
 
-## Learn More
+---
 
-To learn more about Next.js, take a look at the following resources:
-
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
-
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
-
-## Deploy on Vercel
-
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
-
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+何か追加・修正したい場合はglobals.cssとこのREADMEを更新してください。
