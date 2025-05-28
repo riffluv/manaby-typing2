@@ -1,7 +1,6 @@
 import type { Metadata } from "next";
 import { Geist, Geist_Mono } from "next/font/google";
 import "./globals.css";
-import MCPStatus from "@/components/MCPStatus";
 import MonkeytypeHeader from '@/components/common/MonkeytypeHeader';
 import MinimalShortcut from '@/components/MinimalShortcut';
 import AppLayout from '@/components/AppLayout';
@@ -37,9 +36,6 @@ export default function RootLayout({
           {children}
         </AppLayout>
         <MinimalShortcut shortcuts={[]} />
-        <div>
-          <MCPStatus position="bottom-right" />
-        </div>
       </body>
     </html>
   );
