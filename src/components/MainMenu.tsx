@@ -1,10 +1,11 @@
 import PortalShortcut from '@/components/PortalShortcut';
 import React, { useState } from 'react';
 import { motion } from 'framer-motion';
-import { useTypingGameStore } from '@/store/typingGameStore';
+import { useTypingGameStore, useQuestionCount } from '@/store/typingGameStore';
 import { useGlobalShortcuts } from '@/hooks/useGlobalShortcuts';
 import screenStyles from './common/ScreenWrapper.module.css';
 import styles from './MainMenu.module.css';
+import { deleteRankingEntriesByMode } from '@/lib/rankingManaby2';
 
 interface MainMenuProps {
   onStart: () => void;
@@ -17,8 +18,21 @@ interface MainMenuProps {
  * サイバーパンク美学とミニマリズムを融合したプロゲーマー向けUI
  */
 const MainMenu: React.FC<MainMenuProps> = ({ onStart, onRetry, onRanking }) => {
-  const { resetGame, setGameStatus, setMode } = useTypingGameStore();
+  const { resetGame, setGameStatus, setMode, setQuestionCount } = useTypingGameStore();
+  const questionCount = useQuestionCount();
   const [selectedMode, setSelectedMode] = useState<'normal' | 'hard'>('normal');
+
+  // 管理者モード状態
+  const [adminOpen, setAdminOpen] = useState(false);
+  const [adminInput, setAdminInput] = useState(questionCount);
+  const [adminStatus, setAdminStatus] = useState('');
+  const [adminLoading, setAdminLoading] = useState(false);
+
+  // manabyメニュー状態
+  const [manabyMenuOpen, setManabyMenuOpen] = useState(false);
+
+  // manabyで選択中のお題名を保持
+  const [selectedManaby, setSelectedManaby] = useState<string | null>(null);
 
   // ゲーム開始ハンドラー
   const handleStart = () => {
@@ -64,17 +78,120 @@ const MainMenu: React.FC<MainMenuProps> = ({ onStart, onRetry, onRanking }) => {
   useGlobalShortcuts([
     {
       key: ' ',
-      handler: (e) => { e.preventDefault(); handleStart(); },
+      handler: (e) => {
+        if (adminOpen) return; // 管理者モーダルが開いているときは無効化
+        e.preventDefault();
+        handleStart();
+      },
     },
     {
       key: 'r',
       altKey: true,
-      handler: (e) => { e.preventDefault(); onRanking(); },
+      handler: (e) => { if (!adminOpen) { e.preventDefault(); onRanking(); } },
     },
-  ], [handleStart, onRanking]);
+    {
+      key: '@',
+      ctrlKey: true,
+      handler: (e) => {
+        e.preventDefault();
+        setAdminOpen((v) => !v);
+      },
+      allowInputFocus: true
+    },
+  ], [handleStart, onRanking, adminOpen]);
+
+  // ランキングリセット関数
+  const handleResetRanking = async (mode: 'normal' | 'hard') => {
+    setAdminLoading(true);
+    setAdminStatus(`${mode.toUpperCase()}ランキングをリセット中...`);
+    try {
+      const count = await deleteRankingEntriesByMode(mode);
+      setAdminStatus(`${mode.toUpperCase()}ランキングを${count}件リセットしました`);
+    } catch (e) {
+      setAdminStatus(`${mode.toUpperCase()}ランキングリセット失敗`);
+    } finally {
+      setAdminLoading(false);
+    }
+  };
+
+  // 管理者モーダルの外側クリックで閉じる
+  const handleAdminOverlayClick = (e: React.MouseEvent<HTMLDivElement>) => {
+    if (e.target === e.currentTarget) {
+      setAdminOpen(false);
+    }
+  };
+
+  // manabyお題選択時の処理
+  const handleManabyMode = (mode: 'sonkeigo' | 'kenjougo' | 'business') => {
+    setSelectedManaby(
+      mode === 'sonkeigo' ? '尊敬語' : mode === 'kenjougo' ? '謙譲語' : 'ビジネスマナー'
+    );
+    setManabyMenuOpen(false);
+    // setModeやsetGameStatusはまだ呼ばない（ゲーム開始しない）
+  };
+
+  // manabyメニューの外側クリックやESCで閉じる
+  React.useEffect(() => {
+    if (!manabyMenuOpen) return;
+    const handleClose = (e: MouseEvent | KeyboardEvent) => {
+      if (e instanceof KeyboardEvent && (e.key === 'Escape' || e.key === 'Esc' || e.key === 's')) {
+        setManabyMenuOpen(false);
+      }
+      if (e instanceof MouseEvent) {
+        const dropdown = document.getElementById('manaby-dropdown');
+        if (dropdown && !dropdown.contains(e.target as Node)) {
+          setManabyMenuOpen(false);
+        }
+      }
+    };
+    document.addEventListener('mousedown', handleClose);
+    document.addEventListener('keydown', handleClose);
+    return () => {
+      document.removeEventListener('mousedown', handleClose);
+      document.removeEventListener('keydown', handleClose);
+    };
+  }, [manabyMenuOpen]);
 
   return (
     <div className={screenStyles.screenWrapper}>
+      {/* 管理者モーダル（重複排除・×ボタン修正） */}
+      {adminOpen && (
+        <div className={styles.adminModalOverlay} onClick={handleAdminOverlayClick}>
+          <div className={styles.adminModal} onClick={e => e.stopPropagation()}>
+            <h2>管理者モード</h2>
+            <label>
+              出題数：
+              <input
+                type="number"
+                min={1}
+                max={100}
+                value={adminInput}
+                onChange={e => setAdminInput(Number(e.target.value))}
+                disabled={adminLoading}
+              />
+              <button
+                className={styles['admin-btn']}
+                onClick={() => { setQuestionCount(adminInput); setAdminStatus(`出題数を${adminInput}問に変更しました`); }}
+                disabled={adminLoading || adminInput < 1}
+              >反映</button>
+            </label>
+            <div className="admin-actions">
+              <button
+                className={`${styles['admin-btn']} ${styles['admin-danger']}`}
+                onClick={() => handleResetRanking('normal')}
+                disabled={adminLoading}
+              >NORMALランキングリセット</button>
+              <button
+                className={`${styles['admin-btn']} ${styles['admin-danger']}`}
+                onClick={() => handleResetRanking('hard')}
+                disabled={adminLoading}
+              >HARDランキングリセット</button>
+            </div>
+            <div className={styles['admin-status']}>{adminStatus}</div>
+          </div>
+        </div>
+      )}
+
       <div className={styles.mainMenuContainer}>
         {/* ゲームロゴ/タイトル */}
         <div className={styles.mainMenuHeader}>
@@ -212,10 +329,11 @@ const MainMenu: React.FC<MainMenuProps> = ({ onStart, onRetry, onRanking }) => {
             </div>
           </motion.div>
 
-          {/* サブメニューボタン */}
+          {/* ランキングボタンとmanabyボタンを並列配置 */}
           <motion.div 
             variants={itemVariants}
             className={styles.menuSubButtons}
+            style={{ position: 'relative' }}
           >
             <motion.button
               className={`btn-secondary ${styles.menuSubButton}`}
@@ -225,30 +343,49 @@ const MainMenu: React.FC<MainMenuProps> = ({ onStart, onRetry, onRanking }) => {
             >
               RANKING
             </motion.button>
+            <motion.button
+              className={`btn-secondary ${styles.menuSubButton}`}
+              onClick={() => setManabyMenuOpen(v => !v)}
+              whileHover={{ scale: 1.05, y: -2 }}
+              whileTap={{ scale: 0.98 }}
+            >
+              {selectedManaby || 'manaby'}
+            </motion.button>
+            {manabyMenuOpen && (
+              <div
+                id="manaby-dropdown"
+                className={styles.manabyDropdown}
+                style={{ position: 'absolute', right: 0, top: '110%', zIndex: 100 }}
+              >
+                <button onClick={() => handleManabyMode('sonkeigo')}>尊敬語</button>
+                <button onClick={() => handleManabyMode('kenjougo')}>謙譲語</button>
+                <button onClick={() => handleManabyMode('business')}>ビジネスマナー</button>
+              </div>
+            )}
           </motion.div>
 
-          {/* バージョン情報 - 控えめに */}
-          <motion.div 
-            variants={itemVariants}
-            className={styles.menuVersion}
-          >
-            <motion.span
-              whileHover={{ 
-                color: 'var(--color-accent-cyan)',
-                textShadow: 'var(--glow-cyan)'
-              }}
-            >
-              v2.0.0 | monkeytype × THE FINALS
-            </motion.span>
-          </motion.div>
+          {/* ショートカットヘルプ */}
+          <PortalShortcut shortcuts={[
+            { key: 'Space', label: 'Start Game' },
+            { key: 'Alt+R', label: 'Ranking' }
+          ]} />
         </motion.div>
       </div>
 
-      {/* ショートカットヘルプ */}
-      <PortalShortcut shortcuts={[
-        { key: 'Space', label: 'Start Game' },
-        { key: 'Alt+R', label: 'Ranking' }
-      ]} />
+      {/* バージョン情報 - 控えめに */}
+      <motion.div 
+        variants={itemVariants}
+        className={styles.menuVersion}
+      >
+        <motion.span
+          whileHover={{ 
+            color: 'var(--color-accent-cyan)',
+            textShadow: 'var(--glow-cyan)'
+          }}
+        >
+          v2.0.0 | monkeytype × THE FINALS
+        </motion.span>
+      </motion.div>
     </div>
   );
 };

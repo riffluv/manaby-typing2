@@ -259,3 +259,130 @@
     padding: 0.7rem 0.2rem;
   }
 }
+
+.adminModalOverlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  background: rgba(0, 0, 0, 0.7);
+  z-index: 2000;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+.adminModal {
+  background: rgba(20, 20, 30, 0.98);
+  border-radius: 1.2rem;
+  box-shadow: 0 0 40px var(--color-accent-cyan);
+  padding: 2.5rem 2rem 2rem 2rem;
+  min-width: 320px;
+  max-width: 95vw;
+  color: var(--color-text-primary);
+  display: flex;
+  flex-direction: column;
+  gap: 2rem;
+  align-items: center;
+}
+.adminModal h2 {
+  font-size: 1.5rem;
+  color: var(--color-accent-cyan);
+  margin-bottom: 1rem;
+  text-shadow: var(--glow-cyan);
+}
+.adminModal label {
+  font-size: 1rem;
+  margin-bottom: 0.5rem;
+  color: var(--color-accent-neon);
+}
+.adminModal input[type="number"] {
+  font-size: 1.1rem;
+  padding: 0.5rem 1rem;
+  border-radius: 0.5rem;
+  border: 1px solid var(--color-accent-cyan);
+  background: #181c22;
+  color: var(--color-accent-cyan);
+  width: 5rem;
+  margin-left: 0.5rem;
+}
+.adminModal .admin-actions {
+  display: flex;
+  gap: 1.5rem;
+  margin-top: 1.5rem;
+}
+.adminModal .admin-btn {
+  background: var(--gradient-cyber);
+  color: var(--color-base-black);
+  border: none;
+  border-radius: 0.5rem;
+  font-size: 1rem;
+  padding: 0.7rem 1.5rem;
+  cursor: pointer;
+  box-shadow: var(--glow-cyan);
+  transition: filter 0.2s;
+}
+.adminModal .admin-btn:disabled {
+  opacity: 0.5;
+  filter: grayscale(1);
+  cursor: not-allowed;
+}
+.adminModal .admin-btn:hover:not(:disabled) {
+  filter: brightness(1.2);
+}
+.adminModal .admin-danger {
+  background: linear-gradient(90deg, #ff073a, #b466f2);
+  color: #fff;
+  box-shadow: var(--glow-error);
+}
+.adminModal .admin-close {
+  position: absolute;
+  top: 1rem;
+  right: 1.5rem;
+  font-size: 1.5rem;
+  color: var(--color-accent-cyan);
+  background: none;
+  border: none;
+  cursor: pointer;
+}
+.adminModal .admin-status {
+  margin-top: 1rem;
+  font-size: 0.95rem;
+  color: var(--color-text-muted);
+}
+
+.manabyDropdown {
+  position: absolute;
+  right: 0;
+  top: 110%;
+  background: var(--color-bg-dark, #181c24);
+  border: 1px solid var(--color-accent-cyan, #00f5ff);
+  border-radius: 8px;
+  box-shadow: 0 4px 32px rgba(0,245,255,0.08);
+  z-index: 100;
+  min-width: 180px;
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+  padding: 1rem;
+  animation: fadeInDropdown 0.18s cubic-bezier(0.4,0,0.2,1);
+}
+.manabyDropdown button {
+  background: none;
+  border: none;
+  color: var(--color-accent-cyan, #00f5ff);
+  font-size: 1.1rem;
+  padding: 0.5rem 0;
+  text-align: left;
+  cursor: pointer;
+  transition: color 0.2s, background 0.2s;
+  border-radius: 4px;
+}
+.manabyDropdown button:hover {
+  color: var(--color-accent-neon, #39ff14);
+  background: rgba(0,245,255,0.08);
+}
+@keyframes fadeInDropdown {
+  from { opacity: 0; transform: translateY(-10px); }
+  to { opacity: 1; transform: translateY(0); }
+}

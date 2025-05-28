@@ -87,3 +87,34 @@ export async function getRankingEntries(topN = 30, mode: 'normal' | 'hard' = 'no
     throw e;
   }
 }
+
+// ランキング全削除（モード指定）
+export async function deleteRankingEntriesByMode(mode: 'normal' | 'hard') {
+  try {
+    const q = query(
+      collection(db, COLLECTION),
+      // Firestoreのwhereでmode一致を抽出
+      // Firestore v9: whereはimportが必要
+      // ここではimport済みと仮定
+      // import { where } from 'firebase/firestore';
+      // where('mode', '==', mode)
+    );
+    const snap = await getDocs(q);
+    const batch = (await import('firebase/firestore')).writeBatch(db);
+    let count = 0;
+    snap.docs.forEach(doc => {
+      const data = doc.data();
+      if (data.mode === mode) {
+        batch.delete(doc.ref);
+        count++;
+      }
+    });
+    if (count > 0) {
+      await batch.commit();
+    }
+    return count;
+  } catch (e) {
+    console.error('[Firestore] ランキング削除エラー', e);
+    throw e;
+  }
+}

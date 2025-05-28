@@ -22,11 +22,13 @@ interface TypingGameState {
     displayChars: string[];
   };
   mode: TypingMode;
+  questionCount: number; // 出題数を可変に
   
   // アクション
   setGameStatus: (status: 'ready' | 'playing' | 'finished') => void;
   setCurrentWordIndex: (index: number) => void;
   setMode: (mode: TypingMode) => void;
+  setQuestionCount: (count: number) => void;
   resetGame: () => void;
   advanceToNextWord: () => void;
   setupCurrentWord: () => void; // 現在の単語をセットアップする
@@ -49,7 +51,8 @@ const initialTypingGameState = {
   gameStatus: 'ready' as const,
   currentWordIndex: 0,
   currentWord: initialCurrentWord,
-  mode: 'normal' as TypingMode
+  mode: 'normal' as TypingMode,
+  questionCount: 8 // デフォルト8問
 };
 
 // Zustandストアの作成
@@ -67,6 +70,8 @@ const useTypingGameStoreBase = create<TypingGameState>((set, get) => ({
   
   setMode: (mode) => set({ mode }),
   
+  setQuestionCount: (count) => set({ questionCount: count }),
+  
   resetGame: () => {
     set({ 
       gameStatus: 'ready',
@@ -76,10 +81,10 @@ const useTypingGameStoreBase = create<TypingGameState>((set, get) => ({
   },
   
   advanceToNextWord: () => {
-    const { currentWordIndex, mode } = get();
+    const { currentWordIndex, mode, questionCount } = get();
     const list = mode === 'hard' ? require('@/data/hardQuestions').hardQuestions : wordList;
-    // 8問で終了（0〜7まで出題、8問目終了でリザルト）
-    if (currentWordIndex + 1 >= 8 || currentWordIndex + 1 >= list.length) {
+    // questionCount問で終了
+    if (currentWordIndex + 1 >= questionCount || currentWordIndex + 1 >= list.length) {
       set({ gameStatus: 'finished' });
     } else {
       set({ currentWordIndex: currentWordIndex + 1 });
@@ -119,6 +124,7 @@ export const useGameStatus = () => useTypingGameStoreBase((state) => state.gameS
 export const useCurrentWord = () => useTypingGameStoreBase((state) => state.currentWord);
 export const useCurrentWordIndex = () => useTypingGameStoreBase((state) => state.currentWordIndex);
 export const useWordListLength = () => wordList.length;
+export const useQuestionCount = () => useTypingGameStoreBase((state) => state.questionCount);
 
 // 特定の用途に合わせたセレクター（表示のみに必要なもの）
 let lastJapanese = '';
