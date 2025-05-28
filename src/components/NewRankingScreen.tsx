@@ -72,7 +72,7 @@ const NewRankingScreen: React.FC<NewRankingScreenProps> = ({ onGoMenu }) => {
       handler: (e) => { e.preventDefault(); onGoMenu(); },
     },
   ], [onGoMenu]);  return (
-    <div className="ranking-screen">
+    <main className="ranking-screen">
       <motion.div
         className="ranking-container"
         initial="hidden"
@@ -82,7 +82,6 @@ const NewRankingScreen: React.FC<NewRankingScreenProps> = ({ onGoMenu }) => {
         {/* ヘッダー - サイバーパンク風 */}
         <motion.div variants={itemVariants} className="ranking-header">
           <h1 className="ranking-title">RANKING</h1>
-          <p className="ranking-subtitle">CYBER TYPING ARENA LEADERBOARD</p>
         </motion.div>
         
         {/* 難易度選択 - monkeytype風 */}
@@ -147,7 +146,7 @@ const NewRankingScreen: React.FC<NewRankingScreenProps> = ({ onGoMenu }) => {
       </motion.div>
       
       <PortalShortcut shortcuts={[{ key: 'Esc', label: '戻る' }]} />
-    </div>
+    </main>
   );
 };
 
