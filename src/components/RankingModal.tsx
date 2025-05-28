@@ -2,7 +2,6 @@
 
 import { createPortal } from 'react-dom';
 import { motion, AnimatePresence } from 'framer-motion';
-import styles from '@/styles/RankingModal.module.css';
 
 interface RankingModalProps {
   show: boolean;
@@ -18,6 +17,7 @@ interface RankingModalProps {
 
 /**
  * ランキング登録用モーダルコンポーネント
+ * monkeytype × THE FINALS サイバーパンク美学
  */
 export default function RankingModal({
   show,
@@ -33,52 +33,52 @@ export default function RankingModal({
   if (!show || typeof window === 'undefined') return null;
 
   return createPortal(
-    <div className={styles.overlay}>
+    <div className="modal-overlay">
       <AnimatePresence mode="wait">
         <motion.div
           key={done ? 'done' : 'form'}
-          className={styles.modal}
-          initial={{ opacity: 0, scale: 0.95 }}
-          animate={{ opacity: 1, scale: 1 }}
-          exit={{ opacity: 0, scale: 0.95 }}
-          transition={{ duration: 0.18 }}
+          className="modal-container"
+          initial={{ opacity: 0, scale: 0.95, y: 20 }}
+          animate={{ opacity: 1, scale: 1, y: 0 }}
+          exit={{ opacity: 0, scale: 0.95, y: 20 }}
+          transition={{ duration: 0.3, ease: [0.25, 0.1, 0.25, 1] }}
           layout
         >
-          <h3 className={styles.title}>ランキング登録</h3>
+          <h3 className="modal-title">RANKING REGISTRATION</h3>
           {done ? (
-            <div className={styles.doneContainer}>
-              <div className={styles.successMessage}>登録が完了しました！</div>
+            <div className="modal-success">
+              <div className="success-message">登録が完了しました！</div>
               <button 
                 onClick={onClose} 
-                className={styles.closeButton}
+                className="btn-primary"
               >
                 閉じる
               </button>
             </div>
           ) : (
-            <form className={styles.form} onSubmit={onSubmit}>
+            <form className="modal-form" onSubmit={onSubmit}>
               <input
                 type="text"
                 placeholder="名前を入力（10文字以内）"
                 maxLength={10}
                 value={name}
                 onChange={e => onChangeName(e.target.value)}
-                className={styles.input}
+                className="modal-input"
                 disabled={registering || isScoreRegistered}
               />
-              <div className={styles.buttonGroup}>
+              <div className="modal-actions">
                 <button
                   type="submit"
-                  className={styles.submitButton}
+                  className="btn-primary"
                   disabled={registering || !name.trim() || isScoreRegistered}
                 >
                   {registering ? '登録中...' : '登録する'}
                 </button>
-                {error && <div className={styles.errorMessage}>{error}</div>}
+                {error && <div className="error-message">{error}</div>}
                 <button 
                   type="button" 
                   onClick={onClose} 
-                  className={styles.cancelButton}
+                  className="btn-secondary"
                 >
                   キャンセル
                 </button>

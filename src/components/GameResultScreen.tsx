@@ -5,7 +5,6 @@ import type { GameScoreLog } from '@/types/score';
 import type { PerWordScoreLog } from '@/types/score';
 import { useEffect, useState, useRef } from 'react';
 import { useGlobalShortcuts } from '@/hooks/useGlobalShortcuts';
-import styles from '@/styles/ModernGameResult.module.css';
 import GameResultStat from './GameResultStat';
 
 interface GameResultScreenProps {
@@ -26,7 +25,7 @@ interface GameResultScreenProps {
 
 /**
  * モダンなゲーム結果表示画面コンポーネント
- * MonkeyTypeとFinalsのUIを参考にしたデザイン
+ * monkeytype × THE FINALS のサイバーパンク美学を融合
  */
 export default function GameResultScreen({
   resultScore,
@@ -183,66 +182,81 @@ export default function GameResultScreen({
       }
     })
   };
-
   return (
     <motion.div 
-      className={styles.container}
+      className="result-screen"
       initial={{ opacity: 0, scale: 0.98 }}
       animate={{ opacity: 1, scale: 1 }}
       transition={{ duration: 0.4, ease: [0.165, 0.84, 0.44, 1] }}
-    >      {/* 背景の装飾要素 */}
-      <div className={styles.backgroundElements}>
-        <div className={styles.grid}></div>
-        <div className={`${styles.glowElement} ${styles.glow1}`}></div>
-        <div className={`${styles.glowElement} ${styles.glow2}`}></div>
-        <div className={`${styles.accent} ${styles.accentTop}`}></div>
-        <div className={`${styles.accent} ${styles.accentBottom}`}></div>
-        <div className={`${styles.corner} ${styles.cornerTopLeft}`}></div>
-        <div className={`${styles.corner} ${styles.cornerTopRight}`}></div>
-        <div className={`${styles.corner} ${styles.cornerBottomLeft}`}></div>
-        <div className={`${styles.corner} ${styles.cornerBottomRight}`}></div>
-      </div>
-      
-      {/* タイトル */}
+    >
+      {/* タイトル - サイバーパンク風 */}
       <motion.h2 
-        className={styles.title}
+        className="result-title"
         initial={{ opacity: 0, y: -20 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ delay: 0.2, duration: 0.5 }}
       >
-        test complete
+        TEST COMPLETE
       </motion.h2>
       
-      {/* メインスコア表示 */}
-      <div className={styles.statsContainer}>
+      {/* メインスコア表示 - グリッドレイアウト */}
+      <div className="stats-grid">
         <AnimatePresence>
           {resultScore ? (
             <>
-              <GameResultStat label="kpm" value={kpmCount} valueClass={styles.valueAmber} custom={0} showContent={showContent} statVariants={statVariants} />
-              <GameResultStat label="accuracy" value={accuracyCount} valueClass={styles.valueAmber} custom={1} showContent={showContent} statVariants={statVariants} />
-              <GameResultStat label="correct" value={correctCount} valueClass={styles.valueGreen} custom={2} showContent={showContent} statVariants={statVariants} />
-              <GameResultStat label="miss" value={missCount} valueClass={styles.valueRed} custom={3} showContent={showContent} statVariants={statVariants} />
+              <GameResultStat 
+                label="kpm" 
+                value={kpmCount} 
+                valueClass="stat-value-primary" 
+                custom={0} 
+                showContent={showContent} 
+                statVariants={statVariants} 
+              />
+              <GameResultStat 
+                label="accuracy" 
+                value={accuracyCount} 
+                valueClass="stat-value-primary" 
+                custom={1} 
+                showContent={showContent} 
+                statVariants={statVariants} 
+              />
+              <GameResultStat 
+                label="correct" 
+                value={correctCount} 
+                valueClass="stat-value-success" 
+                custom={2} 
+                showContent={showContent} 
+                statVariants={statVariants} 
+              />
+              <GameResultStat 
+                label="miss" 
+                value={missCount} 
+                valueClass="stat-value-error" 
+                custom={3} 
+                showContent={showContent} 
+                statVariants={statVariants} 
+              />
             </>
           ) : scoreLog.length > 0 ? (
             <motion.div 
-              className={styles.calculatingContainer}
+              className="calculating-container"
               initial={{ opacity: 0 }}
               animate={{ opacity: 1 }}
               transition={{ delay: 0.3, duration: 0.5 }}
             >
-              <div className={styles.calculatingText}>計算中...</div>
+              <div className="calculating-text">計算中...</div>
               <motion.button 
-                className={styles.calculateButton}
+                className="btn-primary"
                 onClick={onCalculateFallbackScore}
-                whileHover={{ y: -3 }}
-                whileTap={{ y: 0 }}
+                whileHover={{ y: -3, scale: 1.02 }}
+                whileTap={{ y: 0, scale: 0.98 }}
               >
                 スコアを表示
               </motion.button>
             </motion.div>
           ) : (
             <motion.div 
-              className={styles.calculatingText}
+              className="calculating-text"
               initial={{ opacity: 0 }}
               animate={{ opacity: 1 }}
               transition={{ delay: 0.3 }}
@@ -252,31 +266,31 @@ export default function GameResultScreen({
           )}
         </AnimatePresence>
       </div>
-        {/* パフォーマンスメッセージ */}
+
+      {/* パフォーマンスメッセージ */}
       {resultScore && (
         <motion.div 
-          className={styles.perfMessageContainer}          initial={{ opacity: 0, y: 10 }}
+          className="performance-message"
+          initial={{ opacity: 0, y: 10 }}
           animate={{ opacity: 1, y: 0 }}
-          transition={{ delay: 1.2, duration: 0.4 }} /* 表示を早める */
+          transition={{ delay: 1.2, duration: 0.4 }}
         >
-          <p className={styles.perfMessage}>
-            <span className={styles.perfMessageHighlight}>{perfMessage.message}</span>
-          </p>
+          <span className="message-highlight">{perfMessage.message}</span>
         </motion.div>
       )}
       
       {/* アクションボタン */}
-      <div className={styles.buttonContainer}>
+      <div className="result-actions">
         {resultScore && !isScoreRegistered && (
           <motion.button 
             onClick={onOpenRankingModal} 
-            className={`${styles.actionButton} ${styles.registerButton}`}
+            className="btn-primary"
             custom={0}
             initial="hidden"
             animate={showContent ? "visible" : "hidden"}
             variants={buttonVariants}
-            whileHover={{ y: -3 }}
-            whileTap={{ y: 0 }}
+            whileHover={{ y: -3, scale: 1.02 }}
+            whileTap={{ y: 0, scale: 0.98 }}
           >
             ランキング登録
           </motion.button>
@@ -284,7 +298,7 @@ export default function GameResultScreen({
         
         {isScoreRegistered && (
           <motion.div 
-            className={styles.registeredText}
+            className="registered-text"
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             transition={{ delay: 0.7 }}
@@ -295,39 +309,39 @@ export default function GameResultScreen({
         
         <motion.button 
           onClick={onReset} 
-          className={`${styles.actionButton} ${styles.retryButton}`}
+          className="btn-secondary"
           custom={1}
           initial="hidden"
           animate={showContent ? "visible" : "hidden"}
           variants={buttonVariants}
-          whileHover={{ y: -3 }}
-          whileTap={{ y: 0 }}
+          whileHover={{ y: -3, scale: 1.02 }}
+          whileTap={{ y: 0, scale: 0.98 }}
         >
           もう一度プレイ
         </motion.button>
         
         <motion.button 
           onClick={onGoRanking} 
-          className={`${styles.actionButton} ${styles.rankingButton}`}
+          className="btn-secondary"
           custom={2}
           initial="hidden"
           animate={showContent ? "visible" : "hidden"}
           variants={buttonVariants}
-          whileHover={{ y: -3 }}
-          whileTap={{ y: 0 }}
+          whileHover={{ y: -3, scale: 1.02 }}
+          whileTap={{ y: 0, scale: 0.98 }}
         >
           ランキングへ
         </motion.button>
         
         <motion.button 
           onClick={onGoMenu} 
-          className={`${styles.actionButton} ${styles.menuButton}`}
+          className="btn-secondary"
           custom={3}
           initial="hidden"
           animate={showContent ? "visible" : "hidden"}
           variants={buttonVariants}
-          whileHover={{ y: -3, opacity: 0.9 }}
-          whileTap={{ y: 0 }}
+          whileHover={{ y: -3, scale: 1.02, opacity: 0.9 }}
+          whileTap={{ y: 0, scale: 0.98 }}
         >
           メニューへ
         </motion.button>

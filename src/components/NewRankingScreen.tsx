@@ -5,7 +5,6 @@ import { getRankingEntries, RankingEntry } from '@/lib/rankingManaby2';
 import { useGlobalShortcuts } from '@/hooks/useGlobalShortcuts';
 import PortalShortcut from '@/components/PortalShortcut';
 import NewRankingTableRow from './NewRankingTableRow';
-import styles from '@/styles/NewRankingScreen.module.css';
 
 interface NewRankingScreenProps {
   onGoMenu: () => void;
@@ -77,76 +76,76 @@ const NewRankingScreen: React.FC<NewRankingScreenProps> = ({ onGoMenu }) => {
       key: 'Escape',
       handler: (e) => { e.preventDefault(); onGoMenu(); },
     },
-  ], [onGoMenu]);
-  return (
-    <div className={styles.container}>
-      {/* 背景エフェクト */}
-      <div className={styles.backgroundElements}></div>
+  ], [onGoMenu]);  return (
+    <div className="ranking-screen">
       <motion.div
-        className={styles.content}
+        className="ranking-container"
         initial="hidden"
         animate="visible"
         variants={containerVariants}
       >
-        {/* ヘッダー */}
-        <motion.div variants={itemVariants} className={styles.header}>
-          <h1 className={styles.title}>ranking</h1>
-          <p className={styles.subtitle}>MonkeyType + Finals inspired</p>
+        {/* ヘッダー - サイバーパンク風 */}
+        <motion.div variants={itemVariants} className="ranking-header">
+          <h1 className="ranking-title">RANKING</h1>
+          <p className="ranking-subtitle">CYBER TYPING ARENA LEADERBOARD</p>
         </motion.div>
         
-        {/* 難易度選択 */}
-        <motion.div variants={itemVariants} className={styles.difficultySelector}>
+        {/* 難易度選択 - monkeytype風 */}
+        <motion.div variants={itemVariants} className="difficulty-selector">
           {['normal', 'hard'].map((difficulty) => (
             <button
               key={difficulty}
               onClick={() => handleDifficultyChange(difficulty)}
-              className={`${styles.difficultyButton} ${
-                activeDifficulty === difficulty ? styles.difficultyButtonActive : ''
+              className={`btn-secondary ${
+                activeDifficulty === difficulty ? 'btn-active' : ''
               }`}
             >
-              {difficulty === 'normal' ? '普通' : '難しい'}
+              {difficulty === 'normal' ? 'NORMAL' : 'HARD'}
             </button>
           ))}
         </motion.div>
         
         {/* ランキングテーブル */}
-        <motion.div variants={itemVariants} className={styles.rankingContainer}>
+        <motion.div variants={itemVariants} className="ranking-table-container">
           {loading ? (
-            <div className={styles.loadingContainer}>
-              <div className={styles.loadingText}>ランキング読み込み中</div>
-              <div className={styles.loadingSpinner}></div>
+            <div className="loading-state">
+              <div className="loading-text">ランキング読み込み中</div>
+              <div className="loading-spinner"></div>
             </div>
           ) : error ? (
-            <div className={styles.errorContainer}>
-              <div className={styles.errorText}>{error}</div>
+            <div className="error-state">
+              <div className="error-text">{error}</div>
               <button 
                 onClick={fetchRankings}
-                className={styles.retryButton}
+                className="btn-primary"
               >
                 リトライ
               </button>
             </div>
           ) : rankings.length === 0 ? (
-            <div className={styles.emptyContainer}>
-              <h3 className={styles.emptyTitle}>まだスコアがありません</h3>
-              <p className={styles.emptyMessage}>
+            <div className="empty-state">
+              <h3 className="empty-title">まだスコアがありません</h3>
+              <p className="empty-message">
                 ゲームをプレイして最初のランキング入りを目指しましょう！
               </p>
             </div>
-          ) : (            <table className={styles.table}>
-              <thead className={styles.tableHeader}>
+          ) : (
+            <table className="ranking-table">
+              <thead className="table-header">
                 <tr>
-                  <th className={styles.tableHeaderCell}>順位</th>
-                  <th className={styles.tableHeaderCell}>プレイヤー</th>
-                  <th className={styles.tableHeaderCell}>KPM</th>
-                  <th className={styles.tableHeaderCell}>正確率</th>
-                  <th className={styles.tableHeaderCell}>正解</th>
-                  <th className={styles.tableHeaderCell}>ミス</th>
+                  <th className="table-header-cell">順位</th>
+                  <th className="table-header-cell">プレイヤー</th>
+                  <th className="table-header-cell">KPM</th>
+                  <th className="table-header-cell">正確率</th>
+                  <th className="table-header-cell">正解</th>
+                  <th className="table-header-cell">ミス</th>
                 </tr>
               </thead>
-              <tbody>{rankings.map((entry, index) => (
+              <tbody>
+                {rankings.map((entry, index) => (
                   <NewRankingTableRow entry={entry} index={index} key={index} />
-                ))}</tbody>
+                ))}
+              </tbody>
             </table>
           )}
         </motion.div>

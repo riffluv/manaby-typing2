@@ -1,5 +1,4 @@
 import React from 'react';
-import styles from '@/styles/ScreenLayout.module.css';
 
 type ScreenLayoutProps = {
   children: React.ReactNode;
@@ -26,14 +25,14 @@ const ScreenLayout: React.FC<ScreenLayoutProps> = ({
 
   return (
     <div 
-      className={`${styles.screenLayout} ${className}`}
+      className={`screen-layout ${className}`}
       style={{ border: 'none' }}
     >
       {/* 画面タイプに応じた背景 */}
       {backgroundComponents[variant]}
       
       {/* コンテンツエリア */}
-      <div className={styles.contentArea}>
+      <div className="content-area">
         {children}
       </div>
     </div>

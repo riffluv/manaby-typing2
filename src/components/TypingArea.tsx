@@ -1,5 +1,4 @@
 import React, { memo, useMemo } from 'react';
-import styles from '@/styles/TypingCharacters.module.css';
 import type { TypingChar } from '@/utils/japaneseUtils';
 import type { KanaDisplay } from '@/types/typing';
 
@@ -32,18 +31,18 @@ function getCharClass(
   acceptedLength: number
 ): string {
   // 入力済みのかな: すべての文字が completed
-  if (kanaIndex < currentKanaIndex) return styles.completed;
+  if (kanaIndex < currentKanaIndex) return 'char-completed';
   
   // 現在入力中のかな
   if (kanaIndex === currentKanaIndex) {
     // すでに受け入れられた文字
-    if (charIndex < acceptedLength) return styles.completed;
+    if (charIndex < acceptedLength) return 'char-completed';
     // 次に入力すべき文字
-    if (charIndex === acceptedLength) return styles.current;
+    if (charIndex === acceptedLength) return 'char-current';
   }
   
   // 上記以外は未入力文字
-  return styles.pending;
+  return 'char-pending';
 }
 
 /**
@@ -83,7 +82,7 @@ const TypingArea: React.FC<TypingAreaProps> = memo(({
   // 効率的なレンダリングとアクセシビリティを両立
   return (
     <div
-      className={styles.typingArea}
+      className="typing-area"
       role="region"
       aria-label="タイピング入力欄"
       aria-live="polite"
@@ -109,10 +108,7 @@ const TypingArea: React.FC<TypingAreaProps> = memo(({
         return (
           <span
             key={idx}
-            className={[
-              styles.typingChar,
-              isCurrent ? styles.current : isCompleted ? styles.completed : styles.pending
-            ].join(' ')}
+            className={`typing-char ${stateClass}`}
             aria-current={isCurrent ? 'true' : undefined}
             aria-label={`${char} (${stateText})`}
             data-state={isCurrent ? 'current' : isCompleted ? 'completed' : 'pending'}
