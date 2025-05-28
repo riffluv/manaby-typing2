@@ -92,7 +92,13 @@ const NewRankingScreen: React.FC<NewRankingScreenProps> = ({ onGoMenu }) => {
             <button
               key={difficulty}
               onClick={() => handleDifficultyChange(difficulty)}
-              className={`btn-secondary ${activeDifficulty === difficulty ? 'btn-active' : ''}`}
+              className={
+                `${styles.difficultyTab} ` +
+                (activeDifficulty === difficulty
+                  ? styles.difficultyTabActive
+                  : styles.difficultyTabInactive)
+              }
+              type="button"
             >
               {difficulty === 'normal' ? 'NORMAL' : 'HARD'}
             </button>
