@@ -297,3 +297,67 @@ img {
   max-width: 100%;
   display: block;
 }
+
+/* --- すべてのアニメーション・トランジションを無効化（!importantなし） --- */
+*, *::before, *::after {
+  transition: none;
+  animation: none;
+}
+
+/* --- すべての擬似クラスの装飾をリセット（!importantなし） --- */
+*:hover,
+*:focus,
+*:active,
+*:visited,
+*:link,
+*:target {
+  box-shadow: none;
+  outline: none;
+  text-decoration: none;
+  border: none;
+  transform: none;
+}
+
+/* --- テキストのアニメーションも完全に無効化 --- */
+@keyframes none {}
+
+/* --- 主要UIクラスのアニメーション・トランジションもリセット（!importantなし） --- */
+.btn,
+.menuButton,
+.fade-in,
+.fadeIn,
+.slide-up,
+.actionButton,
+[class*="motion"],
+[class*="fade"],
+[class*="menuButton"],
+[class*="btn"],
+button,
+.motion,
+.motion-button,
+.motion-div {
+  transition: none;
+  animation: none;
+  transform: none;
+  opacity: 1;
+  box-shadow: none;
+  filter: none;
+  scale: 1;
+}
+
+button:active,
+button:hover,
+.btn:active,
+.btn:hover,
+.menuButton:active,
+.menuButton:hover,
+.actionButton:active,
+.actionButton:hover {
+  transition: none;
+  animation: none;
+  transform: none;
+  opacity: 1;
+  box-shadow: none;
+  filter: none;
+  scale: 1;
+}
