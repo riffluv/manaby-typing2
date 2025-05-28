@@ -21,3 +21,29 @@
   flex-direction: column;
   align-items: center;
 }
+
+/* --- Responsive Design: Tablet & Mobile --- */
+@media (max-width: 1024px) {
+  .typingGameScreen {
+    padding-top: 4vh;
+  }
+  .gameScreen {
+    max-width: 90vw;
+    padding: 2rem 1rem;
+  }
+}
+@media (max-width: 768px) {
+  .typingGameScreen {
+    padding-top: 2vh;
+  }
+  .gameScreen {
+    max-width: 100vw;
+    padding: 1.2rem 0.2rem;
+  }
+}
+@media (max-width: 480px) {
+  .gameScreen {
+    padding: 0.7rem 0.05rem;
+    font-size: 0.95rem;
+  }
+}

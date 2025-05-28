@@ -74,7 +74,7 @@ const NewRankingScreen: React.FC<NewRankingScreenProps> = ({ onGoMenu }) => {
       handler: (e) => { e.preventDefault(); onGoMenu(); },
     },
   ], [onGoMenu]);  return (
-    <div className={screenStyles.screenWrapper}>
+    <div className={styles.rankingScreen}>
       <motion.div
         className={styles.rankingContainer}
         initial="hidden"

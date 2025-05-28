@@ -7,20 +7,22 @@
   width: 100vw;
   padding-top: 8vh;
   box-sizing: border-box;
+  /* 背景色はglobals.cssやbody側に任せる。ここでは指定しない */
 }
 
 .rankingContainer {
   width: 100vw;
-  min-height: 92vh;
   max-width: none;
+  min-height: 92vh;
+  margin: 0;
   background: none;
   border-radius: 0;
   box-shadow: none;
   padding: 0;
-  margin: 0;
   display: flex;
   flex-direction: column;
   align-items: center;
+  justify-content: flex-start;
 }
 
 .rankingHeader {
@@ -51,19 +53,24 @@
 }
 
 .rankingTableContainer {
-  width: 100%;
+  width: 100vw;
+  max-width: none;
   overflow-x: auto;
+  display: flex;
+  justify-content: center;
 }
 
 .rankingTable {
-  width: 100%;
-  border-collapse: separate;
-  border-spacing: 0;
-  background: rgba(20, 20, 20, 0.95);
+  width: 90vw;
+  max-width: 900px;
+  min-width: 320px;
+  margin: 0 auto 2rem auto;
   border-radius: 12px;
   box-shadow: 0 2px 16px rgba(0,245,255,0.06);
+  background: rgba(20, 20, 20, 0.95);
+  border-collapse: separate;
+  border-spacing: 0;
   overflow: hidden;
-  margin-bottom: 2rem;
 }
 
 .tableHeader {
@@ -121,4 +128,75 @@
 @keyframes spin {
   0% { transform: rotate(0deg); }
   100% { transform: rotate(360deg); }
+}
+
+/* --- Responsive Design: Tablet & Mobile --- */
+@media (max-width: 1024px) {
+  .rankingScreen {
+    padding-top: 4vh;
+  }
+  .rankingHeader {
+    margin-bottom: 1.2rem;
+  }
+  .rankingTitle {
+    font-size: 2rem;
+  }
+  .rankingTable {
+    font-size: 0.98rem;
+  }
+}
+
+@media (max-width: 768px) {
+  .rankingScreen {
+    padding-top: 2vh;
+  }
+  .rankingContainer {
+    min-height: 98vh;
+    padding: 0 0.5rem;
+  }
+  .rankingHeader {
+    margin-bottom: 0.8rem;
+  }
+  .rankingTitle {
+    font-size: 1.3rem;
+    letter-spacing: 0.06em;
+  }
+  .difficultySelector {
+    gap: 0.5rem;
+    margin-bottom: 1.2rem;
+  }
+  .rankingTableContainer {
+    padding: 0 0.2rem;
+  }
+  .rankingTable {
+    width: 98vw;
+    min-width: 0;
+    font-size: 0.95rem;
+  }
+  .tableHeaderCell {
+    font-size: 0.98rem;
+    padding: 0.7rem 0.2rem;
+  }
+  .rankingTable td {
+    font-size: 0.95rem;
+    padding: 0.7rem 0.2rem;
+  }
+}
+
+@media (max-width: 480px) {
+  .rankingTitle {
+    font-size: 1.05rem;
+  }
+  .rankingTable {
+    width: 100vw;
+    font-size: 0.9rem;
+  }
+  .tableHeaderCell {
+    font-size: 0.9rem;
+    padding: 0.5rem 0.1rem;
+  }
+  .rankingTable td {
+    font-size: 0.9rem;
+    padding: 0.5rem 0.1rem;
+  }
 }

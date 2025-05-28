@@ -85,7 +85,7 @@ const MainMenu: React.FC<MainMenuProps> = ({ onStart, onRetry, onRanking }) => {
           <h1 className={styles.mainMenuTitle}>
             manabytype
           </h1>
-          <p style={{ color: 'var(--color-text-muted)', fontSize: '1.1rem', fontFamily: 'var(--font-ui)', fontWeight: 500, letterSpacing: '0.1em', textTransform: 'uppercase' }}>
+          <p className={styles.menuTitleSub}>
             CYBER TYPING ARENA
           </p>
         </div>
@@ -94,35 +94,20 @@ const MainMenu: React.FC<MainMenuProps> = ({ onStart, onRetry, onRanking }) => {
           initial="hidden"
           animate="visible"
           variants={containerVariants}
-          style={{
-            display: 'flex',
-            flexDirection: 'column',
-            alignItems: 'center',
-            gap: 'var(--space-2xl)',
-            maxWidth: '800px',
-            width: '100%',
-            padding: 'var(--space-xl)'
-          }}
+          className={styles.menuContent}
         >
           {/* メインスタートボタン - THE FINALS風 */}
           <motion.div variants={itemVariants}>
             <motion.button
-              className="btn-primary gpu-accelerated"
+              className={`btn-primary gpu-accelerated ${styles.menuStartButton}`}
               onClick={handleStart}
               whileHover={{ 
                 scale: 1.05,
-                boxShadow: "var(--glow-cyan), 0 0 50px rgba(0, 245, 255, 0.4)"
+                boxShadow: "var(--glow-cyan), 0 0 3.125rem rgba(0, 245, 255, 0.4)"
               }}
               whileTap={{ 
                 scale: 0.98,
                 boxShadow: "var(--glow-cyan)"
-              }}
-              style={{
-                fontSize: '1.5rem',
-                padding: 'var(--space-lg) var(--space-2xl)',
-                minWidth: '300px',
-                position: 'relative',
-                overflow: 'hidden'
               }}
             >
               <motion.span
@@ -159,35 +144,14 @@ const MainMenu: React.FC<MainMenuProps> = ({ onStart, onRetry, onRanking }) => {
           {/* モード選択 - サイバーパンク風 */}
           <motion.div 
             variants={itemVariants}
-            style={{
-              display: 'flex',
-              flexDirection: 'column',
-              alignItems: 'center',
-              gap: 'var(--space-lg)',
-              width: '100%'
-            }}
+            className={styles.menuModeSection}
           >
-            <h2 style={{
-              color: 'var(--color-text-primary)',
-              fontSize: '1.5rem',
-              fontFamily: 'var(--font-ui)',
-              fontWeight: 600,
-              textTransform: 'uppercase',
-              letterSpacing: '0.1em',
-              marginBottom: 'var(--space-md)'
-            }}>
+            <h2 className={styles.menuModeTitle}>
               SELECT MODE
             </h2>
-            
-            <div style={{
-              display: 'grid',
-              gridTemplateColumns: 'repeat(2, 1fr)',
-              gap: 'var(--space-lg)',
-              width: '100%',
-              maxWidth: '500px'
-            }}>
+            <div className={styles.menuModeGrid}>
               <motion.button
-                className="btn-secondary cyber-border"
+                className={`btn-secondary cyber-border ${styles.menuModeButton} ${selectedMode === 'normal' ? styles.menuModeButtonNormal : styles.menuModeButtonInactiveNormal}`}
                 onClick={() => setSelectedMode('normal')}
                 whileHover={{ 
                   scale: 1.03,
@@ -197,21 +161,8 @@ const MainMenu: React.FC<MainMenuProps> = ({ onStart, onRetry, onRanking }) => {
                     : "var(--glow-purple)"
                 }}
                 whileTap={{ scale: 0.98, y: 0 }}
-                style={{
-                  padding: 'var(--space-lg)',
-                  position: 'relative',
-                  backgroundColor: selectedMode === 'normal' 
-                    ? 'rgba(57, 255, 20, 0.1)' 
-                    : 'transparent',
-                  borderColor: selectedMode === 'normal' 
-                    ? 'var(--color-accent-neon)' 
-                    : 'var(--color-accent-purple)',
-                  color: selectedMode === 'normal' 
-                    ? 'var(--color-accent-neon)' 
-                    : 'var(--color-accent-purple)'
-                }}
               >
-                <span style={{ fontSize: '1.2rem', fontWeight: 600 }}>NORMAL</span>
+                <span className={styles.menuModeButtonLabel}>NORMAL</span>
                 {selectedMode === 'normal' && (
                   <motion.div
                     initial={{ scale: 0 }}
@@ -232,7 +183,7 @@ const MainMenu: React.FC<MainMenuProps> = ({ onStart, onRetry, onRanking }) => {
               </motion.button>
 
               <motion.button
-                className="btn-secondary cyber-border"
+                className={`btn-secondary cyber-border ${styles.menuModeButton} ${selectedMode === 'hard' ? styles.menuModeButtonHard : styles.menuModeButtonInactiveHard}`}
                 onClick={() => setSelectedMode('hard')}
                 whileHover={{ 
                   scale: 1.03,
@@ -242,21 +193,8 @@ const MainMenu: React.FC<MainMenuProps> = ({ onStart, onRetry, onRanking }) => {
                     : "var(--glow-purple)"
                 }}
                 whileTap={{ scale: 0.98, y: 0 }}
-                style={{
-                  padding: 'var(--space-lg)',
-                  position: 'relative',
-                  backgroundColor: selectedMode === 'hard' 
-                    ? 'rgba(255, 7, 58, 0.1)' 
-                    : 'transparent',
-                  borderColor: selectedMode === 'hard' 
-                    ? 'var(--color-error)' 
-                    : 'var(--color-accent-purple)',
-                  color: selectedMode === 'hard' 
-                    ? 'var(--color-error)' 
-                    : 'var(--color-accent-purple)'
-                }}
               >
-                <span style={{ fontSize: '1.2rem', fontWeight: 600 }}>HARD</span>
+                <span className={styles.menuModeButtonLabel}>HARD</span>
                 {selectedMode === 'hard' && (
                   <motion.div
                     initial={{ scale: 0 }}
@@ -281,34 +219,21 @@ const MainMenu: React.FC<MainMenuProps> = ({ onStart, onRetry, onRanking }) => {
           {/* サブメニューボタン */}
           <motion.div 
             variants={itemVariants}
-            style={{
-              display: 'flex',
-              gap: 'var(--space-lg)',
-              marginTop: 'var(--space-xl)'
-            }}
+            className={styles.menuSubButtons}
           >
             <motion.button
-              className="btn-secondary"
+              className={`btn-secondary ${styles.menuSubButton}`}
               onClick={onRanking}
               whileHover={{ scale: 1.05, y: -2 }}
               whileTap={{ scale: 0.98 }}
-              style={{
-                padding: 'var(--space-md) var(--space-lg)',
-                fontSize: '1rem'
-              }}
             >
               RANKING
             </motion.button>
-            
             <motion.button
-              className="btn-secondary"
+              className={`btn-secondary ${styles.menuSubButton}`}
               onClick={onRetry}
               whileHover={{ scale: 1.05, y: -2 }}
               whileTap={{ scale: 0.98 }}
-              style={{
-                padding: 'var(--space-md) var(--space-lg)',
-                fontSize: '1rem'
-              }}
             >
               RETRY
             </motion.button>
@@ -317,15 +242,7 @@ const MainMenu: React.FC<MainMenuProps> = ({ onStart, onRetry, onRanking }) => {
           {/* バージョン情報 - 控えめに */}
           <motion.div 
             variants={itemVariants}
-            style={{
-              color: 'var(--color-text-muted)',
-              fontSize: '0.85rem',
-              fontFamily: 'var(--font-mono)',
-              fontWeight: 400,
-              marginTop: 'var(--space-lg)',
-              textAlign: 'center',
-              letterSpacing: '0.05em'
-            }}
+            className={styles.menuVersion}
           >
             <motion.span
               whileHover={{ 

@@ -43,3 +43,37 @@
   text-align: center;
   width: 100%;
 }
+
+/* --- Responsive Design: Tablet & Mobile --- */
+@media (max-width: 1024px) {
+  .resultScreen {
+    padding-top: 4vh;
+  }
+  .resultHeader {
+    margin-bottom: 1.2rem;
+  }
+  .resultTitle {
+    font-size: 1.7rem;
+  }
+}
+@media (max-width: 768px) {
+  .resultScreen {
+    padding-top: 2vh;
+  }
+  .resultContainer {
+    min-height: 98vh;
+    padding: 0 0.5rem;
+  }
+  .resultHeader {
+    margin-bottom: 0.8rem;
+  }
+  .resultTitle {
+    font-size: 1.1rem;
+    letter-spacing: 0.06em;
+  }
+}
+@media (max-width: 480px) {
+  .resultTitle {
+    font-size: 0.95rem;
+  }
+}
