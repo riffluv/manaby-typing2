@@ -211,6 +211,46 @@ header {
 }
 
 /* =====================================
+   HEADER STYLES - ORIGINAL FONT
+   ===================================== */
+.header {
+  display: flex;
+  align-items: center;
+  position: fixed;
+  top: 20px;
+  left: 20px;
+  z-index: 10000;
+  width: calc(100% - 40px);
+  background: none;
+  box-shadow: none;
+  border: none;
+  padding: 0;
+  margin: 0;
+}
+
+.logo-container {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.logo-image {
+  display: block;
+}
+
+.logo-text-container {
+  display: flex;
+}
+
+.logo-text {
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+  font-weight: bold;
+  font-size: 28px;
+  color: #d1d0c5;
+  text-shadow: 0 0 2px rgba(0, 0, 0, 0.5);
+}
+
+/* =====================================
    TYPOGRAPHY SYSTEM
    ===================================== */
 h1, h2, h3, h4, h5, h6 {
