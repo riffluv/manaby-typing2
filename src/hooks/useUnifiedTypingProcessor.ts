@@ -3,8 +3,7 @@
 import { useRef, useCallback, useState, useReducer, useEffect } from 'react';
 import { useTypingGameStore, useGameStatus } from '@/store/typingGameStore';
 import { useAudioStore } from '@/store/audioStore';
-import { TypingWord, KanaDisplay } from '@/types/typing';
-import { PerWordScoreLog } from '@/types/score';
+import { TypingWord, KanaDisplay, PerWordScoreLog } from '@/types';
 import KeyboardSoundUtils from '@/utils/KeyboardSoundUtils';
 
 // タイピング状態を定義

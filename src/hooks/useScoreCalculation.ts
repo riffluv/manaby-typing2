@@ -1,7 +1,7 @@
 'use client';
 
 import { useEffect, useCallback } from 'react';
-import type { PerWordScoreLog, GameScoreLog } from '@/types/score';
+import type { PerWordScoreLog, GameScoreLog } from '@/types';
 import type { ScoreWorkerRequest, ScoreWorkerResponse } from '@/workers/scoreWorker';
 
 // Worker管理（モジュールスコープでWorkerを一度だけ作成）

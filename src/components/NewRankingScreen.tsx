@@ -5,6 +5,8 @@ import { getRankingEntries, RankingEntry } from '@/lib/rankingManaby2';
 import { useGlobalShortcuts } from '@/hooks/useGlobalShortcuts';
 import PortalShortcut from '@/components/PortalShortcut';
 import NewRankingTableRow from './NewRankingTableRow';
+import TabButton from './common/TabButton';
+import CommonButton from './common/CommonButton';
 import styles from './NewRankingScreen.module.css';
 import screenStyles from './common/ScreenWrapper.module.css';
 
@@ -89,19 +91,14 @@ const NewRankingScreen: React.FC<NewRankingScreenProps> = ({ onGoMenu }) => {
         {/* 難易度選択 - monkeytype風 */}
         <motion.div variants={itemVariants} className={styles.difficultySelector}>
           {['normal', 'hard'].map((difficulty) => (
-            <button
+            <TabButton
               key={difficulty}
+              active={activeDifficulty === difficulty}
               onClick={() => handleDifficultyChange(difficulty)}
-              className={
-                `${styles.difficultyTab} ` +
-                (activeDifficulty === difficulty
-                  ? styles.difficultyTabActive
-                  : styles.difficultyTabInactive)
-              }
-              type="button"
+              ariaLabel={difficulty === 'normal' ? 'ノーマルモード' : 'ハードモード'}
             >
               {difficulty === 'normal' ? 'NORMAL' : 'HARD'}
-            </button>
+            </TabButton>
           ))}
         </motion.div>
         
@@ -115,12 +112,9 @@ const NewRankingScreen: React.FC<NewRankingScreenProps> = ({ onGoMenu }) => {
           ) : error ? (
             <div className={styles.errorState}>
               <div className="error-text">{error}</div>
-              <button 
-                onClick={fetchRankings}
-                className="btn-primary"
-              >
+              <CommonButton onClick={fetchRankings} variant="primary">
                 リトライ
-              </button>
+              </CommonButton>
             </div>
           ) : rankings.length === 0 ? (
             <div className={styles.emptyState}>

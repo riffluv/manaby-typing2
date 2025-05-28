@@ -6,6 +6,8 @@ import { useGlobalShortcuts } from '@/hooks/useGlobalShortcuts';
 import screenStyles from './common/ScreenWrapper.module.css';
 import styles from './MainMenu.module.css';
 import { deleteRankingEntriesByMode } from '@/lib/rankingManaby2';
+import CommonModal from './common/CommonModal';
+import CommonButton from './common/CommonButton';
 
 interface MainMenuProps {
   onStart: () => void;
@@ -154,43 +156,41 @@ const MainMenu: React.FC<MainMenuProps> = ({ onStart, onRetry, onRanking }) => {
 
   return (
     <div className={screenStyles.screenWrapper}>
-      {/* 管理者モーダル（重複排除・×ボタン修正） */}
-      {adminOpen && (
-        <div className={styles.adminModalOverlay} onClick={handleAdminOverlayClick}>
-          <div className={styles.adminModal} onClick={e => e.stopPropagation()}>
-            <h2>管理者モード</h2>
-            <label>
-              出題数：
-              <input
-                type="number"
-                min={1}
-                max={100}
-                value={adminInput}
-                onChange={e => setAdminInput(Number(e.target.value))}
-                disabled={adminLoading}
-              />
-              <button
-                className={styles['admin-btn']}
-                onClick={() => { setQuestionCount(adminInput); setAdminStatus(`出題数を${adminInput}問に変更しました`); }}
-                disabled={adminLoading || adminInput < 1}
-              >反映</button>
-            </label>
-            <div className="admin-actions">
-              <button
-                className={`${styles['admin-btn']} ${styles['admin-danger']}`}
-                onClick={() => handleResetRanking('normal')}
-                disabled={adminLoading}
-              >NORMALランキングリセット</button>
-              <button
-                className={`${styles['admin-btn']} ${styles['admin-danger']}`}
-                onClick={() => handleResetRanking('hard')}
-                disabled={adminLoading}
-              >HARDランキングリセット</button>
-            </div>
-            <div className={styles['admin-status']}>{adminStatus}</div>
-          </div>
+      {/* 管理者モーダル（共通モーダルに統一） */}
+      <CommonModal open={adminOpen} onClose={() => setAdminOpen(false)}>
+        <h2>管理者モード</h2>
+        <label>
+          出題数：
+          <input
+            type="number"
+            min={1}
+            max={100}
+            value={adminInput}
+            onChange={e => setAdminInput(Number(e.target.value))}
+            disabled={adminLoading}
+          />
+          <CommonButton
+            onClick={() => { setQuestionCount(adminInput); setAdminStatus(`出題数を${adminInput}問に変更しました`); }}
+            disabled={adminLoading || adminInput < 1}
+            variant="secondary"
+            style={{ marginLeft: 8 }}
+          >反映</CommonButton>
+        </label>
+        <div className="admin-actions">
+          <CommonButton
+            onClick={() => handleResetRanking('normal')}
+            disabled={adminLoading}
+            variant="secondary"
+            style={{ marginRight: 8 }}
+          >NORMALランキングリセット</CommonButton>
+          <CommonButton
+            onClick={() => handleResetRanking('hard')}
+            disabled={adminLoading}
+            variant="secondary"
+          >HARDランキングリセット</CommonButton>
         </div>
-      )}
+        <div className={styles['admin-status']}>{adminStatus}</div>
+      </CommonModal>
 
       <div className={styles.mainMenuContainer}>
         {/* ゲームロゴ/タイトル */}

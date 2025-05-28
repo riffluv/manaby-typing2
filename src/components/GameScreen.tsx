@@ -1,7 +1,7 @@
 import React, { memo, useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import TypingArea from './TypingArea';
-import { TypingWord, KanaDisplay } from '@/types/typing';
+import { TypingWord, KanaDisplay } from '@/types';
 import PortalShortcut from './PortalShortcut';
 import styles from './GameScreen.module.css';
 

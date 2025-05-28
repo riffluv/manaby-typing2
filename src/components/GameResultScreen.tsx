@@ -1,8 +1,7 @@
 "use client";
 import PortalShortcut from '@/components/PortalShortcut';
 import { motion, AnimatePresence } from 'framer-motion';
-import type { GameScoreLog } from '@/types/score';
-import type { PerWordScoreLog } from '@/types/score';
+import type { GameScoreLog, PerWordScoreLog } from '@/types';
 import { useEffect, useState, useRef } from 'react';
 import { useGlobalShortcuts } from '@/hooks/useGlobalShortcuts';
 import GameResultStat from './GameResultStat';

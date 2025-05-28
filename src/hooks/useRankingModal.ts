@@ -2,7 +2,7 @@
 
 import { useReducer, useCallback } from 'react';
 import { addRankingEntry } from '@/lib/rankingManaby2';
-import type { GameScoreLog } from '@/types/score';
+import type { GameScoreLog } from '@/types';
 import { useTypingGameStore } from '@/store/typingGameStore';
 
 // モーダル状態の型定義

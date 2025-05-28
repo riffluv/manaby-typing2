@@ -1,6 +1,6 @@
 import React, { memo, useMemo } from 'react';
 import type { TypingChar } from '@/utils/japaneseUtils';
-import type { KanaDisplay } from '@/types/typing';
+import type { KanaDisplay } from '@/types';
 
 export type TypingAreaProps = {
   currentKanaIndex: number;
