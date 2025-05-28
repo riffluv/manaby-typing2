@@ -20,6 +20,11 @@ interface GameResultScreenProps {
 }
 
 /**
+ * ゲームリザルト画面コンポーネント
+ * @returns {JSX.Element}
+ */
+
+/**
  * モダンなゲーム結果表示画面コンポーネント
  * MonkeyTypeとFinalsのUIを参考にしたデザイン
  */

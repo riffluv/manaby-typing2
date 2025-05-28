@@ -24,6 +24,11 @@ import GameScreen from '@/components/GameScreen';
 import styles from '@/styles/GamePlayingScreen.module.css';
 
 /**
+ * タイピングゲーム本体コンポーネント
+ * @returns {JSX.Element}
+ */
+
+/**
  * 統合されたタイピングゲームコンポーネント
  * - TypingGame.tsxとGamePlayingScreen.tsxの機能を統合
  * - WebWorkerスコア計算とKeyboardSoundUtilsを保持

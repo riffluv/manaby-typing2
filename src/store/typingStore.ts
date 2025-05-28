@@ -1,6 +1,11 @@
 import { create } from 'zustand';
 import { createSelectors } from '@/store/createSelectors';
 
+/**
+ * タイピング入力状態管理ストア（Zustand）
+ * @module typingStore
+ */
+
 // タイピング状態の型定義
 interface TypingState {
   // 入力関連の状態

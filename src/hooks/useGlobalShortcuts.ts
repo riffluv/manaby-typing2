@@ -11,10 +11,8 @@ export type ShortcutConfig = {
 };
 
 /**
- * グローバルなキーボードショートカットを一元管理するカスタムフック
- * - 各画面でショートカット定義配列を渡すだけでOK
- * - input/textarea/select等への入力時はデフォルトで無効化
- * - 拡張性・テスト性・保守性に優れる
+ * グローバルショートカット管理フック
+ * @returns 登録・解除関数
  */
 export function useGlobalShortcuts(shortcuts: ShortcutConfig[], deps: any[] = []) {
   useEffect(() => {

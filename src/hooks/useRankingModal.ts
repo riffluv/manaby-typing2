@@ -45,7 +45,8 @@ function modalReducer(state: ModalState, action: ModalAction): ModalState {
 }
 
 /**
- * ランキングモーダルの状態管理と登録処理のためのカスタムフック
+ * ランキングモーダル制御フック
+ * @returns モーダル表示状態・操作関数
  */
 export function useRankingModal(
   resultScore: GameScoreLog['total'] | null,

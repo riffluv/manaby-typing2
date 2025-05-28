@@ -1,37 +1,53 @@
+/**
+ * @file 複数方式MCP接続テストページ
+ * @description Fetch API / XHR / Promise でMCPサーバー接続をテストし、結果・環境情報を表示するページ。
+ * 型安全・アクセシビリティ・責務分離を重視。
+ *
+ * @module MultiTestPage
+ */
 'use client';
 
 import { useState, useEffect } from 'react';
 import { checkMCPStatus, checkMCPStatusXHR, checkMCPStatusPromise } from '@/utils/mcpChecker';
+import type { JSX } from 'react';
 
-// MCPサーバーのレスポンス型
+/**
+ * MCPサーバーのレスポンス型
+ */
 interface MCPStatusResult {
   success: boolean;
-  data: any;
+  data: unknown;
   error: string | null;
 }
 
-export default function MultiTestPage() {
+/**
+ * 複数方式MCP接続テストページ
+ * @returns {JSX.Element}
+ */
+export default function MultiTestPage(): JSX.Element {
   // 型安全のため、useStateの型を明示
   const [fetchResult, setFetchResult] = useState<MCPStatusResult | null>(null);
   const [xhrResult, setXhrResult] = useState<MCPStatusResult | null>(null);
   const [promiseResult, setPromiseResult] = useState<MCPStatusResult | null>(null);
   const [loading, setLoading] = useState<boolean>(false);
 
-  async function runAllTests() {
+  /**
+   * すべてのMCP接続テストを実行し、結果をstateに格納
+   * @returns {Promise<void>}
+   */
+  async function runAllTests(): Promise<void> {
     setLoading(true);
     setFetchResult(null);
     setXhrResult(null);
     setPromiseResult(null);
     
     // Fetch APIテスト
-    // 型安全のため、コールバックの型を明示
-    checkMCPStatus((result: any) => {
+    checkMCPStatus((result: MCPStatusResult) => {
       setFetchResult(result);
     });
     
     // XHRテスト
-    // 型安全のため、コールバックの型を明示
-    checkMCPStatusXHR((result: any) => {
+    checkMCPStatusXHR((result: MCPStatusResult) => {
       setXhrResult(result);
     });
     
@@ -39,18 +55,17 @@ export default function MultiTestPage() {
     try {
       const result = await checkMCPStatusPromise();
       setPromiseResult(result);
-    } catch (error) {
+    } catch (error: unknown) {
       setPromiseResult({ success: false, data: null, error: error instanceof Error ? error.message : String(error) });
     }
-    
     setLoading(false);
   }
-  
+
   // ページ読み込み時に自動実行
   useEffect(() => {
     runAllTests();
   }, []);
-  
+
   return (
     <div className="p-8 max-w-4xl mx-auto" role="main" aria-labelledby="multi-test-title">
       <h1 id="multi-test-title" className="text-2xl font-bold mb-6">複数方式MCP接続テスト</h1>
@@ -76,11 +91,15 @@ export default function MultiTestPage() {
                 {fetchResult.success ? "✅ 成功" : "❌ 失敗"}
               </div>
               {fetchResult.error && <p className="text-red-500 text-sm mt-2" role="alert">{fetchResult.error}</p>}
-              {fetchResult.data && (
+              {typeof fetchResult.data === 'string' || typeof fetchResult.data === 'number' ? (
+                <pre className="bg-gray-100 p-2 text-xs mt-2 overflow-auto max-h-40" aria-label="Fetch APIレスポンス">
+                  {String(fetchResult.data)}
+                </pre>
+              ) : fetchResult.data && typeof fetchResult.data === 'object' ? (
                 <pre className="bg-gray-100 p-2 text-xs mt-2 overflow-auto max-h-40" aria-label="Fetch APIレスポンス">
                   {JSON.stringify(fetchResult.data, null, 2)}
                 </pre>
-              )}
+              ) : null}
             </div>
           )}
         </div>
@@ -94,11 +113,15 @@ export default function MultiTestPage() {
                 {xhrResult.success ? "✅ 成功" : "❌ 失敗"}
               </div>
               {xhrResult.error && <p className="text-red-500 text-sm mt-2" role="alert">{xhrResult.error}</p>}
-              {xhrResult.data && (
+              {typeof xhrResult.data === 'string' || typeof xhrResult.data === 'number' ? (
+                <pre className="bg-gray-100 p-2 text-xs mt-2 overflow-auto max-h-40" aria-label="XHRレスポンス">
+                  {String(xhrResult.data)}
+                </pre>
+              ) : xhrResult.data && typeof xhrResult.data === 'object' ? (
                 <pre className="bg-gray-100 p-2 text-xs mt-2 overflow-auto max-h-40" aria-label="XHRレスポンス">
                   {JSON.stringify(xhrResult.data, null, 2)}
                 </pre>
-              )}
+              ) : null}
             </div>
           )}
         </div>
@@ -112,11 +135,15 @@ export default function MultiTestPage() {
                 {promiseResult.success ? "✅ 成功" : "❌ 失敗"}
               </div>
               {promiseResult.error && <p className="text-red-500 text-sm mt-2" role="alert">{promiseResult.error}</p>}
-              {promiseResult.data && (
+              {typeof promiseResult.data === 'string' || typeof promiseResult.data === 'number' ? (
+                <pre className="bg-gray-100 p-2 text-xs mt-2 overflow-auto max-h-40" aria-label="Promiseレスポンス">
+                  {String(promiseResult.data)}
+                </pre>
+              ) : promiseResult.data && typeof promiseResult.data === 'object' ? (
                 <pre className="bg-gray-100 p-2 text-xs mt-2 overflow-auto max-h-40" aria-label="Promiseレスポンス">
                   {JSON.stringify(promiseResult.data, null, 2)}
                 </pre>
-              )}
+              ) : null}
             </div>
           )}
         </div>

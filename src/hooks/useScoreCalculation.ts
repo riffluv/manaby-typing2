@@ -102,3 +102,9 @@ export function useScoreCalculation(
     calculateFallbackScore
   };
 }
+
+/**
+ * スコア計算フック
+ * @param scoreLog スコアログ
+ * @returns スコア・正答率等の集計値
+ */

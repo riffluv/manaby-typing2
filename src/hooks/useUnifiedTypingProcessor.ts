@@ -68,10 +68,11 @@ function typingReducer(state: TypingState, action: TypingAction): TypingState {
 }
 
 /**
- * 統合されたタイピング処理フック
- * - useTypingKeyboardHandlerとuseTypingProcessorの機能を統合
- * - KeyboardSoundUtilsとWebWorkerスコア計算を保持
- * - パフォーマンス重視でuseRefを活用
+ * 統合タイピング処理フック
+ * @param currentWord 現在の単語
+ * @param setKanaDisplay かな表示更新関数
+ * @param setScoreLog スコアログ更新関数
+ * @returns 統合タイピング状態・操作関数
  */
 export function useUnifiedTypingProcessor(
   currentWord: TypingWord,

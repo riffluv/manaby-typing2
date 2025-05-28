@@ -4,6 +4,7 @@ import { useTypingGameStore } from '@/store/typingGameStore';
 
 /**
  * Typingゲームの初期化・サウンドプリロード副作用をまとめるカスタムフック
+ * @returns void
  */
 export function useTypingGameLifecycle() {
   const { preloadSounds } = useAudioStore();

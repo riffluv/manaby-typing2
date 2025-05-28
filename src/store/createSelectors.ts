@@ -1,9 +1,11 @@
 import { StoreApi, UseBoundStore } from 'zustand';
 
 /**
- * Zustandストア用のセレクター作成ヘルパー
- * このユーティリティ関数は、Zustandストア全体へのアクセスと
- * 個別のプロパティへのアクセスを両方提供するセレクターを生成します
+ * Zustandストア用セレクター作成ユーティリティ
+ * @template T ストア型
+ * @template F セレクター型
+ * @param store Zustandストア
+ * @returns セレクター付きストア
  */
 export const createSelectors = <T extends object, F extends object = T>(
   store: UseBoundStore<StoreApi<T>>

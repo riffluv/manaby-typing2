@@ -4,6 +4,11 @@ import { wordList } from '@/data/wordList';
 import { createTypingChars, TypingChar } from '@/utils/japaneseUtils';
 import { shallow } from 'zustand/shallow';
 
+/**
+ * タイピングゲーム状態管理ストア
+ * @module typingGameStore
+ */
+
 // タイピングゲーム向けの状態型定義
 interface TypingGameState {
   // ゲーム全体の状態

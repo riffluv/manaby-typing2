@@ -13,6 +13,11 @@ import {
   setBGMVolume as setBGMVolumeUtil
 } from '@/utils/soundPlayer';
 
+/**
+ * オーディオ再生・管理ストア
+ * @module audioStore
+ */
+
 // オーディオ状態の型定義
 interface AudioState {
   // サウンドの設定状態
