@@ -182,9 +182,6 @@ const UnifiedTypingGame: React.FC<{ onGoMenu?: () => void; onGoRanking?: () => v
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.5, ease: [0.165, 0.84, 0.44, 1] }}
         >
-          {/* ゲーム画面はEscのみ */}
-          <PortalShortcut shortcuts={[{ key: 'Esc', label: '戻る' }]} />
-          
           {/* ゲーム画面 */}
           <motion.div
             initial={{ opacity: 0, y: 20 }}
@@ -197,51 +194,7 @@ const UnifiedTypingGame: React.FC<{ onGoMenu?: () => void; onGoRanking?: () => v
               currentKanaDisplay={kanaDisplay}
             />
           </motion.div>
-
-          {/* プログレスバーとステータス */}
-          <motion.div 
-            className="progress-container"
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            transition={{ delay: 0.3, duration: 0.5 }}
-          >
-            <div className="progress-bar-track">
-              <motion.div 
-                className="progress-bar"
-                style={{ width: !hasStarted ? `${progressPercentage}%` : undefined }}
-                animate={hasStarted ? { width: `${progressPercentage}%` } : false}
-                transition={hasStarted ? { duration: 0.3, ease: "easeOut" } : {}}
-              />
-            </div>
-            <div className="status-text">
-              <motion.div 
-                initial={{ opacity: 0 }}
-                animate={{ opacity: 1 }}
-                transition={{ delay: 0.4, duration: 0.3 }}
-              >
-                WORDS: {scoreLog.length}/{questionLimit}
-              </motion.div>
-              
-              {scoreLog.length > 0 && (
-                <>
-                  <motion.div
-                    initial={{ opacity: 0 }}
-                    animate={{ opacity: 1 }}
-                    transition={{ delay: 0.5, duration: 0.3 }}
-                  >
-                    KPM: <span>{latestKpm}</span>
-                  </motion.div>
-                  <motion.div
-                    initial={{ opacity: 0 }}
-                    animate={{ opacity: 1 }}
-                    transition={{ delay: 0.6, duration: 0.3 }}
-                  >
-                    ACC: <span>{latestAccuracy}%</span>
-                  </motion.div>
-                </>
-              )}
-            </div>
-          </motion.div>
+          {/* 進捗ゲージ・KPM・WORDS等のUIは一括削除 */}
         </motion.div>
       )}
       

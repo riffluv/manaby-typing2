@@ -2,6 +2,7 @@ import React, { memo, useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import TypingArea from './TypingArea';
 import { TypingWord, KanaDisplay } from '@/types/typing';
+import PortalShortcut from './PortalShortcut';
 
 export type GameScreenProps = {
   currentWord: TypingWord;
@@ -47,6 +48,11 @@ const GameScreen: React.FC<GameScreenProps> = memo(({ currentWord, currentKanaIn
       >
         {currentWord.hiragana}
       </motion.div>
+
+      {/* ショートカット案内（ローマ字の直下・中央上部） */}
+      <div style={{ margin: '0 auto', marginBottom: '1.5rem', display: 'flex', justifyContent: 'center' }}>
+        <PortalShortcut shortcuts={[{ key: 'Esc', label: '戻る' }]} />
+      </div>
       
       {/* タイピングエリア - メイン インタラクション */}
       <motion.div
