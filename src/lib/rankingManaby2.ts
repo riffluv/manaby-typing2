@@ -18,10 +18,11 @@ export type RankingEntry = {
   accuracy: number;
   correct: number;
   miss: number;
+  mode: 'normal' | 'hard'; // 難易度を追加
   createdAt: Date;
 };
 
-// ランキング登録（名前・スコア）
+// ランキング登録（名前・スコア・難易度）
 export async function addRankingEntry(entry: Omit<RankingEntry, 'createdAt'>) {
   try {
     console.log('[Firestore] 登録開始', entry);
@@ -44,6 +45,7 @@ function isRankingEntry(data: any): data is RankingEntry {
     typeof data?.accuracy === 'number' &&
     typeof data?.correct === 'number' &&
     typeof data?.miss === 'number' &&
+    (data?.mode === 'normal' || data?.mode === 'hard') &&
     (data?.createdAt instanceof Date || (data?.createdAt && typeof data.createdAt.toDate === 'function'))
   );
 }
@@ -54,40 +56,32 @@ function safeToDate(createdAt: any): Date {
   return new Date();
 }
 
-// ランキング取得（上位N件）
-export async function getRankingEntries(topN = 30): Promise<RankingEntry[]> {
+// ランキング取得（上位N件、modeでフィルタ）
+export async function getRankingEntries(topN = 30, mode: 'normal' | 'hard' = 'normal'): Promise<RankingEntry[]> {
   try {
-    console.log('[Firestore] ランキング取得開始');
+    console.log('[Firestore] ランキング取得開始', mode);
     const q = query(
       collection(db, COLLECTION),
       orderBy('kpm', 'desc'),
-      limit(topN)
+      limit(100) // まず多めに取得
     );
     const snap = await getDocs(q);
     console.log('[Firestore] 取得件数', snap.size);
-    return snap.docs.map(doc => {
-      const data = doc.data();
-      if (isRankingEntry(data)) {
-        return {
-          name: data.name,
-          kpm: data.kpm,
-          accuracy: data.accuracy,
-          correct: data.correct,
-          miss: data.miss,
-          createdAt: safeToDate(data.createdAt)
-        };
-      } else {
-        // 型不正時はデフォルト値で返す
-        return {
-          name: '[不正データ]',
-          kpm: 0,
-          accuracy: 0,
-          correct: 0,
-          miss: 0,
-          createdAt: new Date()
-        };
-      }
-    });
+    // modeでフィルタ
+    const filtered = snap.docs
+      .map(doc => doc.data())
+      .filter(data => isRankingEntry(data) && data.mode === mode)
+      .map(data => ({
+        name: data.name,
+        kpm: data.kpm,
+        accuracy: data.accuracy,
+        correct: data.correct,
+        miss: data.miss,
+        mode: data.mode,
+        createdAt: safeToDate(data.createdAt)
+      }))
+      .slice(0, topN);
+    return filtered;
   } catch (e) {
     console.error('[Firestore] ランキング取得エラー', e);
     throw e;

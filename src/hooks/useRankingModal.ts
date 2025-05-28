@@ -3,6 +3,7 @@
 import { useReducer, useCallback } from 'react';
 import { addRankingEntry } from '@/lib/rankingManaby2';
 import type { GameScoreLog } from '@/types/score';
+import { useTypingGameStore } from '@/store/typingGameStore';
 
 // モーダル状態の型定義
 type ModalState = {
@@ -54,6 +55,7 @@ export function useRankingModal(
   onScoreRegistered: () => void
 ) {
   const [modalState, dispatch] = useReducer(modalReducer, initialModalState);
+  const mode = useTypingGameStore(state => state.mode); // 現在の難易度
 
   // ランキング登録処理
   const handleRegisterRanking = useCallback(async () => {
@@ -67,7 +69,8 @@ export function useRankingModal(
         kpm: resultScore.kpm,
         accuracy: resultScore.accuracy,
         correct: resultScore.correct,
-        miss: resultScore.miss
+        miss: resultScore.miss,
+        mode // 難易度を保存
       });
       
       // 登録成功時の処理
@@ -82,7 +85,7 @@ export function useRankingModal(
         error: '登録に失敗しました: ' + (e?.message || String(e)) 
       });
     }
-  }, [resultScore, modalState.name, isScoreRegistered, onScoreRegistered]);
+  }, [resultScore, modalState.name, isScoreRegistered, onScoreRegistered, mode]);
 
   return {
     modalState,

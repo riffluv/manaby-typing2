@@ -44,19 +44,14 @@ const NewRankingScreen: React.FC<NewRankingScreenProps> = ({ onGoMenu }) => {
   const fetchRankings = useCallback(async () => {
     setLoading(true);
     try {
-      // 実際のランキングデータを取得
-      const realRankingData = await getRankingEntries();
-      
-      // 全てのデータを表示（難易度フィルタリングは現在未対応）
-      // 注意: RankingEntry型にmodeプロパティがないため、全データを表示
-      const displayData = realRankingData.slice(0, 15); // 表示数を15件に制限
-      
-      setRankings(displayData);
-      setError(''); // エラーをクリア
+      // 難易度ごとにランキングデータを取得
+      const realRankingData = await getRankingEntries(15, activeDifficulty as 'normal' | 'hard');
+      setRankings(realRankingData);
+      setError('');
     } catch (error) {
       console.error('ランキングデータの取得に失敗しました:', error);
       setError('ランキングの取得に失敗しました');
-      setRankings([]); // エラー時は空配列を設定
+      setRankings([]);
     } finally {
       setLoading(false);
     }
