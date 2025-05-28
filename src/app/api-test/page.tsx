@@ -5,9 +5,15 @@ import { useState, useEffect } from 'react';
 // テスト用APIサーバーのURL
 const TEST_API_URL = 'http://localhost:4000/api/status';
 
+// APIサーバーのレスポンス型
+interface ApiStatusResponse {
+  status: string;
+  [key: string]: any;
+}
+
 export default function ApiTestPage() {
   // 型安全のため、useStateの型を明示
-  const [apiResponse, setApiResponse] = useState<any>(null);
+  const [apiResponse, setApiResponse] = useState<ApiStatusResponse | null>(null);
   const [loading, setLoading] = useState<boolean>(false);
   const [error, setError] = useState<string | null>(null);
   const [refresh, setRefresh] = useState<number>(0);

@@ -3,11 +3,18 @@
 import { useState, useEffect } from 'react';
 import { checkMCPStatus, checkMCPStatusXHR, checkMCPStatusPromise } from '@/utils/mcpChecker';
 
+// MCPサーバーのレスポンス型
+interface MCPStatusResult {
+  success: boolean;
+  data: any;
+  error: string | null;
+}
+
 export default function MultiTestPage() {
   // 型安全のため、useStateの型を明示
-  const [fetchResult, setFetchResult] = useState<any>(null);
-  const [xhrResult, setXhrResult] = useState<any>(null);
-  const [promiseResult, setPromiseResult] = useState<any>(null);
+  const [fetchResult, setFetchResult] = useState<MCPStatusResult | null>(null);
+  const [xhrResult, setXhrResult] = useState<MCPStatusResult | null>(null);
+  const [promiseResult, setPromiseResult] = useState<MCPStatusResult | null>(null);
   const [loading, setLoading] = useState<boolean>(false);
 
   async function runAllTests() {
@@ -33,7 +40,7 @@ export default function MultiTestPage() {
       const result = await checkMCPStatusPromise();
       setPromiseResult(result);
     } catch (error) {
-      setPromiseResult(error);
+      setPromiseResult({ success: false, data: null, error: error instanceof Error ? error.message : String(error) });
     }
     
     setLoading(false);

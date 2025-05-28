@@ -5,9 +5,15 @@ import { useState, useEffect } from 'react';
 // MCPサーバーのURL
 const MCP_SERVER_URL = process.env.NEXT_PUBLIC_MCP_SERVER_URL || 'http://localhost:3003';
 
+// MCPサーバーのレスポンス型
+interface MCPStatusResponse {
+  status: string;
+  [key: string]: any;
+}
+
 export default function MidwayTestPage() {
   // 型安全のため、useStateの型を明示
-  const [apiResponse, setApiResponse] = useState<any>(null);
+  const [apiResponse, setApiResponse] = useState<MCPStatusResponse | null>(null);
   const [loading, setLoading] = useState<boolean>(false);
   const [error, setError] = useState<string | null>(null);
   const [refresh, setRefresh] = useState<number>(0);
