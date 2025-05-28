@@ -1,9 +1,0 @@
-﻿/* GameScreen.module.css - 必要最小限の構造のみ */
-.gameScreen {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  width: 100%;
-}
-

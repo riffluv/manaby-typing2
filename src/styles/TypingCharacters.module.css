@@ -1,7 +1,0 @@
-﻿/* TypingCharacters.module.css - 必要最小限の構造のみ */
-.typingArea {
-  display: flex;
-  flex-wrap: wrap;
-  justify-content: center;
-}
-

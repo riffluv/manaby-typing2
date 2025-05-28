@@ -20,9 +20,6 @@ import RankingModal from '@/components/RankingModal';
 import PortalShortcut from '@/components/PortalShortcut';
 import GameScreen from '@/components/GameScreen';
 
-// スタイルのインポート
-import styles from '@/styles/GamePlayingScreen.module.css';
-
 /**
  * タイピングゲーム本体コンポーネント
  * @returns {JSX.Element}
@@ -180,7 +177,7 @@ const UnifiedTypingGame: React.FC<{ onGoMenu?: () => void; onGoRanking?: () => v
       {/* ゲームプレイ中の画面 */}
       {gameStatus === 'playing' && (
         <motion.div 
-          className={styles.container}
+          className="game-screen"
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.5, ease: [0.165, 0.84, 0.44, 1] }}
@@ -203,20 +200,20 @@ const UnifiedTypingGame: React.FC<{ onGoMenu?: () => void; onGoRanking?: () => v
 
           {/* プログレスバーとステータス */}
           <motion.div 
-            className={styles.progressContainer}
+            className="progress-container"
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             transition={{ delay: 0.3, duration: 0.5 }}
           >
-            <div className={styles.progressBarTrack}>
+            <div className="progress-bar-track">
               <motion.div 
-                className={styles.progressBar}
+                className="progress-bar"
                 style={{ width: !hasStarted ? `${progressPercentage}%` : undefined }}
                 animate={hasStarted ? { width: `${progressPercentage}%` } : false}
                 transition={hasStarted ? { duration: 0.3, ease: "easeOut" } : {}}
               />
             </div>
-            <div className={styles.statusText}>
+            <div className="status-text">
               <motion.div 
                 initial={{ opacity: 0 }}
                 animate={{ opacity: 1 }}

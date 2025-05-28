@@ -1,8 +1,0 @@
-﻿/* ModernGameResult.module.css - 必要最小限の構造のみ */
-.container {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  width: 100%;
-}
-
