@@ -71,11 +71,7 @@ const MainMenu: React.FC<MainMenuProps> = ({ onStart, onRetry, onRanking }) => {
       altKey: true,
       handler: (e) => { e.preventDefault(); onRanking(); },
     },
-    {
-      key: 'r',
-      handler: (e) => { e.preventDefault(); onRetry(); },
-    },
-  ], [handleStart, onRanking, onRetry]);
+  ], [handleStart, onRanking]);
 
   return (
     <div className={screenStyles.screenWrapper}>
@@ -229,14 +225,6 @@ const MainMenu: React.FC<MainMenuProps> = ({ onStart, onRetry, onRanking }) => {
             >
               RANKING
             </motion.button>
-            <motion.button
-              className={`btn-secondary ${styles.menuSubButton}`}
-              onClick={onRetry}
-              whileHover={{ scale: 1.05, y: -2 }}
-              whileTap={{ scale: 0.98 }}
-            >
-              RETRY
-            </motion.button>
           </motion.div>
 
           {/* バージョン情報 - 控えめに */}
@@ -259,8 +247,7 @@ const MainMenu: React.FC<MainMenuProps> = ({ onStart, onRetry, onRanking }) => {
       {/* ショートカットヘルプ */}
       <PortalShortcut shortcuts={[
         { key: 'Space', label: 'Start Game' },
-        { key: 'Alt+R', label: 'Ranking' },
-        { key: 'R', label: 'Retry' }
+        { key: 'Alt+R', label: 'Ranking' }
       ]} />
     </div>
   );
