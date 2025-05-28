@@ -68,6 +68,9 @@ const UnifiedTypingGame: React.FC<{ onGoMenu?: () => void; onGoRanking?: () => v
   // プログレス表示用の状態
   const [hasStarted, setHasStarted] = useState(false);
 
+  // 出題数を管理する状態を追加
+  const [questionLimit, setQuestionLimit] = useState(8);
+
   // 直アクセス防止機能
   useEffect(() => {
     if (typeof window !== 'undefined') {
@@ -219,7 +222,7 @@ const UnifiedTypingGame: React.FC<{ onGoMenu?: () => void; onGoRanking?: () => v
                 animate={{ opacity: 1 }}
                 transition={{ delay: 0.4, duration: 0.3 }}
               >
-                WORDS: {scoreLog.length}/10
+                WORDS: {scoreLog.length}/{questionLimit}
               </motion.div>
               
               {scoreLog.length > 0 && (
