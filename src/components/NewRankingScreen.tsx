@@ -96,7 +96,7 @@ const NewRankingScreen: React.FC<NewRankingScreenProps> = ({ onGoMenu }) => {
         
         {/* 難易度選択 */}
         <motion.div variants={itemVariants} className={styles.difficultySelector}>
-          {['easy', 'normal', 'hard'].map((difficulty) => (
+          {['normal', 'hard'].map((difficulty) => (
             <button
               key={difficulty}
               onClick={() => handleDifficultyChange(difficulty)}
@@ -104,8 +104,7 @@ const NewRankingScreen: React.FC<NewRankingScreenProps> = ({ onGoMenu }) => {
                 activeDifficulty === difficulty ? styles.difficultyButtonActive : ''
               }`}
             >
-              {difficulty === 'easy' ? 'やさしい' : 
-               difficulty === 'normal' ? 'ふつう' : 'むずかしい'}
+              {difficulty === 'normal' ? '普通' : '難しい'}
             </button>
           ))}
         </motion.div>

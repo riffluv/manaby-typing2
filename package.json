@@ -13,7 +13,8 @@
     "mcp:github": "npx @modelcontextprotocol/server-github",
     "dev:nodemon:mcp:github": "concurrently \"nodemon --watch src --exec npm run dev\" \"npm run mcp:github\"",
     "both-mcp": "concurrently \"npm run mcp\" \"npm run mcp:github -- --port 3006\"",
-    "dev:both-mcp": "concurrently \"npm run dev\" \"npm run mcp\" \"npm run mcp:github -- --port 3006\""
+    "dev:both-mcp": "concurrently \"npm run dev\" \"npm run mcp\" \"npm run mcp:github -- --port 3006\"",
+    "test": "jest --passWithNoTests"
   },
   "dependencies": {
     "autoprefixer": "^10.4.21",
