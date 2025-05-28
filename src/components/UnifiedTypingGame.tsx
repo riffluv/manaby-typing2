@@ -10,6 +10,8 @@ import { TypingWord, KanaDisplay } from '@/types/typing';
 import { PerWordScoreLog, GameScoreLog } from '@/types/score';
 import { useSceneNavigationStore } from '@/store/sceneNavigationStore'; 
 import { containerVariants, itemVariants } from '@/styles/animations';
+import styles from './UnifiedTypingGame.module.css';
+import screenStyles from './common/ScreenWrapper.module.css';
 
 // 統合されたカスタムフックとコンポーネントのインポート
 import { useUnifiedTypingProcessor } from '@/hooks/useUnifiedTypingProcessor';
@@ -169,33 +171,14 @@ const UnifiedTypingGame: React.FC<{ onGoMenu?: () => void; onGoRanking?: () => v
   const progressPercentage = Math.min((scoreLog.length / 10) * 100, 100);
 
   return (
-    <motion.div 
-      initial="hidden"
-      animate="visible"
-      variants={containerVariants}
-    >
+    <div className={screenStyles.screenWrapper}>
       {/* ゲームプレイ中の画面 */}
       {gameStatus === 'playing' && (
-        <motion.div 
-          className="game-screen"
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.5, ease: [0.165, 0.84, 0.44, 1] }}
-        >
-          {/* ゲーム画面 */}
-          <motion.div
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ delay: 0.1, duration: 0.6 }}
-          >
-            <GameScreen 
-              currentWord={currentWord}
-              currentKanaIndex={currentKanaIndex}
-              currentKanaDisplay={kanaDisplay}
-            />
-          </motion.div>
-          {/* 進捗ゲージ・KPM・WORDS等のUIは一括削除 */}
-        </motion.div>
+        <GameScreen 
+          currentWord={currentWord}
+          currentKanaIndex={currentKanaIndex}
+          currentKanaDisplay={kanaDisplay}
+        />
       )}
       
       {/* ゲーム終了後の結果画面 */}
@@ -227,7 +210,7 @@ const UnifiedTypingGame: React.FC<{ onGoMenu?: () => void; onGoRanking?: () => v
         onChangeName={(name) => dispatch({ type: 'setName', name })}
         onClose={() => dispatch({ type: 'close' })}
       />
-    </motion.div>
+    </div>
   );
 };
 

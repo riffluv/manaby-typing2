@@ -1,0 +1,52 @@
+.mainMenuScreen {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: flex-start;
+  min-height: 100vh;
+  width: 100vw;
+  padding-top: 8vh;
+  box-sizing: border-box;
+}
+
+.mainMenuContainer {
+  width: 100vw;
+  min-height: 92vh;
+  max-width: none;
+  background: none;
+  border-radius: 0;
+  box-shadow: none;
+  padding: 0;
+  margin: 0;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.mainMenuHeader {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+  margin-bottom: 2rem;
+}
+
+.mainMenuTitle {
+  font-size: 2.5rem;
+  font-family: var(--font-ui);
+  font-weight: 700;
+  color: var(--color-accent-cyan);
+  letter-spacing: 0.1em;
+  margin-bottom: 0.25rem;
+  text-shadow: var(--glow-cyan);
+  text-align: center;
+  width: 100%;
+}
+
+.menuButton {
+  margin: 1rem 0;
+  width: 100%;
+  max-width: 320px;
+  font-size: 1.2rem;
+}

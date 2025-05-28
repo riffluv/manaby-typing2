@@ -1,0 +1,13 @@
+.gameScreenWrapper {
+  width: 100vw;
+  min-height: 92vh;
+  max-width: none;
+  background: none;
+  border-radius: 0;
+  box-shadow: none;
+  padding: 0;
+  margin: 0;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}

@@ -1,0 +1,23 @@
+.typingGameScreen {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: flex-start;
+  min-height: 100vh;
+  width: 100vw;
+  padding-top: 8vh;
+  box-sizing: border-box;
+}
+
+.gameScreen {
+  width: 100%;
+  max-width: 700px;
+  background: rgba(26, 26, 26, 0.85);
+  border-radius: 12px;
+  box-shadow: 0 4px 32px rgba(0,245,255,0.08);
+  padding: 3rem 2rem;
+  margin: 0 auto;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}

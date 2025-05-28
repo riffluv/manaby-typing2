@@ -5,6 +5,8 @@ import { getRankingEntries, RankingEntry } from '@/lib/rankingManaby2';
 import { useGlobalShortcuts } from '@/hooks/useGlobalShortcuts';
 import PortalShortcut from '@/components/PortalShortcut';
 import NewRankingTableRow from './NewRankingTableRow';
+import styles from './NewRankingScreen.module.css';
+import screenStyles from './common/ScreenWrapper.module.css';
 
 interface NewRankingScreenProps {
   onGoMenu: () => void;
@@ -72,27 +74,25 @@ const NewRankingScreen: React.FC<NewRankingScreenProps> = ({ onGoMenu }) => {
       handler: (e) => { e.preventDefault(); onGoMenu(); },
     },
   ], [onGoMenu]);  return (
-    <main className="ranking-screen">
+    <div className={screenStyles.screenWrapper}>
       <motion.div
-        className="ranking-container"
+        className={styles.rankingContainer}
         initial="hidden"
         animate="visible"
         variants={containerVariants}
       >
         {/* ヘッダー - サイバーパンク風 */}
-        <motion.div variants={itemVariants} className="ranking-header">
-          <h1 className="ranking-title">RANKING</h1>
+        <motion.div variants={itemVariants} className={styles.rankingHeader}>
+          <h1 className={styles.rankingTitle}>RANKING</h1>
         </motion.div>
         
         {/* 難易度選択 - monkeytype風 */}
-        <motion.div variants={itemVariants} className="difficulty-selector">
+        <motion.div variants={itemVariants} className={styles.difficultySelector}>
           {['normal', 'hard'].map((difficulty) => (
             <button
               key={difficulty}
               onClick={() => handleDifficultyChange(difficulty)}
-              className={`btn-secondary ${
-                activeDifficulty === difficulty ? 'btn-active' : ''
-              }`}
+              className={`btn-secondary ${activeDifficulty === difficulty ? 'btn-active' : ''}`}
             >
               {difficulty === 'normal' ? 'NORMAL' : 'HARD'}
             </button>
@@ -100,14 +100,14 @@ const NewRankingScreen: React.FC<NewRankingScreenProps> = ({ onGoMenu }) => {
         </motion.div>
         
         {/* ランキングテーブル */}
-        <motion.div variants={itemVariants} className="ranking-table-container">
+        <motion.div variants={itemVariants} className={styles.rankingTableContainer}>
           {loading ? (
-            <div className="loading-state">
+            <div className={styles.loadingState}>
               <div className="loading-text">ランキング読み込み中</div>
-              <div className="loading-spinner"></div>
+              <div className={styles.loadingSpinner}></div>
             </div>
           ) : error ? (
-            <div className="error-state">
+            <div className={styles.errorState}>
               <div className="error-text">{error}</div>
               <button 
                 onClick={fetchRankings}
@@ -117,22 +117,22 @@ const NewRankingScreen: React.FC<NewRankingScreenProps> = ({ onGoMenu }) => {
               </button>
             </div>
           ) : rankings.length === 0 ? (
-            <div className="empty-state">
+            <div className={styles.emptyState}>
               <h3 className="empty-title">まだスコアがありません</h3>
               <p className="empty-message">
                 ゲームをプレイして最初のランキング入りを目指しましょう！
               </p>
             </div>
           ) : (
-            <table className="ranking-table">
-              <thead className="table-header">
+            <table className={styles.rankingTable}>
+              <thead className={styles.tableHeader}>
                 <tr>
-                  <th className="table-header-cell">順位</th>
-                  <th className="table-header-cell">プレイヤー</th>
-                  <th className="table-header-cell">KPM</th>
-                  <th className="table-header-cell">正確率</th>
-                  <th className="table-header-cell">正解</th>
-                  <th className="table-header-cell">ミス</th>
+                  <th className={styles.tableHeaderCell}>順位</th>
+                  <th className={styles.tableHeaderCell}>プレイヤー</th>
+                  <th className={styles.tableHeaderCell}>KPM</th>
+                  <th className={styles.tableHeaderCell}>正確率</th>
+                  <th className={styles.tableHeaderCell}>正解</th>
+                  <th className={styles.tableHeaderCell}>ミス</th>
                 </tr>
               </thead>
               <tbody>
@@ -146,7 +146,7 @@ const NewRankingScreen: React.FC<NewRankingScreenProps> = ({ onGoMenu }) => {
       </motion.div>
       
       <PortalShortcut shortcuts={[{ key: 'Esc', label: '戻る' }]} />
-    </main>
+    </div>
   );
 };
 
