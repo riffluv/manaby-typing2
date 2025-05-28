@@ -1,3 +1,46 @@
+/* すべてのアニメーション・トランジションをリセット */
+*, *::before, *::after {
+  animation: none;
+  transition: none;
+}
+
+/* Framer Motionやmotion系のアニメーションも完全に無効化 */
+[class*="motion"],
+[class*="fade"],
+[class*="menuButton"],
+[class*="btn"],
+button,
+.motion,
+.motion-button,
+.motion-div {
+  transition: none;
+  animation: none;
+  transform: none;
+  opacity: 1;
+  box-shadow: none;
+  filter: none;
+  scale: 1;
+}
+
+button:active,
+button:hover,
+.btn:active,
+.btn:hover,
+.menuButton:active,
+.menuButton:hover,
+.actionButton:active,
+.actionButton:hover {
+  transition: none;
+  animation: none;
+  transform: none;
+  opacity: 1;
+  box-shadow: none;
+  filter: none;
+  scale: 1;
+}
+
+@keyframes none {}
+
 /* フォントのインポート - シンプルにするために残すのは基本フォントだけ */
 @import url('https://fonts.googleapis.com/css2?family=Roboto+Mono:wght@400;700&display=swap');
 @import url('https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@400;700&display=swap');
