@@ -27,7 +27,6 @@ export function useUnifiedTypingProcessor(
 ) {
   const gameStatus = useGameStatus();
   const { advanceToNextWord, currentWordIndex } = useTypingGameStore();
-  const { playSound } = useAudioStore();
   
   // タイピング文字の参照（パフォーマンス重視）
   const typingCharsRef = useRef<TypingWord['typingChars']>([]);
@@ -200,7 +199,7 @@ export function useUnifiedTypingProcessor(
       // パフォーマンス測定終了
       performanceMonitor.endRenderMeasurement(e.key, perfStart);
     };
-  }, [gameStatus, advanceToNextWord, setKanaDisplay, setScoreLog, currentWordIndex, playSound, performanceMonitor, directDOM]);
+  }, [gameStatus, advanceToNextWord, setKanaDisplay, setScoreLog, currentWordIndex, performanceMonitor, directDOM]);
 
   // 🚨 完全ロールバック: 元の高速検知システムのみ使用
   useEffect(() => {

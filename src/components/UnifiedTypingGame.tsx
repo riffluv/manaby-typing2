@@ -40,7 +40,6 @@ const UnifiedTypingGame: React.FC<{ onGoMenu?: () => void; onGoRanking?: () => v
   const gameStatus = useGameStatus();
   const { setGameStatus, resetGame, setupCurrentWord } = useTypingGameStore();
   const storeWord = useCurrentWord();
-  const { playSound } = useAudioStore();
   const { goToResult } = useSceneNavigationStore();
   
   // ゲームライフサイクルフックの使用

@@ -5,6 +5,17 @@ import KeyboardSoundUtils from './KeyboardSoundUtils';
 import LightweightKeyboardSound from './LightweightKeyboardSound';
 import { AUDIO_CONFIG, AudioPerformanceMonitor } from './AudioConfig';
 
+// --- BGM操作API ---
+import {
+  playBGM as _playBGM,
+  stopBGM as _stopBGM,
+  pauseBGM as _pauseBGM,
+  resumeBGM as _resumeBGM,
+  setBGMVolume as _setBGMVolume,
+  setBGMEnabled as _setBGMEnabled
+} from './soundPlayer';
+import { playSound as _playSound, setEffectsEnabled as _setEffectsEnabled, setEffectsVolume as _setEffectsVolume } from './soundPlayer';
+
 class UnifiedAudioSystem {
   static isInitialized = false;
   static audioEngine = null;
@@ -46,28 +57,14 @@ class UnifiedAudioSystem {
     }, `click-${AUDIO_CONFIG.ENGINE}`);
   }
 
-  // エラー音再生
-  static playErrorSound() {
-    if (!this.isInitialized) {
-      console.warn('[UnifiedAudioSystem] システムが初期化されていません');
-      return;
-    }
-
-    AudioPerformanceMonitor.measureLatency(() => {
-      this.audioEngine.playErrorSound();
-    }, 'error');
+  /** 正解音を再生 */
+  static playSuccessSound(volume = 1.0) {
+    this.playSound('correct', volume);
   }
 
-  // 成功音再生
-  static playSuccessSound() {
-    if (!this.isInitialized) {
-      console.warn('[UnifiedAudioSystem] システムが初期化されていません');
-      return;
-    }
-
-    AudioPerformanceMonitor.measureLatency(() => {
-      this.audioEngine.playSuccessSound();
-    }, 'success');
+  /** 不正解音を再生 */
+  static playErrorSound(volume = 1.0) {
+    this.playSound('wrong', volume);
   }
 
   // パフォーマンス統計取得
@@ -102,6 +99,66 @@ class UnifiedAudioSystem {
     if (this.audioEngine && typeof this.audioEngine.resumeAudioContext === 'function') {
       await this.audioEngine.resumeAudioContext();
     }
+  }
+
+  // --- BGM操作API ---
+  /**
+   * BGM種別
+   * @typedef {'game' | 'menu' | 'result'} BGMType
+   */
+
+  /**
+   * BGMを再生
+   * @param {BGMType} bgmType
+   * @param {boolean} [loop=true]
+   * @param {number} [volume=1.0]
+   */
+  static playBGM(bgmType, loop = true, volume = 1.0) {
+    _playBGM(bgmType, loop, volume);
+  }
+
+  /** BGMを停止 */
+  static stopBGM() {
+    _stopBGM();
+  }
+
+  /** BGMを一時停止 */
+  static pauseBGM() {
+    _pauseBGM();
+  }
+
+  /** BGMを再開 */
+  static resumeBGM() {
+    _resumeBGM();
+  }
+
+  /** BGM音量を設定 */
+  static setBGMVolume(volume) {
+    _setBGMVolume(volume);
+  }
+
+  /** BGM有効/無効を設定 */
+  static setBGMEnabled(enabled) {
+    _setBGMEnabled(enabled);
+  }
+
+  /**
+   * 効果音を再生
+   * @param {'correct'|'wrong'} soundType
+   * @param {number} [volume=1.0]
+   */
+  static playSound(soundType, volume = 1.0) {
+    _playSound(soundType, volume);
+  }
+
+  /** 効果音有効/無効を設定 */
+  static setEffectsEnabled(enabled) {
+    _setEffectsEnabled(enabled);
+  }
+
+  /** 効果音音量を設定 */
+  static setEffectsVolume(volume) {
+    _setEffectsVolume(volume);
   }
 }
 

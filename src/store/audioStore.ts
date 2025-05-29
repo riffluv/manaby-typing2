@@ -1,17 +1,9 @@
 import { create } from 'zustand';
 import { createSelectors } from '@/store/createSelectors';
 import { 
-  preloadAllSounds, 
-  playSound as playSoundUtil, 
-  playBGM as playBGMUtil, 
-  stopBGM as stopBGMUtil,
-  pauseBGM as pauseBGMUtil,
-  resumeBGM as resumeBGMUtil,
-  setEffectsEnabled as setEffectsEnabledUtil,
-  setBGMEnabled as setBGMEnabledUtil,
-  setEffectsVolume as setEffectsVolumeUtil,
-  setBGMVolume as setBGMVolumeUtil
+  preloadAllSounds
 } from '@/utils/soundPlayer';
+import UnifiedAudioSystem from '@/utils/UnifiedAudioSystem';
 
 /**
  * オーディオ再生・管理ストア
@@ -56,42 +48,42 @@ const useAudioStoreBase = create<AudioState>((set, get) => ({
   
   // アクション
   preloadSounds: preloadAllSounds,
-  
+
   playSound: (type, volume = 1.0) => {
     if (get().effectsEnabled) {
-      playSoundUtil(type, volume);
+      UnifiedAudioSystem.playSound(type, volume);
     }
   },
-  
+
   playBGM: (type, loop = true, volume = 1.0) => {
     if (get().bgmEnabled) {
-      playBGMUtil(type, loop, volume);
+      UnifiedAudioSystem.playBGM(type, loop, volume);
     }
   },
-  
-  stopBGM: stopBGMUtil,
-  pauseBGM: pauseBGMUtil,
-  resumeBGM: resumeBGMUtil,
-  
+
+  stopBGM: UnifiedAudioSystem.stopBGM,
+  pauseBGM: UnifiedAudioSystem.pauseBGM,
+  resumeBGM: UnifiedAudioSystem.resumeBGM,
+
   // 設定変更
   setEffectsEnabled: (enabled) => {
     set({ effectsEnabled: enabled });
-    setEffectsEnabledUtil(enabled);
+    UnifiedAudioSystem.setEffectsEnabled(enabled);
   },
-  
+
   setBGMEnabled: (enabled) => {
     set({ bgmEnabled: enabled });
-    setBGMEnabledUtil(enabled);
+    UnifiedAudioSystem.setBGMEnabled(enabled);
   },
-  
+
   setEffectsVolume: (volume) => {
     set({ effectsVolume: volume });
-    setEffectsVolumeUtil(volume);
+    UnifiedAudioSystem.setEffectsVolume(volume);
   },
-  
+
   setBGMVolume: (volume) => {
     set({ bgmVolume: volume });
-    setBGMVolumeUtil(volume);
+    UnifiedAudioSystem.setBGMVolume(volume);
   }
 }));
 
