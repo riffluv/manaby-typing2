@@ -66,7 +66,7 @@
   min-width: 320px;
   margin: 0 auto 2rem auto;
   border-radius: 12px;
-  box-shadow: 0 2px 16px rgba(0,245,255,0.06);
+  box-shadow: 0 2px 16px rgba(138,180,248,0.06);
   background: rgba(20, 20, 20, 0.95);
   border-collapse: separate;
   border-spacing: 0;
@@ -93,11 +93,11 @@
 }
 
 .rankingTable tbody tr:nth-child(even) {
-  background: rgba(0,245,255,0.04);
+  background: rgba(138,180,248,0.04);
 }
 
 .rankingTable tbody tr:hover {
-  background: rgba(0,245,255,0.10);
+  background: rgba(138,180,248,0.10);
 }
 
 .rankingTable td {
@@ -106,7 +106,7 @@
   color: var(--color-text-primary);
   padding: 1rem 0.5rem;
   text-align: center;
-  border-bottom: 1px solid rgba(0,245,255,0.08);
+  border-bottom: 1px solid rgba(138,180,248,0.08);
 }
 
 .loadingState, .errorState, .emptyState {

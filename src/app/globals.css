@@ -13,30 +13,30 @@
    CSS CUSTOM PROPERTIES (DESIGN TOKENS)
    ===================================== */
 :root {
-  /* カラーパレット - サイバーパンク */
-  --color-base-black: #0a0a0a;
-  --color-base-dark: #1a1a1a;
+  /* カラーパレット - モダンミニマル */
+  --color-base-black: #141414;
+  --color-base-dark: #1e1e1e;
   --color-base-medium: #2a2a2a;
-  --color-accent-cyan: #00f5ff;
-  --color-accent-neon: #39ff14;
-  --color-accent-purple: #b466f2;
-  --color-success: #39ff14;
-  --color-error: #ff073a;
-  --color-warning: #ffaa00;
-  --color-text-primary: #ffffff;
-  --color-text-secondary: #d1d0c5;
-  --color-text-muted: #646669;
+  --color-accent-cyan: #8ab4f8;
+  --color-accent-neon: #e8b84a;
+  --color-accent-purple: #9bb0c1;
+  --color-success: #81c784;
+  --color-error: #f28b82;
+  --color-warning: #fdd663;
+  --color-text-primary: #e8eaed;
+  --color-text-secondary: #bdc1c6;
+  --color-text-muted: #9aa0a6;
 
   /* グラデーション */
   --gradient-cyber: linear-gradient(135deg, var(--color-accent-cyan), var(--color-accent-purple));
   --gradient-neon: linear-gradient(90deg, var(--color-accent-neon), var(--color-accent-cyan));
   --gradient-dark: linear-gradient(180deg, var(--color-base-black), var(--color-base-dark));
 
-  /* シャドウ - ネオングロー */
-  --glow-cyan: 0 0 20px var(--color-accent-cyan), 0 0 40px var(--color-accent-cyan), 0 0 60px var(--color-accent-cyan);
-  --glow-neon: 0 0 20px var(--color-accent-neon), 0 0 40px var(--color-accent-neon);
-  --glow-purple: 0 0 20px var(--color-accent-purple), 0 0 40px var(--color-accent-purple);
-  --glow-error: 0 0 20px var(--color-error), 0 0 40px var(--color-error);
+  /* シャドウ - ソフトグロー */
+  --glow-cyan: 0 0 8px rgba(138, 180, 248, 0.3), 0 0 16px rgba(138, 180, 248, 0.2);
+  --glow-neon: 0 0 8px rgba(232, 184, 74, 0.3), 0 0 16px rgba(232, 184, 74, 0.2);
+  --glow-purple: 0 0 8px rgba(155, 176, 193, 0.3), 0 0 16px rgba(155, 176, 193, 0.2);
+  --glow-error: 0 0 8px rgba(242, 139, 130, 0.3), 0 0 16px rgba(242, 139, 130, 0.2);
 
   /* タイポグラフィ */
   --font-mono: 'JetBrains Mono', 'Courier New', monospace;
@@ -118,9 +118,9 @@ body {
   transform: translate3d(0, 0, 0);
   /* 動的背景システム */
   background-image: 
-    radial-gradient(circle at 20% 50%, rgba(0, 245, 255, 0.1) 0%, transparent 50%),
-    radial-gradient(circle at 80% 20%, rgba(180, 102, 242, 0.1) 0%, transparent 50%),
-    radial-gradient(circle at 40% 80%, rgba(57, 255, 20, 0.05) 0%, transparent 50%);
+    radial-gradient(circle at 20% 50%, rgba(138, 180, 248, 0.05) 0%, transparent 50%),
+    radial-gradient(circle at 80% 20%, rgba(155, 176, 193, 0.05) 0%, transparent 50%),
+    radial-gradient(circle at 40% 80%, rgba(232, 184, 74, 0.03) 0%, transparent 50%);
   background-attachment: fixed;
   background-size: 100% 100%;
 }
@@ -139,13 +139,13 @@ body::before {
       0deg,
       transparent,
       transparent 98px,
-      rgba(0, 245, 255, 0.03) 100px
+      rgba(138, 180, 248, 0.015) 100px
     ),
     repeating-linear-gradient(
       90deg,
       transparent,
       transparent 98px,
-      rgba(0, 245, 255, 0.03) 100px
+      rgba(138, 180, 248, 0.015) 100px
     );
   animation: gridMove 20s linear infinite;
   pointer-events: none;
@@ -167,9 +167,9 @@ body::after {
   height: 120%;
   z-index: -1;
   background: 
-    radial-gradient(2px 2px at 20px 30px, rgba(0, 245, 255, 0.3), transparent),
-    radial-gradient(2px 2px at 40px 70px, rgba(57, 255, 20, 0.2), transparent),
-    radial-gradient(1px 1px at 90px 40px, rgba(180, 102, 242, 0.3), transparent);
+    radial-gradient(2px 2px at 20px 30px, rgba(138, 180, 248, 0.15), transparent),
+    radial-gradient(2px 2px at 40px 70px, rgba(232, 184, 74, 0.1), transparent),
+    radial-gradient(1px 1px at 90px 40px, rgba(155, 176, 193, 0.15), transparent);
   background-size: 200px 200px;
   animation: float 30s ease-in-out infinite;
   pointer-events: none;
@@ -319,7 +319,7 @@ button, .btn {
 
 .btn-primary:hover {
   transform: scale(1.05) translate3d(0, -2px, 0);
-  box-shadow: var(--glow-cyan), 0 8px 25px rgba(0, 245, 255, 0.3);
+  box-shadow: var(--glow-cyan), 0 8px 25px rgba(138, 180, 248, 0.2);
   filter: brightness(1.2);
 }
 
@@ -395,8 +395,8 @@ button:disabled, .btn:disabled {
   left: -100%;
   width: 100%;
   height: 100%;
-  background: linear-gradient(90deg, transparent, rgba(0, 245, 255, 0.1), transparent);
-  animation: scan 2s infinite;
+  background: linear-gradient(90deg, transparent, rgba(138, 180, 248, 0.05), transparent);
+  animation: scan 3s infinite;
 }
 
 @keyframes scan {
@@ -433,7 +433,7 @@ button:disabled, .btn:disabled {
 
 @keyframes glow {
   0% { box-shadow: var(--glow-neon); }
-  100% { box-shadow: 0 0 30px var(--color-accent-neon), 0 0 60px var(--color-accent-neon); }
+  100% { box-shadow: 0 0 12px rgba(232, 184, 74, 0.4), 0 0 24px rgba(232, 184, 74, 0.3); }
 }
 
 /* 文字状態 */
@@ -446,7 +446,7 @@ button:disabled, .btn:disabled {
 .char-incorrect {
   color: var(--color-error);
   text-shadow: var(--glow-error);
-  background: rgba(255, 7, 58, 0.2);
+  background: rgba(242, 139, 130, 0.2);
   animation: error 0.3s ease-out, shake 0.3s ease-out;
 }
 
@@ -457,8 +457,8 @@ button:disabled, .btn:disabled {
 }
 
 @keyframes error {
-  0% { background: rgba(255, 7, 58, 0.5); }
-  100% { background: rgba(255, 7, 58, 0.2); }
+  0% { background: rgba(242, 139, 130, 0.5); }
+  100% { background: rgba(242, 139, 130, 0.2); }
 }
 
 @keyframes shake {
@@ -710,7 +710,7 @@ input:focus, textarea:focus {
 
 .char-current {
   color: var(--color-text-primary);
-  background: rgba(0, 245, 255, 0.2);
+  background: rgba(138, 180, 248, 0.15);
   border-radius: 2px;
   animation: pulse 1s infinite;
 }
@@ -722,7 +722,7 @@ input:focus, textarea:focus {
 
 .char-incorrect {
   color: var(--color-error);
-  background: rgba(255, 7, 58, 0.2);
+  background: rgba(242, 139, 130, 0.2);
   text-shadow: var(--glow-error);
   animation: shake 0.3s ease-out;
 }
@@ -851,7 +851,7 @@ input:focus, textarea:focus {
   max-width: 700px;
   background: rgba(26, 26, 26, 0.85);
   border-radius: var(--border-radius-lg);
-  box-shadow: 0 4px 32px rgba(0,245,255,0.08);
+  box-shadow: 0 4px 32px rgba(138, 180, 248, 0.06);
   padding: var(--space-2xl) var(--space-xl);
   margin: 0 auto;
   display: flex;
@@ -904,7 +904,7 @@ input:focus, textarea:focus {
   border-spacing: 0;
   background: rgba(20, 20, 20, 0.95);
   border-radius: var(--border-radius-lg);
-  box-shadow: 0 2px 16px rgba(0,245,255,0.06);
+  box-shadow: 0 2px 16px rgba(138, 180, 248, 0.04);
   overflow: hidden;
   margin-bottom: var(--space-xl);
 }
@@ -929,11 +929,11 @@ input:focus, textarea:focus {
 }
 
 .ranking-table tbody tr:nth-child(even) {
-  background: rgba(0,245,255,0.04);
+  background: rgba(138, 180, 248, 0.03);
 }
 
 .ranking-table tbody tr:hover {
-  background: rgba(0,245,255,0.10);
+  background: rgba(138, 180, 248, 0.08);
 }
 
 .ranking-table td {
@@ -942,7 +942,7 @@ input:focus, textarea:focus {
   color: var(--color-text-primary);
   padding: var(--space-md) var(--space-sm);
   text-align: center;
-  border-bottom: 1px solid rgba(0,245,255,0.08);
+  border-bottom: 1px solid rgba(138, 180, 248, 0.06);
 }
 
 .loading-state, .error-state, .empty-state {
@@ -976,61 +976,74 @@ input:focus, textarea:focus {
   transform: translateX(-50%);
   display: flex;
   gap: var(--space-lg);
-  background: rgba(26, 26, 26, 0.95);
-  border: 1px solid var(--color-base-medium);
-  border-radius: var(--border-radius-lg);
-  padding: var(--space-md) var(--space-lg);
-  backdrop-filter: blur(10px);
+  background: transparent;
+  border: none;
+  border-radius: 0.5rem;
+  padding: 0.75rem 1rem;
   z-index: 1000;
-  box-shadow: var(--glow-cyan);
+}
+
+.shortcut-container:hover {
+  background: transparent;
 }
 
 .shortcut-item {
   display: flex;
   align-items: center;
-  gap: var(--space-sm);
+  gap: 0.5rem;
   font-family: var(--font-mono);
 }
 
 .shortcut-key {
-  background: var(--gradient-cyber);
-  color: var(--color-base-black);
-  padding: var(--space-xs) var(--space-sm);
-  border-radius: var(--border-radius);
+  background: rgba(255, 255, 255, 0.05);
+  color: var(--color-text-primary);
+  padding: 0.25rem 0.5rem;
+  border-radius: 0.25rem;
   font-family: var(--font-mono);
-  font-size: 0.85rem;
-  font-weight: 600;
-  min-width: 24px;
+  font-size: 0.75rem;
+  font-weight: 500;
+  min-width: 20px;
   text-align: center;
-  box-shadow: var(--glow-cyan);
-  border: 1px solid var(--color-accent-cyan);
+  border: 1px solid rgba(255, 255, 255, 0.15);
+  transition: all 0.2s ease;
+}
+
+.shortcut-key:hover {
+  background: rgba(255, 255, 255, 0.1);
+  border-color: rgba(255, 255, 255, 0.25);
 }
 
 .shortcut-plus {
-  color: var(--color-text-muted);
-  font-size: 0.8rem;
+  color: rgba(255, 255, 255, 0.4);
+  font-size: 0.7rem;
+  margin: 0 0.25rem;
 }
 
 .shortcut-label {
-  color: var(--color-text-secondary);
-  font-size: 0.9rem;
+  color: var(--color-text-muted);
+  font-size: 0.8rem;
   font-weight: 400;
 }
 
 /* KBD要素のスタイリング */
 .kbd-key {
-  background: var(--gradient-cyber);
-  color: var(--color-base-black);
-  padding: var(--space-xs) var(--space-sm);
-  border-radius: var(--border-radius);
+  background: rgba(255, 255, 255, 0.05);
+  color: var(--color-text-primary);
+  padding: 0.25rem 0.5rem;
+  border-radius: 0.25rem;
   font-family: var(--font-mono);
-  font-size: 0.85rem;
-  font-weight: 600;
-  min-width: 24px;
+  font-size: 0.75rem;
+  font-weight: 500;
+  min-width: 20px;
   text-align: center;
-  box-shadow: var(--glow-cyan);
-  border: 1px solid var(--color-accent-cyan);
+  border: 1px solid rgba(255, 255, 255, 0.15);
   display: inline-block;
+  transition: all 0.2s ease;
+}
+
+.kbd-key:hover {
+  background: rgba(255, 255, 255, 0.1);
+  border-color: rgba(255, 255, 255, 0.25);
 }
 
 /* =====================================
@@ -1118,13 +1131,18 @@ input:focus, textarea:focus {
   display: flex;
   flex-direction: column;
   gap: var(--space-sm);
-  background: rgba(26, 26, 26, 0.95);
-  border: 1px solid var(--color-base-medium);
-  border-radius: var(--border-radius-lg);
-  padding: var(--space-md);
+  background: rgba(26, 26, 26, 0.7);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: 0.5rem;
+  padding: 0.75rem;
   backdrop-filter: blur(10px);
   z-index: 1000;
   transition: all var(--transition-normal);
+}
+
+.minimal-shortcut:hover {
+  background: rgba(26, 26, 26, 0.8);
+  border-color: rgba(255, 255, 255, 0.15);
 }
 
 .minimal-shortcut.visible {
@@ -1138,27 +1156,42 @@ input:focus, textarea:focus {
 }
 
 .minimal-shortcut .key {
-  background: var(--gradient-cyber);
-  color: var(--color-base-black);
-  padding: var(--space-xs);
-  border-radius: var(--border-radius);
+  background: rgba(255, 255, 255, 0.05);
+  color: var(--color-text-primary);
+  padding: 0.2rem 0.4rem;
+  border-radius: 0.25rem;
   font-family: var(--font-mono);
-  font-size: 0.8rem;
-  font-weight: 600;
-  min-width: 20px;
+  font-size: 0.7rem;
+  font-weight: 500;
+  min-width: 18px;
   text-align: center;
   display: inline-block;
+  border: 1px solid rgba(255, 255, 255, 0.15);
+  transition: all 0.2s ease;
+}
+
+.minimal-shortcut .key:hover {
+  background: rgba(255, 255, 255, 0.1);
+  border-color: rgba(255, 255, 255, 0.25);
 }
 
 .minimal-shortcut .plus {
-  color: var(--color-text-muted);
-  margin: 0 var(--space-xs);
-  font-size: 0.7rem;
+  color: rgba(255, 255, 255, 0.4);
+  margin: 0 0.2rem;
+  font-size: 0.6rem;
 }
 
 .minimal-shortcut .label {
-  color: var(--color-text-secondary);
-  font-size: 0.8rem;
+  color: var(--color-text-muted);
+  font-size: 0.7rem;
   margin-left: var(--space-xs);
   font-family: var(--font-mono);
+  font-weight: 400;
+}
+
+/* ショートカットポータルコンテナのスタイル */
+#shortcut-portal-container {
+  background: transparent !important;
+  border: none !important;
+  backdrop-filter: none !important;
 }

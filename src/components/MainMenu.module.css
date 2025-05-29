@@ -105,27 +105,27 @@
 }
 
 .menuModeButtonNormal {
-  background-color: rgba(57, 255, 20, 0.1);
-  border-color: var(--color-accent-neon);
-  color: var(--color-accent-neon);
+  background-color: rgba(129, 199, 132, 0.1);
+  border-color: var(--color-success);
+  color: var(--color-success);
 }
 
 .menuModeButtonHard {
-  background-color: rgba(255, 7, 58, 0.1);
+  background-color: rgba(242, 139, 130, 0.1);
   border-color: var(--color-error);
   color: var(--color-error);
 }
 
 .menuModeButtonInactiveNormal {
   background-color: transparent;
-  border-color: var(--color-accent-purple);
-  color: var(--color-accent-purple);
+  border-color: var(--color-text-muted);
+  color: var(--color-text-muted);
 }
 
 .menuModeButtonInactiveHard {
   background-color: transparent;
-  border-color: var(--color-accent-purple);
-  color: var(--color-accent-purple);
+  border-color: var(--color-text-muted);
+  color: var(--color-text-muted);
 }
 
 .menuModeButtonLabel {
@@ -331,7 +331,7 @@
   filter: brightness(1.2);
 }
 .adminModal .admin-danger {
-  background: linear-gradient(90deg, #ff073a, #b466f2);
+  background: linear-gradient(90deg, var(--color-error), #c8a2c8);
   color: #fff;
   box-shadow: var(--glow-error);
 }
@@ -356,9 +356,9 @@
   right: 0;
   top: 110%;
   background: var(--color-bg-dark, #181c24);
-  border: 1px solid var(--color-accent-cyan, #00f5ff);
+  border: 1px solid var(--color-accent-cyan);
   border-radius: 8px;
-  box-shadow: 0 4px 32px rgba(0,245,255,0.08);
+  box-shadow: 0 4px 32px rgba(138,180,248,0.08);
   z-index: 100;
   min-width: 180px;
   display: flex;
@@ -370,7 +370,7 @@
 .manabyDropdown button {
   background: none;
   border: none;
-  color: var(--color-accent-cyan, #00f5ff);
+  color: var(--color-accent-cyan);
   font-size: 1.1rem;
   padding: 0.5rem 0;
   text-align: left;
@@ -379,8 +379,8 @@
   border-radius: 4px;
 }
 .manabyDropdown button:hover {
-  color: var(--color-accent-neon, #39ff14);
-  background: rgba(0,245,255,0.08);
+  color: var(--color-accent-neon, #e8b84a);
+  background: rgba(138,180,248,0.08);
 }
 @keyframes fadeInDropdown {
   from { opacity: 0; transform: translateY(-10px); }
