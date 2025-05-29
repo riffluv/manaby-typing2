@@ -354,7 +354,7 @@ export const getAllRomajiPatterns = (hiragana: string): Array<{
 };
 
 /**
- * タイピング用のかな文字クラス
+ * タイピング用のかな文字クラス（typingmania-ref流高速化版）
  * 複数の入力パターンをサポートします
  */
 export class TypingChar {
@@ -375,13 +375,22 @@ export class TypingChar {
   }
   
   /**
-   * 特定の文字列を受け入れ可能かどうかをチェック
+   * 特定の文字列を受け入れ可能かどうかをチェック（高速化版）
    */
   canAccept(character: string): boolean {
     const char = character.toLowerCase();
     const newInput = this.acceptedInput + char;
     
-    // 活性なパターンだけをチェック
+    // 高速化：最初の有効パターンでチェック
+    if (this.activePatternIndices.length > 0) {
+      const firstActivePattern = this.patterns[this.activePatternIndices[0]];
+      if (newInput.length <= firstActivePattern.length && 
+          newInput === firstActivePattern.substring(0, newInput.length)) {
+        return true;
+      }
+    }
+    
+    // フォールバック：全パターンチェック
     for (const patternIndex of this.activePatternIndices) {
       const pattern = this.patterns[patternIndex];
       if (newInput.length <= pattern.length && newInput === pattern.substring(0, newInput.length)) {
@@ -393,7 +402,7 @@ export class TypingChar {
   }
   
   /**
-   * 入力を受け入れて、完了したかどうかを返す
+   * 入力を受け入れて、完了したかどうかを返す（高速化版）
    */
   accept(character: string): boolean {
     const char = character.toLowerCase();
@@ -401,7 +410,7 @@ export class TypingChar {
     if (this.canAccept(char)) {
       this.acceptedInput += char;
       
-      // 入力後に有効なパターンを更新
+      // 入力後に有効なパターンを更新（高速化）
       this.updateActivePatterns();
       this.calculateRemainingText();
       return true;
@@ -411,24 +420,25 @@ export class TypingChar {
   }
   
   /**
-   * 現在の入力に基づいて有効なパターンを更新
+   * 現在の入力に基づいて有効なパターンを更新（最適化版）
    */
   updateActivePatterns(): void {
-    const validPatternIndices: number[] = [];
+    // 高速化：フィルタ処理を最小限に
+    const newActiveIndices: number[] = [];
     
-    for (let i = 0; i < this.patterns.length; i++) {
+    for (const i of this.activePatternIndices) {
       const pattern = this.patterns[i];
       if (this.acceptedInput.length <= pattern.length && 
           this.acceptedInput === pattern.substring(0, this.acceptedInput.length)) {
-        validPatternIndices.push(i);
+        newActiveIndices.push(i);
       }
     }
     
-    this.activePatternIndices = validPatternIndices;
+    this.activePatternIndices = newActiveIndices;
   }
   
   /**
-   * 残りのテキストを計算
+   * 残りのテキストを計算（高速化版）
    */
   calculateRemainingText(): void {
     if (this.completed) {
@@ -436,7 +446,7 @@ export class TypingChar {
       return;
     }
     
-    // 最短の残りの表現を検索（活性パターンの中から）
+    // 高速化：最短パターンを素早く見つける
     let shortestRemaining = '';
     let shortestLength = Infinity;
     
@@ -447,6 +457,9 @@ export class TypingChar {
         if (remaining.length < shortestLength) {
           shortestRemaining = remaining;
           shortestLength = remaining.length;
+          
+          // 最短が見つかったら早期終了（高速化）
+          if (shortestLength === 0) break;
         }
       }
     }
@@ -461,7 +474,7 @@ export class TypingChar {
   }
   
   /**
-   * 文字の表示用の情報を取得
+   * 文字の表示用の情報を取得（キャッシュ最適化）
    */
   getDisplayInfo(): {
     displayText: string;

@@ -62,6 +62,13 @@
   --sidebar-width: 250px;
   --border-radius: 8px;
   --border-radius-lg: 12px;
+
+  /* パフォーマンス最適化設定 - typingmania-ref流 */
+  --performance-enable-gpu: true;
+  --performance-layer-force: translateZ(0);
+  --performance-will-change: transform, opacity, background-color;
+  --performance-contain: layout style paint;
+  --performance-content-visibility: auto;
 }
 
 /* ダークモード対応 */
@@ -1194,4 +1201,228 @@ input:focus, textarea:focus {
   background: transparent !important;
   border: none !important;
   backdrop-filter: none !important;
+}
+
+/* =====================================
+   TYPING AREA PERFORMANCE OPTIMIZATIONS
+   typingmania-ref流 GPU加速最適化
+   ===================================== */
+
+/* タイピングエリア - 超高速レンダリング最適化 */
+.typing-area {
+  /* GPU レイヤー強制生成 */
+  transform: var(--performance-layer-force);
+  will-change: var(--performance-will-change);
+  contain: var(--performance-contain);
+  content-visibility: var(--performance-content-visibility);
+  
+  /* レイアウト最適化 */
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.125rem;
+  
+  /* フォント設定 */
+  font-family: var(--font-mono);
+  font-size: 1.75rem;
+  line-height: 1.6;
+  letter-spacing: 0.05em;
+  
+  /* 視覚的配置 */
+  padding: var(--space-lg);
+  background: var(--color-base-dark);
+  border-radius: 12px;
+  border: 1px solid var(--color-base-medium);
+  
+  /* スムーズトランジション */
+  transition: box-shadow 0.2s ease;
+}
+
+.typing-area:focus-within {
+  box-shadow: var(--glow-cyan);
+  border-color: var(--color-accent-cyan);
+}
+
+/* タイピング文字 - 個別最適化 */
+.typing-char {
+  /* 超高速GPU描画 */
+  transform: translateZ(0);
+  will-change: background-color, color, transform;
+  contain: layout style;
+  
+  /* 配置 */
+  display: inline-block;
+  position: relative;
+  padding: 0.1em 0.2em;
+  border-radius: 4px;
+  
+  /* トランジション最適化 */
+  transition: all 0.15s cubic-bezier(0.4, 0, 0.2, 1);
+  backface-visibility: hidden;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+/* 文字状態 - 直接DOM操作対応 */
+.typing-char.char-pending {
+  color: var(--color-text-muted);
+  background: transparent;
+}
+
+.typing-char.char-current {
+  color: var(--color-base-black);
+  background: var(--color-accent-cyan);
+  box-shadow: var(--glow-cyan);
+  transform: translateZ(0) scale(1.05);
+  font-weight: 600;
+}
+
+.typing-char.char-completed {
+  color: var(--color-success);
+  background: rgba(129, 199, 132, 0.1);
+  transform: translateZ(0);
+}
+
+.typing-char.char-error {
+  color: var(--color-error);
+  background: rgba(242, 139, 130, 0.2);
+  box-shadow: var(--glow-error);
+  animation: shake 0.3s ease-in-out;
+}
+
+/* エラー時のシェイクアニメーション */
+@keyframes shake {
+  0%, 100% { transform: translateZ(0) translateX(0); }
+  25% { transform: translateZ(0) translateX(-2px); }
+  75% { transform: translateZ(0) translateX(2px); }
+}
+
+/* ゲーム画面 - パフォーマンス最適化 */
+.game-screen {
+  /* GPU加速レイヤー */
+  transform: translateZ(0);
+  will-change: transform, opacity;
+  contain: layout style paint;
+  
+  /* レイアウト */
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: var(--space-lg);
+  
+  /* 視覚的配置 */
+  min-height: 100vh;
+  padding: var(--space-xl);
+  background: var(--gradient-dark);
+}
+
+/* 単語表示 - 高速レンダリング */
+.word-japanese,
+.word-hiragana {
+  transform: translateZ(0);
+  will-change: transform, opacity;
+  contain: layout style;
+  
+  text-align: center;
+  font-family: var(--font-ui);
+  font-weight: 600;
+  color: var(--color-text-primary);
+  text-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
+}
+
+.word-japanese {
+  font-size: 2.5rem;
+  margin-bottom: var(--space-sm);
+}
+
+.word-hiragana {
+  font-size: 1.5rem;
+  color: var(--color-text-secondary);
+  margin-bottom: var(--space-lg);
+}
+
+/* メディアクエリ - レスポンシブ最適化 */
+@media (max-width: 768px) {
+  .typing-area {
+    font-size: 1.5rem;
+    padding: var(--space-md);
+  }
+  
+  .word-japanese {
+    font-size: 2rem;
+  }
+  
+  .word-hiragana {
+    font-size: 1.25rem;
+  }
+}
+
+@media (max-width: 480px) {
+  .typing-area {
+    font-size: 1.25rem;
+    padding: var(--space-sm);
+  }
+  
+  .word-japanese {
+    font-size: 1.75rem;
+  }
+  
+  .word-hiragana {
+    font-size: 1rem;
+  }
+}
+
+/* ハイコントラストモード対応 */
+@media (prefers-contrast: high) {
+  .typing-char.char-current {
+    background: #ffffff;
+    color: #000000;
+    border: 2px solid var(--color-accent-cyan);
+  }
+  
+  .typing-char.char-completed {
+    background: var(--color-success);
+    color: var(--color-base-black);
+  }
+}
+
+/* リデュースモーション対応 */
+@media (prefers-reduced-motion: reduce) {
+  .typing-char {
+    transition: none;
+    animation: none;
+  }
+  
+  .typing-char.char-current {
+    transform: none;
+  }
+  
+  @keyframes shake {
+    0%, 100% { transform: none; }
+  }
+}
+
+/* フォーカス管理 - アクセシビリティ */
+.typing-area:focus {
+  outline: 2px solid var(--color-accent-cyan);
+  outline-offset: 4px;
+}
+
+.typing-char:focus {
+  outline: 1px solid var(--color-accent-cyan);
+  outline-offset: 2px;
+}
+
+/* パフォーマンス監視用デバッグスタイル（開発時のみ） */
+[data-performance-debug="true"] .typing-char {
+  position: relative;
+}
+
+[data-performance-debug="true"] .typing-char::after {
+  content: attr(data-state);
+  position: absolute;
+  top: -1.5em;
+  left: 0;
+  font-size: 0.7em;
+  color: var(--color-text-muted);
+  pointer-events: none;
 }

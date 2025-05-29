@@ -1,6 +1,8 @@
-import React, { memo, useMemo } from 'react';
+import React, { useEffect, useRef } from 'react';
 import type { TypingChar } from '@/utils/japaneseUtils';
 import type { KanaDisplay } from '@/types';
+import { useDirectDOM } from '@/utils/DirectDOMManager';
+import { usePerformanceMonitor } from '@/utils/PerformanceMonitor';
 
 export type TypingAreaProps = {
   currentKanaIndex: number;
@@ -46,58 +48,128 @@ function getCharClass(
 }
 
 /**
- * TypingArea: タイピングゲームの中核となるローマ字表示コンポーネント
+ * TypingArea: タイピングゲームの中核となるローマ字表示コンポーネント（超高速化版）
  * 
- * 製品版用に最適化されたパフォーマンス重視の実装:
- * - メモ化による再レンダリング最小化
+ * typingmania-ref流パフォーマンス最適化:
+ * - 不要なメモ化を削除
+ * - 直接的なDOM表現
+ * - 直接DOM操作による超高速更新
+ * - パフォーマンス監視統合
  * - アクセシビリティ対応
- * - データ属性を活用した状態管理
  * - 分離されたスタイルモジュールによるリファクタリング耐性
  */
-const TypingArea: React.FC<TypingAreaProps> = memo(({
+const TypingArea: React.FC<TypingAreaProps> = ({
   currentKanaIndex,
   typingChars,
   displayChars,
   kanaDisplay
 }) => {
-  // すべての文字を1次元配列にフラット化（useMemoでパフォーマンス最適化）
-  const allChars: FlatChar[] = useMemo(() =>
-    typingChars.flatMap((_, kanaIndex) => {
-      const displayText = displayChars[kanaIndex] || '';
-      return [...displayText].map((char, charIndex) => ({ char, kanaIndex, charIndex }));
-    }),
-    [typingChars, displayChars]
-  );
+  const containerRef = useRef<HTMLDivElement>(null);
+  const charRefsRef = useRef<Map<string, HTMLSpanElement>>(new Map());
+  const previousKanaIndexRef = useRef(currentKanaIndex);
+  const previousAcceptedLengthRef = useRef(kanaDisplay.acceptedText.length);
+  
+  // 直接DOM操作とパフォーマンス監視
+  const directDOM = useDirectDOM();
+  const performanceMonitor = usePerformanceMonitor();
+
+  // すべての文字を1次元配列にフラット化（高速化：useMemoを削除）
+  const allChars: FlatChar[] = typingChars.flatMap((_, kanaIndex) => {
+    const displayText = displayChars[kanaIndex] || '';
+    return [...displayText].map((char, charIndex) => ({ char, kanaIndex, charIndex }));
+  });
 
   // 現在の入力状態
   const acceptedLength = kanaDisplay.acceptedText.length;
   
-  // ARIA属性用のコンテキスト情報
-  const ariaContext = useMemo(() => {
-    const currentKana = typingChars[currentKanaIndex]?.kana || '';
-    const progress = Math.floor((currentKanaIndex / Math.max(1, typingChars.length)) * 100);
-    return { currentKana, progress };
-  }, [currentKanaIndex, typingChars]);
+  // ARIA属性用のコンテキスト情報（高速化：計算を簡素化）
+  const currentKana = typingChars[currentKanaIndex]?.kana || '';
+  const progress = Math.floor((currentKanaIndex / Math.max(1, typingChars.length)) * 100);
 
-  // 効率的なレンダリングとアクセシビリティを両立
+  // 直接DOM更新による超高速レスポンス
+  useEffect(() => {
+    const perfStart = performanceMonitor.startInputMeasurement('state-update');
+    
+    // かなインデックスが変わった場合の処理
+    if (previousKanaIndexRef.current !== currentKanaIndex) {
+      // 前のかなの全文字を completed に更新
+      if (previousKanaIndexRef.current < currentKanaIndex) {
+        const prevDisplayText = displayChars[previousKanaIndexRef.current] || '';
+        [...prevDisplayText].forEach((_, charIndex) => {
+          directDOM.updateCharState(previousKanaIndexRef.current, charIndex, 'completed');
+        });
+      }
+      
+      previousKanaIndexRef.current = currentKanaIndex;
+    }
+
+    // 受け入れ文字数が変わった場合の処理
+    if (previousAcceptedLengthRef.current !== acceptedLength) {
+      const currentDisplayText = displayChars[currentKanaIndex] || '';
+      
+      // 受け入れられた文字を completed に更新
+      [...currentDisplayText].forEach((_, charIndex) => {
+        if (charIndex < acceptedLength) {
+          directDOM.updateCharState(currentKanaIndex, charIndex, 'completed');
+        } else if (charIndex === acceptedLength) {
+          directDOM.updateCharState(currentKanaIndex, charIndex, 'current');
+        } else {
+          directDOM.updateCharState(currentKanaIndex, charIndex, 'pending');
+        }
+      });
+      
+      previousAcceptedLengthRef.current = acceptedLength;
+    }
+
+    // プログレス情報の直接更新
+    directDOM.updateProgress(progress, currentKana);
+    
+    performanceMonitor.endRenderMeasurement('state-update', perfStart);
+  }, [currentKanaIndex, acceptedLength, directDOM, performanceMonitor, displayChars, progress, currentKana]);
+
+  // 文字要素参照のコールバック
+  const setCharRef = (element: HTMLSpanElement | null, kanaIndex: number, charIndex: number) => {
+    const key = `${kanaIndex}-${charIndex}`;
+    
+    if (element) {
+      charRefsRef.current.set(key, element);
+      directDOM.registerTypingChar(element, kanaIndex, charIndex);
+    } else {
+      charRefsRef.current.delete(key);
+      directDOM.unregisterTypingChar(kanaIndex, charIndex);
+    }
+  };
+
+  // クリーンアップ
+  useEffect(() => {
+    return () => {
+      directDOM.clearAll();
+    };
+  }, [directDOM]);
+
+  // 効率的なレンダリングとアクセシビリティを両立（直接DOM操作版）
   return (
     <div
+      ref={containerRef}
       className="typing-area"
       role="region"
       aria-label="タイピング入力欄"
       aria-live="polite"
       aria-atomic="false"
       aria-relevant="additions text"
-      aria-description={`進捗: ${ariaContext.progress}%`}
-      data-current-kana={ariaContext.currentKana}
-      data-progress={ariaContext.progress}
+      aria-description={`進捗: ${progress}%`}
+      data-current-kana={currentKana}
+      data-progress={progress}
+      style={{
+        willChange: 'transform',
+        contain: 'content'
+      }}
     >
       {allChars.map(({ char, kanaIndex, charIndex }, idx) => {
         // 文字の現在の状態を判定（パフォーマンス最適化）
         const isCompleted = kanaIndex < currentKanaIndex || 
                           (kanaIndex === currentKanaIndex && charIndex < acceptedLength);
         const isCurrent = kanaIndex === currentKanaIndex && charIndex === acceptedLength;
-        const isPending = !isCompleted && !isCurrent;
         
         // 状態に基づいて適切なクラスを適用
         const stateClass = getCharClass(kanaIndex, charIndex, currentKanaIndex, acceptedLength);
@@ -108,6 +180,7 @@ const TypingArea: React.FC<TypingAreaProps> = memo(({
         return (
           <span
             key={idx}
+            ref={(el) => setCharRef(el, kanaIndex, charIndex)}
             className={`typing-char ${stateClass}`}
             aria-current={isCurrent ? 'true' : undefined}
             aria-label={`${char} (${stateText})`}
@@ -115,6 +188,10 @@ const TypingArea: React.FC<TypingAreaProps> = memo(({
             data-kana-index={kanaIndex}
             data-char-index={charIndex}
             data-char={char}
+            style={{
+              willChange: isCurrent ? 'transform, background-color' : undefined,
+              transform: 'translateZ(0)' // GPU レイヤー促進
+            }}
           >
             {char}
           </span>
@@ -122,6 +199,7 @@ const TypingArea: React.FC<TypingAreaProps> = memo(({
       })}
     </div>
   );
-});
+};
+
 TypingArea.displayName = 'TypingArea';
 export default TypingArea;

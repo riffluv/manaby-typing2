@@ -1,73 +1,15 @@
 'use client';
 
-import { useRef, useCallback, useState, useReducer, useEffect } from 'react';
+import { useRef, useCallback, useEffect } from 'react';
 import { useTypingGameStore, useGameStatus } from '@/store/typingGameStore';
 import { useAudioStore } from '@/store/audioStore';
 import { TypingWord, KanaDisplay, PerWordScoreLog } from '@/types';
 import UnifiedAudioSystem from '@/utils/UnifiedAudioSystem';
-
-// タイピング状態を定義
-type TypingState = {
-  wordStats: {
-    keyCount: number;
-    correct: number;
-    miss: number;
-    startTime: number;
-  };
-  kanaIndex: number;
-};
-
-// アクションタイプを定義
-type TypingAction = 
-  | { type: 'RESET_WORD' }
-  | { type: 'INCREMENT_CORRECT' }
-  | { type: 'INCREMENT_MISS' }
-  | { type: 'SET_START_TIME', time: number }
-  | { type: 'ADVANCE_KANA', index?: number };
-
-// レデューサー関数
-function typingReducer(state: TypingState, action: TypingAction): TypingState {
-  switch (action.type) {
-    case 'RESET_WORD':
-      return {
-        wordStats: { keyCount: 0, correct: 0, miss: 0, startTime: 0 },
-        kanaIndex: 0
-      };
-    case 'INCREMENT_CORRECT':
-      return {
-        ...state,
-        wordStats: {
-          ...state.wordStats,
-          keyCount: state.wordStats.keyCount + 1,
-          correct: state.wordStats.correct + 1
-        }
-      };
-    case 'INCREMENT_MISS':
-      return {
-        ...state,
-        wordStats: {
-          ...state.wordStats,
-          keyCount: state.wordStats.keyCount + 1,
-          miss: state.wordStats.miss + 1
-        }
-      };
-    case 'SET_START_TIME':
-      return {
-        ...state,
-        wordStats: { ...state.wordStats, startTime: action.time }
-      };
-    case 'ADVANCE_KANA':
-      return {
-        ...state,
-        kanaIndex: action.index !== undefined ? action.index : state.kanaIndex + 1
-      };
-    default:
-      return state;
-  }
-}
+import { usePerformanceMonitor } from '@/utils/PerformanceMonitor';
+import { useDirectDOM } from '@/utils/DirectDOMManager';
 
 /**
- * 統合タイピング処理フック
+ * 統合タイピング処理フック（typingmania-ref流超高速化版）
  * @param currentWord 現在の単語
  * @param setKanaDisplay かな表示更新関数
  * @param setScoreLog スコアログ更新関数
@@ -86,8 +28,12 @@ export function useUnifiedTypingProcessor(
   const typingCharsRef = useRef<TypingWord['typingChars']>([]);
   const userInputRef = useRef('');
   
-  // 統合されたタイピング状態の管理
-  const [typingState, dispatch] = useReducer(typingReducer, {
+  // パフォーマンス監視と直接DOM操作
+  const performanceMonitor = usePerformanceMonitor();
+  const directDOM = useDirectDOM();
+  
+  // typingmania-ref流：useRefベースの高速状態管理（再レンダリングなし）
+  const typingStateRef = useRef({
     wordStats: {
       keyCount: 0,
       correct: 0,
@@ -102,7 +48,12 @@ export function useUnifiedTypingProcessor(
     if (currentWord && currentWord.typingChars) {
       typingCharsRef.current = currentWord.typingChars;
       userInputRef.current = '';
-      dispatch({ type: 'RESET_WORD' });
+      
+      // 状態をリセット（useRef直接変更）
+      typingStateRef.current = {
+        wordStats: { keyCount: 0, correct: 0, miss: 0, startTime: 0 },
+        kanaIndex: 0
+      };
       
       // 初期表示の設定
       if (currentWord.typingChars.length > 0) {
@@ -116,7 +67,7 @@ export function useUnifiedTypingProcessor(
     }
   }, [currentWord, setKanaDisplay]);
 
-  // キー入力イベントのハンドラー
+  // キー入力イベントのハンドラー（typingmania-ref流最適化）
   useEffect(() => {
     if (gameStatus !== 'playing') return;
 
@@ -126,22 +77,33 @@ export function useUnifiedTypingProcessor(
       // タイピング入力処理
       if (e.key.length !== 1) return;
       
+      // パフォーマンス測定開始
+      const perfStart = performanceMonitor.startInputMeasurement(e.key);
+      
       const typingChars = typingCharsRef.current;
+      const typingState = typingStateRef.current;
       const idx = typingState.kanaIndex;
       const currentTypingChar = typingChars[idx];
       
-      if (!currentTypingChar) return;
+      if (!currentTypingChar) {
+        performanceMonitor.endRenderMeasurement(e.key, perfStart);
+        return;
+      }
 
       // 初回入力時の開始時間記録
       if (typingState.wordStats.keyCount === 0) {
-        dispatch({ type: 'SET_START_TIME', time: Date.now() });
+        typingState.wordStats.startTime = Date.now();
       }
 
-      // 入力判定
+      // 入力判定（高速化）
       if (currentTypingChar.canAccept(e.key)) {
         currentTypingChar.accept(e.key);
-        dispatch({ type: 'INCREMENT_CORRECT' });
-          // 打撃音を再生（UnifiedAudioSystem使用）
+        
+        // 直接状態更新（useReducerより高速）
+        typingState.wordStats.keyCount++;
+        typingState.wordStats.correct++;
+        
+        // 打撃音を再生（UnifiedAudioSystem使用）
         UnifiedAudioSystem.playClickSound();
         
         const info = currentTypingChar.getDisplayInfo();
@@ -156,9 +118,12 @@ export function useUnifiedTypingProcessor(
         // かなが完了したら次へ
         if (info.isCompleted) {
           const nextIdx = idx + 1;
-          dispatch({ type: 'ADVANCE_KANA', index: nextIdx });
+          typingState.kanaIndex = nextIdx;
           
+          // 直接DOM更新でハイライト移動
           if (nextIdx < typingChars.length) {
+            directDOM.updateCurrentCharHighlight(nextIdx, 0);
+            
             const nextInfo = typingChars[nextIdx].getDisplayInfo();
             setKanaDisplay({
               acceptedText: nextInfo.acceptedText,
@@ -170,8 +135,11 @@ export function useUnifiedTypingProcessor(
             const endTime = Date.now();
             const timeSec = (endTime - typingState.wordStats.startTime) / 1000;
             const kpm = timeSec > 0 ? (typingState.wordStats.keyCount / timeSec) * 60 : 0;
+            
             const accuracy = typingState.wordStats.keyCount > 0 ? 
-              (typingState.wordStats.correct / typingState.wordStats.keyCount) * 100 : 0;            // スコアログに記録
+              (typingState.wordStats.correct / typingState.wordStats.keyCount) * 100 : 0;
+              
+            // スコアログに記録
             setScoreLog(prev => [...prev, {
               wordIndex: currentWordIndex,
               kpm,
@@ -189,23 +157,43 @@ export function useUnifiedTypingProcessor(
               advanceToNextWord();
             }, 500);
           }
+        } else {
+          // 文字レベルでの直接DOM更新
+          const acceptedLength = info.acceptedText.length;
+          directDOM.updateCurrentCharHighlight(idx, acceptedLength);
         }
       } else {
-        // ミス処理
-        dispatch({ type: 'INCREMENT_MISS' });
+        // ミス処理（直接状態更新）
+        typingState.wordStats.keyCount++;
+        typingState.wordStats.miss++;
+        
         // オーディオストアから効果音を再生
         playSound('wrong', 0.5);
       }
+      
+      // パフォーマンス測定終了
+      performanceMonitor.endRenderMeasurement(e.key, perfStart);
     };
 
     window.addEventListener('keydown', keyDownHandler);
     return () => window.removeEventListener('keydown', keyDownHandler);
-  }, [gameStatus, advanceToNextWord, setKanaDisplay, setScoreLog, typingState, playSound]);
+  }, [gameStatus, advanceToNextWord, setKanaDisplay, setScoreLog, currentWordIndex, playSound, performanceMonitor, directDOM]);
 
   // お題切り替え時に進行状態をリセット
   const resetProgress = useCallback(() => {
     userInputRef.current = '';
-    dispatch({ type: 'RESET_WORD' });
+    
+    // 状態をリセット（useRef直接変更）
+    typingStateRef.current = {
+      wordStats: { keyCount: 0, correct: 0, miss: 0, startTime: 0 },
+      kanaIndex: 0
+    };
+    
+    // 直接DOM操作もリセット
+    directDOM.resetTypingArea();
+    
+    // パフォーマンス監視もリセット
+    performanceMonitor.reset();
     
     if (currentWord.typingChars.length > 0) {
       const info = currentWord.typingChars[0].getDisplayInfo();
@@ -217,14 +205,14 @@ export function useUnifiedTypingProcessor(
     } else {
       setKanaDisplay({ acceptedText: '', remainingText: '', displayText: '' });
     }
-  }, [currentWord, setKanaDisplay]);
+  }, [currentWord, setKanaDisplay, directDOM, performanceMonitor]);
 
   return {
-    currentKanaIndex: typingState.kanaIndex,
+    currentKanaIndex: typingStateRef.current.kanaIndex,
     wordStats: {
-      keyCount: typingState.wordStats.keyCount,
-      correct: typingState.wordStats.correct,
-      miss: typingState.wordStats.miss
+      keyCount: typingStateRef.current.wordStats.keyCount,
+      correct: typingStateRef.current.wordStats.correct,
+      miss: typingStateRef.current.wordStats.miss
     },
     resetProgress,
     userInputRef
