@@ -1,8 +1,10 @@
-import React from 'react';
+import React, { useState } from 'react';
 import TypingArea from './TypingArea';
 import { TypingWord, KanaDisplay } from '@/types';
 import PortalShortcut from './PortalShortcut';
 import PerformanceDebug from './PerformanceDebug';
+import KeyLatencyAnalyzer from './KeyLatencyAnalyzer';
+import VeteranOptimizationGuide from './VeteranOptimizationGuide';
 import styles from './GameScreen.module.css';
 
 export type GameScreenProps = {
@@ -13,12 +15,20 @@ export type GameScreenProps = {
 
 /**
  * MonkeyType + THE FINALS インスパイアード cyberpunk ゲーム画面（高速化版）
- * typingmania-ref流最適化:
+ * typingmania-ref流最適化 + 40年ベテラン対応:
  * - 不要なアニメーションを削除
  * - 直接的なDOM表現
  * - GPU加速レンダリング最適化
+ * - リアルタイムキー遅延解析システム搭載
  */
 const GameScreen: React.FC<GameScreenProps> = ({ currentWord, currentKanaIndex, currentKanaDisplay }) => {
+  const [latencyAlertCount, setLatencyAlertCount] = useState(0);
+
+  // ベテラン向け遅延アラート処理
+  const handleLatencyAlert = (latency: number) => {
+    setLatencyAlertCount(prev => prev + 1);
+    console.warn(`🚨 ベテラン感覚遅延アラート #${latencyAlertCount + 1}: ${latency.toFixed(3)}ms`);
+  };
 
   return (
     <div className={styles.gameScreenWrapper}>
@@ -64,6 +74,34 @@ const GameScreen: React.FC<GameScreenProps> = ({ currentWord, currentKanaIndex, 
 
         {/* パフォーマンス監視（開発/デバッグ用） */}
         <PerformanceDebug enabled={process.env.NODE_ENV === 'development'} />
+        
+        {/* ベテラン向けキー遅延解析システム（Ctrl+Shift+L で切り替え） */}
+        <KeyLatencyAnalyzer 
+          enabled={process.env.NODE_ENV === 'development'} 
+          onLatencyAlert={handleLatencyAlert}
+        />
+        
+        {/* ベテラン向け最適化ガイド（Ctrl+Shift+V で切り替え） */}
+        <VeteranOptimizationGuide enabled={false} />
+        
+        {/* ベテラン遅延アラート表示 */}
+        {latencyAlertCount > 0 && (
+          <div style={{
+            position: 'fixed',
+            top: '10px',
+            right: '10px',
+            background: 'rgba(255, 68, 68, 0.9)',
+            color: 'white',
+            padding: '8px 12px',
+            borderRadius: '6px',
+            fontSize: '12px',
+            zIndex: 9999,
+            backdropFilter: 'blur(10px)',
+            border: '1px solid #ff4444'
+          }}>
+            🚨 遅延アラート: {latencyAlertCount}回
+          </div>
+        )}
       </div>
     </div>
   );

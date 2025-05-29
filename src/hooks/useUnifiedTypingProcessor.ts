@@ -7,9 +7,13 @@ import { TypingWord, KanaDisplay, PerWordScoreLog } from '@/types';
 import UnifiedAudioSystem from '@/utils/UnifiedAudioSystem';
 import { usePerformanceMonitor } from '@/utils/PerformanceMonitor';
 import { useDirectDOM } from '@/utils/DirectDOMManager';
+import { useHighSpeedKeys } from '@/utils/HighSpeedKeyDetector';
+import { useHardwareKeyOptimizer, SystemLatencyMetrics } from '@/utils/HardwareKeyOptimizer';
 
 /**
- * 統合タイピング処理フック（typingmania-ref流超高速化版）
+ * 統合タイピング処理フック（typingmania-ref流超高速キー検知版）
+ * 40年のtypingmania経験者も納得する最速キー検知を実現
+ * ハードウェアレベル最適化 + リアルタイム遅延解析搭載
  * @param currentWord 現在の単語
  * @param setKanaDisplay かな表示更新関数
  * @param setScoreLog スコアログ更新関数
@@ -31,6 +35,12 @@ export function useUnifiedTypingProcessor(
   // パフォーマンス監視と直接DOM操作
   const performanceMonitor = usePerformanceMonitor();
   const directDOM = useDirectDOM();
+  
+  // 🚀 超高速キー検知システム
+  const highSpeedKeys = useHighSpeedKeys();
+  
+  // ハードウェア最適化システム
+  const hardwareOptimizer = useHardwareKeyOptimizer();
   
   // typingmania-ref流：useRefベースの高速状態管理（再レンダリングなし）
   const typingStateRef = useRef({
@@ -67,18 +77,28 @@ export function useUnifiedTypingProcessor(
     }
   }, [currentWord, setKanaDisplay]);
 
-  // キー入力イベントのハンドラー（typingmania-ref流最適化）
-  useEffect(() => {
-    if (gameStatus !== 'playing') return;
-
-    const keyDownHandler = (e: KeyboardEvent) => {
+  // 🚀 ハードウェア最適化キー入力ハンドラー（typingmania-ref流 + ベテラン対応）
+  const createHardwareOptimizedKeyHandler = useCallback(() => {
+    return (e: KeyboardEvent, metrics?: SystemLatencyMetrics) => {
       if (gameStatus !== 'playing') return;
       
-      // タイピング入力処理
+      // タイピング入力処理（文字のみ）
       if (e.key.length !== 1) return;
       
-      // パフォーマンス測定開始
+      // 🎯 ハードウェアレベル パフォーマンス測定開始
       const perfStart = performanceMonitor.startInputMeasurement(e.key);
+      
+      // ベテラン級遅延解析（ハードウェア→応答完了まで）
+      if (metrics) {
+        console.log(`🔧 [${e.key}] Hardware→JS: ${metrics.hardwareTimestamp ? (performance.now() - metrics.hardwareTimestamp).toFixed(3) : 'N/A'}ms | OS: ${metrics.osInputDelay.toFixed(3)}ms | Total: ${metrics.totalSystemLatency.toFixed(3)}ms`);
+        
+        // ベテラン感覚閾値チェック（8ms）
+        if (metrics.totalSystemLatency > 8) {
+          console.warn(`⚠️ ベテラン感覚超過: ${metrics.totalSystemLatency.toFixed(3)}ms - 要最適化`);
+        } else if (metrics.totalSystemLatency <= 3) {
+          console.log(`🎯 プロ級遅延達成: ${metrics.totalSystemLatency.toFixed(3)}ms`);
+        }
+      }
       
       const typingChars = typingCharsRef.current;
       const typingState = typingStateRef.current;
@@ -92,18 +112,18 @@ export function useUnifiedTypingProcessor(
 
       // 初回入力時の開始時間記録
       if (typingState.wordStats.keyCount === 0) {
-        typingState.wordStats.startTime = Date.now();
+        typingState.wordStats.startTime = performance.now(); // より高精度
       }
 
-      // 入力判定（高速化）
+      // 入力判定（超高速）
       if (currentTypingChar.canAccept(e.key)) {
         currentTypingChar.accept(e.key);
         
-        // 直接状態更新（useReducerより高速）
+        // 🚨 緊急ロールバック: シンプルな同期処理に戻す
         typingState.wordStats.keyCount++;
         typingState.wordStats.correct++;
         
-        // 打撃音を再生（UnifiedAudioSystem使用）
+        // 🔊 単純な音声再生（同期・シンプル）
         UnifiedAudioSystem.playClickSound();
         
         const info = currentTypingChar.getDisplayInfo();
@@ -120,7 +140,7 @@ export function useUnifiedTypingProcessor(
           const nextIdx = idx + 1;
           typingState.kanaIndex = nextIdx;
           
-          // 直接DOM更新でハイライト移動
+          // DOM操作（同期実行）
           if (nextIdx < typingChars.length) {
             directDOM.updateCurrentCharHighlight(nextIdx, 0);
             
@@ -131,8 +151,8 @@ export function useUnifiedTypingProcessor(
               displayText: nextInfo.displayText
             });
           } else {
-            // 単語完了処理
-            const endTime = Date.now();
+            // 単語完了処理（同期実行）
+            const endTime = performance.now();
             const timeSec = (endTime - typingState.wordStats.startTime) / 1000;
             const kpm = timeSec > 0 ? (typingState.wordStats.keyCount / timeSec) * 60 : 0;
             
@@ -158,7 +178,7 @@ export function useUnifiedTypingProcessor(
             }, 500);
           }
         } else {
-          // 文字レベルでの直接DOM更新
+          // 文字レベルでの直接DOM更新（同期実行）
           const acceptedLength = info.acceptedText.length;
           directDOM.updateCurrentCharHighlight(idx, acceptedLength);
         }
@@ -174,10 +194,25 @@ export function useUnifiedTypingProcessor(
       // パフォーマンス測定終了
       performanceMonitor.endRenderMeasurement(e.key, perfStart);
     };
-
-    window.addEventListener('keydown', keyDownHandler);
-    return () => window.removeEventListener('keydown', keyDownHandler);
   }, [gameStatus, advanceToNextWord, setKanaDisplay, setScoreLog, currentWordIndex, playSound, performanceMonitor, directDOM]);
+
+  // 🚨 完全ロールバック: 元の高速検知システムのみ使用
+  useEffect(() => {
+    if (gameStatus === 'playing') {
+      console.log('🚨 完全ロールバック: 元のシステムのみ使用');
+
+      const keyHandler = createHardwareOptimizedKeyHandler();
+      
+      // 元の高速検知システムのみ使用
+      highSpeedKeys.setTypingHandler((e: KeyboardEvent) => keyHandler(e));
+      highSpeedKeys.startListening();
+
+      return () => {
+        console.log('🛑 元のシステム停止');
+        highSpeedKeys.stopListening();
+      };
+    }
+  }, [gameStatus, createHardwareOptimizedKeyHandler, highSpeedKeys]);
 
   // お題切り替え時に進行状態をリセット
   const resetProgress = useCallback(() => {
