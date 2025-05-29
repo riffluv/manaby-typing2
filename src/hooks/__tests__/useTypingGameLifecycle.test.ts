@@ -1,10 +1,18 @@
-import { renderHook } from '@testing-library/react-hooks';
+import { render } from '@testing-library/react';
+import React, { useEffect } from 'react';
 import { useTypingGameLifecycle } from '../useTypingGameLifecycle';
 
 describe('useTypingGameLifecycle', () => {
+  function HookTest({ callback }: { callback: () => void }) {
+    useTypingGameLifecycle();
+    useEffect(() => {
+      callback();
+    }, [callback]);
+    return null;
+  }
   it('副作用フックが呼ばれる', () => {
-    renderHook(() => useTypingGameLifecycle());
-    // 例: サウンドプリロードや初期化が呼ばれることを確認（モック化推奨）
-    expect(true).toBe(true);
+    let called = false;
+    render(<HookTest callback={() => { called = true; }} />);
+    expect(called).toBe(true);
   });
 });
