@@ -340,6 +340,17 @@ class KeyboardSoundUtils {
       console.warn('[KeyboardSoundUtils] 成功音の再生に失敗:', e);
     }
   }
+  static async resumeAudioContext() {
+    const ctx = this.getAudioContext();
+    if (ctx && ctx.state === 'suspended') {
+      try {
+        await ctx.resume();
+        console.log('[KeyboardSoundUtils] AudioContext resumed');
+      } catch (e) {
+        console.warn('[KeyboardSoundUtils] AudioContext resume failed:', e);
+      }
+    }
+  }
 }
 
 export default KeyboardSoundUtils;

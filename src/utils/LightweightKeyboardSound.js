@@ -224,6 +224,18 @@ class LightweightKeyboardSound {
       console.warn('[LightweightKeyboardSound] 最小成功音の再生に失敗:', e);
     }
   }
+
+  static async resumeAudioContext() {
+    const ctx = this.getAudioContext();
+    if (ctx && ctx.state === 'suspended') {
+      try {
+        await ctx.resume();
+        console.log('[LightweightKeyboardSound] AudioContext resumed');
+      } catch (e) {
+        console.warn('[LightweightKeyboardSound] AudioContext resume failed:', e);
+      }
+    }
+  }
 }
 
 export default LightweightKeyboardSound;

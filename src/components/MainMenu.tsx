@@ -8,6 +8,7 @@ import styles from './MainMenu.module.css';
 import { deleteRankingEntriesByMode } from '@/lib/rankingManaby2';
 import CommonModal from './common/CommonModal';
 import CommonButton from './common/CommonButton';
+import UnifiedAudioSystem from '@/utils/UnifiedAudioSystem';
 
 interface MainMenuProps {
   onStart: () => void;
@@ -37,7 +38,9 @@ const MainMenu: React.FC<MainMenuProps> = ({ onStart, onRetry, onRanking }) => {
   const [selectedManaby, setSelectedManaby] = useState<string | null>(null);
 
   // ゲーム開始ハンドラー
-  const handleStart = () => {
+  const handleStart = async () => {
+    await UnifiedAudioSystem.initialize();
+    await UnifiedAudioSystem.resumeAudioContext();
     resetGame();
     setMode(selectedMode);
     setGameStatus('playing');
@@ -80,10 +83,10 @@ const MainMenu: React.FC<MainMenuProps> = ({ onStart, onRetry, onRanking }) => {
   useGlobalShortcuts([
     {
       key: ' ',
-      handler: (e) => {
+      handler: async (e) => {
         if (adminOpen) return; // 管理者モーダルが開いているときは無効化
         e.preventDefault();
-        handleStart();
+        await handleStart();
       },
     },
     {

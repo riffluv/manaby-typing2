@@ -95,6 +95,14 @@ class UnifiedAudioSystem {
     this.isInitialized = false;
     await this.initialize();
   }
+
+  // AudioContextのresume（初回遅延防止用）
+  static async resumeAudioContext() {
+    if (!this.isInitialized) await this.initialize();
+    if (this.audioEngine && typeof this.audioEngine.resumeAudioContext === 'function') {
+      await this.audioEngine.resumeAudioContext();
+    }
+  }
 }
 
 export default UnifiedAudioSystem;
