@@ -18,7 +18,7 @@ export type RankingEntry = {
   accuracy: number;
   correct: number;
   miss: number;
-  mode: 'normal' | 'hard'; // 難易度を追加
+  mode: 'normal' | 'hard' | 'sonkeigo' | 'kenjougo' | 'business'; // 難易度を追加
   createdAt: Date;
 };
 

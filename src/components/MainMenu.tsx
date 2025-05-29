@@ -36,13 +36,17 @@ const MainMenu: React.FC<MainMenuProps> = ({ onStart, onRetry, onRanking }) => {
 
   // manabyで選択中のお題名を保持
   const [selectedManaby, setSelectedManaby] = useState<string | null>(null);
-
   // ゲーム開始ハンドラー
   const handleStart = async () => {
     await UnifiedAudioSystem.initialize();
     await UnifiedAudioSystem.resumeAudioContext();
     resetGame();
-    setMode(selectedMode);
+    // 尊敬語/謙譲語/ビジネスマナーが選択されている場合は、そのモードを優先
+    // 選択されていない場合のみ、通常/ハードモードを設定
+    if (!selectedManaby) {
+      setMode(selectedMode);
+    }
+    // ここでmode設定はしない（既に設定されているため）
     setGameStatus('playing');
     onStart();
   };
@@ -104,9 +108,8 @@ const MainMenu: React.FC<MainMenuProps> = ({ onStart, onRetry, onRanking }) => {
       allowInputFocus: true
     },
   ], [handleStart, onRanking, adminOpen]);
-
   // ランキングリセット関数
-  const handleResetRanking = async (mode: 'normal' | 'hard') => {
+  const handleResetRanking = async (mode: 'normal' | 'hard' | 'sonkeigo' | 'kenjougo' | 'business') => {
     setAdminLoading(true);
     setAdminStatus(`${mode.toUpperCase()}ランキングをリセット中...`);
     try {
@@ -125,14 +128,15 @@ const MainMenu: React.FC<MainMenuProps> = ({ onStart, onRetry, onRanking }) => {
       setAdminOpen(false);
     }
   };
-
   // manabyお題選択時の処理
   const handleManabyMode = (mode: 'sonkeigo' | 'kenjougo' | 'business') => {
     setSelectedManaby(
       mode === 'sonkeigo' ? '尊敬語' : mode === 'kenjougo' ? '謙譲語' : 'ビジネスマナー'
     );
+    // 選択されたモードをゲームモードとして設定
+    setMode(mode);
     setManabyMenuOpen(false);
-    // setModeやsetGameStatusはまだ呼ばない（ゲーム開始しない）
+    // ゲームはまだ開始しない
   };
 
   // manabyメニューの外側クリックやESCで閉じる
@@ -178,8 +182,7 @@ const MainMenu: React.FC<MainMenuProps> = ({ onStart, onRetry, onRanking }) => {
             variant="secondary"
             style={{ marginLeft: 8 }}
           >反映</CommonButton>
-        </label>
-        <div className="admin-actions">
+        </label>        <div className="admin-actions">
           <CommonButton
             onClick={() => handleResetRanking('normal')}
             disabled={adminLoading}
@@ -191,6 +194,27 @@ const MainMenu: React.FC<MainMenuProps> = ({ onStart, onRetry, onRanking }) => {
             disabled={adminLoading}
             variant="secondary"
           >HARDランキングリセット</CommonButton>
+        </div>
+        <div className="admin-actions" style={{ marginTop: 8 }}>
+          <CommonButton
+            onClick={() => handleResetRanking('sonkeigo')}
+            disabled={adminLoading}
+            variant="secondary"
+            style={{ marginRight: 8 }}
+          >尊敬語ランキングリセット</CommonButton>
+          <CommonButton
+            onClick={() => handleResetRanking('kenjougo')}
+            disabled={adminLoading}
+            variant="secondary"
+            style={{ marginRight: 8 }}
+          >謙譲語ランキングリセット</CommonButton>
+        </div>
+        <div className="admin-actions" style={{ marginTop: 8 }}>
+          <CommonButton
+            onClick={() => handleResetRanking('business')}
+            disabled={adminLoading}
+            variant="secondary"
+          >ビジネスマナーランキングリセット</CommonButton>
         </div>
         <div className={styles['admin-status']}>{adminStatus}</div>
       </CommonModal>
@@ -265,21 +289,24 @@ const MainMenu: React.FC<MainMenuProps> = ({ onStart, onRetry, onRanking }) => {
             <h2 className={styles.menuModeTitle}>
               SELECT MODE
             </h2>
-            <div className={styles.menuModeGrid}>
-              <motion.button
-                className={`btn-secondary cyber-border ${styles.menuModeButton} ${selectedMode === 'normal' ? styles.menuModeButtonNormal : styles.menuModeButtonInactiveNormal}`}
-                onClick={() => setSelectedMode('normal')}
+            <div className={styles.menuModeGrid}>              <motion.button
+                className={`btn-secondary cyber-border ${styles.menuModeButton} ${selectedMode === 'normal' && !selectedManaby ? styles.menuModeButtonNormal : styles.menuModeButtonInactiveNormal}`}
+                onClick={() => {
+                  setSelectedMode('normal');
+                  setSelectedManaby(null); // manabyモードをクリア
+                  setMode('normal');
+                }}
                 whileHover={{ 
                   scale: 1.03,
                   y: -2,
-                  boxShadow: selectedMode === 'normal' 
+                  boxShadow: selectedMode === 'normal' && !selectedManaby
                     ? "var(--glow-neon)" 
                     : "var(--glow-purple)"
                 }}
                 whileTap={{ scale: 0.98, y: 0 }}
               >
                 <span className={styles.menuModeButtonLabel}>NORMAL</span>
-                {selectedMode === 'normal' && (
+                {selectedMode === 'normal' && !selectedManaby && (
                   <motion.div
                     initial={{ scale: 0 }}
                     animate={{ scale: 1 }}
@@ -296,22 +323,24 @@ const MainMenu: React.FC<MainMenuProps> = ({ onStart, onRetry, onRanking }) => {
                     }}
                   />
                 )}
-              </motion.button>
-
-              <motion.button
-                className={`btn-secondary cyber-border ${styles.menuModeButton} ${selectedMode === 'hard' ? styles.menuModeButtonHard : styles.menuModeButtonInactiveHard}`}
-                onClick={() => setSelectedMode('hard')}
+              </motion.button>              <motion.button
+                className={`btn-secondary cyber-border ${styles.menuModeButton} ${selectedMode === 'hard' && !selectedManaby ? styles.menuModeButtonHard : styles.menuModeButtonInactiveHard}`}
+                onClick={() => {
+                  setSelectedMode('hard');
+                  setSelectedManaby(null); // manabyモードをクリア
+                  setMode('hard');
+                }}
                 whileHover={{ 
                   scale: 1.03,
                   y: -2,
-                  boxShadow: selectedMode === 'hard' 
+                  boxShadow: selectedMode === 'hard' && !selectedManaby
                     ? "var(--glow-error)" 
                     : "var(--glow-purple)"
                 }}
                 whileTap={{ scale: 0.98, y: 0 }}
               >
                 <span className={styles.menuModeButtonLabel}>HARD</span>
-                {selectedMode === 'hard' && (
+                {selectedMode === 'hard' && !selectedManaby && (
                   <motion.div
                     initial={{ scale: 0 }}
                     animate={{ scale: 1 }}
