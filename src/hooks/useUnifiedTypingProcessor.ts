@@ -9,7 +9,7 @@ import { usePerformanceMonitor } from '@/utils/PerformanceMonitor';
 import { useDirectDOM } from '@/utils/DirectDOMManager';
 import { useHighSpeedKeys } from '@/utils/HighSpeedKeyDetector';
 import { useHardwareKeyOptimizer, SystemLatencyMetrics } from '@/utils/HardwareKeyOptimizer';
-import SynchronizedAudioVisual from '@/utils/SynchronizedAudioVisual';
+import { triggerImmediateFeedback } from '@/utils/SynchronizedAudioVisual';
 
 /**
  * 統合タイピング処理フック（typingmania-ref流超高速キー検知版）
@@ -126,7 +126,7 @@ export function useUnifiedTypingProcessor(
         
         // 🎯 同期音声・視覚フィードバック（typingmania-ref流 < 5ms）
         const info = currentTypingChar.getDisplayInfo();
-        SynchronizedAudioVisual.triggerImmediateFeedback(
+        triggerImmediateFeedback(
           e.key,
           true, // 正解
           () => {
@@ -194,7 +194,7 @@ export function useUnifiedTypingProcessor(
         typingState.wordStats.miss++;
         
         // 🎯 同期エラーフィードバック（音声・視覚）
-        SynchronizedAudioVisual.triggerImmediateFeedback(e.key, false);
+        triggerImmediateFeedback(e.key, false);
       }
       
       // パフォーマンス測定終了

@@ -37,6 +37,29 @@ const soundSettings = {
   bgmVolume: 0.3         // BGMの音量 (0.0 〜 1.0)
 };
 
+// WebAudio API（プリレンダバッファ）方式のインポート
+import LightweightKeyboardSound from './LightweightKeyboardSound';
+
+// サウンドエンジンの選択（"webaudio" or "mp3"）
+let soundEngine: 'webaudio' | 'mp3' = 'webaudio';
+
+// WebAudioの初期化フラグ
+let webAudioReady = false;
+
+// WebAudioの初期化
+const initWebAudio = async () => {
+  try {
+    await LightweightKeyboardSound.initializePrerenderedBuffers();
+    webAudioReady = true;
+  } catch (e) {
+    webAudioReady = false;
+    soundEngine = 'mp3'; // フォールバック
+  }
+};
+
+// ゲーム開始時などで明示的に初期化推奨
+initWebAudio();
+
 /**
  * 効果音を再生
  * @param soundType 再生する効果音の種類
@@ -44,31 +67,32 @@ const soundSettings = {
  */
 export const playSound = (soundType: SoundType, volume: number = 1.0): void => {
   if (!soundSettings.effectsEnabled) return;
-    // キータイプ音のコードは削除
-  
+
+  // WebAudio方式（最速）
+  if (soundEngine === 'webaudio' && webAudioReady) {
+    if (soundType === 'correct') {
+      LightweightKeyboardSound.playSuccessSound();
+    } else if (soundType === 'wrong') {
+      LightweightKeyboardSound.playErrorSound();
+    }
+    return;
+  }
+
+  // mp3方式（セカンド/フォールバック）
   try {
-    // 音声ファイルのパスを取得
     const soundPath = soundPaths[soundType];
     if (!soundPath) return;
-
-    // 音声をキャッシュから取得するか、新規作成
     let audio = audioCache[soundType];
     if (!audio) {
       audio = new Audio(soundPath);
       audio.preload = 'auto';
       audioCache[soundType] = audio;
-    }    // すべての音をクローンして再生することで高速レスポンスを可能にする
+    }
     const clonedAudio = audio.cloneNode() as HTMLAudioElement;
-
-    // 音声の設定（全体設定と個別設定を掛け合わせる）
     clonedAudio.volume = soundSettings.effectsVolume * volume;
-    
-    // 巻き戻して再生
     if (!audio.ended) {
       audio.currentTime = 0;
     }
-    
-    // 再生
     clonedAudio.play().catch(error => {
       console.warn(`サウンド再生エラー: ${soundType}`, error);
     });
