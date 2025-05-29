@@ -9,6 +9,7 @@ import { usePerformanceMonitor } from '@/utils/PerformanceMonitor';
 import { useDirectDOM } from '@/utils/DirectDOMManager';
 import { useHighSpeedKeys } from '@/utils/HighSpeedKeyDetector';
 import { useHardwareKeyOptimizer, SystemLatencyMetrics } from '@/utils/HardwareKeyOptimizer';
+import SynchronizedAudioVisual from '@/utils/SynchronizedAudioVisual';
 
 /**
  * 統合タイピング処理フック（typingmania-ref流超高速キー検知版）
@@ -123,15 +124,19 @@ export function useUnifiedTypingProcessor(
         typingState.wordStats.keyCount++;
         typingState.wordStats.correct++;
         
-        // 🔊 単純な音声再生（同期・シンプル）
-        UnifiedAudioSystem.playClickSound();
-        
+        // 🎯 同期音声・視覚フィードバック（typingmania-ref流 < 5ms）
         const info = currentTypingChar.getDisplayInfo();
-        setKanaDisplay({
-          acceptedText: info.acceptedText,
-          remainingText: info.remainingText,
-          displayText: info.displayText
-        });
+        SynchronizedAudioVisual.triggerImmediateFeedback(
+          e.key,
+          true, // 正解
+          () => {
+            setKanaDisplay({
+              acceptedText: info.acceptedText,
+              remainingText: info.remainingText,
+              displayText: info.displayText
+            });
+          }
+        );
         
         userInputRef.current += e.key;
         
@@ -145,6 +150,7 @@ export function useUnifiedTypingProcessor(
             directDOM.updateCurrentCharHighlight(nextIdx, 0);
             
             const nextInfo = typingChars[nextIdx].getDisplayInfo();
+            // 🎯 次のかな文字への同期視覚フィードバック
             setKanaDisplay({
               acceptedText: nextInfo.acceptedText,
               remainingText: nextInfo.remainingText,
@@ -187,8 +193,8 @@ export function useUnifiedTypingProcessor(
         typingState.wordStats.keyCount++;
         typingState.wordStats.miss++;
         
-        // オーディオストアから効果音を再生
-        playSound('wrong', 0.5);
+        // 🎯 同期エラーフィードバック（音声・視覚）
+        SynchronizedAudioVisual.triggerImmediateFeedback(e.key, false);
       }
       
       // パフォーマンス測定終了
