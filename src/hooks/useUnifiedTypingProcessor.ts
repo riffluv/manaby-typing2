@@ -4,7 +4,7 @@ import { useRef, useCallback, useState, useReducer, useEffect } from 'react';
 import { useTypingGameStore, useGameStatus } from '@/store/typingGameStore';
 import { useAudioStore } from '@/store/audioStore';
 import { TypingWord, KanaDisplay, PerWordScoreLog } from '@/types';
-import KeyboardSoundUtils from '@/utils/KeyboardSoundUtils';
+import UnifiedAudioSystem from '@/utils/UnifiedAudioSystem';
 
 // タイピング状態を定義
 type TypingState = {
@@ -141,9 +141,8 @@ export function useUnifiedTypingProcessor(
       if (currentTypingChar.canAccept(e.key)) {
         currentTypingChar.accept(e.key);
         dispatch({ type: 'INCREMENT_CORRECT' });
-        
-        // 打撃音を再生（KeyboardSoundUtils使用）
-        KeyboardSoundUtils.playClickSound();
+          // 打撃音を再生（UnifiedAudioSystem使用）
+        UnifiedAudioSystem.playClickSound();
         
         const info = currentTypingChar.getDisplayInfo();
         setKanaDisplay({

@@ -3,6 +3,7 @@ import { Geist, Geist_Mono } from "next/font/google";
 import "./globals.css";
 import MonkeytypeHeader from '@/components/common/MonkeytypeHeader';
 import AppLayout from '@/components/AppLayout';
+import AudioSystemInitializer from '@/components/AudioSystemInitializer';
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -23,13 +24,13 @@ export default function RootLayout({
   children,
 }: Readonly<{
   children: React.ReactNode;
-}>) {
-  return (
+}>) {  return (
     <html lang="en" suppressHydrationWarning>
       <body
         className={`${geistSans.variable} ${geistMono.variable} antialiased`}
         suppressHydrationWarning
       >
+        <AudioSystemInitializer />
         <MonkeytypeHeader />
         <AppLayout>
           {children}
