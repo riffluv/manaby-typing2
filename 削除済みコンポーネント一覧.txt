@@ -1,0 +1,7 @@
+削除済み（コメントアウト）コンポーネント一覧:
+- PerformanceDebug
+- KeyLatencyAnalyzer
+- VeteranOptimizationGuide
+
+src/components/GameScreen.tsx から削除済み。
+不要であれば src/components/PerformanceDebug.tsx, KeyLatencyAnalyzer.tsx, VeteranOptimizationGuide.tsx も物理削除してください。

@@ -2,9 +2,6 @@ import React, { useState } from 'react';
 import TypingArea from './TypingArea';
 import { TypingWord, KanaDisplay } from '@/types';
 import PortalShortcut from './PortalShortcut';
-import PerformanceDebug from './PerformanceDebug';
-import KeyLatencyAnalyzer from './KeyLatencyAnalyzer';
-import VeteranOptimizationGuide from './VeteranOptimizationGuide';
 import styles from './GameScreen.module.css';
 
 export type GameScreenProps = {
@@ -72,17 +69,19 @@ const GameScreen: React.FC<GameScreenProps> = ({ currentWord, currentKanaIndex, 
           />
         </div>
 
-        {/* パフォーマンス監視（開発/デバッグ用） */}
+        {/* 
+        パフォーマンス監視（開発/デバッグ用） 
         <PerformanceDebug enabled={process.env.NODE_ENV === 'development'} />
         
-        {/* ベテラン向けキー遅延解析システム（Ctrl+Shift+L で切り替え） */}
+        ベテラン向けキー遅延解析システム（Ctrl+Shift+L で切り替え） 
         <KeyLatencyAnalyzer 
           enabled={process.env.NODE_ENV === 'development'} 
           onLatencyAlert={handleLatencyAlert}
         />
         
-        {/* ベテラン向け最適化ガイド（Ctrl+Shift+V で切り替え） */}
+        ベテラン向け最適化ガイド（Ctrl+Shift+V で切り替え） 
         <VeteranOptimizationGuide enabled={false} />
+        */}
         
         {/* ベテラン遅延アラート表示 */}
         {latencyAlertCount > 0 && (
