@@ -48,8 +48,7 @@ class PureWebAudioEngine {
     const clickLength = Math.floor(sampleRate * 0.015);
     const clickBuffer = this.context.createBuffer(1, clickLength, sampleRate);
     const clickData = clickBuffer.getChannelData(0);
-    
-    for (let i = 0; i < clickLength; i++) {
+      for (let i = 0; i < clickLength; i++) {
       const t = i / sampleRate;
       const decay = 1 - (i / clickLength);
       clickData[i] = Math.sin(2 * Math.PI * 600 * t) * decay * 0.4;
@@ -66,8 +65,20 @@ class PureWebAudioEngine {
       errorData[i] = Math.sin(2 * Math.PI * 200 * t) * decay * 0.3;
     }
     
+    // 成功音: 40ms、800Hz（高音で爽快感）
+    const successLength = Math.floor(sampleRate * 0.04);
+    const successBuffer = this.context.createBuffer(1, successLength, sampleRate);
+    const successData = successBuffer.getChannelData(0);
+    
+    for (let i = 0; i < successLength; i++) {
+      const t = i / sampleRate;
+      const decay = 1 - (i / successLength);
+      successData[i] = Math.sin(2 * Math.PI * 800 * t) * decay * 0.35;
+    }
+    
     this.buffers.click = clickBuffer;
     this.buffers.error = errorBuffer;
+    this.buffers.success = successBuffer;
   }  // 高速タイピング対応：スロットリング付き再生メソッド
   play(name) {
     if (!this.initialized || !this.buffers[name]) {
@@ -139,9 +150,8 @@ class PureWebAudioEngine {
   playError() {
     this.play('error');
   }
-
   playSuccess() {
-    this.play('click'); // 成功音はクリック音と同じ（シンプル化）
+    this.play('success');
   }
   // AudioContext再開（高速タイピング対応強化）
   resume() {

@@ -51,10 +51,8 @@ export function usePureTypingProcessor(
       kanaArray,
       japanese: currentWord.japanese,
       hiragana: currentWord.hiragana
-    });
-
-    // 更新コールバックを設定
-    processorRef.current.setUpdateCallback((state) => {
+    });    // 更新コールバックを設定
+    processorRef.current.setUpdateCallback((state: any) => {
       // 表示更新
       setKanaDisplay({
         acceptedText: state.acceptedText,

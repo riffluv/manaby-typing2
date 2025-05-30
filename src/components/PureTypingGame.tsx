@@ -32,9 +32,8 @@ const PureTypingGame: React.FC<PureTypingGameProps> = ({
   useEffect(() => {
     if (!processorRef.current) {
       processorRef.current = new PureTypingProcessor();
-      
-      // 更新コールバック設定
-      processorRef.current.setUpdateCallback((state) => {
+        // 更新コールバック設定
+      processorRef.current.setUpdateCallback((state: any) => {
         setDisplayState(state);
         
         if (state.completed && onWordComplete) {

@@ -1,12 +1,9 @@
 import { create } from 'zustand';
 import { createSelectors } from '@/store/createSelectors';
-import { 
-  preloadAllSounds
-} from '@/utils/soundPlayer';
 import UnifiedAudioSystem from '@/utils/UnifiedAudioSystem';
 
 /**
- * オーディオ再生・管理ストア
+ * 純粋WebAudioシステム専用ストア（MP3完全削除版）
  * @module audioStore
  */
 
@@ -14,82 +11,87 @@ import UnifiedAudioSystem from '@/utils/UnifiedAudioSystem';
 interface AudioState {
   // サウンドの設定状態
   effectsEnabled: boolean;
-  bgmEnabled: boolean;
   effectsVolume: number;
-  bgmVolume: number;
   
-  // アクション
-  preloadSounds: () => void;
-  playSound: (type: 'correct' | 'wrong', volume?: number) => void;
-  playBGM: (type: 'game' | 'menu' | 'result', loop?: boolean, volume?: number) => void;
-  stopBGM: () => void;
-  pauseBGM: () => void;
-  resumeBGM: () => void;
+  // アクション（WebAudioのみ）
+  playClickSound: () => void;
+  playSuccessSound: (volume?: number) => void;
+  playErrorSound: (volume?: number) => void;
   
   // 設定変更
   setEffectsEnabled: (enabled: boolean) => void;
-  setBGMEnabled: (enabled: boolean) => void;
   setEffectsVolume: (volume: number) => void;
-  setBGMVolume: (volume: number) => void;
+  
+  // システム管理
+  initializeAudio: () => Promise<void>;
+  resumeAudioContext: () => Promise<void>;
+  
+  // 高速タイピング機能
+  setHighSpeedMode: (enabled: boolean) => void;
+  getHighSpeedStats: () => any;
 }
 
 // オーディオ状態の初期値
 const initialAudioState = {
   effectsEnabled: true,
-  bgmEnabled: true,
-  effectsVolume: 0.5,
-  bgmVolume: 0.3
+  effectsVolume: 0.5
 };
 
-// Zustandストアの作成
+// Zustandストアの作成（WebAudio専用）
 const useAudioStoreBase = create<AudioState>((set, get) => ({
   // 初期状態
   ...initialAudioState,
   
-  // アクション
-  preloadSounds: preloadAllSounds,
-
-  playSound: (type, volume = 1.0) => {
+  // アクション（純粋WebAudio）
+  playClickSound: () => {
     if (get().effectsEnabled) {
-      UnifiedAudioSystem.playSound(type, volume);
+      UnifiedAudioSystem.playClickSound();
     }
   },
 
-  playBGM: (type, loop = true, volume = 1.0) => {
-    if (get().bgmEnabled) {
-      UnifiedAudioSystem.playBGM(type, loop, volume);
+  playSuccessSound: (volume = 1.0) => {
+    if (get().effectsEnabled) {
+      UnifiedAudioSystem.playSuccessSound(volume);
     }
   },
 
-  stopBGM: UnifiedAudioSystem.stopBGM,
-  pauseBGM: UnifiedAudioSystem.pauseBGM,
-  resumeBGM: UnifiedAudioSystem.resumeBGM,
+  playErrorSound: (volume = 1.0) => {
+    if (get().effectsEnabled) {
+      UnifiedAudioSystem.playErrorSound(volume);
+    }
+  },
 
   // 設定変更
   setEffectsEnabled: (enabled) => {
     set({ effectsEnabled: enabled });
-    UnifiedAudioSystem.setEffectsEnabled(enabled);
-  },
-
-  setBGMEnabled: (enabled) => {
-    set({ bgmEnabled: enabled });
-    UnifiedAudioSystem.setBGMEnabled(enabled);
   },
 
   setEffectsVolume: (volume) => {
     set({ effectsVolume: volume });
-    UnifiedAudioSystem.setEffectsVolume(volume);
   },
 
-  setBGMVolume: (volume) => {
-    set({ bgmVolume: volume });
-    UnifiedAudioSystem.setBGMVolume(volume);
+  // システム管理
+  initializeAudio: async () => {
+    await UnifiedAudioSystem.initialize();
+  },
+
+  resumeAudioContext: async () => {
+    await UnifiedAudioSystem.resumeAudioContext();
+  },
+
+  // 高速タイピング機能
+  setHighSpeedMode: (enabled) => {
+    UnifiedAudioSystem.setHighSpeedMode(enabled);
+  },
+
+  getHighSpeedStats: () => {
+    return UnifiedAudioSystem.getHighSpeedStats();
   }
 }));
 
 // セレクターを使用して最適化されたストアをエクスポート
 export const useAudioStore = createSelectors(useAudioStoreBase);
 
-// 個別のセレクター（必要に応じて）
+// 個別のセレクター
 export const useEffectsEnabled = () => useAudioStoreBase((state) => state.effectsEnabled);
-export const useBGMEnabled = () => useAudioStoreBase((state) => state.bgmEnabled);
+export const useEffectsVolume = () => useAudioStoreBase((state) => state.effectsVolume);

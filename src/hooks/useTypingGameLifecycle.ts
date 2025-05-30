@@ -1,17 +1,16 @@
 import { useEffect } from 'react';
-import { useAudioStore } from '@/store/audioStore';
 import { useTypingGameStore } from '@/store/typingGameStore';
 
 /**
- * Typingゲームの初期化・サウンドプリロード副作用をまとめるカスタムフック
+ * Typingゲームの初期化副作用をまとめるカスタムフック
+ * 純粋WebAudioシステムではサウンドプリロードは不要
  * @returns void
  */
 export function useTypingGameLifecycle() {
-  const { preloadSounds } = useAudioStore();
   const { setupCurrentWord } = useTypingGameStore();
 
   useEffect(() => {
-    preloadSounds();
+    // 純粋WebAudioシステムではサウンドプリロードは不要
     setupCurrentWord();
-  }, [preloadSounds, setupCurrentWord]);
+  }, [setupCurrentWord]);
 }
