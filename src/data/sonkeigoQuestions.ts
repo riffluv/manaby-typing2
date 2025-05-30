@@ -25,9 +25,9 @@ export const sonkeigoQuestions = [
     "explanation": "イスすすめるときはこれっ！自然に言えるとカッコいい〜！"
   },
   {
-    "kanji": "ご覧になりますか？",
-    "hiragana": "ごらんになりますか？",
-    "explanation": "「見る？」はNG！大人の言い方はコレでキマリっ！"
+    "kanji": "ご覧になりますか?",
+    "hiragana": "ごらんになりますか?",
+    "explanation": "「見る?」はNG!大人の言い方はコレでキマリっ！"
   },
   {
     "kanji": "社長はご存知です",
