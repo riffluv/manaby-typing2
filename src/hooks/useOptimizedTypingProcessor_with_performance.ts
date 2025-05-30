@@ -6,7 +6,6 @@ import { useAudioStore } from '@/store/audioStore';
 import { TypingWord, KanaDisplay, PerWordScoreLog } from '@/types';
 import UnifiedAudioSystem from '@/utils/UnifiedAudioSystem';
 import { simpleKeyInput } from '@/utils/SimpleKeyHandler';
-import { OptimizedTypingChar, TypingChar } from '../utils/OptimizedTypingChar';
 import { createOptimizedTypingChars } from '../utils/optimizedJapaneseUtils';
 import performanceMeasurer from '../utils/PerformanceMeasurer';
 
@@ -34,7 +33,7 @@ export function useOptimizedTypingProcessor(
   const { advanceToNextWord, currentWordIndex } = useTypingGameStore();
   
   // typingmania-ref流：シンプルなRef管理
-  const typingCharsRef = useRef<TypingChar[]>([]);
+  const typingCharsRef = useRef<any[]>([]);
   const currentKanaIndexRef = useRef(0);
   const wordStatsRef = useRef<WordScore>({
     keyCount: 0,

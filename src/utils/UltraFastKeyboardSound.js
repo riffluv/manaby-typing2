@@ -1,11 +1,11 @@
 // UltraFastKeyboardSound.js - 超高速キーボード音（typingmania-ref風）
 'use client';
 
-// 🔊 音量設定（打撃音を大幅アップ）
+// 🔊 音量設定（typingmania-ref同等レベル）
 const ULTRA_VOLUME = {
-  click: 0.6,    // 打撃音量アップ: 0.2 → 0.6
-  error: 0.4,    // 不正解音量アップ: 0.1 → 0.4  
-  success: 0.35, // 正解音量アップ: 0.15 → 0.35
+  click: 0.4,    // typingmania-ref同等：0.6 → 0.4（バランス調整）
+  error: 0.3,    // typingmania-ref同等：0.4 → 0.3（バランス調整）
+  success: 0.35, // 正解音量維持
 };
 
 // グローバルなAudioContextとプリコンパイル済みバッファー

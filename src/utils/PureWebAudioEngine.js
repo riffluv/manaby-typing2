@@ -2,18 +2,20 @@
 'use client';
 
 /**
- * typingmania-ref のSfxクラスを参考にした純粋WebAudioエンジン
- * 高速タイピング時の詰まりを解消するため最小限の実装
+ * typingmania-ref完全同等の純粋WebAudioエンジン（ゼロ遅延版）
+ * typingmania-refの反応速度を実現するための最軽量実装
+ * - スロットリング完全排除：ゼロ遅延再生
+ * - 最小限エラーハンドリング：継続動作優先
+ * - 同期的バッファー管理：初期化時一括生成
  */
-class PureWebAudioEngine {
-  constructor() {
+class PureWebAudioEngine {  constructor() {
     this.context = null;
     this.gainNode = null;
     this.buffers = {};
     this.initialized = false;
-      // 高速タイピング対応：音響呼び出し制御
+    // typingmania-ref風：スロットリング完全排除（ゼロ遅延）
     this.lastPlayTime = 0;
-    this.minInterval = 5; // 最小間隔5ms（超高速タイピング対応、さらに短縮）
+    this.minInterval = 0; // 最小間隔0ms（typingmania-ref同等の即座再生）
     this.pendingPlays = new Map(); // 保留中の再生要求
   }
 
@@ -79,35 +81,16 @@ class PureWebAudioEngine {
     this.buffers.click = clickBuffer;
     this.buffers.error = errorBuffer;
     this.buffers.success = successBuffer;
-  }  // 高速タイピング対応：スロットリング付き再生メソッド
+  }  // typingmania-ref風：即座再生（スロットリング無し）
   play(name) {
     if (!this.initialized || !this.buffers[name]) {
       return;
     }
     
-    const now = performance.now();
-    
-    // 高速入力対応：最小間隔チェック
-    if (now - this.lastPlayTime < this.minInterval) {
-      // 前回の再生から間隔が短い場合、最新の要求で上書き
-      if (this.pendingPlays.has('timeout')) {
-        clearTimeout(this.pendingPlays.get('timeout'));
-      }
-      
-      const timeoutId = setTimeout(() => {
-        this.performPlay(name);
-        this.pendingPlays.delete('timeout');
-      }, this.minInterval - (now - this.lastPlayTime));
-      
-      this.pendingPlays.set('timeout', timeoutId);
-      return;
-    }
-    
-    // 即座に再生
+    // typingmania-ref風：条件なしで即座に再生
     this.performPlay(name);
   }
-  
-  // 実際の音響再生処理
+    // typingmania-ref風：最軽量音響再生処理
   performPlay(name) {
     if (!this.initialized || !this.buffers[name]) {
       return;
@@ -116,19 +99,15 @@ class PureWebAudioEngine {
     this.lastPlayTime = performance.now();
     
     try {
-      // 高速入力対応：BufferSourceを即座に作成・再生・破棄
+      // typingmania-ref風：最軽量BufferSource作成・再生
       const source = this.context.createBufferSource();
       source.buffer = this.buffers[name];
       source.connect(this.gainNode);
       
-      // 即座に再生開始（遅延最小化）
+      // typingmania-ref風：即座に再生開始（ゼロ遅延）
       source.start(0);
       
-      // 高速入力対応：明示的なクリーンアップタイミング設定
-      const cleanupTime = this.context.currentTime + source.buffer.duration + 0.1;
-      source.stop(cleanupTime);
-      
-      // メモリリーク防止：確実なdisconnect
+      // typingmania-ref風：自動クリーンアップ設定
       source.onended = () => {
         try {
           source.disconnect();
@@ -136,8 +115,9 @@ class PureWebAudioEngine {
           // 既にdisconnect済みの場合は無視
         }
       };
+      
     } catch (e) {
-      // エラーは無視（typingmania-ref風）
+      // typingmania-ref風：エラーは警告のみ（継続動作）
       console.warn('[PureWebAudio] 再生エラー:', e);
     }
   }

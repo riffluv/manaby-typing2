@@ -40,27 +40,24 @@ class UnifiedAudioSystem {
       return;
     }
 
-    // 高速タイピング検出：連続キー入力間隔をチェック
+    // typingmania-ref風：高速タイピング検出の完全排除
     const now = performance.now();
     const keyInterval = now - this.lastKeyTime;
     this.lastKeyTime = now;
     
-    // 100ms以下の連続入力で高速モード有効化
-    if (keyInterval < 100) {
-      this.highSpeedMode = true;
-    } else if (keyInterval > 500) {
-      this.highSpeedMode = false; // 500ms以上空いたら通常モードに戻す
-    }
+    // typingmania-ref風：条件なしで常に最高速モード
+    this.highSpeedMode = true;
 
-    // 高速タイピング対応：AudioContext状態チェック
+    // typingmania-ref風：AudioContext状態チェック（最小限）
+    // typingmania-ref風：AudioContext状態チェック（最小限）
     if (this.audioEngine === pureWebAudio && !this.audioEngine.isReady()) {
       this.audioEngine.resume();
-      // 状態が復旧するまで少し待機してから再試行
+      // typingmania-ref風：待機時間を最小化（1ms）
       setTimeout(() => {
         if (this.audioEngine.isReady()) {
           this.audioEngine.playClick();
         }
-      }, this.highSpeedMode ? 5 : 10); // 高速モードでは待機時間短縮
+      }, 1); // 最小待機時間
       return;
     }
 
@@ -70,7 +67,7 @@ class UnifiedAudioSystem {
       } else {
         this.audioEngine.playClickSound();
       }
-    }, this.highSpeedMode ? 'click-highspeed' : 'click-webaudio');
+    }, 'click-ultrafast'); // 常に最高速モード表示
   }
 
   /** 🚀 正解音を再生（純粋WebAudio統一） */
@@ -96,14 +93,14 @@ class UnifiedAudioSystem {
       return;
     }
     
-    // 高速タイピング対応：AudioContext状態チェック
+    // typingmania-ref風：AudioContext状態チェック（最小限）
     if (this.audioEngine === pureWebAudio && !this.audioEngine.isReady()) {
       this.audioEngine.resume();
       setTimeout(() => {
         if (this.audioEngine.isReady()) {
           this.audioEngine.playError();
         }
-      }, this.highSpeedMode ? 5 : 10); // 高速モードでは待機時間短縮
+      }, 1); // 最小待機時間
       return;
     }
     
@@ -113,7 +110,7 @@ class UnifiedAudioSystem {
       } else {
         this.audioEngine.playErrorSound();
       }
-    }, this.highSpeedMode ? 'error-highspeed' : 'error-webaudio');
+    }, 'error-ultrafast'); // 常に最高速モード表示
   }
 
   // パフォーマンス統計取得
