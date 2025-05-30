@@ -26,7 +26,7 @@ export const businessQuestions = [
   },
   {
     "kanji": "メールは24時間以内に返信",
-    "hiragana": "めーるはにじゅうよじかんいないにへんしん",
+    "hiragana": "めーるは24じかんいないにへんしん",
     "explanation": "遅れると印象ダウン！早めの返信が信頼のカギ！"
   },
   {
@@ -81,7 +81,7 @@ export const businessQuestions = [
   },
   {
     "kanji": "TPOに合わせた服装",
-    "hiragana": "てぃーぴーおーにあわせたふくそう",
+    "hiragana": "tpoにあわせたふくそう",
     "explanation": "場所・目的・場合に合わせた服装選びが重要！"
   },
   {

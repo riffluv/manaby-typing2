@@ -96,7 +96,7 @@ export default function GameResultScreen({
   const shortcutDefs = [
     {
       key: 'r',
-      label: 'リトライ',
+      label: 'もう一度プレイ',
       handler: (e: KeyboardEvent) => { e.preventDefault(); onReset(); },
     },
     {
@@ -345,7 +345,7 @@ export default function GameResultScreen({
       </div>
       
       {/* ショートカットキー表示 */}
-      <PortalShortcut shortcuts={shortcutDefs.map(({ key, label }) => ({ key: Array.isArray(key) ? key : (key === 'Escape' ? 'Esc' : key.toUpperCase()), label }))} />
+      <PortalShortcut shortcuts={shortcutDefs.map(({ key, altKey, label }) => ({ key: altKey ? `Alt+${key.toUpperCase()}` : (key === 'Escape' ? 'Esc' : key.toUpperCase()), label }))} />
     </div>
   );
 }

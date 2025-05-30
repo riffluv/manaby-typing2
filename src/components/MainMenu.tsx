@@ -398,8 +398,8 @@ const MainMenu: React.FC<MainMenuProps> = ({ onStart, onRetry, onRanking }) => {
 
           {/* ショートカットヘルプ */}
           <PortalShortcut shortcuts={[
-            { key: 'Space', label: 'Start Game' },
-            { key: 'Alt+R', label: 'Ranking' }
+            { key: 'Space', label: 'ゲーム開始' },
+            { key: 'Alt+R', label: 'ランキング' }
           ]} />
         </motion.div>
       </div>

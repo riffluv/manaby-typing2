@@ -178,7 +178,8 @@ const useTypingGameStoreBase = create<TypingGameState>((set, get) => ({
     } else if (mode === 'sonkeigo') {
       list = require('@/data/sonkeigoQuestions').sonkeigoQuestions;
     } else if (mode === 'kenjougo') {
-      list = require('@/data/kenjougoQuestions').kenjougoQuestions;
+      // 修正版のデータを参照
+      list = require('@/data/kenjougoQuestions_fixed').kenjougoQuestions;
     } else if (mode === 'business') {
       list = require('@/data/businessQuestions').businessQuestions;
     } else {
@@ -207,7 +208,8 @@ const useTypingGameStoreBase = create<TypingGameState>((set, get) => ({
     } else if (mode === 'sonkeigo') {
       list = require('@/data/sonkeigoQuestions').sonkeigoQuestions;
     } else if (mode === 'kenjougo') {
-      list = require('@/data/kenjougoQuestions').kenjougoQuestions;
+      // 修正版のデータを参照
+      list = require('@/data/kenjougoQuestions_fixed').kenjougoQuestions;
     } else if (mode === 'business') {
       list = require('@/data/businessQuestions').businessQuestions;
     } else {
