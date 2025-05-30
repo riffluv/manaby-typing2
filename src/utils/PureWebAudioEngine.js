@@ -11,6 +11,10 @@ class PureWebAudioEngine {
     this.gainNode = null;
     this.buffers = {};
     this.initialized = false;
+      // 高速タイピング対応：音響呼び出し制御
+    this.lastPlayTime = 0;
+    this.minInterval = 5; // 最小間隔5ms（超高速タイピング対応、さらに短縮）
+    this.pendingPlays = new Map(); // 保留中の再生要求
   }
 
   // typingmania-ref風の初期化
@@ -64,27 +68,66 @@ class PureWebAudioEngine {
     
     this.buffers.click = clickBuffer;
     this.buffers.error = errorBuffer;
-  }
-
-  // typingmania-ref Sfx.play() 風の再生メソッド
+  }  // 高速タイピング対応：スロットリング付き再生メソッド
   play(name) {
     if (!this.initialized || !this.buffers[name]) {
       return;
     }
     
+    const now = performance.now();
+    
+    // 高速入力対応：最小間隔チェック
+    if (now - this.lastPlayTime < this.minInterval) {
+      // 前回の再生から間隔が短い場合、最新の要求で上書き
+      if (this.pendingPlays.has('timeout')) {
+        clearTimeout(this.pendingPlays.get('timeout'));
+      }
+      
+      const timeoutId = setTimeout(() => {
+        this.performPlay(name);
+        this.pendingPlays.delete('timeout');
+      }, this.minInterval - (now - this.lastPlayTime));
+      
+      this.pendingPlays.set('timeout', timeoutId);
+      return;
+    }
+    
+    // 即座に再生
+    this.performPlay(name);
+  }
+  
+  // 実際の音響再生処理
+  performPlay(name) {
+    if (!this.initialized || !this.buffers[name]) {
+      return;
+    }
+    
+    this.lastPlayTime = performance.now();
+    
     try {
-      // typingmania-ref風：最小限のBufferSource作成
+      // 高速入力対応：BufferSourceを即座に作成・再生・破棄
       const source = this.context.createBufferSource();
       source.buffer = this.buffers[name];
       source.connect(this.gainNode);
-      source.start();
       
-      // GC対策：自動クリーンアップ（typingmania-ref風）
+      // 即座に再生開始（遅延最小化）
+      source.start(0);
+      
+      // 高速入力対応：明示的なクリーンアップタイミング設定
+      const cleanupTime = this.context.currentTime + source.buffer.duration + 0.1;
+      source.stop(cleanupTime);
+      
+      // メモリリーク防止：確実なdisconnect
       source.onended = () => {
-        source.disconnect();
+        try {
+          source.disconnect();
+        } catch (e) {
+          // 既にdisconnect済みの場合は無視
+        }
       };
     } catch (e) {
       // エラーは無視（typingmania-ref風）
+      console.warn('[PureWebAudio] 再生エラー:', e);
     }
   }
 
@@ -100,12 +143,37 @@ class PureWebAudioEngine {
   playSuccess() {
     this.play('click'); // 成功音はクリック音と同じ（シンプル化）
   }
-
-  // AudioContext再開（必要時のみ）
+  // AudioContext再開（高速タイピング対応強化）
   resume() {
     if (this.context && this.context.state === 'suspended') {
-      this.context.resume();
+      this.context.resume().then(() => {
+        console.log('[PureWebAudio] AudioContext resumed for high-speed typing');
+      }).catch(e => {
+        console.warn('[PureWebAudio] Resume failed:', e);
+      });
     }
+  }
+  
+  // 高速タイピング用：AudioContext状態チェック
+  isReady() {
+    return this.initialized && 
+           this.context && 
+           this.context.state === 'running';
+  }
+  
+  // 高速タイピング用：パフォーマンス統計
+  getPerformanceInfo() {
+    if (!this.context) return null;
+    
+    return {
+      sampleRate: this.context.sampleRate,
+      currentTime: this.context.currentTime,
+      state: this.context.state,
+      baseLatency: this.context.baseLatency || 'unknown',
+      outputLatency: this.context.outputLatency || 'unknown',
+      lastPlayTime: this.lastPlayTime,
+      minInterval: this.minInterval
+    };
   }
 }
 
