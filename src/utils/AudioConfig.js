@@ -1,21 +1,22 @@
-// AudioConfig.js - 音響システム設定
+// AudioConfig.js - 🚀 超高速音響システム設定
 'use client';
 
-// 使用する音響システムの選択
+// 🚀 爆速WebAudio + 超高速MP3統合システム
 export const AUDIO_CONFIG = {
-  // 'legacy', 'lightweight', または 'ultrafast'
+  // 常に'ultrafast'（爆速WebAudio）を使用
   ENGINE: 'ultrafast',
-    // デバッグモード（パフォーマンス測定）
+  
+  // デバッグモード（パフォーマンス測定）
   DEBUG_MODE: true,
   
-  // プリレンダリングバッファーの初期化を自動で行うか
+  // 自動初期化（常にtrue）
   AUTO_INITIALIZE: true,
   
-  // 音量設定
+  // 🚀 最適化済み音量設定
   VOLUME: {
-    click: 0.3,
-    error: 0.15,
-    success: 0.25,
+    click: 0.3,      // 打鍵音
+    error: 0.15,     // エラー音
+    success: 0.25,   // 成功音
   }
 };
 

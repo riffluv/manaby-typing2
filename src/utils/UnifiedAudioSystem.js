@@ -1,8 +1,6 @@
-// UnifiedAudioSystem.js - 統合音響システム
+// UnifiedAudioSystem.js - 🚀 超高速統合音響システム（爆速WebAudio + 超高速MP3）
 'use client';
 
-import KeyboardSoundUtils from './KeyboardSoundUtils';
-import LightweightKeyboardSound from './LightweightKeyboardSound';
 import UltraFastKeyboardSound from './UltraFastKeyboardSound';
 import { AUDIO_CONFIG, AudioPerformanceMonitor } from './AudioConfig';
 
@@ -21,57 +19,64 @@ class UnifiedAudioSystem {
   static isInitialized = false;
   static audioEngine = null;
 
-  // 初期化（アプリ起動時に一度だけ実行）
+  // 🚀 初期化（爆速WebAudioのみ - アプリ起動時に一度だけ実行）
   static async initialize() {
     if (this.isInitialized) return;
 
     try {
-      if (AUDIO_CONFIG.ENGINE === 'ultrafast') {
-        this.audioEngine = UltraFastKeyboardSound;
-        console.log('[UnifiedAudioSystem] 超高速音響システムを使用');
-        // 即座に初期化（async不要）
-        UltraFastKeyboardSound.init();
-      } else if (AUDIO_CONFIG.ENGINE === 'lightweight') {
-        this.audioEngine = LightweightKeyboardSound;
-        
-        if (AUDIO_CONFIG.AUTO_INITIALIZE) {
-          console.log('[UnifiedAudioSystem] 軽量版音響システムを初期化中...');
-          await LightweightKeyboardSound.initializePrerenderedBuffers();
-          console.log('[UnifiedAudioSystem] 軽量版音響システム初期化完了');
-        }
-      } else {
-        this.audioEngine = KeyboardSoundUtils;
-        console.log('[UnifiedAudioSystem] レガシー音響システムを使用');
-      }
-
+      // 常に超高速WebAudioシステムを使用
+      this.audioEngine = UltraFastKeyboardSound;
+      console.log('🚀 [UnifiedAudioSystem] 爆速WebAudioシステムを使用');
+      
+      // 即座に初期化（async不要）
+      UltraFastKeyboardSound.init();
       this.isInitialized = true;
+      
     } catch (error) {
-      console.error('[UnifiedAudioSystem] 初期化に失敗:', error);
-      // フォールバックとして超高速システムを使用
+      console.error('❌ [UnifiedAudioSystem] 初期化に失敗:', error);
+      // 緊急フォールバック
       this.audioEngine = UltraFastKeyboardSound;
       UltraFastKeyboardSound.init();
       this.isInitialized = true;
     }
   }
 
-  // クリック音再生
+  // 🚀 クリック音再生（爆速）
   static playClickSound() {
     if (!this.isInitialized) {
-      console.warn('[UnifiedAudioSystem] システムが初期化されていません');
+      console.warn('⚠️ [UnifiedAudioSystem] システムが初期化されていません');
       return;
-    }    AudioPerformanceMonitor.measureLatency(() => {
+    }
+    
+    AudioPerformanceMonitor.measureLatency(() => {
       this.audioEngine.playClickSound();
-    }, `click-${AUDIO_CONFIG.ENGINE}`);
+    }, 'click-ultrafast');
   }
 
-  /** 正解音を再生 */
+  /** 🚀 正解音を再生（爆速WebAudio統一） */
   static playSuccessSound(volume = 1.0) {
-    this.playSound('correct', volume);
+    // 🚀 正解音もWebAudioに統一（MP3ではなくWebAudio使用）
+    if (!this.isInitialized) {
+      console.warn('⚠️ [UnifiedAudioSystem] システムが初期化されていません');
+      return;
+    }
+    
+    AudioPerformanceMonitor.measureLatency(() => {
+      this.audioEngine.playSuccessSound();
+    }, 'success-ultrafast');
   }
 
-  /** 不正解音を再生 */
+  /** 🚀 不正解音を再生（爆速WebAudio統一） */
   static playErrorSound(volume = 1.0) {
-    this.playSound('wrong', volume);
+    // 🚀 不正解音もWebAudioに統一（MP3と同じような音質）
+    if (!this.isInitialized) {
+      console.warn('⚠️ [UnifiedAudioSystem] システムが初期化されていません');
+      return;
+    }
+    
+    AudioPerformanceMonitor.measureLatency(() => {
+      this.audioEngine.playErrorSound();
+    }, 'error-ultrafast');
   }
 
   // パフォーマンス統計取得
@@ -84,23 +89,12 @@ class UnifiedAudioSystem {
     AudioPerformanceMonitor.reset();
   }
 
-  // 使用中のエンジン名を取得
+  // 使用中のエンジン名を取得（常に'ultrafast'）
   static getCurrentEngine() {
-    return AUDIO_CONFIG.ENGINE;
+    return 'ultrafast';
   }
 
-  // エンジンを動的に切り替え（デバッグ用）
-  static async switchEngine(engineType) {
-    if (engineType === AUDIO_CONFIG.ENGINE) return;
-
-    console.log(`[UnifiedAudioSystem] エンジンを ${AUDIO_CONFIG.ENGINE} から ${engineType} に切り替え`);
-    
-    AUDIO_CONFIG.ENGINE = engineType;
-    this.isInitialized = false;
-    await this.initialize();
-  }
-
-  // AudioContextのresume（初回遅延防止用）
+  // 🚀 AudioContextのresume（初回遅延防止用）
   static async resumeAudioContext() {
     if (!this.isInitialized) await this.initialize();
     if (this.audioEngine && typeof this.audioEngine.resumeAudioContext === 'function') {
@@ -108,14 +102,14 @@ class UnifiedAudioSystem {
     }
   }
 
-  // --- BGM操作API ---
+  // --- 🚀 超高速BGM操作API ---
   /**
    * BGM種別
    * @typedef {'game' | 'menu' | 'result'} BGMType
    */
 
   /**
-   * BGMを再生
+   * 🚀 超高速BGMを再生
    * @param {BGMType} bgmType
    * @param {boolean} [loop=true]
    * @param {number} [volume=1.0]
@@ -124,33 +118,33 @@ class UnifiedAudioSystem {
     _playBGM(bgmType, loop, volume);
   }
 
-  /** BGMを停止 */
+  /** 🚀 BGMを停止 */
   static stopBGM() {
     _stopBGM();
   }
 
-  /** BGMを一時停止 */
+  /** 🚀 BGMを一時停止 */
   static pauseBGM() {
     _pauseBGM();
   }
 
-  /** BGMを再開 */
+  /** 🚀 BGMを再開 */
   static resumeBGM() {
     _resumeBGM();
   }
 
-  /** BGM音量を設定 */
+  /** 🚀 BGM音量を設定 */
   static setBGMVolume(volume) {
     _setBGMVolume(volume);
   }
 
-  /** BGM有効/無効を設定 */
+  /** 🚀 BGM有効/無効を設定 */
   static setBGMEnabled(enabled) {
     _setBGMEnabled(enabled);
   }
 
   /**
-   * 効果音を再生
+   * 🚀 超高速効果音を再生
    * @param {'correct'|'wrong'} soundType
    * @param {number} [volume=1.0]
    */
@@ -158,14 +152,60 @@ class UnifiedAudioSystem {
     _playSound(soundType, volume);
   }
 
-  /** 効果音有効/無効を設定 */
+  /** 🚀 効果音有効/無効を設定 */
   static setEffectsEnabled(enabled) {
     _setEffectsEnabled(enabled);
   }
 
-  /** 効果音音量を設定 */
+  /** 🚀 効果音音量を設定 */
   static setEffectsVolume(volume) {
     _setEffectsVolume(volume);
+  }
+
+  // 🔄 音響システム切り替え機能
+  
+  /** 🚀 MP3版正解音を再生（切り替え用） */
+  static playSuccessSoundMP3(volume = 1.0) {
+    this.playSound('correct', volume);
+  }
+
+  /** 🚀 MP3版不正解音を再生（切り替え用） */
+  static playErrorSoundMP3(volume = 1.0) {
+    this.playSound('wrong', volume);
+  }
+
+  /** 
+   * 🔄 音響システム統一切り替え
+   * @param {'webaudio'|'mp3'} systemType - 使用する音響システム
+   */
+  static setAudioSystem(systemType) {
+    if (systemType === 'mp3') {
+      // MP3版に切り替え（正解・不正解ともにMP3）
+      this.playSuccessSound = this.playSuccessSoundMP3;
+      this.playErrorSound = this.playErrorSoundMP3;
+      console.log('🎵 [UnifiedAudioSystem] MP3版音響システムに切り替え');
+    } else {
+      // WebAudio版に切り替え（正解・不正解ともにWebAudio）
+      this.playSuccessSound = (volume = 1.0) => {
+        if (!this.isInitialized) {
+          console.warn('⚠️ [UnifiedAudioSystem] システムが初期化されていません');
+          return;
+        }
+        AudioPerformanceMonitor.measureLatency(() => {
+          this.audioEngine.playSuccessSound();
+        }, 'success-ultrafast');
+      };
+      this.playErrorSound = (volume = 1.0) => {
+        if (!this.isInitialized) {
+          console.warn('⚠️ [UnifiedAudioSystem] システムが初期化されていません');
+          return;
+        }
+        AudioPerformanceMonitor.measureLatency(() => {
+          this.audioEngine.playErrorSound();
+        }, 'error-ultrafast');
+      };
+      console.log('⚡ [UnifiedAudioSystem] WebAudio版音響システムに切り替え');
+    }
   }
 }
 
