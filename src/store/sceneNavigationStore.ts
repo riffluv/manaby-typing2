@@ -1,4 +1,5 @@
 import { create } from 'zustand';
+import { createSelectors } from '@/store/createSelectors';
 import type { PerWordScoreLog } from '@/types/score';
 import type { GameScoreLog } from '@/types/score';
 
@@ -24,28 +25,21 @@ export type SceneType = 'menu' | 'game' | 'ranking' | 'result';
 
 // 画面ナビゲーション用のストア
 interface SceneNavigationStore {
-  // 現在の画面
   currentScene: SceneType;
   sceneHistory: SceneType[];
-
-  // 画面遷移用メソッド
   navigateTo: (scene: SceneType) => void;
   goBack: () => void;
-
-  // 特定画面への直接遷移
   goToMenu: () => void;
   goToGame: () => void;
   goToRanking: () => void;
   goToResult: () => void;
-
-  // 直近スコア・ログの保持
   lastScoreLog: PerWordScoreLog[];
   lastResultScore: GameScoreLog['total'] | null;
   setLastScore: (scoreLog: PerWordScoreLog[], resultScore: GameScoreLog['total'] | null) => void;
 }
 
-// 画面ナビゲーションストアの実装
-export const useSceneNavigationStore = create<SceneNavigationStore>((set, get) => ({
+// Zustandストアの作成
+const useSceneNavigationStoreBase = create<SceneNavigationStore>((set, get) => ({
   currentScene: 'menu',
   sceneHistory: [],
   lastScoreLog: [],
@@ -89,3 +83,6 @@ export const useSceneNavigationStore = create<SceneNavigationStore>((set, get) =
     lastResultScore: resultScore,
   }),
 }));
+
+// セレクターを使用して最適化されたストアをエクスポート
+export const useSceneNavigationStore = createSelectors(useSceneNavigationStoreBase);
