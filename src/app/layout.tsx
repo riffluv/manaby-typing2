@@ -4,6 +4,7 @@ import "./globals.css";
 import MonkeytypeHeader from '@/components/common/MonkeytypeHeader';
 import AppLayout from '@/components/AppLayout';
 import AudioSystemInitializer from '@/components/AudioSystemInitializer';
+import BGMInitializer from '@/components/BGMInitializer';
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -31,6 +32,7 @@ export default function RootLayout({
         suppressHydrationWarning
       >
         <AudioSystemInitializer />
+        <BGMInitializer />
         <MonkeytypeHeader />
         <AppLayout>
           {children}
