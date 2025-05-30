@@ -90,7 +90,6 @@ export function useUnifiedTypingProcessor(
       
       // ベテラン級遅延解析（ハードウェア→応答完了まで）
       if (metrics) {
-        console.log(`🔧 [${e.key}] Hardware→JS: ${metrics.hardwareTimestamp ? (performance.now() - metrics.hardwareTimestamp).toFixed(3) : 'N/A'}ms | OS: ${metrics.osInputDelay.toFixed(3)}ms | Total: ${metrics.totalSystemLatency.toFixed(3)}ms`);
         
         // ベテラン感覚閾値チェック（8ms）
         if (metrics.totalSystemLatency > 8) {
@@ -204,7 +203,6 @@ export function useUnifiedTypingProcessor(
   // 🚨 完全ロールバック: 元の高速検知システムのみ使用
   useEffect(() => {
     if (gameStatus === 'playing') {
-      console.log('🚨 完全ロールバック: 元のシステムのみ使用');
 
       const keyHandler = createHardwareOptimizedKeyHandler();
       
@@ -213,7 +211,6 @@ export function useUnifiedTypingProcessor(
       highSpeedKeys.startListening();
 
       return () => {
-        console.log('🛑 元のシステム停止');
         highSpeedKeys.stopListening();
       };
     }

@@ -63,7 +63,7 @@ class HighSpeedKeyDetector {
     document.addEventListener('beforeinput', this.handleBeforeInput, options);
 
     this.isListening = true;
-    console.log('🚀 HighSpeedKeyDetector: 超高速リスニング開始');
+    // デバッグログ完全削除
   }
 
   /**
@@ -180,7 +180,7 @@ class HighSpeedKeyDetector {
     document.removeEventListener('beforeinput', this.handleBeforeInput, true);
 
     this.isListening = false;
-    console.log('⏹️ HighSpeedKeyDetector: リスニング停止');
+    // デバッグログ完全削除
   }
 
   /**
