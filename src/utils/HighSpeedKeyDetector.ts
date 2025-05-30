@@ -71,7 +71,7 @@ class HighSpeedKeyDetector {
    */
   private handleKeyDown = (e: KeyboardEvent): void => {
     const keyTime = performance.now();
-    // ESCや修飾キーは無効化しない
+    // ESCや修飾キー（Ctrl/Alt/Meta）は無効化しない（Shiftは除外しない！）
     if (e.key === 'Escape' || e.ctrlKey || e.altKey || e.metaKey) {
       // 通常の伝播に任せる（preventDefault/stopImmediatePropagationしない）
       return;
@@ -81,8 +81,7 @@ class HighSpeedKeyDetector {
       e.preventDefault();
       e.stopImmediatePropagation();
     }
-
-    // タイピング文字のみ処理
+    // タイピング文字のみ処理（shift記号も含む）
     if (e.key.length === 1) {
       this.processKeyInput(e, keyTime, 'keydown');
     }
@@ -93,12 +92,10 @@ class HighSpeedKeyDetector {
    */
   private handleKeyPress = (e: KeyboardEvent): void => {
     const keyTime = performance.now();
-    
     if (this.config.preventDefaultBehavior) {
       e.preventDefault();
       e.stopImmediatePropagation();
     }
-
     if (e.key.length === 1) {
       this.processKeyInput(e, keyTime, 'keypress');
     }

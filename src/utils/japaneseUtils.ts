@@ -378,14 +378,14 @@ export class TypingChar {
    * 特定の文字列を受け入れ可能かどうかをチェック（高速化版）
    */
   canAccept(character: string): boolean {
-    const char = character.toLowerCase();
+    const char = normalizeSymbol(character.toLowerCase());
     const newInput = this.acceptedInput + char;
     
     // 高速化：最初の有効パターンでチェック
     if (this.activePatternIndices.length > 0) {
       const firstActivePattern = this.patterns[this.activePatternIndices[0]];
-      if (newInput.length <= firstActivePattern.length && 
-          newInput === firstActivePattern.substring(0, newInput.length)) {
+      const patternHead = normalizeSymbol(firstActivePattern.substring(0, newInput.length).toLowerCase());
+      if (newInput.length <= firstActivePattern.length && newInput === patternHead) {
         return true;
       }
     }
@@ -393,7 +393,8 @@ export class TypingChar {
     // フォールバック：全パターンチェック
     for (const patternIndex of this.activePatternIndices) {
       const pattern = this.patterns[patternIndex];
-      if (newInput.length <= pattern.length && newInput === pattern.substring(0, newInput.length)) {
+      const patternHead = normalizeSymbol(pattern.substring(0, newInput.length).toLowerCase());
+      if (newInput.length <= pattern.length && newInput === patternHead) {
         return true;
       }
     }
@@ -405,7 +406,7 @@ export class TypingChar {
    * 入力を受け入れて、完了したかどうかを返す（高速化版）
    */
   accept(character: string): boolean {
-    const char = character.toLowerCase();
+    const char = normalizeSymbol(character.toLowerCase());
     
     if (this.canAccept(char)) {
       this.acceptedInput += char;
@@ -499,46 +500,64 @@ export class TypingChar {
 }
 
 /**
- * ひらがなをタイピング用の文字オブジェクトの配列に変換
+ * 記号の全角・半角・shift入力を同一視する正規化関数
  */
-export const createTypingChars = (hiragana: string): TypingChar[] => {
-  const kanaPatterns = convertHiraganaToRomaji(hiragana);
-  return kanaPatterns.map(item => new TypingChar(item.kana, item.alternatives));
-};
+function normalizeSymbol(char: string): string {
+  // 全角→半角変換テーブル（重複キーなし）
+  const zenkakuToHankaku: Record<string, string> = {
+    '？': '?',
+    '！': '!',
+
+    '。': '.',
+    '、': ',',
+    '：': ':',
+    '；': ';',
+    '’': "'",
+    '”': '"',
+    '（': '(',
+    '）': ')',
+    '［': '[',
+    '］': ']',
+    '｛': '{',
+    '｝': '}',
+    'ー': '-',
+    '・': '/',
+    '／': '/',
+    '￥': '\\',
+    '　': ' ',
+    '〜': '~',
+    '＝': '=',
+    '＋': '+',
+    '＊': '*',
+    '＠': '@',
+    '＃': '#',
+    '％': '%',
+    '＆': '&',
+    '＿': '_',
+    '＾': '^',
+    '｜': '|',
+    '＜': '<',
+    '＞': '>',
+    '“': '"',
+    '‘': "'",
+    '…': '...',
+    '‥': '..',
+    '，': ',',
+    '．': '.',
+    '｀': '`',
+    '＄': '$',
+    '０': '0', '１': '1', '２': '2', '３': '3', '４': '4', '５': '5', '６': '6', '７': '7', '８': '8', '９': '9'
+  };
+  if (zenkakuToHankaku[char]) return zenkakuToHankaku[char];
+  // 「/」と「?」は区別する（shift + / で ? を入力できるように）
+  // 何も変換せずそのまま返す
+  return char;
+}
 
 /**
- * ローマ字を1文字ずつに分解して返す
- * 注意: この関数は単純な表示用であり、実際の入力処理にはTypingCharクラスを使用してください
+ * ひらがなをタイピング用の文字オブジェクトの配列に変換
  */
-export const getRomajiCharacters = (hiragana: string): Array<{
-  char: string;
-  kana: string;
-  possibleInputs: string[];
-  expectedInput: string;
-}> => {
-  const patterns = convertHiraganaToRomaji(hiragana);
-  const result: Array<{
-    char: string;
-    kana: string;
-    possibleInputs: string[];
-    expectedInput: string;
-  }> = [];
-  
-  // 各かなのローマ字表現を1文字ずつ分解
-  patterns.forEach(pattern => {
-    // 選択されたローマ字パターン（優先パターン）を取得
-    const romajiChars = pattern.romaji.split('');
-    
-    // 各ローマ字に対して、可能な入力パターンを計算
-    romajiChars.forEach(char => {
-      result.push({
-        char: char,
-        kana: pattern.kana,
-        possibleInputs: pattern.alternatives,
-        expectedInput: char
-      });
-    });
-  });
-  
-  return result;
-};
+export function createTypingChars(hiragana: string): TypingChar[] {
+  const kanaPatterns = convertHiraganaToRomaji(hiragana);
+  return kanaPatterns.map(item => new TypingChar(item.kana, item.alternatives));
+}
