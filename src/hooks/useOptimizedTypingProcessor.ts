@@ -69,22 +69,21 @@ export function useOptimizedTypingProcessor(
     };
 
     updateDisplay();
-  }, [currentWord, updateDisplay]);
-  // typingmania-ref流：シンプルなキー処理（高速入力最適化）
+  }, [currentWord, updateDisplay]);  // typingmania-ref流：シンプルなキー処理（超高速最適化）
   const handleKeyInput = useCallback((e: KeyboardEvent) => {
-    if (gameStatus !== 'playing') return;
-    if (e.key.length !== 1) return; // 1文字のキーのみ処理
+    // typingmania-ref流：統合ガード条件で最大効率化
+    if (gameStatus !== 'playing' || e.key.length !== 1 || 
+        currentKanaIndexRef.current >= typingCharsRef.current.length) return;
 
     const typingChars = typingCharsRef.current;
     const currentKanaIndex = currentKanaIndexRef.current;
     const wordStats = wordStatsRef.current;
-
-    if (currentKanaIndex >= typingChars.length) return;
-
     const currentChar = typingChars[currentKanaIndex];
+    
+    // 最終ガード（nullチェックのみ）
     if (!currentChar) return;
 
-    // 初回入力時の開始時間記録
+    // 初回入力時の開始時間記録（最小限の処理）
     if (wordStats.keyCount === 0) {
       wordStats.startTime = performance.now();
     }
@@ -95,9 +94,8 @@ export function useOptimizedTypingProcessor(
     const result = currentChar.accept(e.key);
     
     if (result >= 0) {
-      // 正解：音声再生（高速入力対応）
+      // 正解：音声再生（最高速対応）
       if (audioEnabled) {
-        // 高速タイピング対応：AudioContext状態チェック後に再生
         UnifiedAudioSystem.playClickSound();
       }
 
@@ -108,12 +106,11 @@ export function useOptimizedTypingProcessor(
         // 単語完了チェック
         if (currentKanaIndexRef.current >= typingChars.length) {
           wordStats.endTime = performance.now();
-          
-          // スコア記録（typingmania-ref流）
+            // スコア記録（typingmania-ref流）
           const duration = (wordStats.endTime - wordStats.startTime) / 1000;
           const kpm = duration > 0 ? (wordStats.keyCount - wordStats.mistakeCount) / duration * 60 : 0;
-          const accuracy = wordStats.keyCount > 0 ? ((wordStats.keyCount - wordStats.mistakeCount) / wordStats.keyCount) : 1;
-
+          const accuracy = wordStats.keyCount > 0 ? (wordStats.keyCount - wordStats.mistakeCount) / wordStats.keyCount : 1;
+          
           setScoreLog(prev => [...prev, {
             keyCount: wordStats.keyCount,
             correct: wordStats.keyCount - wordStats.mistakeCount,
@@ -121,12 +118,13 @@ export function useOptimizedTypingProcessor(
             startTime: wordStats.startTime,
             endTime: wordStats.endTime,
             duration,
-            kpm: Math.max(0, kpm),
-            accuracy: Math.max(0, Math.min(1, accuracy)), // 0-1の範囲に正規化
-          }]);          // 次の単語へ（遅延最小化：さらに短縮）
+            kpm: kpm < 0 ? 0 : kpm,
+            accuracy: accuracy < 0 ? 0 : accuracy > 1 ? 1 : accuracy,
+          }]);// 次の単語へ（typingmania-ref流：即座遷移）
+          // Reactの制約でsetTimeoutを使用するが、遅延を最小化
           setTimeout(() => {
             advanceToNextWord();
-          }, 25); // 50ms→25msに短縮（ベテランユーザー対応）
+          }, 16); // 1フレーム（16ms）で即座遷移
           
           return;
         }

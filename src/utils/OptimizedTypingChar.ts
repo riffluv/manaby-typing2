@@ -9,15 +9,11 @@
 export class OptimizedTypingChar {
   kana: string;
   patterns: string[];
-  // TypingChar互換プロパティ
+  // typingmania-ref互換の統一プロパティ
   acceptedInput: string = '';
   remainingText: string = '';
   completed: boolean = false;
   activePatternIndices: number[] = [];
-  
-  // typingmania-ref由来のプロパティ
-  accepted_input: string = '';
-  remaining_text: string = '';
   base_point: number = 0;
   counted_point: number = 0;
   constructor(kana: string, patterns: string[]) {
@@ -31,17 +27,14 @@ export class OptimizedTypingChar {
   /**
    * typingmania-ref流：最短経路を効率的に計算
    * TypingChar互換メソッド
-   */
-  calculateRemainingText(): void {
+   */  calculateRemainingText(): void {
     if (this.completed) {
       this.remainingText = '';
-      this.remaining_text = '';
       return;
     }
 
     // typingmania-ref流：最短の残りテキストを検索
     this.remainingText = '';
-    this.remaining_text = '';
     let shortestLength = Infinity;
 
     for (const patternIndex of this.activePatternIndices) {
@@ -51,7 +44,6 @@ export class OptimizedTypingChar {
         const remaining = pattern.substring(this.acceptedInput.length);
         if (remaining.length < shortestLength) {
           this.remainingText = remaining;
-          this.remaining_text = remaining;
           shortestLength = remaining.length;
         }
       }
@@ -93,13 +85,11 @@ export class OptimizedTypingChar {
 
   /**
    * typingmania-ref流：文字受け入れ
-   */
-  accept(character: string): number {
+   */  accept(character: string): number {
     const char = character.toLowerCase();
     
     if (this.canAccept(char)) {
       const point = this.dispensePoint(char.length);
-      this.accepted_input += char;
       this.acceptedInput += char;
       
       // 入力後に有効なパターンを更新
@@ -155,9 +145,8 @@ export class OptimizedTypingChar {
   isCompleted(): boolean {
     return this.completed;
   }
-
   getRemainingText(): string {
-    return this.remaining_text;
+    return this.remainingText;
   }
 
   getCharacterCount(): number {
