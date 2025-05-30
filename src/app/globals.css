@@ -715,13 +715,6 @@ input:focus, textarea:focus {
   text-shadow: var(--glow-neon);
 }
 
-.char-current {
-  color: var(--color-text-primary);
-  background: rgba(138, 180, 248, 0.15);
-  border-radius: 2px;
-  animation: pulse 1s infinite;
-}
-
 .char-pending {
   color: var(--color-text-secondary);
   opacity: 0.6;
@@ -1333,54 +1326,6 @@ span.typing-char.current {
   opacity: 0.7;
 }
 
-.typing-char.char-current {
-  /* 🎯 参考実装風の目立つフォーカス表示 */
-  color: #000000 !important;
-  background: #ff9c00 !important; /* etyping-ref風オレンジ */
-  border: 2px solid #ffb347 !important;
-  box-shadow: 
-    0 0 8px #ff9c00,
-    0 0 16px rgba(255, 156, 0, 0.6),
-    0 0 24px rgba(255, 156, 0, 0.4) !important;
-  transform: translateZ(0) scale(1.1) !important;
-  font-weight: 700 !important;
-  border-radius: 6px !important;
-  position: relative;
-  
-  /* 強力なパルスアニメーション */
-  animation: typing-focus-pulse 1.2s ease-in-out infinite !important;
-}
-
-/* より強力なセレクタで確実に適用 */
-.typing-area .typing-char.char-current,
-span.typing-char.char-current {
-  color: #000000 !important;
-  background-color: #ff9c00 !important;
-  background: #ff9c00 !important;
-  border: 2px solid #ffb347 !important;
-  box-shadow: 
-    0 0 8px #ff9c00,
-    0 0 16px rgba(255, 156, 0, 0.6),
-    0 0 24px rgba(255, 156, 0, 0.4) !important;
-  transform: translateZ(0) scale(1.1) !important;
-  font-weight: 700 !important;
-  border-radius: 6px !important;
-  position: relative !important;
-  animation: typing-focus-pulse 1.2s ease-in-out infinite !important;
-}
-
-/* 🎯 現在文字にカーソル効果を追加 */
-.typing-char.char-current::after {
-  content: '';
-  position: absolute;
-  right: -2px;
-  top: 0;
-  bottom: 0;
-  width: 2px;
-  background: #000000;
-  animation: typing-cursor-blink 1s step-end infinite;
-}
-
 .typing-char.char-completed {
   color: var(--color-success);
   background: rgba(129, 199, 132, 0.15);
@@ -1504,7 +1449,7 @@ span.typing-char.char-current {
 
 /* ハイコントラストモード対応 */
 @media (prefers-contrast: high) {
-  .typing-char.char-current {
+  .typing-char.current {
     background: #ffff00 !important; /* 黄色でより高いコントラスト */
     color: #000000 !important;
     border: 3px solid #ff9c00 !important;
@@ -1513,13 +1458,13 @@ span.typing-char.char-current {
       0 0 12px #ffff00 !important;
   }
   
-  .typing-char.char-completed {
+  .typing-char.completed {
     background: var(--color-success) !important;
     color: var(--color-base-black) !important;
     border: 1px solid #000000;
   }
   
-  .typing-char.char-pending {
+  .typing-char.pending {
     opacity: 1;
     color: var(--color-text-primary);
     border: 1px solid rgba(255, 255, 255, 0.3);
@@ -1533,7 +1478,7 @@ span.typing-char.char-current {
     animation: none !important;
   }
   
-  .typing-char.char-current {
+  .typing-char.current {
     /* アニメーション無効時も強いフォーカス表示を維持 */
     transform: translateZ(0) scale(1.1) !important;
     background: #ff9c00 !important;
