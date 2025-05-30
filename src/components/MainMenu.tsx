@@ -165,14 +165,13 @@ const MainMenu: React.FC<MainMenuProps> = ({ onStart, onRetry, onRanking }) => {
             onClick={() => { setQuestionCount(adminInput); setAdminStatus(`出題数を${adminInput}問に変更しました`); }}
             disabled={adminLoading || adminInput < 1}
             variant="secondary"
-            style={{ marginLeft: 8 }}
           >反映</CommonButton>
-        </label>        <div className="admin-actions">
+        </label>
+        <div>
           <CommonButton
             onClick={() => handleResetRanking('normal')}
             disabled={adminLoading}
             variant="secondary"
-            style={{ marginRight: 8 }}
           >NORMALランキングリセット</CommonButton>
           <CommonButton
             onClick={() => handleResetRanking('hard')}

@@ -1,27 +1,29 @@
 import React from 'react';
-import styles from '../NewRankingScreen.module.css';
 
 interface TabButtonProps {
   active?: boolean;
   children: React.ReactNode;
   onClick?: () => void;
-  className?: string;
   tabIndex?: number;
   ariaLabel?: string;
+  variant?: 'primary' | 'secondary';
+  disabled?: boolean;
 }
 
 const TabButton: React.FC<TabButtonProps> = ({
   active = false,
   children,
   onClick,
-  className = '',
   tabIndex = 0,
-  ariaLabel
+  ariaLabel,
+  variant = 'secondary',
+  disabled = false
 }) => {
+  // globals.cssのbtn-primary/btn-secondaryのみを使用
   const tabClass = [
-    styles.difficultyTab,
-    active ? styles.difficultyTabActive : styles.difficultyTabInactive,
-    className
+    variant === 'primary' ? 'btn-primary' : 'btn-secondary',
+    active && 'is-active', // active状態用（必要ならglobals.cssに.is-activeを追加）
+    disabled && 'is-disabled'
   ].filter(Boolean).join(' ');
 
   return (
@@ -32,6 +34,7 @@ const TabButton: React.FC<TabButtonProps> = ({
       tabIndex={tabIndex}
       aria-pressed={active}
       aria-label={ariaLabel}
+      disabled={disabled}
     >
       {children}
     </button>

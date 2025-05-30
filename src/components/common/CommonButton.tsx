@@ -1,25 +1,24 @@
 import React from 'react';
-import styles from '../NewRankingScreen.module.css';
 
 interface CommonButtonProps extends React.ButtonHTMLAttributes<HTMLButtonElement> {
   variant?: 'primary' | 'secondary';
   children: React.ReactNode;
+  disabled?: boolean;
 }
 
 const CommonButton: React.FC<CommonButtonProps> = ({
   variant = 'primary',
   children,
-  className = '',
+  disabled = false,
   ...props
 }) => {
   const btnClass = [
-    variant === 'primary' ? 'btn-primary' : styles.difficultyTab,
-    variant === 'secondary' && styles.difficultyTabActive,
-    className
+    variant === 'primary' ? 'btn-primary' : 'btn-secondary',
+    disabled && 'is-disabled'
   ].filter(Boolean).join(' ');
 
   return (
-    <button type="button" className={btnClass} {...props}>
+    <button type="button" className={btnClass} disabled={disabled} {...props}>
       {children}
     </button>
   );

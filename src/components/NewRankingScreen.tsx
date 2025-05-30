@@ -96,6 +96,8 @@ const NewRankingScreen: React.FC<NewRankingScreenProps> = ({ onGoMenu }) => {
               active={activeDifficulty === difficulty}
               onClick={() => handleDifficultyChange(difficulty)}
               ariaLabel={difficulty === 'normal' ? 'ノーマルモード' : 'ハードモード'}
+              variant={difficulty === 'normal' ? 'primary' : 'secondary'}
+              disabled={false}
             >
               {difficulty === 'normal' ? 'NORMAL' : 'HARD'}
             </TabButton>

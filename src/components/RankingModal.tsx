@@ -53,18 +53,15 @@ export default function RankingModal({
           />
           <div className="modal-actions">
             <CommonButton
-              type="submit"
+              onClick={onSubmit}
               variant="primary"
-              disabled={registering || !name.trim() || isScoreRegistered}
-            >
-              {registering ? '登録中...' : '登録する'}
-            </CommonButton>
-            {error && <div className="error-message">{error}</div>}
+              disabled={registering || isScoreRegistered}
+            >登録</CommonButton>
             <CommonButton
-              type="button"
               onClick={onClose}
               variant="secondary"
             >キャンセル</CommonButton>
+            {error && <div className="error-message">{error}</div>}
           </div>
         </form>
       )}
