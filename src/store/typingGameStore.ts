@@ -141,7 +141,19 @@ const initialTypingGameState = {
   questionHistory: loadQuestionHistory() // LocalStorageから履歴をロード
 };
 
-// Zustandストアの作成
+// --- シャッフル関数（Fisher-Yates） ---
+function shuffleArray<T>(array: T[]): T[] {
+  const arr = [...array];
+  for (let i = arr.length - 1; i > 0; i--) {
+    const j = Math.floor(Math.random() * (i + 1));
+    [arr[i], arr[j]] = [arr[j], arr[i]];
+  }
+  return arr;
+}
+
+// --- ゲームごとの出題リストを管理 ---
+let currentGameQuestions: any[] = [];
+
 const useTypingGameStoreBase = create<TypingGameState>((set, get) => ({
   // 初期状態
   ...initialTypingGameState,
@@ -159,109 +171,64 @@ const useTypingGameStoreBase = create<TypingGameState>((set, get) => ({
   setQuestionCount: (count) => set({ questionCount: count }),
   
   resetGame: () => {
-    // モードを保持したままゲームをリセット
     const currentMode = get().mode;
-    set({ 
+    let list;
+    if (currentMode === 'hard') {
+      list = require('@/data/hardQuestions').hardQuestions;
+    } else if (currentMode === 'sonkeigo') {
+      list = require('@/data/sonkeigoQuestions').sonkeigoQuestions;
+    } else if (currentMode === 'kenjougo') {
+      list = require('@/data/kenjougoQuestions_fixed').kenjougoQuestions;
+    } else if (currentMode === 'business') {
+      list = require('@/data/businessQuestions').businessQuestions;
+    } else {
+      list = wordList;
+    }
+    // 出題数をリスト長以下に制限
+    const questionCount = Math.min(get().questionCount, list.length);
+    // シャッフルして先頭から必要数だけ抽出
+    currentGameQuestions = shuffleArray(list).slice(0, questionCount);
+    set({
       gameStatus: 'ready',
       currentWordIndex: 0,
-      mode: currentMode // モードを明示的に保持
+      mode: currentMode
     });
     get().setupCurrentWord();
   },
   
   advanceToNextWord: () => {
-    const { currentWordIndex, mode, questionCount, questionHistory } = get();
-    // モードに応じてリストを取得
-    let list;
-    if (mode === 'hard') {
-      list = require('@/data/hardQuestions').hardQuestions;
-    } else if (mode === 'sonkeigo') {
-      list = require('@/data/sonkeigoQuestions').sonkeigoQuestions;
-    } else if (mode === 'kenjougo') {
-      // 修正版のデータを参照
-      list = require('@/data/kenjougoQuestions_fixed').kenjougoQuestions;
-    } else if (mode === 'business') {
-      list = require('@/data/businessQuestions').businessQuestions;
-    } else {
-      // normal
-      list = wordList;
-    }
-    
-    // questionCount問で終了
-    if (currentWordIndex + 1 >= questionCount || currentWordIndex + 1 >= list.length) {
+    const { currentWordIndex, questionCount } = get();
+    if (currentWordIndex + 1 >= questionCount) {
       set({ gameStatus: 'finished' });
     } else {
-      // インデックスのみインクリメント（実際の問題選択はsetupCurrentWordで行う）
-      const newIndex = currentWordIndex + 1;
-      set({ currentWordIndex: newIndex });
+      set({ currentWordIndex: currentWordIndex + 1 });
       get().setupCurrentWord();
     }
   },
   
   setupCurrentWord: () => {
-    const { currentWordIndex, mode, questionHistory } = get();
-    
-    // モードに応じてリストを取得
-    let list;
-    if (mode === 'hard') {
-      list = require('@/data/hardQuestions').hardQuestions;
-    } else if (mode === 'sonkeigo') {
-      list = require('@/data/sonkeigoQuestions').sonkeigoQuestions;
-    } else if (mode === 'kenjougo') {
-      // 修正版のデータを参照
-      list = require('@/data/kenjougoQuestions_fixed').kenjougoQuestions;
-    } else if (mode === 'business') {
-      list = require('@/data/businessQuestions').businessQuestions;
-    } else {
-      // normal
-      list = wordList;
-    }
-    
-    // 問題データがある場合は処理を続行
-    if (list.length > 0) {
-      // 履歴に基づいてランダムに問題を選択
-      const previousIndices = questionHistory[mode];
-      
-      // 過去の出題履歴を考慮して次の問題インデックスを選択
-      const randomIndex = selectNextQuestionIndex(mode, list, previousIndices);
-      
-      // 履歴が長すぎる場合は古いものを削除（最新の10問程度を保持）
-      const newHistory = [...previousIndices];
-      if (newHistory.length > Math.min(20, list.length)) {
-        newHistory.shift(); // 最も古い履歴を削除
+    const { currentWordIndex } = get();
+    const word = currentGameQuestions[currentWordIndex];
+    if (!word) return;
+    const typingChars = createTypingChars(word.hiragana);
+    const displayChars = typingChars.map(char => char.getDisplayInfo().displayText);
+    set({
+      currentWord: {
+        japanese: word.japanese || word.kanji,
+        hiragana: word.hiragana,
+        romaji: displayChars.join(''),
+        typingChars: typingChars,
+        displayChars: displayChars,
+        explanation: word.explanation || null
       }
-      newHistory.push(randomIndex);
-      
-      // 履歴を更新
-      const updatedHistory = {
-        ...questionHistory,
-        [mode]: newHistory
-      };
-      
-      // 選択した問題の情報を取得
-      const word = list[randomIndex];
-      
-      // タイピング文字オブジェクトの配列を作成
-      const typingChars = createTypingChars(word.hiragana);
-      // 表示用のローマ字の配列を作成
-      const displayChars = typingChars.map(char => char.getDisplayInfo().displayText);
-      
-      // 状態を更新
-      set({
-        currentWord: {
-          japanese: word.japanese || word.kanji,
-          hiragana: word.hiragana,
-          romaji: displayChars.join(''),
-          typingChars: typingChars,
-          displayChars: displayChars,
-          explanation: word.explanation || null
-        },
-        questionHistory: updatedHistory
-      });
-      
-      // ローカルストレージに保存
-      saveQuestionHistory(updatedHistory);
-    }
+    });
+  },
+  
+  // --- 追加: デバッグ用アクション ---
+  debugSetCurrentGameQuestions: (questions) => {
+    currentGameQuestions = questions;
+    set({ currentWordIndex: 0 });
+    get().setupCurrentWord();
   }
 }));
 
