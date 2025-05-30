@@ -1,11 +1,11 @@
 // UltraFastKeyboardSound.js - 超高速キーボード音（typingmania-ref風）
 'use client';
 
-// 最小限の音量設定
+// 🔊 音量設定（打撃音を大幅アップ）
 const ULTRA_VOLUME = {
-  click: 0.2,
-  error: 0.1,
-  success: 0.15,
+  click: 0.6,    // 打撃音量アップ: 0.2 → 0.6
+  error: 0.4,    // 不正解音量アップ: 0.1 → 0.4  
+  success: 0.35, // 正解音量アップ: 0.15 → 0.35
 };
 
 // グローバルなAudioContextとプリコンパイル済みバッファー
@@ -49,17 +49,22 @@ class UltraFastKeyboardSound {
       const t = i / sampleRate;
       const decay = 1 - (i / clickLength); // 線形減衰（指数関数より高速）
       clickData[i] = Math.sin(3770 * t) * decay * ULTRA_VOLUME.click; // 600Hz固定
-    }
-
-    // エラー音: 30ms、低周波
-    const errorLength = Math.floor(sampleRate * 0.03);
+    }    // 🚫 不正解音: 60ms、不正解らしい重い音（複数周波数で威圧感）
+    const errorLength = Math.floor(sampleRate * 0.06);
     errorBuffer = ctx.createBuffer(1, errorLength, sampleRate);
     const errorData = errorBuffer.getChannelData(0);
     
     for (let i = 0; i < errorLength; i++) {
       const t = i / sampleRate;
-      const decay = 1 - (i / errorLength);
-      errorData[i] = Math.sin(628 * t) * decay * ULTRA_VOLUME.error; // 100Hz固定
+      const decay = Math.max(0, 1 - (i / errorLength) * 1.5); // 少し早めの減衰
+      
+      // 🚫 複数周波数で不正解感を演出
+      const lowBuzz = Math.sin(2 * Math.PI * 80 * t);    // 低音ブザー
+      const midBuzz = Math.sin(2 * Math.PI * 140 * t);   // 中音ブザー  
+      const noise = (Math.random() - 0.5) * 0.3;         // ノイズ成分
+      
+      // 合成して威圧的な不正解音を作成
+      errorData[i] = (lowBuzz * 0.6 + midBuzz * 0.4 + noise) * decay * ULTRA_VOLUME.error;
     }
 
     // 成功音: 40ms、高周波
