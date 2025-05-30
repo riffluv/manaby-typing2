@@ -222,13 +222,6 @@ const useTypingGameStoreBase = create<TypingGameState>((set, get) => ({
         explanation: word.explanation || null
       }
     });
-  },
-  
-  // --- 追加: デバッグ用アクション ---
-  debugSetCurrentGameQuestions: (questions) => {
-    currentGameQuestions = questions;
-    set({ currentWordIndex: 0 });
-    get().setupCurrentWord();
   }
 }));
 
