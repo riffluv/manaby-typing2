@@ -225,15 +225,19 @@ header {
   align-items: center;
   justify-content: space-between;
   position: fixed;
-  top: 20px;
-  left: 20px;
+  top: 15px; /* 20px → 15px により上部に */
+  left: 15px; /* 20px → 15px により左に */
   z-index: 10000;
-  width: calc(100% - 40px);
+  width: calc(100% - 30px); /* 40px → 30px に調整 */
   background: none;
   box-shadow: none;
   border: none;
   padding: 0;
   margin: 0;
+  /* RPGライクなかすかな背景 */
+  background: rgba(0, 0, 0, 0.05);
+  border-radius: 8px;
+  backdrop-filter: blur(5px);
 }
 
 .logo-container {
@@ -708,7 +712,7 @@ input:focus, textarea:focus {
   justify-content: flex-start;
   width: 100%;
   height: 100vh;
-  padding: 8vh var(--space-xl);
+  padding: 6vh var(--space-xl); /* 8vh → 6vh でコンテンツを少し上に */
   position: relative;
   overflow: hidden;
 }
