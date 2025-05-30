@@ -14,7 +14,7 @@ export const AUDIO_CONFIG = {
   
   // 🚀 最適化済み音量設定
   VOLUME: {
-    click: 0.3,      // 打鍵音
+    click: 0.5,      // 打鍵音（音量向上要請対応：0.3 → 0.5）
     error: 0.15,     // エラー音
     success: 0.25,   // 成功音
   }

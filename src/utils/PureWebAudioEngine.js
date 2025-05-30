@@ -26,11 +26,10 @@ class PureWebAudioEngine {  constructor() {
     try {
       const AudioCtx = window.AudioContext || window.webkitAudioContext;
       this.context = new AudioCtx();
-      
-      // メインGainNode（typingmania-ref風）
+        // メインGainNode（typingmania-ref風）
       this.gainNode = this.context.createGain();
       this.gainNode.connect(this.context.destination);
-      this.gainNode.gain.value = 0.3;
+      this.gainNode.gain.value = 0.45; // 音量向上要請対応（0.3 → 0.45）
       
       // バッファーを同期的に生成（typingmania-ref風）
       this.createBuffers();

@@ -223,6 +223,7 @@ header {
 .header {
   display: flex;
   align-items: center;
+  justify-content: space-between;
   position: fixed;
   top: 20px;
   left: 20px;
@@ -255,6 +256,44 @@ header {
   font-size: 28px;
   color: #d1d0c5;
   text-shadow: 0 0 2px rgba(0, 0, 0, 0.5);
+}
+
+/* アイコングループ */
+.icon-group {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+/* ヘッダーアイコンボタン */
+.header-icon-btn {
+  background: none;
+  border: none;
+  cursor: pointer;
+  padding: 8px;
+  border-radius: 6px;
+  transition: all 0.2s ease;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.header-icon-btn:hover {
+  background: rgba(138, 180, 248, 0.1);
+  transform: translateY(-1px);
+}
+
+/* ヘッダーアイコン */
+.header-icon {
+  width: 24px;
+  height: 24px;
+  color: #d1d0c5;
+  transition: all 0.2s ease;
+}
+
+.header-icon-btn:hover .header-icon {
+  color: var(--color-accent-cyan);
+  filter: drop-shadow(0 0 4px rgba(138, 180, 248, 0.6));
 }
 
 /* =====================================
