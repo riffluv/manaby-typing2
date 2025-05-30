@@ -20,6 +20,7 @@ import GameResultScreen from '@/components/GameResultScreen';
 import RankingModal from '@/components/RankingModal';
 import PortalShortcut from '@/components/PortalShortcut';
 import GameScreen from '@/components/GameScreen';
+import { useGlobalShortcuts } from '@/hooks/useGlobalShortcuts';
 
 /**
  * タイピングゲーム本体コンポーネント
@@ -138,20 +139,16 @@ const UnifiedTypingGame: React.FC<{ onGoMenu?: () => void; onGoRanking?: () => v
   }, [onGoMenu]);
 
   // ESCキーでメニューに戻る（ゲーム中のみ）
-  useEffect(() => {
-    if (gameStatus !== 'playing') return;
-    
-    const handleKeyDown = (e: KeyboardEvent) => {
-      if (e.key === 'Escape') {
+  useGlobalShortcuts([
+    {
+      key: 'Escape',
+      allowInputFocus: true,
+      handler: (e) => {
+        e.preventDefault();
         handleGoMenu();
-      }
-    };
-    
-    window.addEventListener('keydown', handleKeyDown);
-    return () => {
-      window.removeEventListener('keydown', handleKeyDown);
-    };
-  }, [handleGoMenu, gameStatus]);
+      },
+    },
+  ], [handleGoMenu, gameStatus]);
 
   // アニメーション制御
   useEffect(() => {

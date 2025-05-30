@@ -71,7 +71,11 @@ class HighSpeedKeyDetector {
    */
   private handleKeyDown = (e: KeyboardEvent): void => {
     const keyTime = performance.now();
-    
+    // ESCや修飾キーは無効化しない
+    if (e.key === 'Escape' || e.ctrlKey || e.altKey || e.metaKey) {
+      // 通常の伝播に任せる（preventDefault/stopImmediatePropagationしない）
+      return;
+    }
     // 即座にイベント制御
     if (this.config.preventDefaultBehavior) {
       e.preventDefault();

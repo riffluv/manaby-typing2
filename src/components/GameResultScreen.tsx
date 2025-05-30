@@ -92,22 +92,28 @@ export default function GameResultScreen({
   // パフォーマンスメッセージの取得
   const perfMessage = getPerformanceMessage();
 
-  // ショートカットのセットアップ
-  useGlobalShortcuts([
+  // ショートカット定義を一元化
+  const shortcutDefs = [
     {
       key: 'r',
-      handler: (e) => { e.preventDefault(); onReset(); },
+      label: 'リトライ',
+      handler: (e: KeyboardEvent) => { e.preventDefault(); onReset(); },
     },
     {
       key: 'r',
       altKey: true,
-      handler: (e) => { e.preventDefault(); onGoRanking(); },
+      label: 'ランキング',
+      handler: (e: KeyboardEvent) => { e.preventDefault(); onGoRanking(); },
     },
     {
       key: 'Escape',
-      handler: (e) => { e.preventDefault(); onGoMenu(); },
+      label: 'メニュー',
+      handler: (e: KeyboardEvent) => { e.preventDefault(); onGoMenu(); },
     },
-  ], [onReset, onGoRanking, onGoMenu]);
+  ];
+
+  // ショートカット発火ロジック
+  useGlobalShortcuts(shortcutDefs, [onReset, onGoRanking, onGoMenu]);
 
   // マウント時にアニメーションをトリガー
   useEffect(() => {
@@ -339,11 +345,7 @@ export default function GameResultScreen({
       </div>
       
       {/* ショートカットキー表示 */}
-      <PortalShortcut shortcuts={[
-        { key: 'R', label: 'リトライ' },
-        { key: 'Alt+R', label: 'ランキング' },
-        { key: 'Esc', label: 'メニュー' }
-      ]} />
+      <PortalShortcut shortcuts={shortcutDefs.map(({ key, label }) => ({ key: Array.isArray(key) ? key : (key === 'Escape' ? 'Esc' : key.toUpperCase()), label }))} />
     </div>
   );
 }
