@@ -9,6 +9,7 @@ import TabButton from './common/TabButton';
 import CommonButton from './common/CommonButton';
 import styles from './NewRankingScreen.module.css';
 import screenStyles from './common/ScreenWrapper.module.css';
+import { useSceneNavigationStore } from '@/store/sceneNavigationStore';
 
 interface NewRankingScreenProps {
   onGoMenu: () => void;
@@ -70,12 +71,22 @@ const NewRankingScreen: React.FC<NewRankingScreenProps> = ({ onGoMenu }) => {
     if (difficulty === activeDifficulty) return;
     setActiveDifficulty(difficulty);
   };
+  const goBack = useSceneNavigationStore(s => s.goBack);
+
   useGlobalShortcuts([
     {
       key: 'Escape',
-      handler: (e) => { e.preventDefault(); onGoMenu(); },
+      handler: (e) => {
+        e.preventDefault();
+        // 直前の画面があれば戻る、なければメニューへ
+        if (goBack) {
+          goBack();
+        } else {
+          onGoMenu();
+        }
+      },
     },
-  ], [onGoMenu]);  return (
+  ], [goBack, onGoMenu]);  return (
     <div className={styles.rankingScreen}>
       <motion.div
         className={styles.rankingContainer}

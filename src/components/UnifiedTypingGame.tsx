@@ -41,7 +41,7 @@ const UnifiedTypingGame: React.FC<{ onGoMenu?: () => void; onGoRanking?: () => v
   const gameStatus = useGameStatus();
   const { setGameStatus, resetGame, setupCurrentWord } = useTypingGameStore();
   const storeWord = useCurrentWord();
-  const { goToResult } = useSceneNavigationStore();
+  const sceneNav = useSceneNavigationStore();
   
   // ゲームライフサイクルフックの使用
   useTypingGameLifecycle();
@@ -109,7 +109,13 @@ const UnifiedTypingGame: React.FC<{ onGoMenu?: () => void; onGoRanking?: () => v
   const { calculateFallbackScore } = useScoreCalculation(
     gameStatus, 
     scoreLog, 
-    (calculatedScore) => setResultScore(calculatedScore)
+    (calculatedScore) => {
+      setResultScore(calculatedScore);
+      // ゲーム終了時にグローバルストアへ保存
+      if (gameStatus === 'finished') {
+        sceneNav.setLastScore(scoreLog, calculatedScore);
+      }
+    }
   );
 
   // リセット処理
@@ -164,6 +170,19 @@ const UnifiedTypingGame: React.FC<{ onGoMenu?: () => void; onGoRanking?: () => v
   const latestKpm = scoreLog.length > 0 ? Math.round(scoreLog[scoreLog.length - 1].kpm) : 0;
   const latestAccuracy = scoreLog.length > 0 ? Math.round(scoreLog[scoreLog.length - 1].accuracy) : 0;
   const progressPercentage = Math.min((scoreLog.length / 10) * 100, 100);
+
+  // ゲーム終了時にリザルト画面へ遷移した場合、直近スコアを復元
+  useEffect(() => {
+    if (gameStatus === 'finished' && scoreLog.length === 0 && !resultScore) {
+      // グローバルストアから復元
+      if (sceneNav.lastScoreLog && sceneNav.lastScoreLog.length > 0) {
+        setScoreLog(sceneNav.lastScoreLog);
+      }
+      if (sceneNav.lastResultScore) {
+        setResultScore(sceneNav.lastResultScore);
+      }
+    }
+  }, [gameStatus, scoreLog.length, resultScore, sceneNav.lastScoreLog, sceneNav.lastResultScore]);
 
   return (
     <div className={screenStyles.screenWrapper}>

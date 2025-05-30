@@ -19,15 +19,20 @@ interface SceneNavigationStore {
   
   // 直前の画面
   previousScene: SceneType | null;
-  
-  // 一つ前の画面に戻る
-  goBack: () => void;
+
+  // --- 追加: 直近スコア・ログの保持 ---
+  lastScoreLog: any[];
+  lastResultScore: any | null;
+  setLastScore: (scoreLog: any[], resultScore: any | null) => void;
 }
 
 // 画面ナビゲーションストアの実装
 export const useSceneNavigationStore = create<SceneNavigationStore>((set) => ({
   currentScene: 'menu',
   previousScene: null,
+  lastScoreLog: [],
+  lastResultScore: null,
+  setLastScore: (scoreLog, resultScore) => set({ lastScoreLog: scoreLog, lastResultScore: resultScore }),
   
   navigateTo: (scene) => set((state) => ({ 
     currentScene: scene, 
