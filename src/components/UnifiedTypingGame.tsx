@@ -13,7 +13,7 @@ import styles from './UnifiedTypingGame.module.css';
 import screenStyles from './common/ScreenWrapper.module.css';
 
 // 統合されたカスタムフックとコンポーネントのインポート
-import { useUnifiedTypingProcessor } from '@/hooks/useUnifiedTypingProcessor';
+import { useOptimizedTypingProcessor } from '@/hooks/useOptimizedTypingProcessor';
 import { useScoreCalculation } from '@/hooks/useScoreCalculation';
 import { useRankingModal } from '@/hooks/useRankingModal';
 import GameResultScreen from '@/components/GameResultScreen';
@@ -98,8 +98,8 @@ const UnifiedTypingGame: React.FC<{ onGoMenu?: () => void; onGoRanking?: () => v
     }
   }, [storeWord, currentWord.japanese]);
 
-  // 統合されたタイピング処理フックの使用
-  const { currentKanaIndex, wordStats, resetProgress } = useUnifiedTypingProcessor(
+  // typingmania-ref流 最適化されたタイピング処理フックの使用
+  const { currentKanaIndex, wordStats, resetProgress } = useOptimizedTypingProcessor(
     currentWord, 
     setKanaDisplay, 
     setScoreLog

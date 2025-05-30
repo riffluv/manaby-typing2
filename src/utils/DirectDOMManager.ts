@@ -51,7 +51,6 @@ class DirectDOMManager {
       state: 'pending'
     });
   }
-
   /**
    * 文字状態の直接更新（React状態をバイパス）
    */
@@ -67,15 +66,41 @@ class DirectDOMManager {
       const key = `${kanaIndex}-${charIndex}`;
       const typingChar = this.typingCharElements.get(key);
       
-      if (!typingChar) return;
+      if (!typingChar) {
+        console.warn(`DirectDOMManager: Element not found for ${key}`);
+        return;
+      }
 
       const { element } = typingChar;
+        // デバッグログ
+      if (newState === 'current') {
+        console.log(`🎯 DirectDOMManager: Setting current state for ${key}`, element);
+        console.log(`🎯 Before update:`, {
+          classList: Array.from(element.classList),
+          hasTypingChar: element.classList.contains('typing-char'),
+          hasCharCurrent: element.classList.contains('char-current')
+        });
+      }
       
       // 前の状態クラスを削除
       element.classList.remove('char-pending', 'char-current', 'char-completed');
       
       // 新しい状態クラスを追加
       element.classList.add(`char-${newState}`);
+      
+      // デバッグ: クラス適用後の確認
+      if (newState === 'current') {
+        console.log(`🎯 After class update:`, {
+          classList: Array.from(element.classList),
+          hasTypingChar: element.classList.contains('typing-char'),
+          hasCharCurrent: element.classList.contains('char-current'),
+          computedStyles: {
+            backgroundColor: window.getComputedStyle(element).backgroundColor,
+            transform: window.getComputedStyle(element).transform,
+            animation: window.getComputedStyle(element).animation
+          }
+        });
+      }
       
       // data属性も更新
       element.dataset.state = newState;

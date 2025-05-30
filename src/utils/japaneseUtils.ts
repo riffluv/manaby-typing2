@@ -502,7 +502,7 @@ export class TypingChar {
 /**
  * 記号の全角・半角・shift入力を同一視する正規化関数
  */
-function normalizeSymbol(char: string): string {
+export function normalizeSymbol(char: string): string {
   // 全角→半角変換テーブル（重複キーなし）
   const zenkakuToHankaku: Record<string, string> = {
     '？': '?',
@@ -561,3 +561,8 @@ export function createTypingChars(hiragana: string): TypingChar[] {
   const kanaPatterns = convertHiraganaToRomaji(hiragana);
   return kanaPatterns.map(item => new TypingChar(item.kana, item.alternatives));
 }
+
+/**
+ * hiraganaToRomaji alias for convertHiraganaToRomaji
+ */
+export const hiraganaToRomaji = convertHiraganaToRomaji;

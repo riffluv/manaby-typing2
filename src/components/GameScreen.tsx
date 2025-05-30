@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import TypingArea from './TypingArea';
+import OptimizedTypingArea from './OptimizedTypingArea';
 import { TypingWord, KanaDisplay } from '@/types';
 import PortalShortcut from './PortalShortcut';
 import styles from './GameScreen.module.css';
@@ -59,12 +59,11 @@ const GameScreen: React.FC<GameScreenProps> = ({ currentWord, currentKanaIndex, 
           <PortalShortcut shortcuts={[{ key: 'Esc', label: '戻る' }]} />
         </div>
         
-        {/* タイピングエリア - メイン インタラクション（シンプル化） */}
+        {/* タイピングエリア - typingmania-ref流 最適化版 */}
         <div style={{ willChange: 'transform' }}>
-          <TypingArea 
+          <OptimizedTypingArea 
             currentKanaIndex={currentKanaIndex}
             typingChars={currentWord.typingChars}
-            displayChars={currentWord.displayChars}
             kanaDisplay={currentKanaDisplay}
           />
         </div>

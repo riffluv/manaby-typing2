@@ -31,20 +31,20 @@ function getCharClass(
   charIndex: number,
   currentKanaIndex: number,
   acceptedLength: number
-): string {
+): 'pending' | 'current' | 'completed' {
   // 入力済みのかな: すべての文字が completed
-  if (kanaIndex < currentKanaIndex) return 'char-completed';
+  if (kanaIndex < currentKanaIndex) return 'completed';
   
   // 現在入力中のかな
   if (kanaIndex === currentKanaIndex) {
     // すでに受け入れられた文字
-    if (charIndex < acceptedLength) return 'char-completed';
+    if (charIndex < acceptedLength) return 'completed';
     // 次に入力すべき文字
-    if (charIndex === acceptedLength) return 'char-current';
+    if (charIndex === acceptedLength) return 'current';
   }
   
   // 上記以外は未入力文字
-  return 'char-pending';
+  return 'pending';
 }
 
 /**
@@ -85,6 +85,19 @@ const TypingArea: React.FC<TypingAreaProps> = ({
   // ARIA属性用のコンテキスト情報（高速化：計算を簡素化）
   const currentKana = typingChars[currentKanaIndex]?.kana || '';
   const progress = Math.floor((currentKanaIndex / Math.max(1, typingChars.length)) * 100);
+
+  // 初期化時の全文字状態設定
+  useEffect(() => {
+    // 少し遅延させてDOM要素の登録完了を待つ
+    const timer = setTimeout(() => {
+      allChars.forEach(({ kanaIndex, charIndex }) => {
+        const initialState = getCharClass(kanaIndex, charIndex, currentKanaIndex, acceptedLength);
+        directDOM.updateCharState(kanaIndex, charIndex, initialState, true);
+      });
+    }, 50);
+
+    return () => clearTimeout(timer);
+  }, []); // 初回のみ実行
 
   // 直接DOM更新による超高速レスポンス
   useEffect(() => {
@@ -134,6 +147,25 @@ const TypingArea: React.FC<TypingAreaProps> = ({
     if (element) {
       charRefsRef.current.set(key, element);
       directDOM.registerTypingChar(element, kanaIndex, charIndex);
+      
+      // 初期状態の設定（レンダリング直後に正しい状態クラスを適用）
+      const initialState = getCharClass(kanaIndex, charIndex, currentKanaIndex, acceptedLength);
+      
+      // すべての状態クラスを一旦削除
+      element.classList.remove('char-pending', 'char-current', 'char-completed');
+      // 正しい状態クラスを追加
+      element.classList.add(`char-${initialState}`);
+      
+      // デバッグ: 初期状態の確認
+      const isCurrent = kanaIndex === currentKanaIndex && charIndex === acceptedLength;
+      if (isCurrent) {
+        console.log(`🎯 TypingArea: Setting up current char element ${key}`, {
+          element,
+          initialState,
+          classList: Array.from(element.classList),
+          computedStyle: window.getComputedStyle(element).backgroundColor
+        });
+      }
     } else {
       charRefsRef.current.delete(key);
       directDOM.unregisterTypingChar(kanaIndex, charIndex);
@@ -181,7 +213,7 @@ const TypingArea: React.FC<TypingAreaProps> = ({
           <span
             key={idx}
             ref={(el) => setCharRef(el, kanaIndex, charIndex)}
-            className={`typing-char ${stateClass}`}
+            className="typing-char" // 基本クラスのみ。状態クラスはDirectDOMManagerで動的適用
             aria-current={isCurrent ? 'true' : undefined}
             aria-label={`${char} (${stateText})`}
             data-state={isCurrent ? 'current' : isCompleted ? 'completed' : 'pending'}

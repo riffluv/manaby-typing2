@@ -1,5 +1,5 @@
 // Typingゲームで使う型定義を集約
-import { TypingChar } from '@/utils/japaneseUtils';
+import { TypingChar } from '@/utils/OptimizedTypingChar';
 
 export type TypingWord = {
   japanese: string;
