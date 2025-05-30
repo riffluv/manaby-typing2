@@ -2,6 +2,7 @@
 'use client';
 
 import UltraFastKeyboardSound from './UltraFastKeyboardSound';
+import pureWebAudio from './PureWebAudioEngine.js';
 import { AUDIO_CONFIG, AudioPerformanceMonitor } from './AudioConfig';
 
 // --- BGM操作API ---
@@ -24,32 +25,34 @@ class UnifiedAudioSystem {
     if (this.isInitialized) return;
 
     try {
-      // 常に超高速WebAudioシステムを使用
-      this.audioEngine = UltraFastKeyboardSound;
-      console.log('🚀 [UnifiedAudioSystem] 爆速WebAudioシステムを使用');
+      // typingmania-ref風純粋WebAudioシステムを使用（最軽量）
+      this.audioEngine = pureWebAudio;
+      console.log('🚀 [UnifiedAudioSystem] typingmania-ref風純粋WebAudioシステムを使用');
       
-      // 即座に初期化（async不要）
-      UltraFastKeyboardSound.init();
+      // 即座に初期化（最軽量）
+      await pureWebAudio.init();
       this.isInitialized = true;
       
     } catch (error) {
       console.error('❌ [UnifiedAudioSystem] 初期化に失敗:', error);
-      // 緊急フォールバック
+      // フォールバック: UltraFastを使用
       this.audioEngine = UltraFastKeyboardSound;
       UltraFastKeyboardSound.init();
       this.isInitialized = true;
     }
-  }
-
-  // 🚀 クリック音再生（爆速）
+  }  // 🚀 クリック音再生（爆速）
   static playClickSound() {
     if (!this.isInitialized) {
       console.warn('⚠️ [UnifiedAudioSystem] システムが初期化されていません');
       return;
     }
-    
+
     AudioPerformanceMonitor.measureLatency(() => {
-      this.audioEngine.playClickSound();
+      if (this.audioEngine === pureWebAudio) {
+        this.audioEngine.playClick();
+      } else {
+        this.audioEngine.playClickSound();
+      }
     }, 'click-ultrafast');
   }
 
@@ -62,7 +65,11 @@ class UnifiedAudioSystem {
     }
     
     AudioPerformanceMonitor.measureLatency(() => {
-      this.audioEngine.playSuccessSound();
+      if (this.audioEngine === pureWebAudio) {
+        this.audioEngine.playSuccess();
+      } else {
+        this.audioEngine.playSuccessSound();
+      }
     }, 'success-ultrafast');
   }
 
@@ -75,7 +82,11 @@ class UnifiedAudioSystem {
     }
     
     AudioPerformanceMonitor.measureLatency(() => {
-      this.audioEngine.playErrorSound();
+      if (this.audioEngine === pureWebAudio) {
+        this.audioEngine.playError();
+      } else {
+        this.audioEngine.playErrorSound();
+      }
     }, 'error-ultrafast');
   }
 
@@ -97,7 +108,9 @@ class UnifiedAudioSystem {
   // 🚀 AudioContextのresume（初回遅延防止用）
   static async resumeAudioContext() {
     if (!this.isInitialized) await this.initialize();
-    if (this.audioEngine && typeof this.audioEngine.resumeAudioContext === 'function') {
+    if (this.audioEngine === pureWebAudio) {
+      this.audioEngine.resume();
+    } else if (this.audioEngine && typeof this.audioEngine.resumeAudioContext === 'function') {
       await this.audioEngine.resumeAudioContext();
     }
   }
@@ -192,7 +205,11 @@ class UnifiedAudioSystem {
           return;
         }
         AudioPerformanceMonitor.measureLatency(() => {
-          this.audioEngine.playSuccessSound();
+          if (this.audioEngine === pureWebAudio) {
+            this.audioEngine.playSuccess();
+          } else {
+            this.audioEngine.playSuccessSound();
+          }
         }, 'success-ultrafast');
       };
       this.playErrorSound = (volume = 1.0) => {
@@ -201,7 +218,11 @@ class UnifiedAudioSystem {
           return;
         }
         AudioPerformanceMonitor.measureLatency(() => {
-          this.audioEngine.playErrorSound();
+          if (this.audioEngine === pureWebAudio) {
+            this.audioEngine.playError();
+          } else {
+            this.audioEngine.playErrorSound();
+          }
         }, 'error-ultrafast');
       };
       console.log('⚡ [UnifiedAudioSystem] WebAudio版音響システムに切り替え');
