@@ -3,6 +3,7 @@
 
 import KeyboardSoundUtils from './KeyboardSoundUtils';
 import LightweightKeyboardSound from './LightweightKeyboardSound';
+import UltraFastKeyboardSound from './UltraFastKeyboardSound';
 import { AUDIO_CONFIG, AudioPerformanceMonitor } from './AudioConfig';
 
 // --- BGM操作API ---
@@ -25,7 +26,12 @@ class UnifiedAudioSystem {
     if (this.isInitialized) return;
 
     try {
-      if (AUDIO_CONFIG.ENGINE === 'lightweight') {
+      if (AUDIO_CONFIG.ENGINE === 'ultrafast') {
+        this.audioEngine = UltraFastKeyboardSound;
+        console.log('[UnifiedAudioSystem] 超高速音響システムを使用');
+        // 即座に初期化（async不要）
+        UltraFastKeyboardSound.init();
+      } else if (AUDIO_CONFIG.ENGINE === 'lightweight') {
         this.audioEngine = LightweightKeyboardSound;
         
         if (AUDIO_CONFIG.AUTO_INITIALIZE) {
@@ -41,8 +47,9 @@ class UnifiedAudioSystem {
       this.isInitialized = true;
     } catch (error) {
       console.error('[UnifiedAudioSystem] 初期化に失敗:', error);
-      // フォールバックとしてレガシーシステムを使用
-      this.audioEngine = KeyboardSoundUtils;
+      // フォールバックとして超高速システムを使用
+      this.audioEngine = UltraFastKeyboardSound;
+      UltraFastKeyboardSound.init();
       this.isInitialized = true;
     }
   }

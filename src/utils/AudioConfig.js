@@ -3,8 +3,8 @@
 
 // 使用する音響システムの選択
 export const AUDIO_CONFIG = {
-  // 'legacy' または 'lightweight'
-  ENGINE: 'lightweight',
+  // 'legacy', 'lightweight', または 'ultrafast'
+  ENGINE: 'ultrafast',
     // デバッグモード（パフォーマンス測定）
   DEBUG_MODE: true,
   
