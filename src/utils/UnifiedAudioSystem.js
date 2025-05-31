@@ -2,7 +2,7 @@
 'use client';
 
 import UltraFastKeyboardSound from './UltraFastKeyboardSound';
-import { AUDIO_CONFIG, AudioPerformanceMonitor } from './AudioConfig';
+import { AUDIO_CONFIG } from './AudioConfig';
 
 class UnifiedAudioSystem {
   static isInitialized = false;
@@ -59,9 +59,7 @@ class UnifiedAudioSystem {
       return;
     }
 
-    AudioPerformanceMonitor.measureLatency(() => {
-      this.audioEngine.playClickSound();
-    }, 'click-ultrafast'); // 常に最高速モード表示
+    this.audioEngine.playClickSound();
   }
 
   /** 🚀 正解音を再生（純粋WebAudio統一） */
@@ -71,9 +69,7 @@ class UnifiedAudioSystem {
       return;
     }
     
-    AudioPerformanceMonitor.measureLatency(() => {
-      this.audioEngine.playSuccessSound();
-    }, 'success-webaudio');
+    this.audioEngine.playSuccessSound();
   }
 
   /** 🚀 不正解音を再生（高速タイピング対応強化版） */
@@ -94,31 +90,15 @@ class UnifiedAudioSystem {
       return;
     }
     
-    AudioPerformanceMonitor.measureLatency(() => {
-      this.audioEngine.playErrorSound();
-    }, 'error-ultrafast'); // 常に最高速モード表示
+    this.audioEngine.playErrorSound();
   }
 
-  // パフォーマンス統計取得
-  static getPerformanceStats() {
-    return AudioPerformanceMonitor.getStats();
-  }
-
-  // パフォーマンス統計リセット
-  static resetPerformanceStats() {
-    AudioPerformanceMonitor.reset();
-  }
-
-  // 高速タイピング用：詳細パフォーマンス情報取得
-  static getDetailedPerformanceInfo() {
-    const baseStats = AudioPerformanceMonitor.getStats();
-    const audioEngineInfo = this.audioEngine && this.audioEngine.getPerformanceInfo ? 
-      this.audioEngine.getPerformanceInfo() : null;
-    
+  // システム情報取得
+  static getSystemInfo() {
     return {
-      systemStats: baseStats,
-      audioEngine: audioEngineInfo,
       engineType: 'UltraFast',
+      isInitialized: this.isInitialized,
+      highSpeedMode: this.highSpeedMode,
       initialized: this.isInitialized,
       timestamp: performance.now()
     };
