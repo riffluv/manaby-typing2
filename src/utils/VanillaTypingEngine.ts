@@ -8,7 +8,6 @@
 import type { TypingChar } from './OptimizedTypingChar';
 import type { KanaDisplay, PerWordScoreLog } from '@/types';
 import UnifiedAudioSystem from './UnifiedAudioSystem';
-import performanceMeasurer from './PerformanceMeasurer';
 
 interface VanillaTypingState {
   typingChars: TypingChar[];
@@ -154,11 +153,8 @@ export class VanillaTypingEngine {
       
       // 🚀 即座制御
       e.preventDefault();
-      e.stopPropagation();
-
-      // 🚀 パフォーマンス測定
+      e.stopPropagation();      // 🚀 パフォーマンス測定
       const keyDownTime = performance.now();
-      performanceMeasurer.recordKeyDown(e.key, keyDownTime);
 
       const { typingChars, currentKanaIndex, wordStats } = this.state;
       
@@ -177,11 +173,9 @@ export class VanillaTypingEngine {
       // 🚀 文字処理（最小限）
       const result = currentChar.accept(e.key);
       
-      if (result >= 0) {
-        // 正解: 即座音声再生
+      if (result >= 0) {        // 正解: 即座音声再生
         if (this.audioEnabled) {
           UnifiedAudioSystem.playClickSound();
-          performanceMeasurer.recordAudioPlay(e.key, performance.now());
         }
 
         // 即座DOM更新
@@ -196,12 +190,10 @@ export class VanillaTypingEngine {
             return;
           }
         }
-      } else {
-        // ミス: 即座音声再生
+      } else {        // ミス: 即座音声再生
         wordStats.mistakeCount++;
         if (this.audioEnabled) {
           UnifiedAudioSystem.playErrorSound();
-          performanceMeasurer.recordAudioPlay(e.key + '_error', performance.now());
         }
       }
 

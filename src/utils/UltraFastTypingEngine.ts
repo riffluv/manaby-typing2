@@ -8,7 +8,6 @@
 import type { TypingChar } from './OptimizedTypingChar';
 import type { KanaDisplay, PerWordScoreLog } from '@/types';
 import UnifiedAudioSystem from './UnifiedAudioSystem';
-import performanceMeasurer from './PerformanceMeasurer';
 
 interface FastTypingState {
   typingChars: TypingChar[];
