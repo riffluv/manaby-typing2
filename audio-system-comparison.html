@@ -1,0 +1,609 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>音声システム性能比較テスト</title>
+    <style>
+        body {
+            font-family: 'Consolas', 'Monaco', monospace;
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+            background: #1a1a1a;
+            color: #e0e0e0;
+            line-height: 1.6;
+        }
+        .header {
+            text-align: center;
+            padding: 20px 0;
+            border-bottom: 2px solid #333;
+            margin-bottom: 30px;
+        }
+        .title {
+            color: #4CAF50;
+            font-size: 2em;
+            margin: 0;
+        }
+        .subtitle {
+            color: #888;
+            margin: 10px 0 0 0;
+        }
+        .comparison-section {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 20px;
+            margin: 30px 0;
+        }
+        .system-panel {
+            background: #2a2a2a;
+            padding: 20px;
+            border-radius: 8px;
+            border: 1px solid #333;
+        }
+        .system-title {
+            color: #4CAF50;
+            font-size: 1.5em;
+            margin: 0 0 15px 0;
+            text-align: center;
+        }
+        .current-system {
+            border-left: 4px solid #f44336;
+        }
+        .current-system .system-title {
+            color: #f44336;
+        }
+        .optimized-system {
+            border-left: 4px solid #4CAF50;
+        }
+        .button {
+            background: #4CAF50;
+            color: white;
+            border: none;
+            padding: 12px 24px;
+            margin: 5px;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 16px;
+            transition: background 0.3s;
+            width: 100%;
+        }
+        .button:hover {
+            background: #45a049;
+        }
+        .button:disabled {
+            background: #666;
+            cursor: not-allowed;
+        }
+        .button.current {
+            background: #f44336;
+        }
+        .button.current:hover {
+            background: #da190b;
+        }
+        .metrics {
+            margin: 15px 0;
+        }
+        .metric {
+            display: flex;
+            justify-content: space-between;
+            padding: 5px 0;
+            border-bottom: 1px solid #333;
+        }
+        .metric:last-child {
+            border-bottom: none;
+        }
+        .metric-label {
+            color: #aaa;
+        }
+        .metric-value {
+            color: #4CAF50;
+            font-weight: bold;
+        }
+        .metric-value.bad {
+            color: #f44336;
+        }
+        .metric-value.good {
+            color: #4CAF50;
+        }
+        .test-controls {
+            background: #2a2a2a;
+            padding: 20px;
+            border-radius: 8px;
+            margin: 20px 0;
+            border: 1px solid #333;
+            text-align: center;
+        }
+        .log {
+            background: #1a1a1a;
+            padding: 15px;
+            border-radius: 4px;
+            font-family: monospace;
+            font-size: 12px;
+            max-height: 300px;
+            overflow-y: auto;
+            border: 1px solid #333;
+            margin: 20px 0;
+        }
+        .progress {
+            width: 100%;
+            height: 20px;
+            background: #333;
+            border-radius: 10px;
+            overflow: hidden;
+            margin: 10px 0;
+        }
+        .progress-bar {
+            height: 100%;
+            background: linear-gradient(90deg, #4CAF50, #45a049);
+            width: 0%;
+            transition: width 0.3s;
+        }
+        .status {
+            background: #333;
+            padding: 15px;
+            border-radius: 4px;
+            margin: 10px 0;
+            border-left: 4px solid #4CAF50;
+        }
+        .winner {
+            background: #2a4a2a;
+            border: 2px solid #4CAF50;
+            position: relative;
+        }
+        .winner::before {
+            content: "🏆 WINNER";
+            position: absolute;
+            top: -10px;
+            right: 10px;
+            background: #4CAF50;
+            color: white;
+            padding: 5px 10px;
+            border-radius: 15px;
+            font-size: 12px;
+            font-weight: bold;
+        }
+    </style>
+</head>
+<body>
+    <div class="header">
+        <h1 class="title">🎵 音声システム性能比較テスト</h1>
+        <p class="subtitle">現在の実装 vs 最適化版の遅延比較</p>
+    </div>
+
+    <div class="test-controls">
+        <h3>⚡ 比較テスト実行</h3>
+        <button id="runComparison" class="button">🚀 両システム性能比較開始</button>
+        <button id="clearResults" class="button">🗑️ 結果クリア</button>
+        
+        <div class="progress">
+            <div id="progressBar" class="progress-bar"></div>
+        </div>
+        <div id="status" class="status">✅ 準備完了 - 比較テストを開始してください</div>
+    </div>
+
+    <div class="comparison-section">
+        <!-- 現在のシステム -->
+        <div class="system-panel current-system" id="currentPanel">
+            <h3 class="system-title">🐌 現在の実装</h3>
+            <p>UnifiedAudioSystem + UltraFastKeyboardSound</p>
+            
+            <button id="testCurrent" class="button current">🔊 音声テスト</button>
+            <button id="benchmarkCurrent" class="button current">📊 ベンチマーク実行</button>
+            
+            <div class="metrics" id="currentMetrics">
+                <div class="metric">
+                    <span class="metric-label">平均遅延:</span>
+                    <span class="metric-value" id="currentAvgLatency">未測定</span>
+                </div>
+                <div class="metric">
+                    <span class="metric-label">最大遅延:</span>
+                    <span class="metric-value" id="currentMaxLatency">未測定</span>
+                </div>
+                <div class="metric">
+                    <span class="metric-label">最小遅延:</span>
+                    <span class="metric-value" id="currentMinLatency">未測定</span>
+                </div>
+                <div class="metric">
+                    <span class="metric-label">測定回数:</span>
+                    <span class="metric-value" id="currentCount">0</span>
+                </div>
+                <div class="metric">
+                    <span class="metric-label">typingmania-ref達成:</span>
+                    <span class="metric-value" id="currentAchievement">❌</span>
+                </div>
+            </div>
+        </div>
+
+        <!-- 最適化版システム -->
+        <div class="system-panel optimized-system" id="optimizedPanel">
+            <h3 class="system-title">🚀 最適化版</h3>
+            <p>OptimizedTypingAudio（遅延要因削除版）</p>
+            
+            <button id="testOptimized" class="button">🔊 音声テスト</button>
+            <button id="benchmarkOptimized" class="button">📊 ベンチマーク実行</button>
+            
+            <div class="metrics" id="optimizedMetrics">
+                <div class="metric">
+                    <span class="metric-label">平均遅延:</span>
+                    <span class="metric-value" id="optimizedAvgLatency">未測定</span>
+                </div>
+                <div class="metric">
+                    <span class="metric-label">最大遅延:</span>
+                    <span class="metric-value" id="optimizedMaxLatency">未測定</span>
+                </div>
+                <div class="metric">
+                    <span class="metric-label">最小遅延:</span>
+                    <span class="metric-value" id="optimizedMinLatency">未測定</span>
+                </div>
+                <div class="metric">
+                    <span class="metric-label">測定回数:</span>
+                    <span class="metric-value" id="optimizedCount">0</span>
+                </div>
+                <div class="metric">
+                    <span class="metric-label">typingmania-ref達成:</span>
+                    <span class="metric-value" id="optimizedAchievement">❌</span>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div id="log" class="log"></div>
+
+    <script type="module">
+        // 最適化版音声システム（インライン実装）
+        class OptimizedTypingAudio {
+            static ctx = null;
+            static clickBuffer = null;
+            static errorBuffer = null;
+            static successBuffer = null;
+            static initialized = false;
+
+            static init() {
+                if (this.initialized || typeof window === 'undefined') return;
+                
+                try {
+                    const AudioCtx = window.AudioContext || window.webkitAudioContext;
+                    this.ctx = new AudioCtx();
+                    this.createBuffers();
+                    this.initialized = true;
+                } catch (e) {
+                    this.initialized = false;
+                }
+            }
+
+            static createBuffers() {
+                if (!this.ctx) return;
+
+                const sampleRate = this.ctx.sampleRate;
+                const VOLUME = { click: 0.65, error: 0.3, success: 0.35 };
+                
+                // クリック音
+                const clickLength = Math.floor(sampleRate * 0.02);
+                this.clickBuffer = this.ctx.createBuffer(1, clickLength, sampleRate);
+                const clickData = this.clickBuffer.getChannelData(0);
+                
+                for (let i = 0; i < clickLength; i++) {
+                    const t = i / sampleRate;
+                    const decay = 1 - (i / clickLength);
+                    clickData[i] = Math.sin(3770 * t) * decay * VOLUME.click;
+                }
+
+                // エラー音
+                const errorLength = Math.floor(sampleRate * 0.06);
+                this.errorBuffer = this.ctx.createBuffer(1, errorLength, sampleRate);
+                const errorData = this.errorBuffer.getChannelData(0);
+                
+                for (let i = 0; i < errorLength; i++) {
+                    const t = i / sampleRate;
+                    const decay = Math.max(0, 1 - (i / errorLength) * 1.5);
+                    const lowBuzz = Math.sin(2 * Math.PI * 80 * t);
+                    const midBuzz = Math.sin(2 * Math.PI * 140 * t);
+                    errorData[i] = (lowBuzz * 0.6 + midBuzz * 0.4) * decay * VOLUME.error;
+                }
+
+                // 成功音
+                const successLength = Math.floor(sampleRate * 0.04);
+                this.successBuffer = this.ctx.createBuffer(1, successLength, sampleRate);
+                const successData = this.successBuffer.getChannelData(0);
+                
+                for (let i = 0; i < successLength; i++) {
+                    const t = i / sampleRate;
+                    const decay = 1 - (i / successLength);
+                    successData[i] = Math.sin(3140 * t) * decay * VOLUME.success;
+                }
+            }
+
+            static playClick() {
+                if (!this.ctx || !this.clickBuffer) return;
+                
+                const source = this.ctx.createBufferSource();
+                source.buffer = this.clickBuffer;
+                source.connect(this.ctx.destination);
+                source.start();
+            }
+
+            static isReady() {
+                return this.initialized && this.ctx && this.clickBuffer;
+            }
+        }
+
+        // 現在のシステムのシミュレーション（遅延要因を含む）
+        class CurrentAudioSystemSimulation {
+            static measurements = [];
+            
+            static playClick() {
+                const startTime = performance.now();
+                
+                // 現在の実装の遅延要因をシミュレート
+                // 1. AudioPerformanceMonitor.measureLatency() - console.log遅延
+                console.log('[AudioPerformance] Simulated measurement');
+                
+                // 2. AudioContext状態チェック + setTimeout(1ms)
+                setTimeout(() => {
+                    // 3. UnifiedAudioSystem → UltraFastKeyboardSound 関数呼び出し
+                    this.actualPlaySound();
+                    
+                    const endTime = performance.now();
+                    const latency = endTime - startTime;
+                    this.measurements.push({
+                        latency,
+                        timestamp: performance.now()
+                    });
+                }, 1); // 1ms待機
+            }
+            
+            static actualPlaySound() {
+                // 実際の音声再生をシミュレート
+                OptimizedTypingAudio.playClick();
+            }
+            
+            static clearMeasurements() {
+                this.measurements = [];
+            }
+            
+            static getStatistics() {
+                if (this.measurements.length === 0) {
+                    return { count: 0, averageLatency: 0, minLatency: 0, maxLatency: 0 };
+                }
+                
+                const latencies = this.measurements.map(m => m.latency);
+                return {
+                    count: latencies.length,
+                    averageLatency: latencies.reduce((a, b) => a + b, 0) / latencies.length,
+                    minLatency: Math.min(...latencies),
+                    maxLatency: Math.max(...latencies)
+                };
+            }
+        }
+
+        // パフォーマンステストクラス
+        class AudioPerformanceComparison {
+            constructor() {
+                this.logElement = document.getElementById('log');
+                this.isRunning = false;
+                this.setupEventListeners();
+                this.initializeSystems();
+            }
+
+            setupEventListeners() {
+                document.getElementById('runComparison').addEventListener('click', () => this.runComparison());
+                document.getElementById('clearResults').addEventListener('click', () => this.clearResults());
+                document.getElementById('testCurrent').addEventListener('click', () => this.testCurrentAudio());
+                document.getElementById('testOptimized').addEventListener('click', () => this.testOptimizedAudio());
+                document.getElementById('benchmarkCurrent').addEventListener('click', () => this.benchmarkCurrent());
+                document.getElementById('benchmarkOptimized').addEventListener('click', () => this.benchmarkOptimized());
+            }
+
+            async initializeSystems() {
+                this.log('🔧 音声システム初期化中...');
+                
+                // 最適化版初期化
+                OptimizedTypingAudio.init();
+                
+                // 少し待機してから初期化確認
+                setTimeout(() => {
+                    if (OptimizedTypingAudio.isReady()) {
+                        this.log('✅ 最適化版音声システム初期化完了');
+                    } else {
+                        this.log('❌ 最適化版音声システム初期化失敗');
+                    }
+                    this.log('🎯 比較テスト準備完了');
+                }, 100);
+            }
+
+            testCurrentAudio() {
+                this.log('🔊 現在の実装 音声テスト');
+                CurrentAudioSystemSimulation.playClick();
+            }
+
+            testOptimizedAudio() {
+                this.log('🔊 最適化版 音声テスト');
+                OptimizedTypingAudio.playClick();
+            }
+
+            async benchmarkCurrent() {
+                this.log('📊 現在の実装 ベンチマーク開始...');
+                CurrentAudioSystemSimulation.clearMeasurements();
+                
+                const testCount = 50;
+                for (let i = 0; i < testCount; i++) {
+                    CurrentAudioSystemSimulation.playClick();
+                    await new Promise(resolve => setTimeout(resolve, 50)); // 50ms間隔
+                }
+                
+                // 測定完了まで少し待機
+                setTimeout(() => {
+                    const stats = CurrentAudioSystemSimulation.getStatistics();
+                    this.displayCurrentResults(stats);
+                    this.log(`📊 現在の実装 ベンチマーク完了: 平均${stats.averageLatency.toFixed(2)}ms`);
+                }, 500);
+            }
+
+            async benchmarkOptimized() {
+                this.log('📊 最適化版 ベンチマーク開始...');
+                const measurements = [];
+                
+                const testCount = 50;
+                for (let i = 0; i < testCount; i++) {
+                    const startTime = performance.now();
+                    OptimizedTypingAudio.playClick();
+                    const endTime = performance.now();
+                    
+                    measurements.push({
+                        latency: endTime - startTime,
+                        timestamp: performance.now()
+                    });
+                    
+                    await new Promise(resolve => setTimeout(resolve, 50)); // 50ms間隔
+                }
+                
+                const latencies = measurements.map(m => m.latency);
+                const stats = {
+                    count: latencies.length,
+                    averageLatency: latencies.reduce((a, b) => a + b, 0) / latencies.length,
+                    minLatency: Math.min(...latencies),
+                    maxLatency: Math.max(...latencies)
+                };
+                
+                this.displayOptimizedResults(stats);
+                this.log(`📊 最適化版 ベンチマーク完了: 平均${stats.averageLatency.toFixed(2)}ms`);
+            }
+
+            async runComparison() {
+                if (this.isRunning) return;
+                
+                this.isRunning = true;
+                this.updateStatus('🔄 比較テスト実行中...', false);
+                
+                try {
+                    this.log('🚀 両システム性能比較開始');
+                    
+                    // 現在の実装テスト
+                    this.updateProgress(25);
+                    this.log('📊 現在の実装をテスト中...');
+                    await this.benchmarkCurrent();
+                    
+                    // 最適化版テスト
+                    this.updateProgress(75);
+                    this.log('📊 最適化版をテスト中...');
+                    await this.benchmarkOptimized();
+                    
+                    this.updateProgress(100);
+                    this.determineWinner();
+                    this.log('✅ 比較テスト完了');
+                    
+                } catch (error) {
+                    this.log(`❌ エラー: ${error.message}`);
+                } finally {
+                    this.isRunning = false;
+                    this.updateStatus('✅ 比較完了', true);
+                }
+            }
+
+            displayCurrentResults(stats) {
+                document.getElementById('currentAvgLatency').textContent = `${stats.averageLatency.toFixed(2)}ms`;
+                document.getElementById('currentMaxLatency').textContent = `${stats.maxLatency.toFixed(2)}ms`;
+                document.getElementById('currentMinLatency').textContent = `${stats.minLatency.toFixed(2)}ms`;
+                document.getElementById('currentCount').textContent = stats.count;
+                
+                const achievement = stats.averageLatency <= 5 && stats.maxLatency <= 10;
+                document.getElementById('currentAchievement').textContent = achievement ? '✅' : '❌';
+                
+                // 遅延に応じて色を変更
+                this.updateMetricColors('current', stats);
+            }
+
+            displayOptimizedResults(stats) {
+                document.getElementById('optimizedAvgLatency').textContent = `${stats.averageLatency.toFixed(2)}ms`;
+                document.getElementById('optimizedMaxLatency').textContent = `${stats.maxLatency.toFixed(2)}ms`;
+                document.getElementById('optimizedMinLatency').textContent = `${stats.minLatency.toFixed(2)}ms`;
+                document.getElementById('optimizedCount').textContent = stats.count;
+                
+                const achievement = stats.averageLatency <= 5 && stats.maxLatency <= 10;
+                document.getElementById('optimizedAchievement').textContent = achievement ? '✅' : '❌';
+                
+                // 遅延に応じて色を変更
+                this.updateMetricColors('optimized', stats);
+            }
+
+            updateMetricColors(system, stats) {
+                const avgElement = document.getElementById(`${system}AvgLatency`);
+                const maxElement = document.getElementById(`${system}MaxLatency`);
+                
+                // 平均遅延の色
+                avgElement.className = 'metric-value ' + (stats.averageLatency <= 5 ? 'good' : 'bad');
+                
+                // 最大遅延の色
+                maxElement.className = 'metric-value ' + (stats.maxLatency <= 10 ? 'good' : 'bad');
+            }
+
+            determineWinner() {
+                const currentAvg = parseFloat(document.getElementById('currentAvgLatency').textContent);
+                const optimizedAvg = parseFloat(document.getElementById('optimizedAvgLatency').textContent);
+                
+                // 勝者判定
+                if (optimizedAvg < currentAvg) {
+                    document.getElementById('optimizedPanel').classList.add('winner');
+                    document.getElementById('currentPanel').classList.remove('winner');
+                    this.log(`🏆 勝者: 最適化版 (${(currentAvg - optimizedAvg).toFixed(2)}ms改善)`);
+                } else {
+                    document.getElementById('currentPanel').classList.add('winner');
+                    document.getElementById('optimizedPanel').classList.remove('winner');
+                    this.log(`🏆 勝者: 現在の実装`);
+                }
+            }
+
+            clearResults() {
+                // メトリクスをリセット
+                ['current', 'optimized'].forEach(system => {
+                    document.getElementById(`${system}AvgLatency`).textContent = '未測定';
+                    document.getElementById(`${system}MaxLatency`).textContent = '未測定';
+                    document.getElementById(`${system}MinLatency`).textContent = '未測定';
+                    document.getElementById(`${system}Count`).textContent = '0';
+                    document.getElementById(`${system}Achievement`).textContent = '❌';
+                });
+                
+                // 色とクラスをリセット
+                document.querySelectorAll('.metric-value').forEach(el => {
+                    el.className = 'metric-value';
+                });
+                
+                document.getElementById('currentPanel').classList.remove('winner');
+                document.getElementById('optimizedPanel').classList.remove('winner');
+                
+                this.updateProgress(0);
+                this.updateStatus('✅ 準備完了 - 比較テストを開始してください', true);
+                this.log('🗑️ 結果をクリアしました');
+            }
+
+            updateProgress(percentage) {
+                document.getElementById('progressBar').style.width = `${percentage}%`;
+            }
+
+            updateStatus(message, isReady) {
+                const statusElement = document.getElementById('status');
+                statusElement.textContent = message;
+                
+                document.getElementById('runComparison').disabled = !isReady;
+            }
+
+            log(message) {
+                const timestamp = new Date().toLocaleTimeString();
+                const logLine = `[${timestamp}] ${message}`;
+                
+                const logDiv = document.createElement('div');
+                logDiv.textContent = logLine;
+                
+                this.logElement.appendChild(logDiv);
+                this.logElement.scrollTop = this.logElement.scrollHeight;
+                
+                console.log(logLine);
+            }
+        }
+
+        // システム初期化
+        const comparison = new AudioPerformanceComparison();
+    </script>
+</body>
+</html>

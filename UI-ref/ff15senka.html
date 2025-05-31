@@ -1,0 +1,204 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>ETERNAL ASHES - Flames of War</title>
+  <style>
+    html, body {
+      margin: 0;
+      padding: 0;
+      overflow: hidden;
+      font-family: 'Cinzel', serif;
+      height: 100vh;
+      background: black;
+      color: white;
+    }
+
+    body::before {
+      content: '';
+      position: absolute;
+      top: 0; left: 0;
+      width: 100%; height: 100%;
+      background: radial-gradient(ellipse at center, rgba(255,100,0,0.1) 0%, rgba(0,0,0,0.9) 100%);
+      animation: flicker 3s infinite ease-in-out;
+      z-index: 0;
+    }
+
+    @keyframes flicker {
+      0%, 100% { opacity: 0.9; }
+      50% { opacity: 0.6; }
+    }
+
+    canvas {
+      position: absolute;
+      top: 0;
+      left: 0;
+      z-index: 1;
+    }
+
+    .title {
+      position: absolute;
+      top: 15%;
+      width: 100%;
+      text-align: center;
+      font-size: 4rem;
+      letter-spacing: 0.3rem;
+      background: linear-gradient(45deg, #ffd700, #ff6347);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      text-shadow: 0 0 20px #ff9933;
+      z-index: 2;
+      opacity: 0;
+      animation: fadeIn 2s ease forwards;
+    }
+
+    .menu {
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      z-index: 2;
+      display: flex;
+      flex-direction: column;
+      gap: 1.2rem;
+      width: 240px;
+      opacity: 0;
+      animation: fadeIn 3s ease forwards 2s;
+    }
+
+    .menu-item {
+      padding: 1rem;
+      text-align: center;
+      background: rgba(255, 255, 255, 0.05);
+      border: 1px solid rgba(255, 255, 255, 0.1);
+      border-radius: 12px;
+      backdrop-filter: blur(10px);
+      cursor: pointer;
+      transition: all 0.3s ease;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .menu-item::after {
+      content: '';
+      position: absolute;
+      left: 0;
+      top: 0;
+      height: 100%;
+      width: 0;
+      background: rgba(255, 215, 0, 0.2);
+      transition: width 0.3s ease;
+      z-index: -1;
+    }
+
+    .menu-item:hover::after {
+      width: 100%;
+    }
+
+    .menu-item:hover {
+      color: #ffe26b;
+      transform: scale(1.05);
+    }
+
+    .footer {
+      position: absolute;
+      bottom: 20px;
+      left: 20px;
+      font-size: 0.8rem;
+      color: #aaa;
+      z-index: 2;
+    }
+
+    .version {
+      position: absolute;
+      bottom: 20px;
+      right: 20px;
+      font-size: 0.8rem;
+      color: #aaa;
+      z-index: 2;
+    }
+
+    @keyframes fadeIn {
+      to {
+        opacity: 1;
+      }
+    }
+  </style>
+</head>
+<body>
+  <canvas id="particles"></canvas>
+  <div class="title">ETERNAL ASHES</div>
+  <div class="menu">
+    <div class="menu-item">Continue</div>
+    <div class="menu-item">New Game</div>
+    <div class="menu-item">Load Game</div>
+    <div class="menu-item">Settings</div>
+  </div>
+  <div class="footer">© 2025 BlackFlame Studio. All rights reserved.</div>
+  <div class="version">Ver. 1.0.1</div>
+
+  <script>
+    const canvas = document.getElementById('particles');
+    const ctx = canvas.getContext('2d');
+    canvas.width = window.innerWidth;
+    canvas.height = window.innerHeight;
+
+    let particles = [];
+
+    class Particle {
+      constructor(x, y, dx, dy, size, life) {
+        this.x = x;
+        this.y = y;
+        this.dx = dx;
+        this.dy = dy;
+        this.size = size;
+        this.life = life;
+      }
+
+      update() {
+        this.x += this.dx;
+        this.y += this.dy;
+        this.life -= 1;
+      }
+
+      draw() {
+        ctx.beginPath();
+        ctx.arc(this.x, this.y, this.size, 0, Math.PI * 2);
+        ctx.fillStyle = `rgba(255, ${Math.floor(100 + Math.random() * 100)}, 0, ${this.life / 100})`;
+        ctx.fill();
+      }
+    }
+
+    function spawnParticles(x, y) {
+      for (let i = 0; i < 20; i++) {
+        const dx = (Math.random() - 0.5) * 4;
+        const dy = (Math.random() - 0.5) * 4;
+        const size = Math.random() * 2 + 1;
+        const life = 80 + Math.random() * 40;
+        particles.push(new Particle(x, y, dx, dy, size, life));
+      }
+    }
+
+    function animate() {
+      ctx.clearRect(0, 0, canvas.width, canvas.height);
+      particles = particles.filter(p => p.life > 0);
+      for (let p of particles) {
+        p.update();
+        p.draw();
+      }
+      requestAnimationFrame(animate);
+    }
+
+    canvas.addEventListener('mousemove', e => {
+      spawnParticles(e.clientX, e.clientY);
+    });
+
+    window.addEventListener('resize', () => {
+      canvas.width = window.innerWidth;
+      canvas.height = window.innerHeight;
+    });
+
+    animate();
+  </script>
+</body>
+</html>
