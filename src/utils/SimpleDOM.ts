@@ -72,6 +72,25 @@ export class SimpleDOM {
       this.container.setAttribute('data-progress', progress.toString());
     }
   }
+
+  /**
+   * 全ての文字要素を初期状態にリセット（リトライ用）
+   */
+  resetAllCharStates(): void {
+    if (!this.container) return;
+    
+    const allCharElements = this.container.querySelectorAll('.typing-char');
+    allCharElements.forEach(element => {
+      // 全ての状態クラスを削除
+      element.classList.remove('current', 'completed', 'pending');
+      // 初期状態（pending）を設定
+      element.classList.add('pending');
+      // ARIA属性をクリア
+      element.removeAttribute('aria-current');
+    });
+    
+    console.log(`🔄 SimpleDOM: Reset ${allCharElements.length} character states to pending`);
+  }
 }
 
 // シングルトンインスタンス

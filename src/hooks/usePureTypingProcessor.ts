@@ -125,10 +125,14 @@ export function usePureTypingProcessor(
       stats: { keyCount: 0, mistakeCount: 0, startTime: 0 }
     };
   }, []);
-
   // リセット処理
   const resetProgress = useCallback(() => {
     if (processorRef.current && currentWordRef.current) {
+      console.log('🔄 usePureTypingProcessor resetProgress: Starting reset...');
+      
+      // キー監視を一時停止
+      processorRef.current.stopListening();
+      
       // 同じ単語で再初期化
       const typingChars = createOptimizedTypingChars(currentWordRef.current.hiragana);
       const kanaArray = typingChars.map(char => ({
@@ -149,8 +153,15 @@ export function usePureTypingProcessor(
         remainingText: initialState.remainingText,
         displayText: initialState.acceptedText + initialState.remainingText
       });
+      
+      // キー監視を再開（ゲームが再生中の場合のみ）
+      if (gameStatus === 'playing') {
+        processorRef.current.startListening();
+      }
+      
+      console.log('🔄 usePureTypingProcessor resetProgress: Reset completed');
     }
-  }, [setKanaDisplay]);
+  }, [setKanaDisplay, gameStatus]);
 
   const currentState = getCurrentState();
 

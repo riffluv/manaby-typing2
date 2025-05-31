@@ -117,16 +117,33 @@ const UnifiedTypingGame: React.FC<{ onGoMenu?: () => void; onGoRanking?: () => v
       }
     }
   );
-
   // リセット処理
   const handleReset = useCallback(() => {
+    console.log('🔄 handleReset: Starting complete reset...');
+    
+    // 1. ゲーム状態をリセット（これが最初に必要）
     resetGame();
-    setupCurrentWord();
+    
+    // 2. タイピング進行状況をリセット
+    resetProgress();
+    
+    // 3. スコア関連をクリア
     setScoreLog([]);
     setResultScore(null);
     setIsScoreRegistered(false);
-    resetProgress();
-  }, [resetGame, setupCurrentWord, resetProgress]);
+    
+    // 4. 表示状態をクリア（kanaDisplay を初期化）
+    setKanaDisplay({
+      acceptedText: '',
+      remainingText: '',
+      displayText: ''
+    });
+    
+    // 5. 新しい単語をセットアップ（最後に実行）
+    setupCurrentWord();
+    
+    console.log('🔄 handleReset: Complete reset finished');
+  }, [resetGame, setupCurrentWord, resetProgress, setKanaDisplay]);
 
   // ランキングモーダル管理
   const { modalState, dispatch, handleRegisterRanking } = useRankingModal(

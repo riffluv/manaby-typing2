@@ -6,6 +6,7 @@ import { useAudioStore } from '@/store/audioStore';
 import { TypingWord, KanaDisplay, PerWordScoreLog } from '@/types';
 import UnifiedAudioSystem from '@/utils/UnifiedAudioSystem';
 import { simpleKeyInput } from '@/utils/SimpleKeyHandler';
+import { simpleDOM } from '@/utils/SimpleDOM';
 import { OptimizedTypingChar, TypingChar } from '../utils/OptimizedTypingChar';
 import { createOptimizedTypingChars } from '../utils/optimizedJapaneseUtils';
 import performanceMeasurer from '../utils/PerformanceMeasurer';
@@ -173,11 +174,11 @@ export function useOptimizedTypingProcessor(
     const cleanup = simpleKeyInput.onKey(handleKeyInput);
     return cleanup;
   }, [gameStatus, handleKeyInput]);
-
   return {
     currentKanaIndex: currentKanaIndexRef.current,
     wordStats: wordStatsRef.current,
     resetProgress: () => {
+      // 参照の値をリセット
       currentKanaIndexRef.current = 0;
       wordStatsRef.current = {
         keyCount: 0,
@@ -185,7 +186,24 @@ export function useOptimizedTypingProcessor(
         startTime: 0,
         endTime: 0,
       };
+      
+      // 各TypingCharの内部状態をリセット
+      const typingChars = typingCharsRef.current;
+      typingChars.forEach(char => {
+        if (char.reset) {
+          char.reset();
+        }
+      });
+      
+      // 表示状態をリセット（これが重要！）
+      if (typeof simpleDOM !== 'undefined') {
+        simpleDOM.resetAllCharStates();
+      }
+      
+      // 最後に表示を更新
       updateDisplay();
+      
+      console.log('🔄 resetProgress: Complete reset performed');
     }
   };
 }

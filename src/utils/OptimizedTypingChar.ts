@@ -159,6 +159,18 @@ export class OptimizedTypingChar {
   getLeftoverCharCount(): number {
     return this.remainingText.length;
   }
+
+  /**
+   * リトライ用：文字状態を完全リセット
+   */
+  reset(): void {
+    this.acceptedInput = '';
+    this.completed = false;
+    this.counted_point = 0;
+    // 最初はすべてのパターンが有効
+    this.activePatternIndices = Array.from({ length: this.patterns.length }, (_, i) => i);
+    this.calculateRemainingText();
+  }
 }
 
 /**
