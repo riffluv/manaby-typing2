@@ -194,11 +194,7 @@ export function useOptimizedTypingProcessor(
           char.reset();
         }
       });
-      
-      // 表示状態をリセット（これが重要！）
-      if (typeof simpleDOM !== 'undefined') {
-        simpleDOM.resetAllCharStates();
-      }
+        // 表示状態をリセット（これが重要！）
       
       // 最後に表示を更新
       updateDisplay();

@@ -123,6 +123,11 @@ class UltraFastKeyboardSound {
     }
   }
 
+  // AudioContextとバッファーの準備状況をチェック
+  static isReady() {
+    return initialized && ctx && ctx.state === 'running' && clickBuffer && errorBuffer && successBuffer;
+  }
+
   // 統一インターフェース
   static playClickSound() {
     this.playClick();
