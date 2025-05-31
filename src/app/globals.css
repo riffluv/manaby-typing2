@@ -1312,7 +1312,37 @@ input:focus, textarea:focus {
   position: relative;
 }
 
-/* 🎯 現在文字にシンプルなカーソル効果 */
+/* 🚀 超高速タイピング用：GPU最適化スタイル */
+.typing-area {
+  /* GPU合成レイヤー促進 */
+  will-change: transform;
+  transform: translateZ(0);
+  backface-visibility: hidden;
+  /* コンテナクエリ最適化 */
+  contain: layout style paint;
+  /* フォント最適化 */
+  font-variant-numeric: tabular-nums;
+  /* サブピクセルレンダリング */
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+/* 🚀 typingmania-ref流：最小限スタイル文字 */
+.typing-char {
+  /* GPU合成促進 */
+  transform: translateZ(0);
+  will-change: auto;
+  /* 高速クラス変更対応 */
+  transition: none;
+  /* レイアウト最適化 */
+  display: inline-block;
+  position: relative;
+  font-weight: 600;
+  /* サブピクセル最適化 */
+  backface-visibility: hidden;
+}
+
+/* 🎯 現在文字にシンプルなカーソル効果（GPU最適化） */
 .typing-char.current::after {
   content: '';
   position: absolute;
@@ -1322,21 +1352,28 @@ input:focus, textarea:focus {
   width: 1px;
   background: #000000;
   opacity: 0.7;
+  /* GPU合成促進 */
+  transform: translateZ(0);
+  will-change: opacity;
 }
 
-/* 🎯 完了文字 - OptimizedTypingArea用 */
+/* 🎯 完了文字 - GPU最適化版 */
 .typing-char.completed {
   color: var(--color-success);
   background: rgba(129, 199, 132, 0.15);
   transform: translateZ(0);
   opacity: 0.9;
+  /* レイヤー固定 */
+  will-change: auto;
 }
 
-/* 🎯 未入力文字 - OptimizedTypingArea用 */
+/* 🎯 未入力文字 - GPU最適化版 */
 .typing-char.pending {
   color: var(--color-text-muted);
   background: transparent;
   opacity: 0.7;
+  transform: translateZ(0);
+  will-change: auto;
 }
 
 .typing-char.char-completed {

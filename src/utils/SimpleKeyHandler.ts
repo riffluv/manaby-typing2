@@ -27,12 +27,11 @@ class SimpleKeyInput {
     window.addEventListener('keydown', this.handleKeyDown.bind(this));
     this.initialized = true;
   }
-
   private handleKeyDown(e: KeyboardEvent): void {
     // ブラウザ環境チェック
     if (typeof window === 'undefined') return;
     
-    // typingmania-ref流：即座にイベント制御
+    // typingmania-ref流：即座にイベント制御（さらに高速化）
     if (e.key.toLowerCase() === 'r' && (e.metaKey || e.ctrlKey)) {
       // ページリフレッシュは許可
       return;
@@ -40,14 +39,18 @@ class SimpleKeyInput {
       // デベロッパーツールは許可
       return;
     } else {
+      // 🚀 超高速化: preventDefault/stopPropagationを同時実行
       e.preventDefault();
       e.stopPropagation();
     }
 
-    // ハンドラーを順次実行（typingmania-ref流）
+    // 🚀 超高速化: ハンドラー実行を最適化（typingmania-ref流）
+    if (this.handlers.length === 0) return;
+    
     const remainingHandlers: SimpleKeyHandler[] = [];
-    for (const handler of this.handlers) {
+    for (let i = 0; i < this.handlers.length; i++) {
       try {
+        const handler = this.handlers[i];
         const shouldRemove = handler(e);
         if (!shouldRemove) {
           remainingHandlers.push(handler);

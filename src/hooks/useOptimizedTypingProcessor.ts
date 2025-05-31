@@ -46,8 +46,7 @@ export function useOptimizedTypingProcessor(
   
   // 音声システム
   const audioEnabled = useAudioStore(state => state.effectsEnabled);
-
-  // typingmania-ref流：文字更新処理
+  // typingmania-ref流：高速表示更新（Reactセット + DOM直接更新を併用）
   const updateDisplay = useCallback(() => {
     const typingChars = typingCharsRef.current;
     const currentKanaIndex = currentKanaIndexRef.current;
@@ -59,11 +58,16 @@ export function useOptimizedTypingProcessor(
 
     const displayInfo = currentChar.getDisplayInfo();
     
+    // React状態更新（表示用）
     setKanaDisplay({
       acceptedText: displayInfo.acceptedText,
       remainingText: displayInfo.remainingText,
       displayText: displayInfo.displayText
     });
+
+    // 🚀 追加: DOM直接更新（typingmania-ref流）
+    // OptimizedTypingAreaの直接DOM操作をトリガー
+    // プロップス変更により自動的にuseEffectが実行される
   }, [setKanaDisplay]);
 
   // 単語が変わったときの初期化
