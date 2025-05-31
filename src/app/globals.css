@@ -1305,53 +1305,25 @@ input:focus, textarea:focus {
   opacity: 0.7;
 }
 
-/* 🎯 現在文字フォーカス表示 - OptimizedTypingArea用 (.current クラス) */
+/* 🎯 現在文字フォーカス表示 - シンプル&高速 */
 .typing-char.current {
-  /* 🎯 参考実装風の目立つフォーカス表示 */
-  color: #000000 !important;
-  background: #ff9c00 !important; /* etyping-ref風オレンジ */
-  border: 2px solid #ffb347 !important;
-  box-shadow: 
-    0 0 8px #ff9c00,
-    0 0 16px rgba(255, 156, 0, 0.6),
-    0 0 24px rgba(255, 156, 0, 0.4) !important;
-  transform: translateZ(0) scale(1.1) !important;
-  font-weight: 700 !important;
-  border-radius: 6px !important;
-  position: relative !important;
-  
-  /* 強力なパルスアニメーション */
-  animation: typing-focus-pulse 1.2s ease-in-out infinite !important;
+  color: #000000;
+  background: #ff9c00;
+  border-radius: 4px;
+  font-weight: 600;
+  position: relative;
 }
 
-/* より強力なセレクタで確実に適用 - OptimizedTypingArea用 */
-.typing-area .typing-char.current,
-span.typing-char.current {
-  color: #000000 !important;
-  background-color: #ff9c00 !important;
-  background: #ff9c00 !important;
-  border: 2px solid #ffb347 !important;
-  box-shadow: 
-    0 0 8px #ff9c00,
-    0 0 16px rgba(255, 156, 0, 0.6),
-    0 0 24px rgba(255, 156, 0, 0.4) !important;
-  transform: translateZ(0) scale(1.1) !important;
-  font-weight: 700 !important;
-  border-radius: 6px !important;
-  position: relative !important;
-  animation: typing-focus-pulse 1.2s ease-in-out infinite !important;
-}
-
-/* 🎯 現在文字にカーソル効果を追加 - OptimizedTypingArea用 */
+/* 🎯 現在文字にシンプルなカーソル効果 */
 .typing-char.current::after {
   content: '';
   position: absolute;
-  right: -2px;
+  right: -1px;
   top: 0;
   bottom: 0;
-  width: 2px;
+  width: 1px;
   background: #000000;
-  animation: typing-cursor-blink 1s step-end infinite;
+  opacity: 0.7;
 }
 
 /* 🎯 完了文字 - OptimizedTypingArea用 */
@@ -1383,28 +1355,10 @@ span.typing-char.current {
   animation: shake 0.3s ease-in-out;
 }
 
-/* 🎯 強力なフォーカス用パルスアニメーション */
+/* 🎯 シンプルなフォーカス表示（アニメーションなし） */
 @keyframes typing-focus-pulse {
-  0% { 
-    transform: translateZ(0) scale(1.1);
-    box-shadow: 
-      0 0 8px #ff9c00,
-      0 0 16px rgba(255, 156, 0, 0.6),
-      0 0 24px rgba(255, 156, 0, 0.4);
-  }
-  50% { 
-    transform: translateZ(0) scale(1.15);
-    box-shadow: 
-      0 0 12px #ff9c00,
-      0 0 24px rgba(255, 156, 0, 0.8),
-      0 0 36px rgba(255, 156, 0, 0.6);
-  }
-  100% { 
-    transform: translateZ(0) scale(1.1);
-    box-shadow: 
-      0 0 8px #ff9c00,
-      0 0 16px rgba(255, 156, 0, 0.6),
-      0 0 24px rgba(255, 156, 0, 0.4);
+  0%, 100% { 
+    opacity: 1;
   }
 }
 
@@ -1522,23 +1476,11 @@ span.typing-char.current {
   }
   
   .typing-char.current {
-    /* アニメーション無効時も強いフォーカス表示を維持 */
-    transform: translateZ(0) scale(1.1) !important;
-    background: #ff9c00 !important;
-    border: 3px solid #ffb347 !important;
-    box-shadow: 
-      0 0 8px #ff9c00,
-      0 0 16px rgba(255, 156, 0, 0.8) !important;
-  }
-  
-  @keyframes shake {
-    0%, 100% { transform: none; }
-  }
-  
-  @keyframes typing-focus-pulse {
-    0%, 100% { 
-      transform: translateZ(0) scale(1.1);
-    }
+    /* シンプルなフォーカス表示 */
+    color: #000000;
+    background: #ff9c00;
+    border-radius: 4px;
+    font-weight: 600;
   }
 }
 

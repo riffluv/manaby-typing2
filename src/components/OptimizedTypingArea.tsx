@@ -1,7 +1,6 @@
-import React, { useEffect, useRef, useMemo } from 'react';
+import React, { useMemo } from 'react';
 import type { OptimizedTypingChar, TypingChar } from '@/utils/OptimizedTypingChar';
 import type { KanaDisplay } from '@/types';
-import { simpleDOM } from '@/utils/SimpleDOM';
 import { calculateProgress } from '@/utils/optimizedJapaneseUtils';
 
 export type OptimizedTypingAreaProps = {
@@ -35,20 +34,16 @@ function getCharClass(
 }
 
 /**
- * OptimizedTypingArea: typingmania-ref流 シンプル高速タイピング表示
+ * OptimizedTypingArea: シンプル&高速タイピング表示
  * 
- * 複雑な最適化を削除し、シンプルで効率的な表示を実現
+ * 重いアニメーションとDOM操作を削除し、React標準レンダリングのみを使用
  */
 const OptimizedTypingArea: React.FC<OptimizedTypingAreaProps> = ({
   currentKanaIndex,
   typingChars,
   kanaDisplay,
 }) => {
-  const containerRef = useRef<HTMLDivElement>(null);
-  const previousKanaIndexRef = useRef(currentKanaIndex);
-  const previousAcceptedLengthRef = useRef(0);
-
-  // typingmania-ref流：シンプルな文字配列作成
+  // シンプルな文字配列作成
   const allChars = useMemo((): FlatChar[] => {
     const chars: FlatChar[] = [];
     
@@ -60,64 +55,16 @@ const OptimizedTypingArea: React.FC<OptimizedTypingAreaProps> = ({
         chars.push({ char, kanaIndex, charIndex });
       });
     });
-    
-    return chars;
+      return chars;
   }, [typingChars]);
-
-  // DOM要素の初期化
-  useEffect(() => {
-    if (containerRef.current) {
-      simpleDOM.setContainer(containerRef.current);
-    }
-  }, []);
 
   // 現在の入力状態
   const acceptedLength = kanaDisplay.acceptedText.length;
-  
-  // 進捗計算
+    // 進捗計算
   const progress = calculateProgress(typingChars, currentKanaIndex);
 
-  // typingmania-ref流：最小限の状態更新
-  useEffect(() => {
-    // かなインデックスが変わった場合
-    if (previousKanaIndexRef.current !== currentKanaIndex) {
-      // 前のかなの全文字を completed に更新
-      if (previousKanaIndexRef.current < currentKanaIndex && previousKanaIndexRef.current >= 0) {
-        const prevTypingChar = typingChars[previousKanaIndexRef.current];
-        if (prevTypingChar) {
-          const prevDisplayText = prevTypingChar.getDisplayInfo().displayText;
-          [...prevDisplayText].forEach((_, charIndex) => {
-            simpleDOM.updateCharState(previousKanaIndexRef.current, charIndex, 'completed');
-          });
-        }
-      }
-      
-      previousKanaIndexRef.current = currentKanaIndex;
-    }
-
-    // 受け入れ文字数が変わった場合
-    if (previousAcceptedLengthRef.current !== acceptedLength) {
-      const currentTypingChar = typingChars[currentKanaIndex];
-      if (currentTypingChar) {
-        const currentDisplayText = currentTypingChar.getDisplayInfo().displayText;
-        
-        [...currentDisplayText].forEach((_, charIndex) => {
-          const state = getCharClass(currentKanaIndex, charIndex, currentKanaIndex, acceptedLength);
-          simpleDOM.updateCharState(currentKanaIndex, charIndex, state as any);
-        });
-      }
-      
-      previousAcceptedLengthRef.current = acceptedLength;
-    }
-
-    // 進捗更新
-    simpleDOM.updateProgress(progress);
-  }, [currentKanaIndex, acceptedLength, typingChars, progress]);
-
-  // typingmania-ref流：シンプルなレンダリング
   return (
     <div
-      ref={containerRef}
       className="typing-area"
       role="region"
       aria-label="タイピング入力欄"
@@ -125,7 +72,7 @@ const OptimizedTypingArea: React.FC<OptimizedTypingAreaProps> = ({
       aria-atomic="false"
       data-progress={progress}
       style={{
-        willChange: 'transform',
+        willChange: 'auto',
         contain: 'content'
       }}
     >
