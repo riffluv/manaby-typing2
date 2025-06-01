@@ -154,17 +154,18 @@ body::before {
       transparent 98px,
       rgba(138, 180, 248, 0.015) 100px
     );
-  animation: gridMove 20s linear infinite;
+  /* animation: gridMove 20s linear infinite; ← パフォーマンス最適化のため除去 */
   pointer-events: none;
 }
 
-/* グリッドアニメーション */
+/* 不要なアニメーション定義を除去（パフォーマンス最適化）
 @keyframes gridMove {
   0% { transform: translate(0, 0); }
   100% { transform: translate(100px, 100px); }
 }
+*/
 
-/* パララックスレイヤー */
+/* パララックスレイヤー - アニメーション除去 */
 body::after {
   content: '';
   position: fixed;
@@ -178,14 +179,16 @@ body::after {
     radial-gradient(2px 2px at 40px 70px, rgba(232, 184, 74, 0.1), transparent),
     radial-gradient(1px 1px at 90px 40px, rgba(155, 176, 193, 0.15), transparent);
   background-size: 200px 200px;
-  animation: float 30s ease-in-out infinite;
+  /* animation: float 30s ease-in-out infinite; ← パフォーマンス最適化のため除去 */
   pointer-events: none;
 }
 
+/* 不要なアニメーション定義を除去（パフォーマンス最適化）
 @keyframes float {
   0%, 100% { transform: translate(-10px, -10px) rotate(0deg); }
   50% { transform: translate(10px, 10px) rotate(180deg); }
 }
+*/
 
 #root, #__next {
   height: 100%;
@@ -444,13 +447,15 @@ button:disabled, .btn:disabled {
   width: 100%;
   height: 100%;
   background: linear-gradient(90deg, transparent, rgba(138, 180, 248, 0.05), transparent);
-  animation: scan 3s infinite;
+  /* animation: scan 3s infinite; ← パフォーマンス最適化のため除去 */
 }
 
+/* 不要なアニメーション定義を除去（パフォーマンス最適化）
 @keyframes scan {
   0% { left: -100%; }
   100% { left: 100%; }
 }
+*/
 
 .typing-text {
   font-family: var(--font-mono);
@@ -467,13 +472,14 @@ button:disabled, .btn:disabled {
   width: 3px;
   height: 1.5rem;
   display: inline-block;
-  animation: blink 1s infinite, glow 2s ease-in-out infinite alternate;
+  /* animation: blink 1s infinite, glow 2s ease-in-out infinite alternate; ← パフォーマンス最適化のため除去 */
   box-shadow: var(--glow-neon);
   margin-left: 2px;
   position: relative;
   top: 2px;
 }
 
+/* 不要なアニメーション定義を除去（パフォーマンス最適化）
 @keyframes blink {
   0%, 50% { opacity: 1; }
   51%, 100% { opacity: 0; }
@@ -483,21 +489,23 @@ button:disabled, .btn:disabled {
   0% { box-shadow: var(--glow-neon); }
   100% { box-shadow: 0 0 12px rgba(232, 184, 74, 0.4), 0 0 24px rgba(232, 184, 74, 0.3); }
 }
+*/
 
-/* 文字状態 */
+/* 文字状態 - アニメーション除去でパフォーマンス最適化 */
 .char-correct {
   color: var(--color-success);
   text-shadow: var(--glow-neon);
-  animation: correct 0.2s ease-out;
+  /* animation: correct 0.2s ease-out; ← 除去 */
 }
 
 .char-incorrect {
   color: var(--color-error);
   text-shadow: var(--glow-error);
   background: rgba(242, 139, 130, 0.2);
-  animation: error 0.3s ease-out, shake 0.3s ease-out;
+  /* animation: error 0.3s ease-out, shake 0.3s ease-out; ← 除去 */
 }
 
+/* 不要なアニメーション定義を除去
 @keyframes correct {
   0% { transform: scale(1); }
   50% { transform: scale(1.1); }
@@ -514,6 +522,7 @@ button:disabled, .btn:disabled {
   25% { transform: translateX(-2px); }
   75% { transform: translateX(2px); }
 }
+*/
 
 /* =====================================
    INTERACTIVE ELEMENTS
@@ -569,13 +578,15 @@ input:focus, textarea:focus {
   font-family: var(--font-mono);
   text-shadow: var(--glow-cyan);
   margin-bottom: var(--space-xs);
-  animation: countUp 0.8s var(--easing-bounce);
+  /* animation: countUp 0.8s var(--easing-bounce); ← パフォーマンス最適化のため除去 */
 }
 
+/* 不要なアニメーション定義を除去（パフォーマンス最適化）
 @keyframes countUp {
   0% { transform: scale(0) rotate(180deg); opacity: 0; }
   100% { transform: scale(1) rotate(0deg); opacity: 1; }
 }
+*/
 
 .stat-label {
   font-size: 0.85rem;
@@ -765,7 +776,7 @@ input:focus, textarea:focus {
   color: var(--color-error);
   background: rgba(242, 139, 130, 0.2);
   text-shadow: var(--glow-error);
-  animation: shake 0.3s ease-out;
+  /* animation: shake 0.3s ease-out; ← パフォーマンス最適化のため除去 */
 }
 
 /* =====================================
@@ -824,7 +835,7 @@ input:focus, textarea:focus {
 
 .count-up-number {
   display: inline-block;
-  animation: countUp 0.8s var(--easing-bounce);
+  /* animation: countUp 0.8s var(--easing-bounce); ← パフォーマンス最適化のため除去 */
 }
 
 @keyframes spin {
@@ -843,7 +854,7 @@ input:focus, textarea:focus {
   font-size: 1.2rem;
   color: var(--color-text-muted);
   font-family: var(--font-mono);
-  animation: pulse 1.5s infinite;
+  /* animation: pulse 1.5s infinite; ← パフォーマンス最適化のため除去 */
 }
 
 .performance-message {
@@ -999,13 +1010,15 @@ input:focus, textarea:focus {
   border-top: 4px solid transparent;
   border-radius: 50%;
   margin: 1rem auto 0 auto;
-  animation: spin 1s linear infinite;
+  /* animation: spin 1s linear infinite; ← パフォーマンス最適化のため除去 */
 }
 
+/* 不要なアニメーション定義を除去（パフォーマンス最適化）
 @keyframes spin {
   0% { transform: rotate(0deg); }
   100% { transform: rotate(360deg); }
 }
+*/
 
 /* =====================================
    SHORTCUT SYSTEM
@@ -1387,22 +1400,22 @@ input:focus, textarea:focus {
   color: var(--color-error);
   background: rgba(242, 139, 130, 0.3);
   box-shadow: var(--glow-error);
-  animation: shake 0.3s ease-in-out;
+  /* animation: shake 0.3s ease-in-out; ← パフォーマンス最適化のため除去 */
 }
 
-/* 🎯 シンプルなフォーカス表示（アニメーションなし） */
+/* 不要なアニメーション定義を除去（パフォーマンス最適化）
 @keyframes typing-focus-pulse {
   0%, 100% { 
     opacity: 1;
   }
 }
 
-/* エラー時のシェイクアニメーション */
 @keyframes shake {
   0%, 100% { transform: translateZ(0) translateX(0); }
   25% { transform: translateZ(0) translateX(-2px); }
   75% { transform: translateZ(0) translateX(2px); }
 }
+*/
 
 /* ゲーム画面 - パフォーマンス最適化 */
 .game-screen {

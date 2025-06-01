@@ -363,9 +363,8 @@
   min-width: 180px;
   display: flex;
   flex-direction: column;
-  gap: 0.5rem;
-  padding: 1rem;
-  animation: fadeInDropdown 0.18s cubic-bezier(0.4,0,0.2,1);
+  gap: 0.5rem;  padding: 1rem;
+  /* animation: fadeInDropdown 0.18s cubic-bezier(0.4,0,0.2,1); ← パフォーマンス最適化のため除去 */
 }
 .manabyDropdown button {
   background: none;
@@ -379,10 +378,11 @@
   border-radius: 4px;
 }
 .manabyDropdown button:hover {
-  color: var(--color-accent-neon, #e8b84a);
-  background: rgba(138,180,248,0.08);
+  color: var(--color-accent-neon, #e8b84a);  background: rgba(138,180,248,0.08);
 }
+/* 不要なアニメーション定義を除去（パフォーマンス最適化）
 @keyframes fadeInDropdown {
   from { opacity: 0; transform: translateY(-10px); }
   to { opacity: 1; transform: translateY(0); }
 }
+*/
