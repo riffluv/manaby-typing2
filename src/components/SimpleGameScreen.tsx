@@ -83,14 +83,13 @@ const SimpleGameScreen: React.FC<SimpleGameScreenProps> = ({
       fontFamily: 'system-ui, -apple-system, sans-serif',
       padding: '2rem 1rem',
       gap: '1rem'
-    }}>
-        {/* 日本語単語表示 */}
+    }}>      {/* 日本語単語表示 */}
       <div 
         className="japanese-display slide-in"
         style={{
           fontSize: 'clamp(2.5rem, 5vw, 4rem)',
           fontWeight: '800',
-          marginBottom: '1.5rem',
+          marginBottom: '2.5rem',
           textAlign: 'center',
           background: 'linear-gradient(45deg, #06b6d4, #3b82f6, #8b5cf6)',
           backgroundClip: 'text',
@@ -101,23 +100,7 @@ const SimpleGameScreen: React.FC<SimpleGameScreenProps> = ({
         }}
       >
         {currentWord.japanese}
-      </div>
-
-      {/* ひらがな表示 */}
-      <div 
-        className="hiragana-display slide-in"
-        style={{
-          fontSize: 'clamp(1.8rem, 4vw, 2.5rem)',
-          marginBottom: '1.5rem',
-          textAlign: 'center',
-          color: '#cbd5e1',
-          letterSpacing: '0.5rem',
-          fontWeight: '500',
-          animationDelay: '0.1s'
-        }}
-      >
-        {currentWord.hiragana}
-      </div>      {/* ローマ字表示エリア（ハイライト機能付き） */}
+      </div>{/* ローマ字表示エリア（ハイライト機能付き） */}
       <div 
         className="romaji-display slide-in"
         style={{
