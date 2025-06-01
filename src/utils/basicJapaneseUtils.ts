@@ -53,3 +53,24 @@ export function getTotalCharacterCount(chars: BasicTypingChar[]): number {
 export function getLeftoverCharacterCount(chars: BasicTypingChar[]): number {
   return chars.reduce((total, char) => total + char.getLeftoverCharCount(), 0);
 }
+
+/**
+ * デバッグ用：促音処理の確認
+ */
+export function debugSokuonProcessing(hiragana: string): void {
+  console.log(`\n=== デバッグ: "${hiragana}" の促音処理 ===`);
+  
+  const romajiData = hiraganaToRomaji(hiragana);
+  console.log('変換結果:', romajiData);
+  
+  const chars = createBasicTypingChars(hiragana);
+  console.log('BasicTypingChar:', chars.map(char => ({
+    kana: char.kana,
+    patterns: char.patterns,
+    remaining: char.getRemainingText()
+  })));
+  
+  const totalRomaji = chars.map(char => char.patterns[0]).join('');
+  console.log(`合計ローマ字: "${totalRomaji}" (${totalRomaji.length}文字)`);
+  console.log('==========================================\n');
+}

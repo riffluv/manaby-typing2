@@ -169,7 +169,6 @@ export class BasicTypingEngine {
       textElement.textContent = displayInfo.displayText || '';
     }
   }
-
   /**
    * 進捗通知
    */
@@ -187,6 +186,54 @@ export class BasicTypingEngine {
     };
     
     this.onProgress(this.state.currentIndex, kanaDisplay);
+  }
+
+  /**
+   * 詳細な進捗情報を取得（ローマ字文字レベル）
+   */
+  getDetailedProgress(): {
+    currentKanaIndex: number;
+    currentRomajiIndex: number;
+    totalKanaCount: number;
+    totalRomajiCount: number;
+    currentKanaDisplay: KanaDisplay | null;
+  } {
+    const currentChar = this.state.typingChars[this.state.currentIndex];
+    if (!currentChar) {
+      return {
+        currentKanaIndex: this.state.currentIndex,
+        currentRomajiIndex: 0,
+        totalKanaCount: this.state.typingChars.length,
+        totalRomajiCount: 0,
+        currentKanaDisplay: null
+      };
+    }
+
+    const displayInfo = currentChar.getDisplayInfo();
+    const kanaDisplay: KanaDisplay = {
+      acceptedText: displayInfo.acceptedText,
+      remainingText: displayInfo.remainingText,
+      displayText: displayInfo.displayText
+    };
+
+    // 現在のひらがな文字内でのローマ字進捗を計算
+    const currentRomajiIndex = displayInfo.acceptedText.length;
+    
+    // 全体のローマ字文字数を計算
+    let totalRomajiCount = 0;
+    for (const char of this.state.typingChars) {
+      if (char.patterns.length > 0) {
+        totalRomajiCount += char.patterns[0].length; // 最初のパターンの長さを使用
+      }
+    }
+
+    return {
+      currentKanaIndex: this.state.currentIndex,
+      currentRomajiIndex,
+      totalKanaCount: this.state.typingChars.length,
+      totalRomajiCount,
+      currentKanaDisplay: kanaDisplay
+    };
   }
 
   /**

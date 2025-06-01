@@ -2,7 +2,7 @@ import React from 'react';
 import { TypingWord, PerWordScoreLog } from '@/types';
 import PortalShortcut from './PortalShortcut';
 import { useSimpleTyping } from '@/hooks/useSimpleTyping';
-import { createBasicTypingChars } from '@/utils/basicJapaneseUtils';
+import { createBasicTypingChars, debugSokuonProcessing } from '@/utils/basicJapaneseUtils';
 import { getRomajiString } from '@/utils/japaneseUtils';
 import '@/styles/typing-animations.css';
 
@@ -23,59 +23,80 @@ const SimpleGameScreen: React.FC<SimpleGameScreenProps> = ({
 }) => {  
   // ひらがなからBasicTypingChar配列を生成
   const typingChars = React.useMemo(() => {
-    return currentWord.hiragana ? createBasicTypingChars(currentWord.hiragana) : [];
+    const chars = currentWord.hiragana ? createBasicTypingChars(currentWord.hiragana) : [];
+    
+    // デバッグ：促音処理の確認
+    if (currentWord.hiragana) {
+      debugSokuonProcessing(currentWord.hiragana);
+    }
+    
+    return chars;
   }, [currentWord.hiragana]);
-
-  // ローマ字文字列を生成（wanakanaの代替）
+  // ローマ字文字列を生成（wanakanaの代替 - BasicTypingCharのパターンから直接構築）
   const romajiString = React.useMemo(() => {
-    return currentWord.hiragana ? getRomajiString(currentWord.hiragana) : '';
-  }, [currentWord.hiragana]);
-
-  const { containerRef, currentCharIndex, kanaDisplay } = useSimpleTyping({
+    if (!typingChars || typingChars.length === 0) return '';
+    
+    // 各BasicTypingCharの最初のパターン（デフォルトパターン）を連結
+    return typingChars.map(char => char.patterns[0] || '').join('');
+  }, [typingChars]);const { containerRef, currentCharIndex, kanaDisplay, detailedProgress } = useSimpleTyping({
     word: currentWord,
     typingChars,
     onWordComplete,
-  });
-  // ローマ字のハイライト表示のためのメモ
+  });  // ローマ字のハイライト表示のためのメモ（個々のローマ字文字レベル）
   const romajiDisplay = React.useMemo(() => {
-    if (!kanaDisplay || !romajiString) {
+    if (!romajiString) {
       return { accepted: '', remaining: romajiString || '' };
     }
     
-    // 現在の文字のインデックスベースで進捗を計算
-    const currentCharProgress = currentCharIndex;
-    const totalChars = typingChars.length;
-    
-    if (totalChars === 0) {
+    // 詳細な進捗情報を取得
+    if (!detailedProgress || !detailedProgress.currentKanaDisplay) {
       return { accepted: '', remaining: romajiString };
     }
     
-    // 文字レベルでの進捗比率を計算
-    const progressRatio = currentCharProgress / totalChars;
+    // romajiStringと一致するように計算（romajiStringは各文字のpatterns[0]で構築されている）
+    let totalAcceptedRomajiLength = 0;
     
-    // ローマ字での進捗位置を計算（より細かく）
-    let romajiProgress = Math.floor(progressRatio * romajiString.length);
-    
-    // 現在の文字内での進捗も考慮
-    if (kanaDisplay.acceptedText && currentCharProgress < totalChars) {
-      const currentCharTotal = kanaDisplay.acceptedText.length + kanaDisplay.remainingText.length;
-      const currentCharAccepted = kanaDisplay.acceptedText.length;
-      
-      if (currentCharTotal > 0) {
-        const charProgressRatio = currentCharAccepted / currentCharTotal;
-        const nextCharStart = Math.floor(((currentCharProgress + 1) / totalChars) * romajiString.length);
-        const currentCharStart = Math.floor((currentCharProgress / totalChars) * romajiString.length);
-        const charRomajiLength = nextCharStart - currentCharStart;
-        
-        romajiProgress = currentCharStart + Math.floor(charProgressRatio * charRomajiLength);
+    // 完了したひらがな文字のローマ字を追加
+    for (let i = 0; i < detailedProgress.currentKanaIndex; i++) {
+      if (typingChars[i] && typingChars[i].patterns.length > 0) {
+        // romajiStringは各文字のpatterns[0]で構築されているため、それと一致させる
+        totalAcceptedRomajiLength += typingChars[i].patterns[0].length;
       }
     }
     
+    // 現在のひらがな文字内で受け入れられた文字数を追加
+    const currentCharAcceptedText = detailedProgress.currentKanaDisplay.acceptedText;
+    totalAcceptedRomajiLength += currentCharAcceptedText.length;
+    
+    // romajiStringから正確な位置で分割
+    const accepted = romajiString.slice(0, totalAcceptedRomajiLength);
+    const remaining = romajiString.slice(totalAcceptedRomajiLength);
+    
+    // デバッグ出力（開発時のみ）
+    if (process.env.NODE_ENV === 'development') {
+      console.log('🎯 Romaji Focus Debug:', {
+        romajiString,
+        currentKanaIndex: detailedProgress.currentKanaIndex,
+        acceptedText: currentCharAcceptedText,
+        totalLength: totalAcceptedRomajiLength,
+        accepted,
+        remaining,
+        nextChar: remaining[0] || 'NONE'
+      });
+    }
+    
     return {
-      accepted: romajiString.slice(0, romajiProgress),
-      remaining: romajiString.slice(romajiProgress)
+      accepted,
+      remaining
     };
-  }, [kanaDisplay, romajiString, currentCharIndex, typingChars.length]);  return (
+  }, [romajiString, detailedProgress, typingChars]);React.useEffect(() => {
+    // デバッグ用：グローバルテスト関数を追加
+    if (typeof window !== 'undefined') {
+      (window as any).testSokuon = (hiragana: string) => {
+        debugSokuonProcessing(hiragana);
+      };
+    }
+  }, []);return (
     <div style={{
       minHeight: '100vh',
       background: 'linear-gradient(135deg, #0f172a 0%, #1e293b 25%, #334155 50%, #475569 75%, #64748b 100%)',
@@ -144,36 +165,38 @@ const SimpleGameScreen: React.FC<SimpleGameScreenProps> = ({
           position: 'relative',
           animationDelay: '0.2s'
         }}
-      >
-        <span style={{ 
+      >        <span style={{ 
           color: '#10b981',
           textShadow: '0 0 8px rgba(16, 185, 129, 0.5)',
           fontWeight: '600'
         }}>
           {romajiDisplay.accepted}
         </span>
-        <span style={{ 
-          color: '#64748b',
-          position: 'relative'
-        }}>
-          {romajiDisplay.remaining}
-          {romajiDisplay.remaining && (
+        {romajiDisplay.remaining && (
+          <>
+            {/* 次に打つべき文字をハイライト */}
             <span 
-              className="typing-cursor"
+              className="next-char-highlight pulse"
               style={{
-                position: 'absolute',
-                left: '0',
-                top: '50%',
-                transform: 'translateY(-50%)',
-                width: '2px',
-                height: '1.5em',
-                background: '#3b82f6',
-                borderRadius: '1px',
-                boxShadow: '0 0 8px rgba(59, 130, 246, 0.8)'
-              }} 
-            />
-          )}
-        </span>
+                color: '#fbbf24',
+                textShadow: '0 0 12px rgba(251, 191, 36, 0.8)',
+                fontWeight: '700',
+                backgroundColor: 'rgba(251, 191, 36, 0.2)',
+                padding: '0.2em 0.3em',
+                borderRadius: '6px',
+                border: '2px solid rgba(251, 191, 36, 0.5)'
+              }}
+            >
+              {romajiDisplay.remaining[0]}
+            </span>
+            {/* 残りの文字 */}
+            <span style={{ 
+              color: '#64748b'
+            }}>
+              {romajiDisplay.remaining.slice(1)}
+            </span>
+          </>
+        )}
       </div>
 
       {/* ショートカット案内 */}

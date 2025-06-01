@@ -20,6 +20,14 @@ export interface UseSimpleTypingReturn {
   containerRef: React.RefObject<HTMLDivElement | null>;
   currentCharIndex: number;
   kanaDisplay: KanaDisplay | null;
+  detailedProgress: {
+    currentKanaIndex: number;
+    currentRomajiIndex: number;
+    totalKanaCount: number;
+    totalRomajiCount: number;
+    currentKanaDisplay: KanaDisplay | null;
+  } | null;
+  getDetailedProgress: () => any;
 }
 
 /**
@@ -32,10 +40,16 @@ export function useSimpleTyping({
   onWordComplete,
 }: UseSimpleTypingProps): UseSimpleTypingReturn {  
   const containerRef = useRef<HTMLDivElement>(null);
-  const engineRef = useRef<BasicTypingEngine | null>(null);
-  // 進行状況の状態
+  const engineRef = useRef<BasicTypingEngine | null>(null);  // 進行状況の状態
   const [currentCharIndex, setCurrentCharIndex] = useState(0);
   const [kanaDisplay, setKanaDisplay] = useState<KanaDisplay | null>(null);
+  const [detailedProgress, setDetailedProgress] = useState<{
+    currentKanaIndex: number;
+    currentRomajiIndex: number;
+    totalKanaCount: number;
+    totalRomajiCount: number;
+    currentKanaDisplay: KanaDisplay | null;
+  } | null>(null);
 
   // エンジンの初期化
   useEffect(() => {
@@ -49,11 +63,15 @@ export function useSimpleTyping({
     // 新しいエンジンを作成
     engineRef.current = new BasicTypingEngine();    engineRef.current.initialize(
       containerRef.current,
-      typingChars,
-      (index: number, display: KanaDisplay) => {
+      typingChars,      (index: number, display: KanaDisplay) => {
         // onProgress - 進行状況を更新
         setCurrentCharIndex(index);
         setKanaDisplay(display);
+        
+        // 詳細な進捗情報も更新
+        if (engineRef.current) {
+          setDetailedProgress(engineRef.current.getDetailedProgress());
+        }
       },
       (scoreLog: PerWordScoreLog) => {
         // onComplete - BasicTypingEngineからの実際のスコアデータを受け取る
@@ -70,16 +88,22 @@ export function useSimpleTyping({
         engineRef.current = null;
       }
     };
-  }, [word.hiragana, typingChars, onWordComplete]);
-  // 単語が変わったときに進行状況をリセット
+  }, [word.hiragana, typingChars, onWordComplete]);  // 単語が変わったときに進行状況をリセット
   useEffect(() => {
     setCurrentCharIndex(0);
     setKanaDisplay(null);
+    setDetailedProgress(null);
   }, [word.hiragana]);
 
+  // 詳細な進捗情報を取得する関数
+  const getDetailedProgress = () => {
+    return engineRef.current?.getDetailedProgress() || null;
+  };
   return {
     containerRef,
     currentCharIndex,
     kanaDisplay,
+    detailedProgress,
+    getDetailedProgress,
   };
 }

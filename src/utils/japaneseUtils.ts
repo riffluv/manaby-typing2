@@ -272,30 +272,32 @@ export const convertHiraganaToRomaji = (hiragana: string) => {
     position++;
   }
   
-  // 促音（っ）の特殊処理
+  // 促音（っ）の特殊処理 - typingmaniaの実装に基づく
   for (let i = 0; i < result.length - 1; i++) {
     if (result[i].kana === 'っ') {
-      const nextRomaji = result[i + 1].romaji;
-      const nextKana = result[i + 1].kana;
+      const nextItem = result[i + 1];
       
       // 次の文字が存在しない場合やカンマ、ピリオドの場合は通常の処理
-      if (!nextRomaji || nextRomaji.match(/[,.]/) || 
-          nextRomaji[0].match(/^[aiueon]/)) {
-        // デフォルトのままでOK
+      if (!nextItem || nextItem.romaji.match(/^[,.]/) || 
+          nextItem.romaji[0].match(/^[aiueon]/)) {
+        // デフォルトのままでOK（xtu, xtsu, ltuなど）
       } else {
-        // 次の文字の最初の子音を重ねる
-        const firstChar = nextRomaji[0];
-        if ('bcdfghjklmnpqrstvwxyz'.includes(firstChar)) {
-          const doubledCons = Array.from(result[i + 1].alternatives).map(alt => 
-            alt.length > 0 ? firstChar + alt : alt
-          );
-          
-          result[i].romaji = firstChar;
-          result[i].alternatives = [...new Set([firstChar, ...result[i].alternatives])];
-          
-          // 次の文字の代替入力も更新
-          result[i + 1].alternatives = doubledCons;
+        // 次の文字の各代替入力の最初の文字を抽出して促音として設定
+        const sokuonAlternatives: string[] = [];
+        
+        // 次の文字の全ての代替入力から最初の文字を抽出
+        for (const alt of nextItem.alternatives) {
+          if (alt.length > 0 && 'bcdfghjklmnpqrstvwxyz'.includes(alt[0])) {
+            sokuonAlternatives.push(alt[0]);
+          }
         }
+        
+        // 重複を削除
+        const uniqueSokuon = [...new Set(sokuonAlternatives)];
+        
+        // 促音文字の代替入力を更新（子音のみ）
+        result[i].alternatives = uniqueSokuon;
+        result[i].romaji = uniqueSokuon[0] || 'xtu'; // フォールバック
       }
     }
   }
