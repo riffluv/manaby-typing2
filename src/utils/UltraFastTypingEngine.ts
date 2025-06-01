@@ -254,7 +254,6 @@ export class UltraFastTypingEngine {
       }
     };
   }
-
   /**
    * ⚡ 単一かな文字の即座更新（バッチ処理）
    */  private syncUpdateCharState(kanaIndex: number, currentChar: TypingChar): void {
@@ -262,12 +261,20 @@ export class UltraFastTypingEngine {
     const acceptedLength = displayInfo.acceptedText.length;
     const elements = this.state.elementsByKana.get(kanaIndex);
     
-    if (!elements) return;    // ⚡ typingmania-ref流：色直接変更（最高速）
+    if (!elements) return;
+
+    // ⚡ 文字が完了している場合は全て完了色に
+    const isCompleted = currentChar.isCompleted();
+    
+    // ⚡ typingmania-ref流：色直接変更（最高速）
     for (let i = 0; i < elements.length; i++) {
       const element = elements[i];
       let newColor: string;
       
-      if (i < acceptedLength) {
+      if (isCompleted) {
+        // 文字完了時は全て完了色
+        newColor = UltraFastTypingEngine.COLORS.COMPLETED;
+      } else if (i < acceptedLength) {
         newColor = UltraFastTypingEngine.COLORS.COMPLETED;
       } else if (i === acceptedLength) {
         newColor = UltraFastTypingEngine.COLORS.CURRENT;
@@ -286,11 +293,15 @@ export class UltraFastTypingEngine {
   private prepareNextElements(): void {
     const prevKanaIndex = this.state.currentKanaIndex - 1;
     const nextKanaIndex = this.state.currentKanaIndex;
-      // ⚡ 前の文字を完了色に変更（typingmania-ref流）
+    
+    // ⚡ 前の文字を完了色に変更（typingmania-ref流）
     if (prevKanaIndex >= 0 && this.state.elementsByKana.has(prevKanaIndex)) {
       const prevElements = this.state.elementsByKana.get(prevKanaIndex)!;
-      for (const element of prevElements) {
-        if (element.style.color === UltraFastTypingEngine.COLORS.CURRENT) {
+      const prevChar = this.state.typingChars[prevKanaIndex];
+      
+      // 前の文字が完了している場合は全て完了色に
+      if (prevChar && prevChar.isCompleted()) {
+        for (const element of prevElements) {
           element.style.color = UltraFastTypingEngine.COLORS.COMPLETED;
         }
       }
