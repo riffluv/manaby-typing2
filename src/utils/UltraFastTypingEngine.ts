@@ -41,16 +41,22 @@ export class UltraFastTypingEngine {
     acceptedText: '',
     remainingText: '',
     displayText: ''
-  };  // ⚡ 事前定義CSS（文字列作成ゼロ）
-  private static readonly CLASSES = {
-    PENDING: 'typing-char pending',
-    CURRENT: 'typing-char current',
-    COMPLETED: 'typing-char completed',
-    NEXT: 'typing-char next-char'
+  };
+  // ⚡ typingmania-ref流：直接色変更（最高速）
+  private static readonly COLORS = {
+    PENDING: '#6b7280',        // グレー
+    CURRENT: '#ff8c00',        // オレンジ（カーソル）
+    COMPLETED: '#10b981',      // 緑
+    ERROR: '#ef4444'           // 赤
   };
 
   // ⚡ 事前バインドメソッド（function作成回避）
   private boundKeyHandler: (e: KeyboardEvent) => void;
+  
+  // ⚡ typingmania-ref流：メモリリーク防止
+  private cleanupCallbacks: Array<() => void> = [];
+  private animationFrameId: number | null = null;
+  private updateScheduled = false;
 
   constructor() {
     this.state = {
@@ -132,14 +138,18 @@ export class UltraFastTypingEngine {
       // displayTextを文字単位で分割して処理
       const chars = [...displayText];
       for (let charIndex = 0; charIndex < chars.length; charIndex++) {
-        const charToDisplay = chars[charIndex];
-        const element = document.createElement('span');
-        
-        // ⚡ 正しいCSS クラス設定
-        element.className = 'typing-char pending';
+        const charToDisplay = chars[charIndex];        const element = document.createElement('span');
+          // ⚡ typingmania-ref流：直接色設定
+        element.className = 'typing-char';
+        element.style.color = UltraFastTypingEngine.COLORS.PENDING;
         element.textContent = charToDisplay;
         element.setAttribute('data-kana-index', kanaIndex.toString());
         element.setAttribute('data-char-index', charIndex.toString());
+        
+        // ⚡ メモリリーク防止：クリーンアップ登録
+        this.cleanupCallbacks.push(() => {
+          element.remove();
+        });
         
         fragment.appendChild(element);
         this.state.charElements.push(element);
@@ -154,10 +164,9 @@ export class UltraFastTypingEngine {
 
     // ⚡ 初期現在要素設定
     if (this.state.elementsByKana.has(0)) {
-      this.state.currentElements = this.state.elementsByKana.get(0)!;
-      // 初期の最初の文字をcurrentに設定
+      this.state.currentElements = this.state.elementsByKana.get(0)!;      // 初期の最初の文字をcurrentに設定
       if (this.state.currentElements.length > 0) {
-        this.state.currentElements[0].className = 'typing-char current';
+        this.state.currentElements[0].style.color = UltraFastTypingEngine.COLORS.CURRENT;
       }
     }
   }
@@ -253,24 +262,22 @@ export class UltraFastTypingEngine {
     const acceptedLength = displayInfo.acceptedText.length;
     const elements = this.state.elementsByKana.get(kanaIndex);
     
-    if (!elements) return;
-
-    // ⚡ 高速DOM更新（変更時のみ）
+    if (!elements) return;    // ⚡ typingmania-ref流：色直接変更（最高速）
     for (let i = 0; i < elements.length; i++) {
       const element = elements[i];
-      let newClass: string;
+      let newColor: string;
       
       if (i < acceptedLength) {
-        newClass = UltraFastTypingEngine.CLASSES.COMPLETED;
+        newColor = UltraFastTypingEngine.COLORS.COMPLETED;
       } else if (i === acceptedLength) {
-        newClass = UltraFastTypingEngine.CLASSES.CURRENT;
+        newColor = UltraFastTypingEngine.COLORS.CURRENT;
       } else {
-        newClass = UltraFastTypingEngine.CLASSES.PENDING;
+        newColor = UltraFastTypingEngine.COLORS.PENDING;
       }
       
-      // ⚡ 変更時のみ更新（高速化）
-      if (element.className !== newClass) {
-        element.className = newClass;
+      // ⚡ 色のみ変更（最高速）
+      if (element.style.color !== newColor) {
+        element.style.color = newColor;
       }
     }
   }  /**
@@ -279,13 +286,12 @@ export class UltraFastTypingEngine {
   private prepareNextElements(): void {
     const prevKanaIndex = this.state.currentKanaIndex - 1;
     const nextKanaIndex = this.state.currentKanaIndex;
-    
-    // ⚡ 前の文字の現在状態をクリア（完了済みのはずなので）
+      // ⚡ 前の文字を完了色に変更（typingmania-ref流）
     if (prevKanaIndex >= 0 && this.state.elementsByKana.has(prevKanaIndex)) {
       const prevElements = this.state.elementsByKana.get(prevKanaIndex)!;
       for (const element of prevElements) {
-        if (element.className === 'typing-char current') {
-          element.className = 'typing-char completed';
+        if (element.style.color === UltraFastTypingEngine.COLORS.CURRENT) {
+          element.style.color = UltraFastTypingEngine.COLORS.COMPLETED;
         }
       }
     }
@@ -295,7 +301,7 @@ export class UltraFastTypingEngine {
       this.state.currentElements = this.state.elementsByKana.get(nextKanaIndex)!;
       // 次の最初の文字をcurrentに設定
       if (this.state.currentElements.length > 0) {
-        this.state.currentElements[0].className = 'typing-char current';
+        this.state.currentElements[0].style.color = UltraFastTypingEngine.COLORS.CURRENT;
       }
     }
   }
@@ -348,23 +354,29 @@ export class UltraFastTypingEngine {
     if (this.onWordComplete) {
       this.onWordComplete(scoreLog);
     }
-  }
-  /**
+  }  /**
    * ⚡ 完全クリーンアップ
    */
   destroy(): void {
-    this.isActive = false;
-    
-    if (this.keyHandler) {
-      document.removeEventListener('keydown', this.keyHandler);
-      this.keyHandler = null;
-    }
+    this.deactivate();
     
     this.state.charElements.length = 0;
     this.state.typingChars.length = 0;
     this.state.elementsByKana.clear();
     this.state.currentElements.length = 0;
     this.state.containerElement = null;
+  }
+
+  /**
+   * ⚡ typingmania-ref流：エンジン非アクティブ化
+   */
+  deactivate(): void {
+    this.isActive = false;
+    
+    if (this.keyHandler) {
+      document.removeEventListener('keydown', this.keyHandler);
+      this.keyHandler = null;
+    }
   }
   /**
    * ⚡ 単語状態リセット（新しい単語開始時）
@@ -405,12 +417,51 @@ export class UltraFastTypingEngine {
   isEngineActive(): boolean {
     return this.isActive;
   }
-
   /**
    * 強制音声切り替え
    */
   setAudioEnabled(enabled: boolean): void {
     this.audioEnabled = enabled;
+  }
+
+  /**
+   * ⚡ typingmania-ref流：完全メモリクリーンアップ
+   */
+  dispose(): void {
+    this.deactivate();
+    
+    // アニメーションフレームをキャンセル
+    if (this.animationFrameId !== null) {
+      cancelAnimationFrame(this.animationFrameId);
+      this.animationFrameId = null;
+    }
+    
+    // 全てのコールバックを実行してクリーンアップ
+    this.cleanupCallbacks.forEach(cleanup => cleanup());
+    this.cleanupCallbacks = [];
+    
+    // DOM要素参照をクリア
+    this.state.charElements = [];
+    this.state.elementsByKana.clear();
+    this.state.currentElements = [];
+    this.state.containerElement = null;
+    
+    // メモリプールをリセット
+    UltraFastTypingEngine.DISPLAY_POOL.acceptedText = '';
+    UltraFastTypingEngine.DISPLAY_POOL.remainingText = '';
+    UltraFastTypingEngine.DISPLAY_POOL.displayText = '';
+  }
+  /**
+   * ⚡ typingmania-ref流：バッチ更新スケジューラー
+   */
+  private scheduleUpdate(): void {
+    if (this.updateScheduled) return;
+    
+    this.updateScheduled = true;
+    this.animationFrameId = requestAnimationFrame(() => {
+      this.updateScheduled = false;
+      this.syncUpdateDisplay();
+    });
   }
 }
 

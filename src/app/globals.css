@@ -1340,12 +1340,12 @@ input:focus, textarea:focus {
   -moz-osx-font-smoothing: grayscale;
 }
 
-/* 🚀 typingmania-ref流：最小限スタイル文字 */
+/* 🚀 typingmania-ref流：最小限スタイル（色のみで状態管理） */
 .typing-char {
   /* GPU合成促進 */
   transform: translateZ(0);
   will-change: auto;
-  /* 高速クラス変更対応 */
+  /* 高速色変更対応 */
   transition: none;
   /* レイアウト最適化 */
   display: inline-block;
@@ -1353,54 +1353,7 @@ input:focus, textarea:focus {
   font-weight: 600;
   /* サブピクセル最適化 */
   backface-visibility: hidden;
-}
-
-/* 🎯 現在文字にシンプルなカーソル効果（GPU最適化） */
-.typing-char.current::after {
-  content: '';
-  position: absolute;
-  right: -1px;
-  top: 0;
-  bottom: 0;
-  width: 1px;
-  background: #000000;
-  opacity: 0.7;
-  /* GPU合成促進 */
-  transform: translateZ(0);
-  will-change: opacity;
-}
-
-/* 🎯 完了文字 - GPU最適化版 */
-.typing-char.completed {
-  color: var(--color-success);
-  background: rgba(129, 199, 132, 0.15);
-  transform: translateZ(0);
-  opacity: 0.9;
-  /* レイヤー固定 */
-  will-change: auto;
-}
-
-/* 🎯 未入力文字 - GPU最適化版 */
-.typing-char.pending {
-  color: var(--color-text-muted);
-  background: transparent;
-  opacity: 0.7;
-  transform: translateZ(0);
-  will-change: auto;
-}
-
-.typing-char.char-completed {
-  color: var(--color-success);
-  background: rgba(129, 199, 132, 0.15);
-  transform: translateZ(0);
-  opacity: 0.9;
-}
-
-.typing-char.char-error {
-  color: var(--color-error);
-  background: rgba(242, 139, 130, 0.3);
-  box-shadow: var(--glow-error);
-  /* animation: shake 0.3s ease-in-out; ← パフォーマンス最適化のため除去 */
+  /* デフォルト色は JavaScript で設定 */
 }
 
 /* 不要なアニメーション定義を除去（パフォーマンス最適化）

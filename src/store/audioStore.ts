@@ -25,10 +25,6 @@ interface AudioState {
   // システム管理
   initializeAudio: () => Promise<void>;
   resumeAudioContext: () => Promise<void>;
-  
-  // 高速タイピング機能
-  setHighSpeedMode: (enabled: boolean) => void;
-  getHighSpeedStats: () => any;
 }
 
 // オーディオ状態の初期値
@@ -51,13 +47,13 @@ const useAudioStoreBase = create<AudioState>((set, get) => ({
 
   playSuccessSound: (volume = 1.0) => {
     if (get().effectsEnabled) {
-      UnifiedAudioSystem.playSuccessSound(volume);
+      UnifiedAudioSystem.playSuccessSound();
     }
   },
 
   playErrorSound: (volume = 1.0) => {
     if (get().effectsEnabled) {
-      UnifiedAudioSystem.playErrorSound(volume);
+      UnifiedAudioSystem.playErrorSound();
     }
   },
 
@@ -78,15 +74,6 @@ const useAudioStoreBase = create<AudioState>((set, get) => ({
   resumeAudioContext: async () => {
     await UnifiedAudioSystem.resumeAudioContext();
   },
-
-  // 高速タイピング機能
-  setHighSpeedMode: (enabled) => {
-    UnifiedAudioSystem.setHighSpeedMode(enabled);
-  },
-
-  getHighSpeedStats: () => {
-    return UnifiedAudioSystem.getHighSpeedStats();
-  }
 }));
 
 // セレクターを使用して最適化されたストアをエクスポート

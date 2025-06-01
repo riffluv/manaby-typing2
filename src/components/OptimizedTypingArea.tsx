@@ -1,12 +1,14 @@
 import React, { useRef, useEffect, useCallback } from 'react';
 import type { OptimizedTypingChar, TypingChar } from '@/utils/OptimizedTypingChar';
-import type { KanaDisplay } from '@/types';
+import type { KanaDisplay, PerWordScoreLog } from '@/types';
 import { calculateProgress } from '@/utils/optimizedJapaneseUtils';
 
 export type OptimizedTypingAreaProps = {
-  currentKanaIndex: number;
-  typingChars: TypingChar[];
-  kanaDisplay: KanaDisplay;
+  typingChars: OptimizedTypingChar[];
+  onProgress?: (kanaIndex: number, display: KanaDisplay) => void;
+  onWordComplete?: (scoreLog: PerWordScoreLog) => void;
+  audioEnabled: boolean;
+  style?: React.CSSProperties;
 };
 
 // 1文字ごとの情報型
@@ -25,14 +27,14 @@ type FlatChar = {
  * - キー入力から表示更新まで1ms以下を目指す
  */
 const OptimizedTypingArea: React.FC<OptimizedTypingAreaProps> = ({
-  currentKanaIndex,
   typingChars,
-  kanaDisplay,
-}) => {
-  const containerRef = useRef<HTMLDivElement>(null);
+  onProgress,
+  onWordComplete,
+  audioEnabled,
+  style,
+}) => {  const containerRef = useRef<HTMLDivElement>(null);
   const flatCharsRef = useRef<FlatChar[]>([]);
-  const lastKanaIndexRef = useRef(-1);
-  const lastAcceptedLengthRef = useRef(-1);
+  const lastUpdateRef = useRef({ kanaIndex: -1, acceptedLength: -1 });
 
   // typingmania-ref流: 初回DOM構築（Reactで1回のみ）
   const buildInitialDOM = useCallback(() => {
@@ -50,8 +52,9 @@ const OptimizedTypingArea: React.FC<OptimizedTypingAreaProps> = ({
       
       [...displayText].forEach((char, charIndex) => {
         const element = document.createElement('span');
-        element.className = 'typing-char pending';
+        element.className = 'typing-char';
         element.textContent = char;
+        element.style.color = '#6b7280'; // PENDING
         element.setAttribute('data-kana-index', kanaIndex.toString());
         element.setAttribute('data-char-index', charIndex.toString());
         element.setAttribute('aria-label', `${char} (未入力)`);
@@ -68,53 +71,82 @@ const OptimizedTypingArea: React.FC<OptimizedTypingAreaProps> = ({
     });
 
     // 初回状態設定
-    updateCharStates(0, 0);
+    updateDisplay();
   }, [typingChars]);
 
   // typingmania-ref流: 超高速状態更新（DOM直接操作）
-  const updateCharStates = useCallback((newKanaIndex: number, newAcceptedLength: number) => {
+  const updateDisplay = useCallback(() => {
+    // 現在の状態を計算
+    let currentKanaIndex = 0;
+    let currentAcceptedLength = 0;
+    
+    // 最新の状態を各typingCharから取得
+    for (let i = 0; i < typingChars.length; i++) {
+      const displayInfo = typingChars[i].getDisplayInfo();
+      if (displayInfo.acceptedText.length > 0) {
+        currentKanaIndex = i;
+        currentAcceptedLength = displayInfo.acceptedText.length;
+      } else if (displayInfo.acceptedText.length === 0 && i === currentKanaIndex) {
+        break;
+      }
+    }
+
+    // 変更チェック（最適化）
+    const lastUpdate = lastUpdateRef.current;
+    if (currentKanaIndex === lastUpdate.kanaIndex && 
+        currentAcceptedLength === lastUpdate.acceptedLength) {
+      return; // 変更なし
+    }
+
     const flatChars = flatCharsRef.current;
     
-    // 前回から変更された範囲のみ更新（最適化）
+    // 色の定数
+    const COLORS = {
+      PENDING: '#6b7280',
+      CURRENT: '#000000', 
+      COMPLETED: '#10b981',
+      ERROR: '#ef4444'
+    };
+    
+    // 全文字の状態を更新
     for (let i = 0; i < flatChars.length; i++) {
       const { kanaIndex, charIndex, element } = flatChars[i];
       
-      let newState: string;
+      let color: string;
       let ariaLabel: string;
       
-      if (kanaIndex < newKanaIndex) {
-        newState = 'completed';
+      if (kanaIndex < currentKanaIndex) {
+        color = COLORS.COMPLETED;
         ariaLabel = '入力済み';
-      } else if (kanaIndex === newKanaIndex) {
-        if (charIndex < newAcceptedLength) {
-          newState = 'completed';
+      } else if (kanaIndex === currentKanaIndex) {
+        if (charIndex < currentAcceptedLength) {
+          color = COLORS.COMPLETED;
           ariaLabel = '入力済み';
-        } else if (charIndex === newAcceptedLength) {
-          newState = 'current';
+        } else if (charIndex === currentAcceptedLength) {
+          color = COLORS.CURRENT;
           ariaLabel = '入力中';
         } else {
-          newState = 'pending';
+          color = COLORS.PENDING;
           ariaLabel = '未入力';
         }
       } else {
-        newState = 'pending';
+        color = COLORS.PENDING;
         ariaLabel = '未入力';
       }
 
-      // クラス名変更（必要な場合のみ）
-      const expectedClass = `typing-char ${newState}`;
-      if (element.className !== expectedClass) {
-        element.className = expectedClass;
+      // 直接色変更（最高速）
+      if (element.style.color !== color) {
+        element.style.color = color;
       }
 
-      // aria-label更新（必要な場合のみ）
+      // aria-label更新
       const expectedAriaLabel = `${flatChars[i].char} (${ariaLabel})`;
       if (element.getAttribute('aria-label') !== expectedAriaLabel) {
         element.setAttribute('aria-label', expectedAriaLabel);
       }
 
-      // aria-current更新（必要な場合のみ）
-      const shouldHaveCurrent = newState === 'current';
+      // aria-current更新
+      const shouldHaveCurrent = color === COLORS.CURRENT;
       const hasCurrent = element.hasAttribute('aria-current');
       if (shouldHaveCurrent && !hasCurrent) {
         element.setAttribute('aria-current', 'true');
@@ -123,33 +155,26 @@ const OptimizedTypingArea: React.FC<OptimizedTypingAreaProps> = ({
       }
     }
 
-    // 進捗更新
-    const container = containerRef.current;
-    if (container) {
-      const progress = calculateProgress(typingChars, newKanaIndex);
-      container.setAttribute('data-progress', progress.toString());
+    // 進捗コールバック
+    if (onProgress && typingChars[currentKanaIndex]) {
+      const kanaDisplay = typingChars[currentKanaIndex].getDisplayInfo();
+      onProgress(currentKanaIndex, kanaDisplay);
     }
-  }, [typingChars]);
+
+    // 更新記録
+    lastUpdateRef.current = { kanaIndex: currentKanaIndex, acceptedLength: currentAcceptedLength };
+  }, [typingChars, onProgress]);
 
   // 初回DOM構築
   useEffect(() => {
     buildInitialDOM();
   }, [buildInitialDOM]);
 
-  // プロップス変更時の高速更新
+  // プロップス変更時の更新監視
   useEffect(() => {
-    const currentAcceptedLength = kanaDisplay.acceptedText.length;
-    
-    // 変更がある場合のみ更新
-    if (currentKanaIndex !== lastKanaIndexRef.current || 
-        currentAcceptedLength !== lastAcceptedLengthRef.current) {
-      
-      updateCharStates(currentKanaIndex, currentAcceptedLength);
-      
-      lastKanaIndexRef.current = currentKanaIndex;
-      lastAcceptedLengthRef.current = currentAcceptedLength;
-    }
-  }, [currentKanaIndex, kanaDisplay.acceptedText.length, updateCharStates]);
+    const interval = setInterval(updateDisplay, 16); // 60fps
+    return () => clearInterval(interval);
+  }, [updateDisplay]);
 
   // Reactレンダリング（初回のみ、以降は直接DOM更新）
   return (
@@ -162,7 +187,8 @@ const OptimizedTypingArea: React.FC<OptimizedTypingAreaProps> = ({
       aria-atomic="false"
       style={{
         willChange: 'auto',
-        contain: 'content'
+        contain: 'content',
+        ...style
       }}
     />
   );

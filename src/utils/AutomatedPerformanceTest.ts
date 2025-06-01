@@ -4,9 +4,6 @@
  * 現在の実装の正確なパフォーマンス測定を行う
  */
 
-import PerformanceTestHelper from './PerformanceTestHelper';
-import performanceMeasurer from './PerformanceMeasurer';
-
 export class AutomatedPerformanceTest {
   private testSequence: string[] = [
     'a', 'i', 'u', 'e', 'o', // 母音テスト

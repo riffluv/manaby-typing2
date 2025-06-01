@@ -229,36 +229,23 @@ const AudioSystemSettings: React.FC<AudioSystemSettingsProps> = ({ className }) 
         .improvement {
           color: #4CAF50;
           font-weight: bold;
-        }
-        .current-engine {
+        }        .current-engine {
           color: #f44336;
         }
-        .optimized-engine {
-          color: #4CAF50;
-        }
-      `}</style>
-
-      <h3 className="settings-title">
+      `}</style>      <h3 className="settings-title">
         🎵 音声システム設定
-        {stats.engine === 'optimized' && <span>⚡</span>}
+        {stats.engine === 'current' && <span>⚡</span>}
         {stats.engine === 'silent' && <span>🔇</span>}
       </h3>
 
       {/* エンジン選択 */}
       <div className="settings-section">
-        <div className="section-title">音声エンジン</div>
-        <div className="engine-selector">
+        <div className="section-title">音声エンジン</div>        <div className="engine-selector">
           <button
             className={`engine-button ${config.engine === 'current' ? 'active' : ''}`}
             onClick={() => handleEngineChange('current')}
           >
             🐌 現在の実装
-          </button>
-          <button
-            className={`engine-button ${config.engine === 'optimized' ? 'active' : ''}`}
-            onClick={() => handleEngineChange('optimized')}
-          >
-            🚀 最適化版
           </button>
           <button
             className={`engine-button ${config.engine === 'silent' ? 'active' : ''}`}
@@ -311,12 +298,7 @@ const AudioSystemSettings: React.FC<AudioSystemSettingsProps> = ({ className }) 
           <div className="stat-item">
             <div className="stat-label">初期化状態</div>
             <div className="stat-value">{stats.initialized ? '✅' : '❌'}</div>
-          </div>
-          <div className="stat-item">
-            <div className="stat-label">最適化版準備</div>
-            <div className="stat-value">{stats.optimizedReady ? '✅' : '❌'}</div>
-          </div>
-        </div>
+          </div>        </div>
       </div>
 
       {/* ベンチマーク */}
@@ -332,32 +314,17 @@ const AudioSystemSettings: React.FC<AudioSystemSettingsProps> = ({ className }) 
 
         {benchmarkResults && (
           <div className="benchmark-results">
-            <h4>📊 ベンチマーク結果</h4>
-            <div className="benchmark-item">
+            <h4>📊 ベンチマーク結果</h4>            <div className="benchmark-item">
               <span>現在の実装:</span>
               <span className="current-engine">
                 {benchmarkResults.results.current.averageLatency.toFixed(2)}ms
               </span>
-            </div>
-            <div className="benchmark-item">
-              <span>最適化版:</span>
-              <span className="optimized-engine">
-                {benchmarkResults.results.optimized.averageLatency.toFixed(2)}ms
-              </span>
-            </div>
-            <div className="benchmark-item">
-              <span>改善度:</span>
-              <span className="improvement">
-                {benchmarkResults.improvement.toFixed(2)}ms 
-                ({benchmarkResults.improvementPercent.toFixed(1)}%)
-              </span>
-            </div>
-            <div className="benchmark-item">
-              <span>推奨:</span>
+            </div>            <div className="benchmark-item">
+              <span>パフォーマンス:</span>
               <span>
-                {benchmarkResults.improvementPercent > 20 ? 
-                  '🚀 最適化版の使用を推奨' : 
-                  '📊 現在の実装で十分'}
+                {benchmarkResults.results.current.averageLatency < 5 ? 
+                  '🚀 高速' : 
+                  '📊 標準'}
               </span>
             </div>
           </div>
