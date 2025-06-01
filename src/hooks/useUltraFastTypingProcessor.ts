@@ -82,8 +82,7 @@ export function useUltraFastTypingProcessor({
       const container = document.querySelector('.typing-area') as HTMLElement;
       if (container) {
         containerRef.current = container;
-        
-        // UltraFastEngine初期化
+          // UltraFastEngine初期化
         ultraFastTypingEngine.initialize(
           container,
           typingChars,
@@ -91,8 +90,6 @@ export function useUltraFastTypingProcessor({
           handleWordComplete,
           audioEnabled
         );
-        
-        console.log('⚡ UltraFastTypingEngine初期化完了');
       }
     }
     

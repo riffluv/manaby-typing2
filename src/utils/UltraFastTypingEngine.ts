@@ -212,14 +212,10 @@ export class UltraFastTypingEngine {
           UnifiedAudioSystem.playClickSound();
         }
 
-        console.log(`⚡ キー受理: ${e.key}, インデックス: ${currentKanaIndex}, 完了状態: ${currentChar.isCompleted()}`);
-
         // ⚡ 現在の文字のDOM状態を更新
         this.syncUpdateCharState(currentKanaIndex, currentChar);
         
         if (currentChar.isCompleted()) {
-          console.log(`⚡ 文字完了: インデックス ${currentKanaIndex} -> ${this.state.currentKanaIndex + 1}`);
-          
           // ⚡ 次の文字にインデックスを移動
           this.state.currentKanaIndex++;
           
@@ -242,7 +238,6 @@ export class UltraFastTypingEngine {
         }
       } else {
         // ⚡ ミス処理（最小限）
-        console.log(`⚡ キーミス: ${e.key}, インデックス: ${currentKanaIndex}`);
         stats.mistakeCount++;
         if (this.audioEnabled) {
           UnifiedAudioSystem.playErrorSound();
@@ -280,23 +275,19 @@ export class UltraFastTypingEngine {
     }
   }  /**
    * ⚡ 次要素の事前準備
-   */  private prepareNextElements(): void {
+   */
+  private prepareNextElements(): void {
     const prevKanaIndex = this.state.currentKanaIndex - 1;
     const nextKanaIndex = this.state.currentKanaIndex;
-    
-    console.log(`⚡ 次要素準備: 前=${prevKanaIndex}, 次=${nextKanaIndex}`);
     
     // ⚡ 前の文字の現在状態をクリア（完了済みのはずなので）
     if (prevKanaIndex >= 0 && this.state.elementsByKana.has(prevKanaIndex)) {
       const prevElements = this.state.elementsByKana.get(prevKanaIndex)!;
-      let clearedCount = 0;
       for (const element of prevElements) {
         if (element.className === 'typing-char current') {
           element.className = 'typing-char completed';
-          clearedCount++;
         }
       }
-      console.log(`⚡ 前要素クリア: ${clearedCount}個`);
     }
     
     // ⚡ 次の文字をcurrentに設定
@@ -305,10 +296,7 @@ export class UltraFastTypingEngine {
       // 次の最初の文字をcurrentに設定
       if (this.state.currentElements.length > 0) {
         this.state.currentElements[0].className = 'typing-char current';
-        console.log(`⚡ 次要素設定: インデックス${nextKanaIndex}の最初の文字をcurrentに`);
       }
-    } else {
-      console.log(`⚡ 警告: インデックス${nextKanaIndex}の要素が見つかりません`);
     }
   }
 
@@ -378,7 +366,6 @@ export class UltraFastTypingEngine {
     this.state.currentElements.length = 0;
     this.state.containerElement = null;
   }
-
   /**
    * ⚡ 単語状態リセット（新しい単語開始時）
    */
@@ -400,8 +387,6 @@ export class UltraFastTypingEngine {
     this.state.display.acceptedText = '';
     this.state.display.remainingText = '';
     this.state.display.displayText = '';
-    
-    console.log('⚡ UltraFastEngine: 単語状態リセット完了');
   }
 
   /**
