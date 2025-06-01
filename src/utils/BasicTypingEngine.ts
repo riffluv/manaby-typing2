@@ -1,7 +1,7 @@
 /**
  * BasicTypingEngine - typingmania-ref流のシンプル設計
  * 
- * OptimizedTypingCharから完全に独立し、BasicTypingCharを使用
+ * BasicTypingCharを使用してシンプルで効率的なタイピング処理を実現
  * 元のtypingmania-refの33行レベルのシンプルさに回帰
  * 
  * ユーザーの複雑なタイピングロジックは japaneseUtils.ts で完全保持

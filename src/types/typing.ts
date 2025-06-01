@@ -1,11 +1,11 @@
 // Typingゲームで使う型定義を集約
-import { TypingChar } from '@/utils/OptimizedTypingChar';
+import { BasicTypingChar } from '@/utils/BasicTypingChar';
 
 export type TypingWord = {
   japanese: string;
   hiragana: string;
   romaji: string;
-  typingChars: TypingChar[];
+  typingChars: BasicTypingChar[];
   displayChars: string[];
 };
 

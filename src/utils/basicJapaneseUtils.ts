@@ -1,7 +1,7 @@
 /**
  * basicJapaneseUtils - typingmania-ref流のシンプル日本語ユーティリティ
  * 
- * OptimizedTypingCharに依存せず、BasicTypingCharを使用
+ * BasicTypingCharを使用してシンプルで効率的な日本語入力を実現
  * ユーザーの複雑なタイピングロジック（複数パターン、「ん」処理）は japaneseUtils.ts で完全保持
  */
 

@@ -1,8 +1,8 @@
 import { create } from 'zustand';
 import { createSelectors } from '@/store/createSelectors';
 import { wordList } from '@/data/wordList';
-import { createOptimizedTypingChars } from '@/utils/optimizedJapaneseUtils';
-import { OptimizedTypingChar, TypingChar } from '@/utils/OptimizedTypingChar';
+import { createBasicTypingChars } from '@/utils/basicJapaneseUtils';
+import { BasicTypingChar } from '@/utils/BasicTypingChar';
 import { shallow } from 'zustand/shallow';
 
 /**
@@ -28,7 +28,7 @@ interface TypingGameState {
     japanese: string;
     hiragana: string;
     romaji: string;
-    typingChars: TypingChar[];
+    typingChars: BasicTypingChar[];
     displayChars: string[];
     explanation?: string | null;  // マナビー解説（将来的に使用）
   };
@@ -54,7 +54,7 @@ const initialCurrentWord = {
   japanese: '',
   hiragana: '',
   romaji: '',
-  typingChars: [] as OptimizedTypingChar[],
+  typingChars: [] as BasicTypingChar[],
   displayChars: [] as string[],
   explanation: null
 };
@@ -211,7 +211,7 @@ const useTypingGameStoreBase = create<TypingGameState>((set, get) => ({
     const { currentWordIndex } = get();
     const word = currentGameQuestions[currentWordIndex];
     if (!word) return;
-    const typingChars = createOptimizedTypingChars(word.hiragana);
+    const typingChars = createBasicTypingChars(word.hiragana);
     const displayChars = typingChars.map(char => char.getDisplayInfo().displayText);
     set({
       currentWord: {
