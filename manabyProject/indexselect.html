@@ -1,0 +1,273 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8">
+  <title>manabytype II</title>
+  <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@700&display=swap" rel="stylesheet">
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    html, body {
+      width: 100%;
+      height: 100%;
+      background: radial-gradient(ellipse at center, #0a0f1b, #000000);
+      color: #ccc;
+      font-family: 'Cinzel', serif;
+      overflow: hidden;
+    }
+    .container {
+      height: 100%;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      text-align: center;
+      position: relative;
+      z-index: 1;
+    }
+    .title-main {
+      font-size: 3rem;
+      background: linear-gradient(to right, #c9a76f, #f8e6b0);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      letter-spacing: 0.3rem;
+      text-shadow: 0 0 6px rgba(255, 223, 128, 0.3);
+    }
+    .title-sub {
+      font-size: 5rem;
+      color: #b8cfe7;
+      letter-spacing: 0.6rem;
+      text-shadow: 0 0 12px rgba(100, 180, 255, 0.25);
+      margin: 12px 0 60px;
+    }
+
+    .menu {
+      display: flex;
+      flex-direction: column;
+      gap: 1.2rem;
+      align-items: center;
+    }
+    .menu-item {
+      position: relative;
+      font-size: 1.4rem;
+      color: #ccc;
+      cursor: pointer;
+      transition: color 0.3s ease;
+    }
+    .menu-item:hover {
+      color: #e0f7ff;
+      text-shadow: 0 0 10px rgba(100,180,255,0.5);
+    }
+    .menu-item::after {
+      content: '';
+      position: absolute;
+      bottom: -6px;
+      left: 50%;
+      width: 120px;
+      height: 3px;
+      background: linear-gradient(to right, rgba(120,200,255,0), #88ccff, rgba(120,200,255,0));
+      background-size: 300% auto;
+      opacity: 0;
+      transform: translateX(-50%);
+      border-radius: 3px;
+      filter: blur(3px);
+      transition: opacity 0.3s ease;
+      animation: shimmer 1.2s linear infinite;
+      pointer-events: none;
+    }
+    .menu-item:hover::after {
+      opacity: 1;
+    }
+
+    @keyframes shimmer {
+      0% { background-position: -150% 0; }
+      50% { background-position: 150% 0; }
+      100% { background-position: -150% 0; }
+    }
+
+    .selected-mode {
+      margin-top: 2rem;
+      font-size: 1rem;
+      color: #a99;
+      font-style: italic;
+    }
+    .shortcut-keys {
+      position: absolute;
+      bottom: 20px;
+      left: 50%;
+      transform: translateX(-50%);
+      display: flex;
+      gap: 2rem;
+      font-size: 0.8rem;
+      color: #999;
+      background: rgba(255,255,255,0.03);
+      border: 1px solid rgba(255,255,255,0.1);
+      border-radius: 6px;
+      padding: 0.3rem 1rem;
+      z-index: 1;
+    }
+    .version, .copyright {
+      position: absolute;
+      font-size: 0.7rem;
+      color: #777;
+      z-index: 1;
+    }
+    .version { bottom: 40px; right: 20px; }
+    .copyright { bottom: 40px; left: 20px; }
+
+    /* モードセレクトモーダル */
+    .mode-select-screen {
+      position: fixed;
+      top: 0; left: 0;
+      width: 100vw; height: 100vh;
+      background: rgba(5, 10, 20, 0.92);
+      backdrop-filter: blur(6px);
+      display: none;
+      justify-content: center;
+      align-items: center;
+      z-index: 10;
+    }
+    .mode-select-screen.active {
+      display: flex;
+    }
+    .mode-wrapper {
+      display: flex;
+      width: 800px;
+      height: 400px;
+      background: rgba(20,25,35,0.7);
+      border: 1px solid rgba(255,255,255,0.08);
+      box-shadow: 0 0 20px rgba(255,255,255,0.06);
+    }
+    .mode-sidebar {
+      width: 200px;
+      background: rgba(0,0,0,0.2);
+      border-right: 1px solid rgba(255,255,255,0.08);
+      display: flex;
+      flex-direction: column;
+      padding: 1rem;
+    }
+    .mode-option {
+      font-size: 1rem;
+      color: #ccc;
+      padding: 0.6rem 0.8rem;
+      border: 1px solid transparent;
+      cursor: pointer;
+      margin-bottom: 0.5rem;
+      transition: all 0.3s ease;
+    }
+    .mode-option:hover {
+      background: rgba(120,180,255,0.07);
+      box-shadow: 0 0 8px rgba(180,220,255,0.1);
+      color: #d0e8ff;
+    }
+    .mode-option.selected {
+      border: 1px solid rgba(180,220,255,0.3);
+      animation: pulse 1.6s infinite;
+      color: #e0f0ff;
+    }
+    @keyframes pulse {
+      0%, 100% { box-shadow: 0 0 6px rgba(100,180,255,0.2); }
+      50% { box-shadow: 0 0 12px rgba(100,180,255,0.5); }
+    }
+    .mode-content {
+      flex: 1;
+      padding: 1.5rem;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+    }
+    .mode-description {
+      font-size: 1rem;
+      color: #aaa;
+      line-height: 1.6;
+    }
+    .back-button {
+      align-self: flex-end;
+      margin-top: 2rem;
+      padding: 0.6rem 1.2rem;
+      font-size: 1rem;
+      color: #aaa;
+      border: 1px solid rgba(255,255,255,0.08);
+      background: rgba(255,255,255,0.01);
+      cursor: pointer;
+      transition: all 0.3s ease;
+    }
+    .back-button:hover {
+      color: #b0d0ff;
+      border-color: rgba(255,255,255,0.15);
+      background: rgba(255,255,255,0.02);
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <div class="title-main">manabytype</div>
+    <div class="title-sub">II</div>
+    <div class="menu">
+      <div class="menu-item" onclick="startGame()">START GAME</div>
+      <div class="menu-item" onclick="toggleModeScreen()">SELECT MODE</div>
+      <div class="menu-item">RANKING</div>
+      <div class="menu-item">SYSTEM</div>
+    </div>
+    <div class="selected-mode" id="selectedMode">Mode: Normal</div>
+  </div>
+
+  <div class="shortcut-keys">
+    <span>Space：ゲーム開始</span>
+    <span>Alt+R：ランキング</span>
+  </div>
+  <div class="copyright">&copy;2025 manaby Omiya Studio. All rights reserved.</div>
+  <div class="version">App Ver. 1.01</div>
+
+  <!-- モードセレクト -->
+  <div id="modeScreen" class="mode-select-screen">
+    <div class="mode-wrapper">
+      <div class="mode-sidebar">
+        <div class="mode-option selected" onclick="setMode('Normal', this)">Normal</div>
+        <div class="mode-option" onclick="setMode('尊敬語', this)">尊敬語</div>
+        <div class="mode-option" onclick="setMode('謙譲語', this)">謙譲語</div>
+        <div class="mode-option" onclick="setMode('ビジネスマナー', this)">ビジネスマナー</div>
+      </div>
+      <div class="mode-content">
+        <div class="mode-description" id="modeDescription">
+          一般的な入力練習モードです。基本的な言葉遣いを扱います。
+        </div>
+        <div class="back-button" onclick="toggleModeScreen()">戻る</div>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    let selectedMode = localStorage.getItem('manabytype_mode') || 'Normal';
+    const descriptions = {
+      'Normal': '一般的な入力練習モードです。基本的な言葉遣いを扱います。',
+      '尊敬語': '敬語の中でも「相手を高める」言葉遣いを学びます。',
+      '謙譲語': '自分を下げて丁寧さを表現する「謙譲語」を練習します。',
+      'ビジネスマナー': 'ビジネスシーンでの適切な言葉選びとマナーを学ぶモードです。'
+    };
+    function setMode(mode, element) {
+      selectedMode = mode;
+      localStorage.setItem('manabytype_mode', mode);
+      document.getElementById('selectedMode').textContent = `Mode: ${mode}`;
+      document.getElementById('modeDescription').textContent = descriptions[mode] || '';
+      document.querySelectorAll('.mode-option').forEach(opt => {
+        opt.classList.remove('selected');
+      });
+      element.classList.add('selected');
+    }
+    function toggleModeScreen() {
+      document.getElementById('modeScreen').classList.toggle('active');
+    }
+    function startGame() {
+      if (selectedMode) {
+        window.location.href = `game.html?mode=${encodeURIComponent(selectedMode)}`;
+      } else {
+        alert('モードを選択してください');
+      }
+    }
+    document.addEventListener('keydown', e => {
+      if (e.code === 'Space') startGame();
+      if (e.key === 'Escape') toggleModeScreen();
+    });
+  </script>
+</body>
+</html>

@@ -44,13 +44,23 @@ const GameScreen: React.FC<GameScreenProps> = ({ currentWord, currentKanaIndex, 
           {currentWord.japanese}
         </div>
         
-        {/* ひらがな - サブ表示（シンプル化） */}
+        {/* ひらがな - サブ表示（UltraFastTypingEngineが直接DOM操作） */}
         <div 
           className="word-hiragana"
           aria-label="ひらがな"
           key={`hira-${currentWord.hiragana}`}
+          style={{
+            fontSize: '1.3rem',
+            color: '#fff',
+            textAlign: 'center',
+            marginBottom: '0.5rem',
+            minHeight: '1.5em',
+            letterSpacing: '0.08em',
+            fontFamily: 'monospace',
+            userSelect: 'none',
+          }}
         >
-          {currentWord.hiragana}
+          {/* UltraFastTypingEngineがtextContentを直接更新 */}
         </div>
 
         {/* ショートカット案内（ローマ字の直下・中央上部） */}
@@ -73,6 +83,25 @@ const GameScreen: React.FC<GameScreenProps> = ({ currentWord, currentKanaIndex, 
           }}
         >
           {/* UltraFastTypingEngineがDOM直接操作でコンテンツを生成 */}
+        </div>
+
+        {/* ローマ字 - 進行表示（UltraFastTypingEngineが直接DOM操作） */}
+        <div 
+          className="romaji-display"
+          aria-label="ローマ字"
+          key={`romaji-${currentWord.romaji}`}
+          style={{
+            fontSize: '1.2rem',
+            color: '#00e0ff',
+            textAlign: 'center',
+            marginBottom: '0.5rem',
+            minHeight: '1.5em',
+            letterSpacing: '0.08em',
+            fontFamily: 'monospace',
+            userSelect: 'none',
+          }}
+        >
+          {/* UltraFastTypingEngineがtextContentを直接更新 */}
         </div>
 
         {/* 

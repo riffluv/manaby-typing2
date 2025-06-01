@@ -316,22 +316,90 @@ export class UltraFastTypingEngine {
   }
 
   /**
+   * ローマ字表示を直接DOMに即時反映（1文字単位で色分け・フォーカス対応）
+   */
+  private updateRomajiDisplay(): void {
+    const romajiEl = document.querySelector('.romaji-display') as HTMLDivElement | null;
+    if (!romajiEl) return;
+    const { typingChars, currentKanaIndex } = this.state;
+    const currentChar = typingChars[currentKanaIndex];
+    if (!currentChar) {
+      romajiEl.textContent = '';
+      return;
+    }
+    const info = currentChar.getDisplayInfo();
+    const romaji = info.displayText || '';
+    const accepted = info.acceptedText || '';
+    // 1文字単位で色分け
+    romajiEl.innerHTML = '';
+    let focusSet = false;
+    for (let i = 0; i < romaji.length; i++) {
+      const span = document.createElement('span');
+      span.textContent = romaji[i];
+      if (i < accepted.length) {
+        span.style.color = UltraFastTypingEngine.COLORS.COMPLETED;
+      } else if (i === accepted.length && !focusSet) {
+        span.style.color = UltraFastTypingEngine.COLORS.CURRENT;
+        focusSet = true;
+      } else {
+        span.style.color = UltraFastTypingEngine.COLORS.PENDING;
+      }
+      romajiEl.appendChild(span);
+    }
+  }
+  /**
+   * かな表示を全文＋色分けで直接DOMに即時反映（1文字単位でフォーカス対応）
+   */
+  private updateKanaDisplay(): void {
+    const kanaEl = document.querySelector('.word-hiragana') as HTMLDivElement | null;
+    if (!kanaEl) return;
+    const { typingChars, currentKanaIndex } = this.state;
+    // 全体のかな文字列を構築
+    const allKana = typingChars.map(char => char.kana || '').join('');
+    // 進行状況（何文字目まで完了か）
+    let completedCount = 0;
+    for (let i = 0; i < currentKanaIndex; i++) {
+      completedCount += (typingChars[i].kana || '').length;
+    }
+    // 現在の文字のacceptedText長も加算
+    const currentChar = typingChars[currentKanaIndex];
+    let currentAccepted = 0;
+    if (currentChar && currentChar.acceptedInput) {
+      currentAccepted = currentChar.acceptedInput.length;
+    }
+    const focusIndex = completedCount + currentAccepted;
+    kanaEl.innerHTML = '';
+    for (let i = 0; i < allKana.length; i++) {
+      const span = document.createElement('span');
+      span.textContent = allKana[i];
+      if (i < focusIndex) {
+        span.style.color = UltraFastTypingEngine.COLORS.COMPLETED;
+      } else if (i === focusIndex) {
+        span.style.color = UltraFastTypingEngine.COLORS.CURRENT;
+      } else {
+        span.style.color = UltraFastTypingEngine.COLORS.PENDING;
+      }
+      kanaEl.appendChild(span);
+    }
+  }
+
+  /**
    * ⚡ 完全同期表示更新
    */
   private syncUpdateDisplay(): void {
     const { typingChars, currentKanaIndex } = this.state;
-    
     if (currentKanaIndex >= typingChars.length) return;
-    
     const currentChar = typingChars[currentKanaIndex];
     if (!currentChar) return;
-
     const displayInfo = currentChar.getDisplayInfo();
-    
     // ⚡ メモリプール使用（文字列作成ゼロ）
     this.state.display.acceptedText = displayInfo.acceptedText;
     this.state.display.remainingText = displayInfo.remainingText;
     this.state.display.displayText = displayInfo.displayText;
+    // ローマ字表示を直接DOMに反映
+    this.updateRomajiDisplay();
+    // かな表示も直接DOMに反映
+    this.updateKanaDisplay();
   }
   /**
    * ⚡ 単語完了処理（即座）
