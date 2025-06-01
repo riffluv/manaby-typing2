@@ -17,7 +17,7 @@ export interface UseSimpleTypingProps {
 }
 
 export interface UseSimpleTypingReturn {
-  containerRef: React.RefObject<HTMLDivElement>;
+  containerRef: React.RefObject<HTMLDivElement | null>;
 }
 
 /**
