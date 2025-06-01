@@ -1,7 +1,8 @@
 import React, { useState, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
 import { useGameStatus, useTypingGameStore, useCurrentWord } from '@/store/typingGameStore';
-import { TypingWord } from '@/types';
+import { TypingWord, PerWordScoreLog, GameScoreLog } from '@/types';
+import { useScoreCalculation } from '@/hooks/useScoreCalculation';
 import SimpleGameScreen from './SimpleGameScreen';
 import SimpleGameResultScreen from './SimpleGameResultScreen';
 
@@ -22,8 +23,7 @@ const SimpleUnifiedTypingGame: React.FC<{
   const gameStatus = useGameStatus();
   const { setGameStatus, advanceToNextWord } = useTypingGameStore();
   const storeWord = useCurrentWord();
-  
-  const [currentWord, setCurrentWord] = useState<TypingWord>({
+    const [currentWord, setCurrentWord] = useState<TypingWord>({
     japanese: '',
     hiragana: '',
     romaji: '',
@@ -33,6 +33,18 @@ const SimpleUnifiedTypingGame: React.FC<{
   
   const [completedCount, setCompletedCount] = useState(0);
   const [questionLimit] = useState(8); // 固定値でシンプルに
+  // スコア管理の追加
+  const [scoreLog, setScoreLog] = useState<PerWordScoreLog[]>([]);
+  const [resultScore, setResultScore] = useState<GameScoreLog['total'] | null>(null);
+
+  // WebWorkerを使用したスコア計算
+  const { calculateFallbackScore } = useScoreCalculation(
+    gameStatus, 
+    scoreLog, 
+    (calculatedScore) => {
+      setResultScore(calculatedScore);
+    }
+  );
 
   // 直アクセス防止
   useEffect(() => {
@@ -53,16 +65,16 @@ const SimpleUnifiedTypingGame: React.FC<{
     if (gameStatus === 'ready') {
       setGameStatus('playing');
     }
-  }, [gameStatus, setGameStatus]);
-
-  // 現在のお題が変わったときに更新
+  }, [gameStatus, setGameStatus]);  // 現在のお題が変わったときに更新
   useEffect(() => {
     if (storeWord && storeWord.japanese !== currentWord.japanese) {
       setCurrentWord(storeWord);
     }
-  }, [storeWord, currentWord.japanese]);
-  // 単語完了時の処理
-  const handleWordComplete = () => {
+  }, [storeWord, currentWord.japanese]);// 単語完了時の処理（実際のスコアデータを使用）
+  const handleWordComplete = (scoreLog: PerWordScoreLog) => {
+    // BasicTypingEngineから受け取った実際のスコアデータを使用
+    setScoreLog(prev => [...prev, scoreLog]);
+
     const newCount = completedCount + 1;
     setCompletedCount(newCount);
     
@@ -90,12 +102,15 @@ const SimpleUnifiedTypingGame: React.FC<{
     window.addEventListener('keydown', handleKeyDown);
     return () => window.removeEventListener('keydown', handleKeyDown);
   }, [gameStatus, onGoMenu, router]);
-
   // ゲーム状態に応じたレンダリング
   if (gameStatus === 'finished') {
-    return (      <SimpleGameResultScreen
+    return (
+      <SimpleGameResultScreen
         onGoMenu={onGoMenu || (() => router.push('/'))}
         onGoRanking={onGoRanking || (() => router.push('/ranking'))}
+        resultScore={resultScore}
+        scoreLog={scoreLog}
+        onCalculateFallbackScore={() => setResultScore(calculateFallbackScore())}
       />
     );
   }

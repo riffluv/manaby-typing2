@@ -6,14 +6,14 @@
  */
 
 import { useRef, useEffect } from 'react';
-import { TypingWord } from '@/types';
+import { TypingWord, PerWordScoreLog } from '@/types';
 import { BasicTypingChar } from '@/utils/BasicTypingChar';
 import { BasicTypingEngine } from '@/utils/BasicTypingEngine';
 
 export interface UseSimpleTypingProps {
   word: TypingWord;
   typingChars: BasicTypingChar[];
-  onWordComplete?: () => void;
+  onWordComplete?: (scoreLog: PerWordScoreLog) => void;
 }
 
 export interface UseSimpleTypingReturn {
@@ -44,10 +44,10 @@ export function useSimpleTyping({
       containerRef.current,
       typingChars,
       undefined, // onProgress - シンプル版では不要
-      () => {
-        // onComplete
+      (scoreLog: PerWordScoreLog) => {
+        // onComplete - BasicTypingEngineからの実際のスコアデータを受け取る
         if (onWordComplete) {
-          onWordComplete();
+          onWordComplete(scoreLog);
         }
       }
     );

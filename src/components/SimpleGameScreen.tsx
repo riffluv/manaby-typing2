@@ -1,12 +1,12 @@
 import React from 'react';
-import { TypingWord } from '@/types';
+import { TypingWord, PerWordScoreLog } from '@/types';
 import PortalShortcut from './PortalShortcut';
 import { useSimpleTyping } from '@/hooks/useSimpleTyping';
 import { createBasicTypingChars } from '@/utils/basicJapaneseUtils';
 
 export type SimpleGameScreenProps = {
   currentWord: TypingWord;
-  onWordComplete?: () => void;
+  onWordComplete?: (scoreLog: PerWordScoreLog) => void;
 };
 
 /**
