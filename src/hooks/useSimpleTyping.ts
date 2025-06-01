@@ -5,8 +5,8 @@
  * BasicTypingEngineを使用してhigh-performanceタイピング処理を実現
  */
 
-import { useRef, useEffect } from 'react';
-import { TypingWord, PerWordScoreLog } from '@/types';
+import { useRef, useEffect, useState } from 'react';
+import { TypingWord, PerWordScoreLog, KanaDisplay } from '@/types';
 import { BasicTypingChar } from '@/utils/BasicTypingChar';
 import { BasicTypingEngine } from '@/utils/BasicTypingEngine';
 
@@ -18,6 +18,8 @@ export interface UseSimpleTypingProps {
 
 export interface UseSimpleTypingReturn {
   containerRef: React.RefObject<HTMLDivElement | null>;
+  currentCharIndex: number;
+  kanaDisplay: KanaDisplay | null;
 }
 
 /**
@@ -28,8 +30,12 @@ export function useSimpleTyping({
   word,
   typingChars,
   onWordComplete,
-}: UseSimpleTypingProps): UseSimpleTypingReturn {  const containerRef = useRef<HTMLDivElement>(null);
+}: UseSimpleTypingProps): UseSimpleTypingReturn {  
+  const containerRef = useRef<HTMLDivElement>(null);
   const engineRef = useRef<BasicTypingEngine | null>(null);
+  // 進行状況の状態
+  const [currentCharIndex, setCurrentCharIndex] = useState(0);
+  const [kanaDisplay, setKanaDisplay] = useState<KanaDisplay | null>(null);
 
   // エンジンの初期化
   useEffect(() => {
@@ -38,12 +44,17 @@ export function useSimpleTyping({
     // 既存のエンジンをクリーンアップ
     if (engineRef.current) {
       engineRef.current.cleanup();
-    }    // 新しいエンジンを作成
-    engineRef.current = new BasicTypingEngine();
-    engineRef.current.initialize(
+    }    
+
+    // 新しいエンジンを作成
+    engineRef.current = new BasicTypingEngine();    engineRef.current.initialize(
       containerRef.current,
       typingChars,
-      undefined, // onProgress - シンプル版では不要
+      (index: number, display: KanaDisplay) => {
+        // onProgress - 進行状況を更新
+        setCurrentCharIndex(index);
+        setKanaDisplay(display);
+      },
       (scoreLog: PerWordScoreLog) => {
         // onComplete - BasicTypingEngineからの実際のスコアデータを受け取る
         if (onWordComplete) {
@@ -60,8 +71,15 @@ export function useSimpleTyping({
       }
     };
   }, [word.hiragana, typingChars, onWordComplete]);
+  // 単語が変わったときに進行状況をリセット
+  useEffect(() => {
+    setCurrentCharIndex(0);
+    setKanaDisplay(null);
+  }, [word.hiragana]);
 
   return {
     containerRef,
+    currentCharIndex,
+    kanaDisplay,
   };
 }

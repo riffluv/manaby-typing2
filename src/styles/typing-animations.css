@@ -1,0 +1,107 @@
+/* Typing Game Animations */
+
+@keyframes blink {
+  0%, 50% { 
+    opacity: 1; 
+  }
+  51%, 100% { 
+    opacity: 0; 
+  }
+}
+
+@keyframes pulse {
+  0% {
+    transform: scale(1);
+    opacity: 1;
+  }
+  50% {
+    transform: scale(1.05);
+    opacity: 0.8;
+  }
+  100% {
+    transform: scale(1);
+    opacity: 1;
+  }
+}
+
+@keyframes slideInUp {
+  from {
+    opacity: 0;
+    transform: translateY(30px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes glow {
+  0% {
+    text-shadow: 0 0 5px currentColor;
+  }
+  50% {
+    text-shadow: 0 0 20px currentColor, 0 0 30px currentColor;
+  }
+  100% {
+    text-shadow: 0 0 5px currentColor;
+  }
+}
+
+.typing-cursor {
+  animation: blink 1s infinite;
+}
+
+.typing-correct {
+  animation: glow 0.3s ease-out;
+}
+
+.typing-error {
+  animation: pulse 0.5s ease-out;
+}
+
+.slide-in {
+  animation: slideInUp 0.5s ease-out;
+}
+
+/* Responsive font sizes */
+@media (max-width: 768px) {
+  .romaji-display {
+    font-size: 1.2rem !important;
+    letter-spacing: 0.2rem !important;
+    padding: 1rem 1.5rem !important;
+  }
+  
+  .typing-area {
+    font-size: 1.8rem !important;
+    padding: 1rem 1.5rem !important;
+  }
+  
+  .japanese-display {
+    font-size: 2.5rem !important;
+  }
+  
+  .hiragana-display {
+    font-size: 1.8rem !important;
+  }
+}
+
+@media (max-width: 480px) {
+  .romaji-display {
+    font-size: 1rem !important;
+    letter-spacing: 0.1rem !important;
+    padding: 0.8rem 1rem !important;
+  }
+  
+  .typing-area {
+    font-size: 1.5rem !important;
+    padding: 0.8rem 1rem !important;
+  }
+  
+  .japanese-display {
+    font-size: 2rem !important;
+  }
+  
+  .hiragana-display {
+    font-size: 1.5rem !important;
+  }
+}
