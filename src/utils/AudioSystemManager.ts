@@ -4,7 +4,7 @@
  */
 'use client';
 
-import UnifiedAudioSystem from './UnifiedAudioSystem';
+import OptimizedAudioSystem from './OptimizedAudioSystem';
 
 // 音声システム設定（シンプル化）
 export interface AudioSystemConfig {
@@ -43,12 +43,11 @@ class AudioSystemManager {
   static async initialize() {
     if (this.isInitialized) return;
 
-    try {
-      // 現在の実装のみ使用（遅延最小化）
+    try {      // 現在の実装のみ使用（遅延最小化）
       switch (this.config.engine) {
         case 'current':
-          await UnifiedAudioSystem.initialize();
-          console.log('🔊 UnifiedAudioSystem初期化完了');
+          OptimizedAudioSystem.init();
+          console.log('🔊 OptimizedAudioSystem初期化完了');
           break;
         case 'silent':
           console.log('🔇 音声無効モード');
@@ -69,11 +68,9 @@ class AudioSystemManager {
   static playClickSound() {
     if (!this.isInitialized) {
       this.initialize();
-    }
-
-    switch (this.config.engine) {
+    }    switch (this.config.engine) {
       case 'current':
-        UnifiedAudioSystem.playClickSound();
+        OptimizedAudioSystem.playClickSound();
         break;
       case 'silent':
         // 音声なし
@@ -87,11 +84,9 @@ class AudioSystemManager {
   static playErrorSound() {
     if (!this.isInitialized) {
       this.initialize();
-    }
-
-    switch (this.config.engine) {
+    }    switch (this.config.engine) {
       case 'current':
-        UnifiedAudioSystem.playErrorSound();
+        OptimizedAudioSystem.playErrorSound();
         break;
       case 'silent':
         // 音声なし
@@ -105,11 +100,9 @@ class AudioSystemManager {
   static playSuccessSound() {
     if (!this.isInitialized) {
       this.initialize();
-    }
-
-    switch (this.config.engine) {
+    }    switch (this.config.engine) {
       case 'current':
-        UnifiedAudioSystem.playSuccessSound();
+        OptimizedAudioSystem.playSuccessSound();
         break;
       case 'silent':
         // 音声なし

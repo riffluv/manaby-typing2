@@ -7,7 +7,7 @@ import { TypingWord, KanaDisplay, PerWordScoreLog } from '@/types';
 import { simpleKeyInput } from '@/utils/SimpleKeyHandler';
 import { OptimizedTypingChar, TypingChar } from '../utils/OptimizedTypingChar';
 import { createOptimizedTypingChars } from '../utils/optimizedJapaneseUtils';
-import UnifiedAudioSystem from '@/utils/UnifiedAudioSystem';
+import OptimizedAudioSystem from '@/utils/OptimizedAudioSystem';
 
 // typingmania-ref風：最小限のワードスコア
 interface WordScore {
@@ -111,10 +111,9 @@ export function useOptimizedTypingProcessor(
 
     // typingmania-ref流：シンプルな入力判定
     const result = currentChar.accept(e.key);
-      if (result >= 0) {
-      // 正解：音声再生（最高速対応）
+      if (result >= 0) {      // 正解：音声再生（最高速対応）
       if (audioEnabled) {
-        UnifiedAudioSystem.playClickSound();
+        OptimizedAudioSystem.playClickSound();
       }
 
       // 文字完了チェック
@@ -148,7 +147,7 @@ export function useOptimizedTypingProcessor(
     } else {      // ミス：音声再生（高速入力対応）
       wordStats.mistakeCount++;
       if (audioEnabled) {
-        UnifiedAudioSystem.playErrorSound();
+        OptimizedAudioSystem.playErrorSound();
       }
     }
 

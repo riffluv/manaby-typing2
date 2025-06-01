@@ -1,6 +1,6 @@
 import { create } from 'zustand';
 import { createSelectors } from '@/store/createSelectors';
-import UnifiedAudioSystem from '@/utils/UnifiedAudioSystem';
+import OptimizedAudioSystem from '@/utils/OptimizedAudioSystem';
 
 /**
  * 純粋WebAudioシステム専用ストア（MP3完全削除版）
@@ -41,19 +41,19 @@ const useAudioStoreBase = create<AudioState>((set, get) => ({
   // アクション（純粋WebAudio）
   playClickSound: () => {
     if (get().effectsEnabled) {
-      UnifiedAudioSystem.playClickSound();
+      OptimizedAudioSystem.playClickSound();
     }
   },
 
   playSuccessSound: (volume = 1.0) => {
     if (get().effectsEnabled) {
-      UnifiedAudioSystem.playSuccessSound();
+      OptimizedAudioSystem.playSuccessSound();
     }
   },
 
   playErrorSound: (volume = 1.0) => {
     if (get().effectsEnabled) {
-      UnifiedAudioSystem.playErrorSound();
+      OptimizedAudioSystem.playErrorSound();
     }
   },
 
@@ -68,11 +68,11 @@ const useAudioStoreBase = create<AudioState>((set, get) => ({
 
   // システム管理
   initializeAudio: async () => {
-    await UnifiedAudioSystem.initialize();
+    OptimizedAudioSystem.init();
   },
 
   resumeAudioContext: async () => {
-    await UnifiedAudioSystem.resumeAudioContext();
+    await OptimizedAudioSystem.resumeAudioContext();
   },
 }));
 

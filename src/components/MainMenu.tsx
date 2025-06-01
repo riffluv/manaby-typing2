@@ -8,7 +8,7 @@ import styles from './MainMenu.module.css';
 import { deleteRankingEntriesByMode } from '@/lib/rankingManaby2';
 import CommonModal from './common/CommonModal';
 import CommonButton from './common/CommonButton';
-import UnifiedAudioSystem from '@/utils/UnifiedAudioSystem';
+import OptimizedAudioSystem from '@/utils/OptimizedAudioSystem';
 
 interface MainMenuProps {
   onStart: () => void;
@@ -30,11 +30,10 @@ const MainMenu: React.FC<MainMenuProps> = ({ onStart, onRetry, onRanking }) => {
   const [adminLoading, setAdminLoading] = useState(false);
   // manabyメニュー状態のみuseState
   const [manabyMenuOpen, setManabyMenuOpen] = useState(false);
-
   // ゲーム開始ハンドラー
   const handleStart = async () => {
-    await UnifiedAudioSystem.initialize();
-    await UnifiedAudioSystem.resumeAudioContext();
+    OptimizedAudioSystem.init();
+    await OptimizedAudioSystem.resumeAudioContext();
     resetGame();
     setGameStatus('playing');
     onStart();

@@ -7,7 +7,7 @@
 
 import type { TypingChar } from './OptimizedTypingChar';
 import type { KanaDisplay, PerWordScoreLog } from '@/types';
-import UnifiedAudioSystem from './UnifiedAudioSystem';
+import OptimizedAudioSystem from './OptimizedAudioSystem';
 
 interface FastTypingState {
   typingChars: TypingChar[];
@@ -215,10 +215,9 @@ export class UltraFastTypingEngine {
       stats.keyCount++;      // ⚡ 文字処理（最小限）
       const result = currentChar.accept(e.key);
       
-      if (result >= 0) {
-        // ⚡ 正解処理（即座音声）
+      if (result >= 0) {        // ⚡ 正解処理（即座音声）
         if (this.audioEnabled) {
-          UnifiedAudioSystem.playClickSound();
+          OptimizedAudioSystem.playClickSound();
         }
 
         // ⚡ 現在の文字のDOM状態を更新
@@ -245,11 +244,10 @@ export class UltraFastTypingEngine {
         if (this.onProgress) {
           this.onProgress(this.state.currentKanaIndex, this.state.display);
         }
-      } else {
-        // ⚡ ミス処理（最小限）
+      } else {        // ⚡ ミス処理（最小限）
         stats.mistakeCount++;
         if (this.audioEnabled) {
-          UnifiedAudioSystem.playErrorSound();
+          OptimizedAudioSystem.playErrorSound();
         }
       }
     };
