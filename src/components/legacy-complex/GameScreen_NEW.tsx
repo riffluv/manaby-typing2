@@ -2,7 +2,7 @@ import React from 'react';
 import OptimizedTypingArea from './OptimizedTypingArea';
 import { TypingWord, KanaDisplay, PerWordScoreLog } from '@/types';
 import { createOptimizedTypingChars } from '@/utils/optimizedJapaneseUtils';
-import PortalShortcut from './PortalShortcut';
+import PortalShortcut from '../PortalShortcut';
 import styles from './GameScreen.module.css';
 
 export type GameScreenProps = {

@@ -1,18 +1,18 @@
 /**
- * 🎯 useSimpleTyping - 複数パターン対応版
+ * 🎯 useSimpleTyping - BasicTypingChar対応版
  * 
- * OptimizedTypingChar配列を処理し、複数入力パターン（ji/zi）をサポート
- * SimpleTypingEngineを使用してhigh-performanceタイピング処理を実現
+ * BasicTypingChar配列を処理し、複数入力パターン（ji/zi）をサポート
+ * BasicTypingEngineを使用してhigh-performanceタイピング処理を実現
  */
 
 import { useRef, useEffect } from 'react';
 import { TypingWord } from '@/types';
-import { TypingChar } from '@/utils/OptimizedTypingChar';
-import { SimpleTypingEngine } from '@/utils/SimpleTypingEngine';
+import { BasicTypingChar } from '@/utils/BasicTypingChar';
+import { BasicTypingEngine } from '@/utils/BasicTypingEngine';
 
 export interface UseSimpleTypingProps {
   word: TypingWord;
-  typingChars: TypingChar[];
+  typingChars: BasicTypingChar[];
   onWordComplete?: () => void;
 }
 
@@ -21,16 +21,15 @@ export interface UseSimpleTypingReturn {
 }
 
 /**
- * シンプルなタイピングフック - 複数パターン対応版
- * SimpleTypingEngineを使用して高速タイピング処理を実現
+ * シンプルなタイピングフック - BasicTypingChar対応版
+ * BasicTypingEngineを使用して高速タイピング処理を実現
  */
 export function useSimpleTyping({
   word,
   typingChars,
   onWordComplete,
-}: UseSimpleTypingProps): UseSimpleTypingReturn {
-  const containerRef = useRef<HTMLDivElement>(null);
-  const engineRef = useRef<SimpleTypingEngine | null>(null);
+}: UseSimpleTypingProps): UseSimpleTypingReturn {  const containerRef = useRef<HTMLDivElement>(null);
+  const engineRef = useRef<BasicTypingEngine | null>(null);
 
   // エンジンの初期化
   useEffect(() => {
@@ -39,10 +38,8 @@ export function useSimpleTyping({
     // 既存のエンジンをクリーンアップ
     if (engineRef.current) {
       engineRef.current.cleanup();
-    }
-
-    // 新しいエンジンを作成
-    engineRef.current = new SimpleTypingEngine();
+    }    // 新しいエンジンを作成
+    engineRef.current = new BasicTypingEngine();
     engineRef.current.initialize(
       containerRef.current,
       typingChars,

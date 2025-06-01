@@ -2,7 +2,7 @@ import React from 'react';
 import { TypingWord } from '@/types';
 import PortalShortcut from './PortalShortcut';
 import { useSimpleTyping } from '@/hooks/useSimpleTyping';
-import { createOptimizedTypingChars } from '@/utils/optimizedJapaneseUtils';
+import { createBasicTypingChars } from '@/utils/basicJapaneseUtils';
 
 export type SimpleGameScreenProps = {
   currentWord: TypingWord;
@@ -10,18 +10,17 @@ export type SimpleGameScreenProps = {
 };
 
 /**
- * typingmania-ref流シンプルGameScreen - 複数パターン対応版
- * - OptimizedTypingChar配列を正しく処理
+ * typingmania-ref流シンプルGameScreen - BasicTypingChar対応版
+ * - BasicTypingChar配列を正しく処理
  * - 複数入力パターン（ji/zi）をサポート
  * - シンプルで高速なレスポンス
  */
 const SimpleGameScreen: React.FC<SimpleGameScreenProps> = ({ 
   currentWord, 
   onWordComplete 
-}) => {
-  // ひらがなからOptimizedTypingChar配列を生成
+}) => {  // ひらがなからBasicTypingChar配列を生成
   const typingChars = React.useMemo(() => {
-    return currentWord.hiragana ? createOptimizedTypingChars(currentWord.hiragana) : [];
+    return currentWord.hiragana ? createBasicTypingChars(currentWord.hiragana) : [];
   }, [currentWord.hiragana]);
 
   const { containerRef } = useSimpleTyping({
@@ -69,7 +68,7 @@ const SimpleGameScreen: React.FC<SimpleGameScreenProps> = ({
         <PortalShortcut shortcuts={[{ key: 'Esc', label: 'メニューに戻る' }]} />
       </div>
 
-      {/* タイピングエリア - SimpleTypingEngineが制御 */}
+      {/* タイピングエリア - BasicTypingEngineが制御 */}
       <div 
         ref={containerRef}
         style={{
@@ -91,7 +90,7 @@ const SimpleGameScreen: React.FC<SimpleGameScreenProps> = ({
         aria-live="polite"
         aria-label="タイピングエリア"
       >
-        {/* SimpleTypingEngine が動的にコンテンツを挿入 */}
+        {/* BasicTypingEngine が動的にコンテンツを挿入 */}
       </div>
 
       {/* Escキーヒント */}
