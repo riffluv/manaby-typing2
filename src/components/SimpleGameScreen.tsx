@@ -42,54 +42,28 @@ const SimpleGameScreen: React.FC<SimpleGameScreenProps> = ({
     word: currentWord,
     typingChars,
     onWordComplete,
-  });  // ローマ字のハイライト表示のためのメモ（個々のローマ字文字レベル）
+  });  // typingmania-ref流: 効率的なローマ字位置計算とハイライト表示
   const romajiDisplay = React.useMemo(() => {
-    if (!romajiString) {
+    if (!romajiString || !detailedProgress?.currentKanaDisplay) {
       return { accepted: '', remaining: romajiString || '' };
     }
     
-    // 詳細な進捗情報を取得
-    if (!detailedProgress || !detailedProgress.currentKanaDisplay) {
-      return { accepted: '', remaining: romajiString };
+    // シンプルで高速な位置計算
+    const currentKanaIndex = detailedProgress.currentKanaIndex;
+    const acceptedLength = detailedProgress.currentKanaDisplay.acceptedText.length;
+    
+    // 累積長さ計算（typingmania-ref方式）
+    let totalAcceptedLength = 0;
+    for (let i = 0; i < currentKanaIndex && i < typingChars.length; i++) {
+      totalAcceptedLength += typingChars[i].patterns[0]?.length || 0;
     }
-    
-    // romajiStringと一致するように計算（romajiStringは各文字のpatterns[0]で構築されている）
-    let totalAcceptedRomajiLength = 0;
-    
-    // 完了したひらがな文字のローマ字を追加
-    for (let i = 0; i < detailedProgress.currentKanaIndex; i++) {
-      if (typingChars[i] && typingChars[i].patterns.length > 0) {
-        // romajiStringは各文字のpatterns[0]で構築されているため、それと一致させる
-        totalAcceptedRomajiLength += typingChars[i].patterns[0].length;
-      }
-    }
-    
-    // 現在のひらがな文字内で受け入れられた文字数を追加
-    const currentCharAcceptedText = detailedProgress.currentKanaDisplay.acceptedText;
-    totalAcceptedRomajiLength += currentCharAcceptedText.length;
-    
-    // romajiStringから正確な位置で分割
-    const accepted = romajiString.slice(0, totalAcceptedRomajiLength);
-    const remaining = romajiString.slice(totalAcceptedRomajiLength);
-    
-    // デバッグ出力（開発時のみ）
-    if (process.env.NODE_ENV === 'development') {
-      console.log('🎯 Romaji Focus Debug:', {
-        romajiString,
-        currentKanaIndex: detailedProgress.currentKanaIndex,
-        acceptedText: currentCharAcceptedText,
-        totalLength: totalAcceptedRomajiLength,
-        accepted,
-        remaining,
-        nextChar: remaining[0] || 'NONE'
-      });
-    }
-    
+    totalAcceptedLength += acceptedLength;
+
     return {
-      accepted,
-      remaining
+      accepted: romajiString.slice(0, totalAcceptedLength),
+      remaining: romajiString.slice(totalAcceptedLength)
     };
-  }, [romajiString, detailedProgress, typingChars]);React.useEffect(() => {
+  }, [romajiString, detailedProgress?.currentKanaIndex, detailedProgress?.currentKanaDisplay?.acceptedText]);  React.useEffect(() => {
     // デバッグ用：グローバルテスト関数を追加
     if (typeof window !== 'undefined') {
       (window as any).testSokuon = (hiragana: string) => {
