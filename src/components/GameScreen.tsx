@@ -1,5 +1,4 @@
 import React, { useState } from 'react';
-import OptimizedTypingArea from './OptimizedTypingArea';
 import { TypingWord, KanaDisplay } from '@/types';
 import PortalShortcut from './PortalShortcut';
 import styles from './GameScreen.module.css';
@@ -59,13 +58,21 @@ const GameScreen: React.FC<GameScreenProps> = ({ currentWord, currentKanaIndex, 
           <PortalShortcut shortcuts={[{ key: 'Esc', label: '戻る' }]} />
         </div>
         
-        {/* タイピングエリア - typingmania-ref流 最適化版 */}
-        <div style={{ willChange: 'transform' }}>
-          <OptimizedTypingArea 
-            currentKanaIndex={currentKanaIndex}
-            typingChars={currentWord.typingChars}
-            kanaDisplay={currentKanaDisplay}
-          />
+        {/* ⚡ UltraFastTypingEngine専用コンテナ */}
+        <div 
+          className="typing-area"
+          style={{ 
+            willChange: 'transform',
+            minHeight: '120px',
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'center',
+            fontSize: '1.8rem',
+            letterSpacing: '0.1em',
+            fontFamily: 'monospace'
+          }}
+        >
+          {/* UltraFastTypingEngineがDOM直接操作でコンテンツを生成 */}
         </div>
 
         {/* 

@@ -1,6 +1,6 @@
 'use client';
 
-import { useState, useEffect, useCallback } from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
 import { motion } from 'framer-motion';
 import { useRouter } from 'next/navigation';
 import { useGameStatus, useTypingGameStore, useCurrentWord } from '@/store/typingGameStore';
@@ -13,8 +13,9 @@ import styles from './UnifiedTypingGame.module.css';
 import screenStyles from './common/ScreenWrapper.module.css';
 
 // 統合されたカスタムフックとコンポーネントのインポート
-import { useOptimizedTypingProcessor } from '@/hooks/useOptimizedTypingProcessor';
+import { useUltraFastTypingProcessor } from '@/hooks/useUltraFastTypingProcessor';
 import { useScoreCalculation } from '@/hooks/useScoreCalculation';
+import { createOptimizedTypingChars } from '@/utils/optimizedJapaneseUtils';
 import { useRankingModal } from '@/hooks/useRankingModal';
 import GameResultScreen from '@/components/GameResultScreen';
 import RankingModal from '@/components/RankingModal';
@@ -39,19 +40,14 @@ const UnifiedTypingGame: React.FC<{ onGoMenu?: () => void; onGoRanking?: () => v
 }) => {
   const router = useRouter();
   const gameStatus = useGameStatus();
-  const { setGameStatus, resetGame, setupCurrentWord } = useTypingGameStore();
+  const { setGameStatus, resetGame, setupCurrentWord, advanceToNextWord } = useTypingGameStore();
   const storeWord = useCurrentWord();
   const sceneNav = useSceneNavigationStore();
   
   // ゲームライフサイクルフックの使用
   useTypingGameLifecycle();
 
-  // 状態管理
-  const [kanaDisplay, setKanaDisplay] = useState<KanaDisplay>({
-    acceptedText: '',
-    remainingText: '',
-    displayText: ''
-  });
+  // 状態管理（React状態更新最小化 - UltraFastEngine委譲）
   const [currentWord, setCurrentWord] = useState<TypingWord>({
     japanese: '',
     hiragana: '',
@@ -98,12 +94,28 @@ const UnifiedTypingGame: React.FC<{ onGoMenu?: () => void; onGoRanking?: () => v
     }
   }, [storeWord, currentWord.japanese]);
 
-  // typingmania-ref流 最適化されたタイピング処理フックの使用
-  const { currentKanaIndex, wordStats, resetProgress } = useOptimizedTypingProcessor(
-    currentWord, 
-    setKanaDisplay, 
-    setScoreLog
-  );
+  // ⚡ UltraFast流 最高速タイピング処理フックの使用
+  const typingChars = React.useMemo(() => {
+    return currentWord.hiragana ? createOptimizedTypingChars(currentWord.hiragana) : [];
+  }, [currentWord.hiragana]);
+
+  const { 
+    currentKanaIndex, 
+    kanaDisplay, 
+    handleProgress, 
+    handleWordComplete, 
+    isEngineActive,
+    resetWord
+  } = useUltraFastTypingProcessor({
+    typingChars,
+    onWordComplete: (scoreLog) => {
+      setScoreLog(prev => [...prev, scoreLog]);
+      advanceToNextWord();
+    },
+    onKeyDown: () => {
+      // 必要に応じて追加処理
+    }
+  });
 
   // スコア計算処理（WebWorker使用）
   const { calculateFallbackScore } = useScoreCalculation(
@@ -117,33 +129,26 @@ const UnifiedTypingGame: React.FC<{ onGoMenu?: () => void; onGoRanking?: () => v
       }
     }
   );
-  // リセット処理
+  // リセット処理（⚡ UltraFastEngine対応版）
   const handleReset = useCallback(() => {
     console.log('🔄 handleReset: Starting complete reset...');
     
     // 1. ゲーム状態をリセット（これが最初に必要）
     resetGame();
     
-    // 2. タイピング進行状況をリセット
-    resetProgress();
+    // 2. UltraFastEngineの単語状態をリセット
+    resetWord();
     
     // 3. スコア関連をクリア
     setScoreLog([]);
     setResultScore(null);
     setIsScoreRegistered(false);
     
-    // 4. 表示状態をクリア（kanaDisplay を初期化）
-    setKanaDisplay({
-      acceptedText: '',
-      remainingText: '',
-      displayText: ''
-    });
-    
-    // 5. 新しい単語をセットアップ（最後に実行）
+    // 4. 新しい単語をセットアップ（最後に実行）
     setupCurrentWord();
     
     console.log('🔄 handleReset: Complete reset finished');
-  }, [resetGame, setupCurrentWord, resetProgress, setKanaDisplay]);
+  }, [resetGame, resetWord, setupCurrentWord]);
 
   // ランキングモーダル管理
   const { modalState, dispatch, handleRegisterRanking } = useRankingModal(
