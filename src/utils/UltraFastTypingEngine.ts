@@ -82,19 +82,6 @@ export class UltraFastTypingEngine {
     onWordComplete?: (scoreLog: PerWordScoreLog) => void,
     audioEnabled = true
   ): void {
-    console.log('🚀 [DEBUG] UltraFastTypingEngine: 初期化開始', { 
-      typingCharsLength: typingChars.length, 
-      audioEnabled,
-      containerElement: !!containerElement 
-    });
-    if (typeof window !== 'undefined') {
-      window.postMessage({ 
-        type: 'TYPING_ENGINE_DEBUG', 
-        message: 'エンジン初期化開始', 
-        data: { typingCharsLength: typingChars.length, audioEnabled } 
-      }, '*');
-    }
-
     // ステート初期化
     this.state.containerElement = containerElement;
     this.state.typingChars = typingChars;
@@ -112,8 +99,6 @@ export class UltraFastTypingEngine {
     this.state.stats.startTime = 0;
     this.state.stats.endTime = 0;
 
-    console.log('🔄 [DEBUG] DOM構築開始');
-
     // ⚡ DOM完全クリア（innerHTML避けて高速化）
     while (containerElement.firstChild) {
       containerElement.removeChild(containerElement.firstChild);
@@ -128,16 +113,10 @@ export class UltraFastTypingEngine {
     // 初期表示
     this.syncUpdateDisplay();
     this.isActive = true;
-    
-    console.log('✅ [DEBUG] UltraFastTypingEngine: 初期化完了');
-    if (typeof window !== 'undefined') {
-      window.postMessage({ type: 'TYPING_ENGINE_DEBUG', message: 'エンジン初期化完了' }, '*');
-    }
-  }  /**
+  }/**
    * ⚡ 超高速DOM構築 + 要素キャッシュ
    */  private buildDOMStructure(container: HTMLElement, typingChars: TypingChar[]): void {
     const fragment = document.createDocumentFragment();
-    console.log('🏗️ [DEBUG] DOM構築:', { typingCharsLength: typingChars.length });
     
     for (let kanaIndex = 0; kanaIndex < typingChars.length; kanaIndex++) {
       const typingChar = typingChars[kanaIndex];
@@ -145,37 +124,22 @@ export class UltraFastTypingEngine {
       const displayText = displayInfo.displayText;
       const kanaElements: HTMLSpanElement[] = [];
       
-      console.log(`📝 [DEBUG] かな${kanaIndex}:`, { 
-        kana: (typingChar as any).kana || 'unknown',
-        displayText,
-        displayTextLength: displayText?.length || 0,
-        patterns: (typingChar as any).patterns || 'unknown'
-      });
-      
       // displayTextが空でないことを確認
       if (!displayText || displayText.length === 0) {
-        console.error(`❌ [DEBUG] displayTextが空です - かな${kanaIndex}`);
         continue;
       }
-        // displayTextを文字単位で分割して処理（動作していた時点の方法）
-      const chars = [...displayText]; // 文字配列に変換
+
+      // displayTextを文字単位で分割して処理
+      const chars = [...displayText];
       for (let charIndex = 0; charIndex < chars.length; charIndex++) {
         const charToDisplay = chars[charIndex];
         const element = document.createElement('span');
         
-        // ⚡ 正しいCSS クラス設定（動作していた時点の方法）
+        // ⚡ 正しいCSS クラス設定
         element.className = 'typing-char pending';
         element.textContent = charToDisplay;
         element.setAttribute('data-kana-index', kanaIndex.toString());
         element.setAttribute('data-char-index', charIndex.toString());
-        
-        console.log(`🔤 [DEBUG] 文字要素作成:`, { 
-          kanaIndex, 
-          charIndex, 
-          char: charToDisplay, 
-          textContent: element.textContent,
-          className: element.className 
-        });
         
         fragment.appendChild(element);
         this.state.charElements.push(element);
@@ -186,93 +150,71 @@ export class UltraFastTypingEngine {
       this.state.elementsByKana.set(kanaIndex, kanaElements);
     }
     
-    console.log('🎯 [DEBUG] DOM構築完了:', { 
-      totalElements: this.state.charElements.length,
-      fragmentChildCount: fragment.childNodes.length 
-    });
-    
     container.appendChild(fragment);
-    
-    // DOM追加後の確認
-    console.log('🔍 [DEBUG] コンテナ確認:', {
-      containerChildCount: container.childNodes.length,
-      containerInnerHTML: container.innerHTML.substring(0, 200) + '...'
-    });
-      // ⚡ 初期現在要素設定
+
+    // ⚡ 初期現在要素設定
     if (this.state.elementsByKana.has(0)) {
       this.state.currentElements = this.state.elementsByKana.get(0)!;
-      console.log('✨ [DEBUG] 初期現在要素設定:', {
-        currentElementsLength: this.state.currentElements.length,
-        firstElementText: this.state.currentElements[0]?.textContent || 'なし'
-      });
-        // 初期の最初の文字をcurrentに設定
+      // 初期の最初の文字をcurrentに設定
       if (this.state.currentElements.length > 0) {
         this.state.currentElements[0].className = 'typing-char current';
-        console.log('🎯 [DEBUG] 初期currentクラス設定:', this.state.currentElements[0].className);
       }
     }
   }
 
   /**
    * ⚡ 即座キーイベントバインド
-   */
-  private bindKeyEvents(): void {
+   */  private bindKeyEvents(): void {
     if (this.keyHandler) {
       document.removeEventListener('keydown', this.keyHandler);
     }
 
     this.keyHandler = this.boundKeyHandler;
-    document.addEventListener('keydown', this.keyHandler, { passive: false });
-  }  /**
+    // ⚡ 高性能オプション
+    document.addEventListener('keydown', this.keyHandler, { 
+      passive: false, 
+      capture: true 
+    });
+  }/**
    * ⚡ 超軽量キーハンドラー（事前作成）
-   */
-  private createKeyHandler() {
+   */  private createKeyHandler() {
     return (e: KeyboardEvent) => {
-      // ⚡ 最小限チェック
-      if (!this.isActive || e.key.length !== 1) {
-        if (!this.isActive) console.log('🔇 [DEBUG] キー入力: エンジン非アクティブ');
-        if (e.key.length !== 1) console.log('🔇 [DEBUG] キー入力: 無効なキー', e.key);
+      // ⚡ 最小限チェック（高速化）
+      if (!this.isActive || e.key.length !== 1 || e.ctrlKey || e.altKey || e.metaKey) {
         return;
       }
       
-      console.log('⌨️ [DEBUG] キー入力:', e.key);
-      
-      // ⚡ 即座制御（最小限）
+      // ⚡ 軽量イベント制御
       e.preventDefault();
-      e.stopPropagation();
 
       const { typingChars, currentKanaIndex, stats } = this.state;
       
       if (currentKanaIndex >= typingChars.length) {
-        console.log('⚠️ [DEBUG] すべての文字完了済み');
         return;
       }
       
       const currentChar = typingChars[currentKanaIndex];
       if (!currentChar) {
-        console.log('⚠️ [DEBUG] 現在の文字が見つからない');
         return;
       }
 
       // ⚡ 初回タイムスタンプ
       if (stats.keyCount === 0) {
         stats.startTime = performance.now();
-        console.log('⏱️ [DEBUG] タイピング開始');
       }
 
       stats.keyCount++;
 
       // ⚡ 文字処理（最小限）
       const result = currentChar.accept(e.key);
-      console.log('🔤 [DEBUG] 文字処理結果:', result);
       
       if (result >= 0) {
-        // ⚡ 正解処理（完全同期）
+        // ⚡ 正解処理（即座音声）
         if (this.audioEnabled) {
           UnifiedAudioSystem.playClickSound();
         }
 
-        // ⚡ 即座DOM更新（同期）
+        // ⚡ DOM更新（必要時のみ）
         this.syncUpdateCharState(currentKanaIndex, currentChar);
         
         if (currentChar.isCompleted()) {
@@ -287,35 +229,34 @@ export class UltraFastTypingEngine {
             return;
           }
         }
+
+        // ⚡ 表示更新（正解時のみ）
+        this.syncUpdateDisplay();
+        
+        // ⚡ コールバック（正解時のみ）
+        if (this.onProgress) {
+          this.onProgress(this.state.currentKanaIndex, this.state.display);
+        }
       } else {
-        // ⚡ ミス処理（完全同期）
+        // ⚡ ミス処理（最小限）
         stats.mistakeCount++;
         if (this.audioEnabled) {
           UnifiedAudioSystem.playErrorSound();
         }
-      }
-
-      // ⚡ 表示更新（完全同期）
-      this.syncUpdateDisplay();
-      
-      // ⚡ コールバック（同期）
-      if (this.onProgress) {
-        this.onProgress(this.state.currentKanaIndex, this.state.display);
       }
     };
   }
 
   /**
    * ⚡ 単一かな文字の即座更新（バッチ処理）
-   */
-  private syncUpdateCharState(kanaIndex: number, currentChar: TypingChar): void {
+   */  private syncUpdateCharState(kanaIndex: number, currentChar: TypingChar): void {
     const displayInfo = currentChar.getDisplayInfo();
     const acceptedLength = displayInfo.acceptedText.length;
     const elements = this.state.elementsByKana.get(kanaIndex);
     
     if (!elements) return;
 
-    // ⚡ バッチDOM更新（for-loop最適化）
+    // ⚡ 高速DOM更新（変更時のみ）
     for (let i = 0; i < elements.length; i++) {
       const element = elements[i];
       let newClass: string;
@@ -328,7 +269,7 @@ export class UltraFastTypingEngine {
         newClass = UltraFastTypingEngine.CLASSES.PENDING;
       }
       
-      // ⚡ 必要時のみ更新
+      // ⚡ 変更時のみ更新（高速化）
       if (element.className !== newClass) {
         element.className = newClass;
       }
@@ -337,11 +278,11 @@ export class UltraFastTypingEngine {
 
   /**
    * ⚡ 次要素の事前準備
-   */
-  private prepareNextElements(): void {
+   */  private prepareNextElements(): void {
     const nextKanaIndex = this.state.currentKanaIndex;
     if (this.state.elementsByKana.has(nextKanaIndex)) {
-      this.state.currentElements = this.state.elementsByKana.get(nextKanaIndex)!;        // 次の最初の文字をcurrentに設定
+      this.state.currentElements = this.state.elementsByKana.get(nextKanaIndex)!;
+      // 次の最初の文字をcurrentに設定
       if (this.state.currentElements.length > 0) {
         this.state.currentElements[0].className = 'typing-char current';
       }
@@ -371,7 +312,6 @@ export class UltraFastTypingEngine {
    */  private handleWordComplete(): void {
     const { stats } = this.state;
     stats.endTime = performance.now();
-      console.log('🎯 [DEBUG] 単語完了処理開始');
     
     // ⚡ エンジンは次の単語のためアクティブのまま維持
     // this.isActive = false; // コメントアウト：次の単語のため継続
@@ -393,15 +333,10 @@ export class UltraFastTypingEngine {
       accuracy: accuracy < 0 ? 0 : accuracy > 1 ? 1 : accuracy,
     };
 
-    console.log('📊 [DEBUG] スコアログ:', scoreLog);
-
     // ⚡ 即座コールバック（同期）
     if (this.onWordComplete) {
-      console.log('📞 [DEBUG] onWordCompleteコールバック実行');
       this.onWordComplete(scoreLog);
     }
-    
-    console.log('✅ [DEBUG] 単語完了処理終了 - 次の単語を待機中');
   }
 
   /**
