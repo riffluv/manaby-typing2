@@ -188,8 +188,8 @@ export class UltraFastTypingEngine {
    * ⚡ 超軽量キーハンドラー（事前作成）
    */  private createKeyHandler() {
     return (e: KeyboardEvent) => {
-      // ⚡ 最小限チェック（高速化）
-      if (!this.isActive || e.key.length !== 1 || e.ctrlKey || e.altKey || e.metaKey) {
+      // ⚡ 最小限チェック（高速化）- Spaceキーとナビゲーションキーを除外
+      if (!this.isActive || e.key.length !== 1 || e.ctrlKey || e.altKey || e.metaKey || e.key === ' ') {
         return;
       }
       
