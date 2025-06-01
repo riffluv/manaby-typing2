@@ -14,12 +14,17 @@ let clickBuffer = null;
 let errorBuffer = null;
 let successBuffer = null;
 
-// 🚀 超高速合成音声初期化（MP3一切不使用）
+// 🚀 超高速合成音声初期化（MP3一切不使用・完全同期）
 function initAudio() {
   if (ctx) return;
   
   try {
     ctx = new (window.AudioContext || window.webkitAudioContext)();
+    
+    // 🚀 AudioContext即座Resume（遅延除去）
+    if (ctx.state === 'suspended') {
+      ctx.resume();
+    }
     
     // 🎵 心地よいクリック音（純粋合成、即座生成）
     const clickFreq = 440;  // A音（心地よい）
@@ -97,9 +102,9 @@ class InstantKeyboardSound {
     source.connect(ctx.destination);
     source.start();
   }
-  
-  static init() {
+    static init() {
     initAudio();
+    return true; // 常に成功
   }
   
   static isReady() {
@@ -110,6 +115,16 @@ class InstantKeyboardSound {
     if (ctx && ctx.state === 'suspended') {
       ctx.resume();
     }
+    return true; // 同期復帰
+  }
+
+  // 🚀 完全同期初期化（遅延ゼロ）
+  static ensureReady() {
+    if (!ctx) initAudio();
+    if (ctx && ctx.state === 'suspended') {
+      ctx.resume();
+    }
+    return ctx && ctx.state === 'running';
   }
 }
 

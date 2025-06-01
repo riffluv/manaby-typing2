@@ -1,15 +1,14 @@
 /**
- * 音声システム統合マネージャー
- * 現在の実装と最適化版を切り替え可能にし、段階的な導入をサポート
+ * 音声システム統合マネージャー - シンプル化版
+ * 重複システムを除去し、遅延を最小化
  */
 'use client';
 
 import UnifiedAudioSystem from './UnifiedAudioSystem';
-import OptimizedTypingAudio from './OptimizedTypingAudio';
 
-// 音声システム設定
+// 音声システム設定（シンプル化）
 export interface AudioSystemConfig {
-  engine: 'current' | 'optimized' | 'silent';
+  engine: 'current' | 'silent';  // optimizedを削除
   enablePerformanceMeasurement: boolean;
   enableConsoleLogging: boolean;
 }
@@ -38,20 +37,15 @@ class AudioSystemManager {
     
     console.log('🔧 AudioSystemManager設定更新:', this.config);
   }
-
   /**
-   * 音声システム初期化
+   * 音声システム初期化（シンプル化版）
    */
   static async initialize() {
     if (this.isInitialized) return;
 
     try {
-      // 選択されたエンジンを初期化
+      // 現在の実装のみ使用（遅延最小化）
       switch (this.config.engine) {
-        case 'optimized':
-          OptimizedTypingAudio.init();
-          console.log('🚀 OptimizedTypingAudio初期化完了');
-          break;
         case 'current':
           await UnifiedAudioSystem.initialize();
           console.log('🔊 UnifiedAudioSystem初期化完了');
@@ -69,9 +63,8 @@ class AudioSystemManager {
       this.isInitialized = true;
     }
   }
-
   /**
-   * クリック音再生（統合インターフェース）
+   * クリック音再生（シンプル化版）
    */
   static playClickSound() {
     if (!this.isInitialized) {
@@ -79,9 +72,6 @@ class AudioSystemManager {
     }
 
     switch (this.config.engine) {
-      case 'optimized':
-        OptimizedTypingAudio.playClick();
-        break;
       case 'current':
         UnifiedAudioSystem.playClickSound();
         break;
@@ -92,7 +82,7 @@ class AudioSystemManager {
   }
 
   /**
-   * エラー音再生（統合インターフェース）
+   * エラー音再生（シンプル化版）
    */
   static playErrorSound() {
     if (!this.isInitialized) {
@@ -100,9 +90,6 @@ class AudioSystemManager {
     }
 
     switch (this.config.engine) {
-      case 'optimized':
-        OptimizedTypingAudio.playError();
-        break;
       case 'current':
         UnifiedAudioSystem.playErrorSound();
         break;
@@ -113,7 +100,7 @@ class AudioSystemManager {
   }
 
   /**
-   * 成功音再生（統合インターフェース）
+   * 成功音再生（シンプル化版）
    */
   static playSuccessSound() {
     if (!this.isInitialized) {
@@ -121,9 +108,6 @@ class AudioSystemManager {
     }
 
     switch (this.config.engine) {
-      case 'optimized':
-        OptimizedTypingAudio.playSuccess();
-        break;
       case 'current':
         UnifiedAudioSystem.playSuccessSound();
         break;
@@ -152,13 +136,12 @@ class AudioSystemManager {
     // 即座に初期化
     this.initialize();
   }
-
   /**
    * パフォーマンスモード切り替え（遅延を最小化）
    */
   static enablePerformanceMode() {
     this.configure({
-      engine: 'optimized',
+      engine: 'current',
       enableConsoleLogging: false,
       enablePerformanceMeasurement: false
     });
@@ -192,39 +175,30 @@ class AudioSystemManager {
       }
     };
   }
-
   /**
-   * 統計情報を取得
+   * 統計情報を取得（シンプル化版）
    */
   static getStats() {
     return {
       engine: this.config.engine,
       initialized: this.isInitialized,
-      optimizedReady: OptimizedTypingAudio.isReady(),
       currentConfig: this.config
     };
   }
-
   /**
-   * パフォーマンステスト用：エンジン比較
+   * パフォーマンステスト用：シンプル化版（遅延測定のみ）
    */
   static async benchmarkEngines(testCount = 50) {
-    console.log('🏁 音声エンジンベンチマーク開始');
+    console.log('🏁 音声システム遅延測定開始');
     
     const results = {
-      current: await this.benchmarkEngine('current', testCount),
-      optimized: await this.benchmarkEngine('optimized', testCount)
+      current: await this.benchmarkEngine('current', testCount)
     };
 
-    const improvement = results.current.averageLatency - results.optimized.averageLatency;
-    const improvementPercent = (improvement / results.current.averageLatency * 100);
-
-    console.log('📊 ベンチマーク結果:');
+    console.log('📊 遅延測定結果:');
     console.log(`  現在の実装: ${results.current.averageLatency.toFixed(2)}ms`);
-    console.log(`  最適化版: ${results.optimized.averageLatency.toFixed(2)}ms`);
-    console.log(`  改善度: ${improvement.toFixed(2)}ms (${improvementPercent.toFixed(1)}%)`);
 
-    return { results, improvement, improvementPercent };
+    return { results, improvement: 0, improvementPercent: 0 };
   }
 
   /**
