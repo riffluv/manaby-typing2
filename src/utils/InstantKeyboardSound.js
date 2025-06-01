@@ -1,11 +1,11 @@
-// InstantKeyboardSound.js - 心地よい音声システム
+// InstantKeyboardSound.js - 超高速純粋合成音声（MP3完全不使用）
 'use client';
 
 // 🔊 快適な音量設定
 const INSTANT_VOLUME = {
-  click: 0.4,      // より控えめな音量
-  error: 0.25,     
-  success: 0.3,
+  click: 0.3,      // 控えめな音量
+  error: 0.2,     
+  success: 0.25,
 };
 
 // グローバルリソース
@@ -14,73 +14,56 @@ let clickBuffer = null;
 let errorBuffer = null;
 let successBuffer = null;
 
-// 🎵 音声ファイル読み込み
-async function loadAudioBuffer(url) {
-  try {
-    const response = await fetch(url);
-    const arrayBuffer = await response.arrayBuffer();
-    return await ctx.decodeAudioData(arrayBuffer);
-  } catch (e) {
-    return null;
-  }
-}
-
-// 🚀 快適な音声初期化
-async function initAudio() {
+// 🚀 超高速合成音声初期化（MP3一切不使用）
+function initAudio() {
   if (ctx) return;
   
   try {
     ctx = new (window.AudioContext || window.webkitAudioContext)();
     
-    // 🎵 心地よいクリック音（ファイルベース）
-    clickBuffer = await loadAudioBuffer('/sounds/buttonsound1.mp3');
+    // 🎵 心地よいクリック音（純粋合成、即座生成）
+    const clickFreq = 440;  // A音（心地よい）
+    const duration = 0.06;   // 短く軽やか
+    const sampleRate = ctx.sampleRate;
+    const bufferSize = Math.floor(sampleRate * duration);
     
-    // ファイル読み込み失敗時の代替音（より心地よい周波数）
-    if (!clickBuffer) {
-      const clickFreq = 440;  // A音（心地よい）
-      const duration = 0.08;   // より短く
-      const sampleRate = ctx.sampleRate;
-      const bufferSize = Math.floor(sampleRate * duration);
-      
-      clickBuffer = ctx.createBuffer(1, bufferSize, sampleRate);
-      const clickData = clickBuffer.getChannelData(0);
-      
-      for (let i = 0; i < bufferSize; i++) {
-        const t = i / sampleRate;
-        // より柔らかい音色
-        const wave = Math.sin(2 * Math.PI * clickFreq * t) * 0.3 + 
-                    Math.sin(2 * Math.PI * clickFreq * 2 * t) * 0.1;
-        clickData[i] = wave * Math.exp(-t * 8) * INSTANT_VOLUME.click;
-      }
+    clickBuffer = ctx.createBuffer(1, bufferSize, sampleRate);
+    const clickData = clickBuffer.getChannelData(0);
+    
+    for (let i = 0; i < bufferSize; i++) {
+      const t = i / sampleRate;
+      // 美しい音色（倍音含む）
+      const wave = Math.sin(2 * Math.PI * clickFreq * t) * 0.6 + 
+                  Math.sin(2 * Math.PI * clickFreq * 2 * t) * 0.2;
+      clickData[i] = wave * Math.exp(-t * 12) * INSTANT_VOLUME.click;
     }
     
     // 🎵 エラー音（低く短く）
-    const errorFreq = 150;  // より低く
-    const errorDuration = 0.15;
-    const errorSampleRate = ctx.sampleRate;
-    const errorBufferSize = Math.floor(errorSampleRate * errorDuration);
+    const errorFreq = 180;
+    const errorDuration = 0.12;
+    const errorBufferSize = Math.floor(sampleRate * errorDuration);
     
-    errorBuffer = ctx.createBuffer(1, errorBufferSize, errorSampleRate);
+    errorBuffer = ctx.createBuffer(1, errorBufferSize, sampleRate);
     const errorData = errorBuffer.getChannelData(0);
     
     for (let i = 0; i < errorBufferSize; i++) {
-      const t = i / errorSampleRate;
-      errorData[i] = Math.sin(2 * Math.PI * errorFreq * t) * Math.exp(-t * 4) * INSTANT_VOLUME.error;
+      const t = i / sampleRate;
+      errorData[i] = Math.sin(2 * Math.PI * errorFreq * t) * Math.exp(-t * 8) * INSTANT_VOLUME.error;
     }
     
-    // 🎵 成功音（心地よい和音）
-    const successDuration = 0.2;
-    const successSampleRate = ctx.sampleRate;
-    const successBufferSize = Math.floor(successSampleRate * successDuration);
+    // 🎵 成功音（美しい和音 C+E）
+    const successDuration = 0.15;
+    const successBufferSize = Math.floor(sampleRate * successDuration);
     
-    successBuffer = ctx.createBuffer(1, successBufferSize, successSampleRate);
-    const successData = successBuffer.getChannelData(0);    
+    successBuffer = ctx.createBuffer(1, successBufferSize, sampleRate);
+    const successData = successBuffer.getChannelData(0);
+    
     for (let i = 0; i < successBufferSize; i++) {
-      const t = i / successSampleRate;
-      // 心地よい和音（C + E）
-      const wave1 = Math.sin(2 * Math.PI * 523 * t) * 0.4; // C5
-      const wave2 = Math.sin(2 * Math.PI * 659 * t) * 0.3; // E5
-      successData[i] = (wave1 + wave2) * Math.exp(-t * 3) * INSTANT_VOLUME.success;
+      const t = i / sampleRate;
+      // C+E和音（美しい響き）
+      const c = Math.sin(2 * Math.PI * 523 * t);  // C5
+      const e = Math.sin(2 * Math.PI * 659 * t);  // E5
+      successData[i] = (c + e) * 0.5 * Math.exp(-t * 6) * INSTANT_VOLUME.success;
     }
   } catch (e) {
     // サイレント失敗
@@ -88,19 +71,12 @@ async function initAudio() {
 }
 
 class InstantKeyboardSound {
-  // 🚀 即座再生（高速）
   static playClickSound() {
     if (!ctx || !clickBuffer) return;
     
     const source = ctx.createBufferSource();
     source.buffer = clickBuffer;
-    
-    // 音量調整（より快適に）
-    const gainNode = ctx.createGain();
-    gainNode.gain.value = 0.4;
-    
-    source.connect(gainNode);
-    gainNode.connect(ctx.destination);
+    source.connect(ctx.destination);
     source.start();
   }
   
@@ -122,9 +98,8 @@ class InstantKeyboardSound {
     source.start();
   }
   
-  // 🚀 非同期初期化
-  static async init() {
-    await initAudio();
+  static init() {
+    initAudio();
   }
   
   static isReady() {
@@ -138,9 +113,7 @@ class InstantKeyboardSound {
   }
 }
 
-// 初期化（非同期）
-if (typeof window !== 'undefined') {
-  initAudio();
-}
+// 即座初期化（同期）
+initAudio();
 
 export default InstantKeyboardSound;
