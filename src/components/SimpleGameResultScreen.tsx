@@ -97,130 +97,113 @@ const SimpleGameResultScreen: React.FC<SimpleGameResultScreenProps> = ({
 
     window.addEventListener('keydown', handleKeyDown);
     return () => window.removeEventListener('keydown', handleKeyDown);
-  }, [onGoMenu, onGoRanking, currentScore, isScoreRegistered, modalState.show, handleOpenRankingModal]);
-
-  return (
+  }, [onGoMenu, onGoRanking, currentScore, isScoreRegistered, modalState.show, handleOpenRankingModal]);    return (
     <div style={{
       minHeight: '100vh',
-      background: 'linear-gradient(135deg, #1a1a2e 0%, #16213e 50%, #0f3460 100%)',
-      color: '#fff',
+      width: '100%',
+      maxWidth: '100%',
       display: 'flex',
       flexDirection: 'column',
       justifyContent: 'center',
       alignItems: 'center',
-      fontFamily: 'monospace'
-    }}>
-      <div style={{
+      padding: '2rem 1rem',
+      boxSizing: 'border-box',
+      overflowX: 'hidden'
+    }}>      <div style={{
         textAlign: 'center',
-        maxWidth: '600px',
-        padding: '2rem'
-      }}>        {/* タイトル */}
+        maxWidth: '800px',
+        width: '100%',
+        padding: '2rem',
+        background: '#ffffff',
+        borderRadius: '1rem',
+        boxShadow: '0 10px 25px rgba(0, 0, 0, 0.1)',
+        border: '1px solid #e5e7eb',
+        boxSizing: 'border-box'
+      }}>{/* タイトル */}
         <h1 style={{
-          fontSize: '3rem',
+          fontSize: 'clamp(1.75rem, 4vw, 2.5rem)',
+          fontWeight: '700',
+          color: '#111827',
           marginBottom: '2rem',
-          color: '#00e0ff',
-          textShadow: '0 0 20px rgba(0, 224, 255, 0.5)'
+          letterSpacing: '-0.025em'
         }}>
           お疲れ様でした！
         </h1>
-          {/* スコア表示 */}
+
+        {/* スコア表示 */}
         {currentScore ? (
           <div style={{
-            marginBottom: '3rem',
+            marginBottom: '2rem',
             padding: '2rem',
-            background: 'rgba(255, 255, 255, 0.1)',
-            borderRadius: '12px',
-            border: '1px solid rgba(255, 255, 255, 0.2)',
-            textAlign: 'center'
+            border: '1px solid #e5e7eb',
+            borderRadius: '0.75rem',
+            textAlign: 'center',
+            background: '#fafafa',
+            boxShadow: '0 4px 6px rgba(0, 0, 0, 0.05)'
           }}>
             <div style={{
               display: 'grid',
-              gridTemplateColumns: 'repeat(2, 1fr)',
+              gridTemplateColumns: 'repeat(auto-fit, minmax(120px, 1fr))',
               gap: '1.5rem',
-              fontSize: '1.2rem'
-            }}>              <div>
-                <div style={{ color: '#00e0ff', fontWeight: 'bold' }}>KPM</div>
-                <div style={{ fontSize: '2rem', color: '#fff' }}>{Math.floor(currentScore.kpm)}</div>
+              fontSize: '1rem'
+            }}>
+              <div>
+                <div>KPM</div>
+                <div style={{ fontSize: '1.5rem' }}>{Math.floor(currentScore.kpm)}</div>
               </div>
               <div>
-                <div style={{ color: '#7cffcb', fontWeight: 'bold' }}>精度</div>
-                <div style={{ fontSize: '2rem', color: '#fff' }}>{Math.floor(currentScore.accuracy)}%</div>
+                <div>精度</div>
+                <div style={{ fontSize: '1.5rem' }}>{Math.floor(currentScore.accuracy)}%</div>
               </div>
               <div>
-                <div style={{ color: '#10b981', fontWeight: 'bold' }}>正解</div>
-                <div style={{ fontSize: '1.5rem', color: '#fff' }}>{currentScore.correct}</div>
+                <div>正解</div>
+                <div style={{ fontSize: '1.2rem' }}>{currentScore.correct}</div>
               </div>
               <div>
-                <div style={{ color: '#ef4444', fontWeight: 'bold' }}>ミス</div>
-                <div style={{ fontSize: '1.5rem', color: '#fff' }}>{currentScore.miss}</div>
+                <div>ミス</div>
+                <div style={{ fontSize: '1.2rem' }}>{currentScore.miss}</div>
               </div>
             </div>
-          </div>        ) : scoreLog && scoreLog.length > 0 ? (
+          </div>
+        ) : scoreLog && scoreLog.length > 0 ? (
           <div style={{
-            marginBottom: '3rem',
-            padding: '2rem',
-            background: 'rgba(255, 255, 255, 0.1)',
-            borderRadius: '12px',
-            border: '1px solid rgba(255, 255, 255, 0.2)',
+            marginBottom: '2rem',
+            padding: '1rem',
+            border: '1px solid #ccc',
+            borderRadius: '4px',
             textAlign: 'center'
           }}>
-            <div style={{ fontSize: '1.2rem', color: '#ccc', marginBottom: '1rem' }}>
+            <div style={{ fontSize: '1rem', marginBottom: '1rem' }}>
               スコア計算中...
             </div>
             {onCalculateFallbackScore && (
               <button
                 onClick={onCalculateFallbackScore}
-                style={{
-                  padding: '8px 16px',
-                  fontSize: '1rem',
-                  background: 'linear-gradient(45deg, #666, #888)',
-                  color: '#fff',
-                  border: 'none',
-                  borderRadius: '6px',
-                  cursor: 'pointer',
-                  transition: 'all 0.3s ease'
-                }}
+                className="btn"
               >
                 スコアを表示
               </button>
             )}
-          </div>        ) : null}
+          </div>
+        ) : null}
         
         {/* 最小スペース確保 */}
         {!currentScore && (!scoreLog || scoreLog.length === 0) && (
-          <div style={{ height: '3rem' }} />
+          <div style={{ height: '2rem' }} />
         )}
         
-        {/* メッセージ（スコアがない場合のみ） */}
-          {/* ボタン */}
+        {/* ボタン */}
         <div style={{
           display: 'flex',
-          gap: '1.5rem',
+          gap: '1rem',
           justifyContent: 'center',
           flexWrap: 'wrap'
-        }}>          {/* ランキング登録ボタン（スコアがあり、まだ登録していない場合のみ表示） */}
+        }}>
+          {/* ランキング登録ボタン（スコアがあり、まだ登録していない場合のみ表示） */}
           {currentScore && !isScoreRegistered && (
             <button
               onClick={handleOpenRankingModal}
-              style={{
-                padding: '12px 24px',
-                fontSize: '1.2rem',
-                background: 'linear-gradient(45deg, #10b981, #059669)',
-                color: '#fff',
-                border: 'none',
-                borderRadius: '8px',
-                cursor: 'pointer',
-                transition: 'all 0.3s ease',
-                minWidth: '150px'
-              }}
-              onMouseEnter={(e) => {
-                e.currentTarget.style.transform = 'translateY(-2px)';
-                e.currentTarget.style.boxShadow = '0 8px 25px rgba(16, 185, 129, 0.3)';
-              }}
-              onMouseLeave={(e) => {
-                e.currentTarget.style.transform = 'translateY(0)';
-                e.currentTarget.style.boxShadow = 'none';
-              }}
+              className="btn"
             >
               ランキング登録
             </button>
@@ -228,59 +211,22 @@ const SimpleGameResultScreen: React.FC<SimpleGameResultScreenProps> = ({
           
           <button
             onClick={onGoMenu}
-            style={{
-              padding: '12px 24px',
-              fontSize: '1.2rem',
-              background: 'linear-gradient(45deg, #00e0ff, #0080ff)',
-              color: '#fff',
-              border: 'none',
-              borderRadius: '8px',
-              cursor: 'pointer',
-              transition: 'all 0.3s ease',
-              minWidth: '150px'
-            }}
-            onMouseEnter={(e) => {
-              e.currentTarget.style.transform = 'translateY(-2px)';
-              e.currentTarget.style.boxShadow = '0 8px 25px rgba(0, 224, 255, 0.3)';
-            }}
-            onMouseLeave={(e) => {
-              e.currentTarget.style.transform = 'translateY(0)';
-              e.currentTarget.style.boxShadow = 'none';
-            }}
+            className="btn"
           >
             メニューに戻る
           </button>
           
           <button
             onClick={onGoRanking}
-            style={{
-              padding: '12px 24px',
-              fontSize: '1.2rem',
-              background: 'linear-gradient(45deg, #666, #888)',
-              color: '#fff',
-              border: 'none',
-              borderRadius: '8px',
-              cursor: 'pointer',
-              transition: 'all 0.3s ease',
-              minWidth: '150px'
-            }}
-            onMouseEnter={(e) => {
-              e.currentTarget.style.transform = 'translateY(-2px)';
-              e.currentTarget.style.boxShadow = '0 8px 25px rgba(136, 136, 136, 0.3)';
-            }}
-            onMouseLeave={(e) => {
-              e.currentTarget.style.transform = 'translateY(0)';
-              e.currentTarget.style.boxShadow = 'none';
-            }}
+            className="btn"
           >
             ランキング
           </button>
         </div>        
         {/* ショートカット情報 */}
         <div style={{
-          marginTop: '3rem',
-          fontSize: '0.9rem',
-          color: '#666'
+          marginTop: '2rem',
+          fontSize: '0.9rem'
         }}>
           <p>ESC: メニューに戻る | R: ランキング{currentScore && !isScoreRegistered ? ' | ENTER: ランキング登録' : ''}</p>
         </div>

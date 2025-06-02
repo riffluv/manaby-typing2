@@ -1,7 +1,6 @@
 import type { Metadata } from "next";
 import { Geist, Geist_Mono } from "next/font/google";
 import "./globals.css";
-import MonkeytypeHeader from '@/components/common/MonkeytypeHeader';
 import AppLayout from '@/components/AppLayout';
 import AudioSystemInitializer from '@/components/AudioSystemInitializer';
 import BGMInitializer from '@/components/BGMInitializer';
@@ -33,7 +32,6 @@ export default function RootLayout({
       >
         <AudioSystemInitializer />
         <BGMInitializer />
-        <MonkeytypeHeader />
         <AppLayout>
           {children}
         </AppLayout>

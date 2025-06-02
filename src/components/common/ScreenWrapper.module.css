@@ -1,9 +1,20 @@
-/* ScreenWrapper.module.css - 必要最小限の構造のみ */
+/* Professional ScreenWrapper - Production Ready */
 .screenWrapper {
   width: 100%;
+  max-width: 100%;
   min-height: 100vh;
   display: flex;
   flex-direction: column;
-  padding-top: 8vh; /* header分の余白を追加 */
   box-sizing: border-box;
+  overflow-x: hidden;
+  position: relative;
+}
+
+.withBorder {
+  border: 1px solid #e5e7eb;
+  border-radius: 0.5rem;
+}
+
+.withBoxShadow {
+  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
 }

@@ -114,28 +114,25 @@ const SimpleUnifiedTypingGame: React.FC<{
       />
     );
   }
-
   if (gameStatus === 'playing' && currentWord.japanese) {
     return (
       <div style={{
         minHeight: '100vh',
-        background: 'linear-gradient(135deg, #1a1a2e 0%, #16213e 50%, #0f3460 100%)',
-        color: '#fff',
         display: 'flex',
         flexDirection: 'column',
         justifyContent: 'center',
         alignItems: 'center'
-      }}>
-        {/* プログレス表示 */}
+      }}>        {/* プログレス表示 */}
         <div style={{
           position: 'fixed',
           top: '20px',
           right: '20px',
           fontSize: '1.2rem',
-          color: '#fff',
-          background: 'rgba(0,0,0,0.3)',
+          color: '#000',
+          background: 'rgba(255,255,255,0.8)',
           padding: '8px 16px',
-          borderRadius: '8px'
+          borderRadius: '8px',
+          border: '1px solid #ccc'
         }}>
           {completedCount + 1} / {questionLimit}
         </div>
@@ -147,13 +144,10 @@ const SimpleUnifiedTypingGame: React.FC<{
       </div>
     );
   }
-
   // ローディング状態
   return (
     <div style={{
       minHeight: '100vh',
-      background: 'linear-gradient(135deg, #1a1a2e 0%, #16213e 50%, #0f3460 100%)',
-      color: '#fff',
       display: 'flex',
       justifyContent: 'center',
       alignItems: 'center',

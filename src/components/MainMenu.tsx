@@ -270,16 +270,14 @@ const MainMenu: React.FC<MainMenuProps> = ({ onStart, onRetry, onRanking }) => {
           >ビジネスマナーランキングリセット</CommonButton>
         </div> */}
         <div className={styles['admin-status']}>{adminStatus}</div>
-      </CommonModal>
-
-      <div className={styles.mainMenuContainer}>
+      </CommonModal>      <div className={styles.mainMenuContainer}>
         {/* ゲームロゴ/タイトル */}
         <div className={styles.mainMenuHeader}>
           <h1 className={styles.mainMenuTitle}>
-            manabytype
+            TYPING GAME
           </h1>
           <p className={styles.menuTitleSub}>
-            CYBER TYPING ARENA
+            PRACTICE MODE
           </p>
         </div>
 
@@ -382,9 +380,7 @@ const MainMenu: React.FC<MainMenuProps> = ({ onStart, onRetry, onRanking }) => {
             { key: 'Alt+R', label: 'ランキング' }
           ]} />
         </motion.div>
-      </div>
-
-      {/* バージョン情報 - 控えめに */}
+      </div>      {/* バージョン情報 - 控えめに */}
       <motion.div 
         variants={itemVariants}
         className={styles.menuVersion}
@@ -395,7 +391,7 @@ const MainMenu: React.FC<MainMenuProps> = ({ onStart, onRetry, onRanking }) => {
             textShadow: 'var(--glow-cyan)'
           }}
         >
-          v2.0.0 | monkeytype × THE FINALS
+          v2.0.0
         </motion.span>
       </motion.div>
     </div>
