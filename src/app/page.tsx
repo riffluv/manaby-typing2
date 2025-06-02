@@ -3,7 +3,7 @@ import React, { useEffect } from 'react';
 import { AnimatePresence } from 'framer-motion';
 import SimpleUnifiedTypingGame from '@/components/SimpleUnifiedTypingGame';
 import MainMenu from '@/components/MainMenu';
-import NewRankingScreen from '@/components/NewRankingScreen';
+import CleanRankingScreen from '@/components/CleanRankingScreen';
 import { useSceneNavigationStore, SceneType } from '@/store/sceneNavigationStore';
 import ScreenLayout from '@/components/common/ScreenLayout';
 
@@ -25,13 +25,15 @@ export default function Home() {
       {currentScene === 'menu' ? (
         // MainMenuは完全独立 - ScreenLayoutを使用しない
         <MainMenu onStart={goToGame} onRanking={goToRanking} onRetry={goToGame} key={currentScene} />
+      ) : currentScene === 'ranking' ? (
+        // ランキング画面も完全独立 - ScreenLayoutを使用しない（CSS競合回避）
+        <CleanRankingScreen onGoMenu={goToMenu} key={currentScene} />
       ) : (
         <ScreenLayout 
           variant={getLayoutVariant(currentScene)}
           key={currentScene}
         >
           {currentScene === 'game' && <SimpleUnifiedTypingGame onGoMenu={goToMenu} onGoRanking={goToRanking} />}
-          {currentScene === 'ranking' && <NewRankingScreen onGoMenu={goToMenu} />}
           {/* GameResultScreenは直接使用せず、TypingGameコンポーネント内で管理します */}
         </ScreenLayout>
       )}
