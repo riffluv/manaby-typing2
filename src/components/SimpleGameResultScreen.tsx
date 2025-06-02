@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import type { GameScoreLog, PerWordScoreLog } from '@/types';
 import { useRankingModal } from '@/hooks/useRankingModal';
 import RankingModal from './RankingModal';
+import PortalShortcut from './PortalShortcut';
 
 // sessionStorageのキー
 const LAST_SCORE_KEY = 'typing_game_last_score';
@@ -223,13 +224,14 @@ const SimpleGameResultScreen: React.FC<SimpleGameResultScreenProps> = ({
             ランキング
           </button>
         </div>        
-        {/* ショートカット情報 */}
-        <div style={{
-          marginTop: '2rem',
-          fontSize: '0.9rem'
-        }}>
-          <p>ESC: メニューに戻る | R: ランキング{currentScore && !isScoreRegistered ? ' | ENTER: ランキング登録' : ''}</p>
-        </div>
+        {/* ショートカット情報（デザイン統一・ポータル表示） */}
+        <PortalShortcut
+          shortcuts={[
+            { key: 'ESC', label: 'メニューに戻る' },
+            { key: 'R', label: 'ランキング' },
+            ...(currentScore && !isScoreRegistered ? [{ key: 'ENTER', label: 'ランキング登録' }] : [])
+          ]}
+        />
       </div>
 
       {/* ランキング登録モーダル */}

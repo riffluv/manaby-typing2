@@ -5,17 +5,28 @@
   <title>manabytype II</title>
   <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@700&display=swap" rel="stylesheet">
   <style>
-    * { margin: 0; padding: 0; box-sizing: border-box; }
     html, body {
       width: 100%;
       height: 100%;
+      font-family: 'Cinzel', serif;
       background: radial-gradient(ellipse at center, #1a2740 0%, #0e1220 100%);
       color: #e6e6e6;
-      font-family: 'Cinzel', serif;
       overflow: hidden;
+      line-height: 1.4;
     }
+
+    body {
+      display: flex;
+      flex-direction: column;
+      margin: 0;
+    }
+
+    * {
+      box-sizing: border-box;
+    }
+
     .container {
-      height: 100%;
+      flex: 1;
       display: flex;
       flex-direction: column;
       justify-content: center;
@@ -24,6 +35,7 @@
       position: relative;
       z-index: 1;
     }
+
     .title-main {
       font-size: 3rem;
       background: linear-gradient(to right, #ffd88a, #fff3c2);
@@ -31,7 +43,9 @@
       -webkit-text-fill-color: transparent;
       letter-spacing: 0.3rem;
       text-shadow: 0 0 10px rgba(255, 230, 180, 0.5);
+      margin: 0;
     }
+
     .title-sub {
       font-size: 5rem;
       color: #d3e8ff;
@@ -46,6 +60,7 @@
       gap: 1.2rem;
       align-items: center;
     }
+
     .menu-item {
       position: relative;
       font-size: 1.6rem;
@@ -53,10 +68,12 @@
       cursor: pointer;
       transition: color 0.3s ease, text-shadow 0.3s ease;
     }
+
     .menu-item:hover {
       color: #ffffff;
       text-shadow: 0 0 14px rgba(120,180,255,0.7);
     }
+
     .menu-item::after {
       content: '';
       position: absolute;
@@ -74,6 +91,7 @@
       animation: shimmer 1.2s linear infinite;
       pointer-events: none;
     }
+
     .menu-item:hover::after {
       opacity: 1;
     }
@@ -90,6 +108,7 @@
       color: #bba;
       font-style: italic;
     }
+
     .shortcut-keys {
       position: absolute;
       bottom: 20px;
@@ -106,16 +125,17 @@
       z-index: 1;
       box-shadow: 0 0 6px rgba(200, 220, 255, 0.08);
     }
+
     .version, .copyright {
       position: absolute;
       font-size: 0.75rem;
       color: #aaa;
       z-index: 1;
     }
+
     .version { bottom: 40px; right: 20px; }
     .copyright { bottom: 40px; left: 20px; }
 
-    /* モードセレクトモーダル */
     .mode-select-screen {
       position: fixed;
       top: 0; left: 0;
@@ -127,9 +147,11 @@
       align-items: center;
       z-index: 10;
     }
+
     .mode-select-screen.active {
       display: flex;
     }
+
     .mode-wrapper {
       display: flex;
       width: 800px;
@@ -138,6 +160,7 @@
       border: 1px solid rgba(255,255,255,0.1);
       box-shadow: 0 0 20px rgba(200,220,255,0.08);
     }
+
     .mode-sidebar {
       width: 200px;
       background: rgba(0,0,0,0.2);
@@ -146,6 +169,7 @@
       flex-direction: column;
       padding: 1rem;
     }
+
     .mode-option {
       font-size: 1rem;
       color: #ccc;
@@ -155,20 +179,24 @@
       margin-bottom: 0.5rem;
       transition: all 0.3s ease;
     }
+
     .mode-option:hover {
       background: rgba(120,180,255,0.1);
       box-shadow: 0 0 8px rgba(180,220,255,0.15);
       color: #e0f8ff;
     }
+
     .mode-option.selected {
       border: 1px solid rgba(180,220,255,0.3);
       animation: pulse 1.6s infinite;
       color: #f0fcff;
     }
+
     @keyframes pulse {
       0%, 100% { box-shadow: 0 0 8px rgba(100,180,255,0.25); }
       50% { box-shadow: 0 0 14px rgba(100,180,255,0.4); }
     }
+
     .mode-content {
       flex: 1;
       padding: 1.5rem;
@@ -176,11 +204,13 @@
       flex-direction: column;
       justify-content: space-between;
     }
+
     .mode-description {
       font-size: 1rem;
       color: #bbb;
       line-height: 1.6;
     }
+
     .back-button {
       align-self: flex-end;
       margin-top: 2rem;
@@ -192,6 +222,7 @@
       cursor: pointer;
       transition: all 0.3s ease;
     }
+
     .back-button:hover {
       color: #b0d0ff;
       border-color: rgba(255,255,255,0.2);
