@@ -1,5 +1,10 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import type { GameScoreLog, PerWordScoreLog } from '@/types';
+import { useRankingModal } from '@/hooks/useRankingModal';
+import RankingModal from './RankingModal';
+
+// sessionStorageのキー
+const LAST_SCORE_KEY = 'typing_game_last_score';
 
 export type SimpleGameResultScreenProps = {
   onGoMenu: () => void;
@@ -13,6 +18,7 @@ export type SimpleGameResultScreenProps = {
  * シンプルなゲーム結果画面（スコア表示機能付き）
  * - WebWorkerで計算されたスコアを表示
  * - 基本的な結果表示
+ * - ランキング登録機能
  */
 const SimpleGameResultScreen: React.FC<SimpleGameResultScreenProps> = ({ 
   onGoMenu, 
@@ -21,6 +27,78 @@ const SimpleGameResultScreen: React.FC<SimpleGameResultScreenProps> = ({
   scoreLog,
   onCalculateFallbackScore
 }) => {
+  // ランキング登録状態管理
+  const [isScoreRegistered, setIsScoreRegistered] = useState(false);
+  
+  // 現在のスコア状態（propsまたはsessionStorageから復元）
+  const [currentScore, setCurrentScore] = useState<GameScoreLog['total'] | null>(null);
+
+  // 初期化時にスコアを設定
+  useEffect(() => {
+    if (resultScore) {
+      // 新しいスコアがpropsで渡された場合
+      setCurrentScore(resultScore);
+      // sessionStorageに保存
+      if (typeof window !== 'undefined') {
+        sessionStorage.setItem(LAST_SCORE_KEY, JSON.stringify(resultScore));
+      }
+    } else {
+      // propsにスコアがない場合、sessionStorageから復元を試みる
+      if (typeof window !== 'undefined') {
+        const savedScore = sessionStorage.getItem(LAST_SCORE_KEY);
+        if (savedScore) {
+          try {
+            setCurrentScore(JSON.parse(savedScore));
+          } catch (e) {
+            console.warn('Failed to parse saved score:', e);
+          }
+        }
+      }
+    }
+  }, [resultScore]);
+  
+  // ランキングモーダルフック
+  const { modalState, dispatch, handleRegisterRanking } = useRankingModal(
+    currentScore,
+    isScoreRegistered,
+    () => setIsScoreRegistered(true)
+  );
+
+  // ランキング登録ボタンのクリックハンドラ
+  const handleOpenRankingModal = () => {
+    dispatch({ type: 'open' });
+  };
+
+  // フォーム送信ハンドラ
+  const handleSubmitRanking = (e: React.FormEvent) => {
+    e.preventDefault();
+    handleRegisterRanking();
+  };
+
+  // キーボードショートカット
+  useEffect(() => {
+    const handleKeyDown = (e: KeyboardEvent) => {
+      if (modalState.show) return; // モーダルが開いている場合は無視
+      
+      switch (e.key) {
+        case 'Escape':
+          onGoMenu();
+          break;
+        case 'r':
+        case 'R':
+          onGoRanking();
+          break;        case 'Enter':
+          if (currentScore && !isScoreRegistered) {
+            handleOpenRankingModal();
+          }
+          break;
+      }
+    };
+
+    window.addEventListener('keydown', handleKeyDown);
+    return () => window.removeEventListener('keydown', handleKeyDown);
+  }, [onGoMenu, onGoRanking, currentScore, isScoreRegistered, modalState.show, handleOpenRankingModal]);
+
   return (
     <div style={{
       minHeight: '100vh',
@@ -45,9 +123,8 @@ const SimpleGameResultScreen: React.FC<SimpleGameResultScreenProps> = ({
         }}>
           お疲れ様でした！
         </h1>
-        
-        {/* スコア表示 */}
-        {resultScore ? (
+          {/* スコア表示 */}
+        {currentScore ? (
           <div style={{
             marginBottom: '3rem',
             padding: '2rem',
@@ -61,26 +138,24 @@ const SimpleGameResultScreen: React.FC<SimpleGameResultScreenProps> = ({
               gridTemplateColumns: 'repeat(2, 1fr)',
               gap: '1.5rem',
               fontSize: '1.2rem'
-            }}>
-              <div>
+            }}>              <div>
                 <div style={{ color: '#00e0ff', fontWeight: 'bold' }}>KPM</div>
-                <div style={{ fontSize: '2rem', color: '#fff' }}>{Math.floor(resultScore.kpm)}</div>
+                <div style={{ fontSize: '2rem', color: '#fff' }}>{Math.floor(currentScore.kpm)}</div>
               </div>
               <div>
                 <div style={{ color: '#7cffcb', fontWeight: 'bold' }}>精度</div>
-                <div style={{ fontSize: '2rem', color: '#fff' }}>{Math.floor(resultScore.accuracy)}%</div>
+                <div style={{ fontSize: '2rem', color: '#fff' }}>{Math.floor(currentScore.accuracy)}%</div>
               </div>
               <div>
                 <div style={{ color: '#10b981', fontWeight: 'bold' }}>正解</div>
-                <div style={{ fontSize: '1.5rem', color: '#fff' }}>{resultScore.correct}</div>
+                <div style={{ fontSize: '1.5rem', color: '#fff' }}>{currentScore.correct}</div>
               </div>
               <div>
                 <div style={{ color: '#ef4444', fontWeight: 'bold' }}>ミス</div>
-                <div style={{ fontSize: '1.5rem', color: '#fff' }}>{resultScore.miss}</div>
+                <div style={{ fontSize: '1.5rem', color: '#fff' }}>{currentScore.miss}</div>
               </div>
             </div>
-          </div>
-        ) : scoreLog && scoreLog.length > 0 ? (
+          </div>        ) : scoreLog && scoreLog.length > 0 ? (
           <div style={{
             marginBottom: '3rem',
             padding: '2rem',
@@ -109,28 +184,48 @@ const SimpleGameResultScreen: React.FC<SimpleGameResultScreenProps> = ({
                 スコアを表示
               </button>
             )}
-          </div>
-        ) : (
-          <p style={{
-            fontSize: '1.5rem',
-            marginBottom: '3rem',
-            lineHeight: '1.6',
-            color: '#ccc'
-          }}>
-            タイピング練習が完了しました。<br />
-            引き続き練習を頑張りましょう！
-          </p>
+          </div>        ) : null}
+        
+        {/* 最小スペース確保 */}
+        {!currentScore && (!scoreLog || scoreLog.length === 0) && (
+          <div style={{ height: '3rem' }} />
         )}
         
         {/* メッセージ（スコアがない場合のみ） */}
-        
-        {/* ボタン */}
+          {/* ボタン */}
         <div style={{
           display: 'flex',
-          gap: '2rem',
+          gap: '1.5rem',
           justifyContent: 'center',
           flexWrap: 'wrap'
-        }}>
+        }}>          {/* ランキング登録ボタン（スコアがあり、まだ登録していない場合のみ表示） */}
+          {currentScore && !isScoreRegistered && (
+            <button
+              onClick={handleOpenRankingModal}
+              style={{
+                padding: '12px 24px',
+                fontSize: '1.2rem',
+                background: 'linear-gradient(45deg, #10b981, #059669)',
+                color: '#fff',
+                border: 'none',
+                borderRadius: '8px',
+                cursor: 'pointer',
+                transition: 'all 0.3s ease',
+                minWidth: '150px'
+              }}
+              onMouseEnter={(e) => {
+                e.currentTarget.style.transform = 'translateY(-2px)';
+                e.currentTarget.style.boxShadow = '0 8px 25px rgba(16, 185, 129, 0.3)';
+              }}
+              onMouseLeave={(e) => {
+                e.currentTarget.style.transform = 'translateY(0)';
+                e.currentTarget.style.boxShadow = 'none';
+              }}
+            >
+              ランキング登録
+            </button>
+          )}
+          
           <button
             onClick={onGoMenu}
             style={{
@@ -180,17 +275,29 @@ const SimpleGameResultScreen: React.FC<SimpleGameResultScreenProps> = ({
           >
             ランキング
           </button>
-        </div>
-        
+        </div>        
         {/* ショートカット情報 */}
         <div style={{
           marginTop: '3rem',
           fontSize: '0.9rem',
           color: '#666'
         }}>
-          <p>ESC: メニューに戻る | R: ランキング</p>
+          <p>ESC: メニューに戻る | R: ランキング{currentScore && !isScoreRegistered ? ' | ENTER: ランキング登録' : ''}</p>
         </div>
       </div>
+
+      {/* ランキング登録モーダル */}
+      <RankingModal
+        show={modalState.show}
+        name={modalState.name}
+        registering={modalState.registering}
+        done={modalState.done}
+        error={modalState.error}
+        isScoreRegistered={isScoreRegistered}
+        onSubmit={handleSubmitRanking}
+        onChangeName={(name) => dispatch({ type: 'setName', name })}
+        onClose={() => dispatch({ type: 'close' })}
+      />
     </div>
   );
 };
