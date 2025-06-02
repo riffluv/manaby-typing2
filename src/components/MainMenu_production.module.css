@@ -122,7 +122,7 @@
   color: #d3e8ff;
   letter-spacing: 0.6rem;
   text-shadow: 0 0 15px rgba(150, 200, 255, 0.35);
-  margin: 12px 0 60px 0;
+  margin: 12px 0 80px 0;  /* indexnewmain.htmlと同じ見た目のため下マージンを80pxに調整 */
   font-family: 'Cinzel', 'Times New Roman', 'Georgia', serif;
   font-weight: 700;
   padding: 0;
@@ -132,7 +132,7 @@
 .menu {
   display: flex;
   flex-direction: column;
-  gap: 1.2rem;
+  gap: 1.4rem;  /* indexnewmain.htmlの間隔に合わせて1.2remから1.4remに調整 */
   align-items: center;
   margin: 0;
   padding: 0;
