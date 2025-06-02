@@ -19,17 +19,17 @@
   width: 100vw;
   height: 100vh;
   z-index: 999999;
-    /* 背景とビジュアル（ブラウザ互換性強化） */
-  background: radial-gradient(ellipse at center, #0a0f1b, #000000);
-  background: -webkit-radial-gradient(ellipse at center, #0a0f1b, #000000);
-  background: -moz-radial-gradient(ellipse at center, #0a0f1b, #000000);
-  background: -o-radial-gradient(ellipse at center, #0a0f1b, #000000);
+  /* 背景とビジュアル（明るいバージョン・ブラウザ互換性強化） */
+  background: radial-gradient(ellipse at center, #1a2740 0%, #0e1220 100%);
+  background: -webkit-radial-gradient(ellipse at center, #1a2740 0%, #0e1220 100%);
+  background: -moz-radial-gradient(ellipse at center, #1a2740 0%, #0e1220 100%);
+  background: -o-radial-gradient(ellipse at center, #1a2740 0%, #0e1220 100%);
   overflow: hidden;
   
-  /* フォント設定 - フォールバック強化 */
+  /* フォント設定 - フォールバック強化（明るいバージョン） */
   font-family: 'Cinzel', 'Times New Roman', 'Georgia', serif;
   font-weight: 700;
-  color: #ccc;
+  color: #e6e6e6;
   
   /* ボックスモデル */
   box-sizing: border-box;
@@ -94,13 +94,13 @@
   z-index: 1;
 }
 
-/* タイトル - メイン（ブラウザ互換性強化） */
+/* タイトル - メイン（明るいバージョン・ブラウザ互換性強化） */
 .titleMain {
   display: block;
   font-size: 3rem;
-  background: linear-gradient(to right, #c9a76f, #f8e6b0);
-  background: -webkit-linear-gradient(to right, #c9a76f, #f8e6b0);
-  background: -moz-linear-gradient(to right, #c9a76f, #f8e6b0);
+  background: linear-gradient(to right, #ffd88a, #fff3c2);
+  background: -webkit-linear-gradient(to right, #ffd88a, #fff3c2);
+  background: -moz-linear-gradient(to right, #ffd88a, #fff3c2);
   -webkit-background-clip: text;
   -moz-background-clip: text;
   background-clip: text;
@@ -108,20 +108,20 @@
   -moz-text-fill-color: transparent;
   color: transparent;
   letter-spacing: 0.3rem;
-  text-shadow: 0 0 6px rgba(255, 223, 128, 0.3);
+  text-shadow: 0 0 10px rgba(255, 230, 180, 0.5);
   font-family: 'Cinzel', 'Times New Roman', 'Georgia', serif;
   font-weight: 700;
   margin: 0;
   padding: 0;
 }
 
-/* タイトル - サブ */
+/* タイトル - サブ（明るいバージョン） */
 .titleSub {
   display: block;
   font-size: 5rem;
-  color: #b8cfe7;
+  color: #d3e8ff;
   letter-spacing: 0.6rem;
-  text-shadow: 0 0 12px rgba(100, 180, 255, 0.25);
+  text-shadow: 0 0 15px rgba(150, 200, 255, 0.35);
   margin: 12px 0 60px 0;
   font-family: 'Cinzel', 'Times New Roman', 'Georgia', serif;
   font-weight: 700;
@@ -138,14 +138,14 @@
   padding: 0;
 }
 
-/* メニューアイテム（ボタン対応） */
+/* メニューアイテム（明るいバージョン・ボタン対応） */
 .menuItem {
   display: block;
   position: relative;
-  font-size: 1.4rem;
-  color: #ccc;
+  font-size: 1.6rem;
+  color: #e0e0e0;
   cursor: pointer;
-  transition: color 0.3s ease;
+  transition: color 0.3s ease, text-shadow 0.3s ease;
   background: none;
   border: none;
   font-family: 'Cinzel', 'Times New Roman', 'Georgia', serif;
@@ -156,6 +156,11 @@
   text-decoration: none;
   line-height: 1;
   width: auto;
+}
+
+.menuItem:hover {
+  color: #ffffff;
+  text-shadow: 0 0 14px rgba(120, 180, 255, 0.7);
 }
 
 .menuItem:disabled {
@@ -169,11 +174,6 @@
   text-shadow: none;
 }
 
-.menuItem:hover {
-  color: #e0f7ff;
-  text-shadow: 0 0 10px rgba(100, 180, 255, 0.5);
-}
-
 .menuItem::after {
   content: '';
   position: absolute;
@@ -181,12 +181,12 @@
   left: 50%;
   width: 120px;
   height: 3px;
-  background: linear-gradient(to right, rgba(120, 200, 255, 0), #88ccff, rgba(120, 200, 255, 0));
+  background: linear-gradient(to right, rgba(180, 220, 255, 0), #b0ddff, rgba(180, 220, 255, 0));
   background-size: 300% auto;
   opacity: 0;
   transform: translateX(-50%);
   border-radius: 3px;
-  filter: blur(3px);
+  filter: blur(4px);
   transition: opacity 0.3s ease;
   animation: shimmer 1.2s linear infinite;
   pointer-events: none;
@@ -202,12 +202,12 @@
   100% { background-position: -150% 0; }
 }
 
-/* 選択されたモード表示 */
+/* 選択されたモード表示（明るいバージョン） */
 .selectedMode {
   display: block;
   margin-top: 2rem;
   font-size: 1rem;
-  color: #a99;
+  color: #bba;
   font-style: italic;
   font-family: 'Cinzel', 'Times New Roman', 'Georgia', serif;
   font-weight: 700;
@@ -235,7 +235,7 @@
   100% { opacity: 1; transform: translateY(0); }
 }
 
-/* ショートカットキー */
+/* ショートカットキー（明るいバージョン） */
 .shortcutKeys {
   position: absolute;
   bottom: 20px;
@@ -243,13 +243,14 @@
   transform: translateX(-50%);
   display: flex;
   gap: 2rem;
-  font-size: 0.8rem;
-  color: #999;
-  background: rgba(255, 255, 255, 0.03);
-  border: 1px solid rgba(255, 255, 255, 0.1);
+  font-size: 0.85rem;
+  color: #bbb;
+  background: rgba(255, 255, 255, 0.05);
+  border: 1px solid rgba(255, 255, 255, 0.15);
   border-radius: 6px;
-  padding: 0.3rem 1rem;
+  padding: 0.4rem 1.2rem;
   z-index: 1;
+  box-shadow: 0 0 6px rgba(200, 220, 255, 0.08);
   font-family: 'Cinzel', 'Times New Roman', 'Georgia', serif;
   font-weight: 700;
   margin: 0;
@@ -262,12 +263,12 @@
   padding: 0;
 }
 
-/* バージョンとコピーライト */
+/* バージョンとコピーライト（明るいバージョン） */
 .version,
 .copyright {
   position: absolute;
-  font-size: 0.7rem;
-  color: #777;
+  font-size: 0.75rem;
+  color: #aaa;
   z-index: 1;
   font-family: 'Cinzel', 'Times New Roman', 'Georgia', serif;
   font-weight: 700;
@@ -286,15 +287,15 @@
   left: 20px;
 }
 
-/* モードセレクトモーダル */
+/* モードセレクトモーダル（明るいバージョン） */
 .modeSelectScreen {
   position: fixed;
   top: 0;
   left: 0;
   width: 100vw;
   height: 100vh;
-  background: rgba(5, 10, 20, 0.92);
-  backdrop-filter: blur(6px);
+  background: rgba(15, 20, 35, 0.9);
+  backdrop-filter: blur(8px);
   display: flex;
   justify-content: center;
   align-items: center;
@@ -305,9 +306,9 @@
   display: flex;
   width: 800px;
   height: 400px;
-  background: rgba(20, 25, 35, 0.7);
-  border: 1px solid rgba(255, 255, 255, 0.08);
-  box-shadow: 0 0 20px rgba(255, 255, 255, 0.06);
+  background: rgba(30, 35, 50, 0.75);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  box-shadow: 0 0 20px rgba(200, 220, 255, 0.08);
 }
 
 .modeSidebar {
@@ -335,20 +336,20 @@
 }
 
 .modeOption:hover {
-  background: rgba(120, 180, 255, 0.07);
-  box-shadow: 0 0 8px rgba(180, 220, 255, 0.1);
-  color: #d0e8ff;
+  background: rgba(120, 180, 255, 0.1);
+  box-shadow: 0 0 8px rgba(180, 220, 255, 0.15);
+  color: #e0f8ff;
 }
 
 .modeOption.selected {
   border: 1px solid rgba(180, 220, 255, 0.3);
   animation: pulse 1.6s infinite;
-  color: #e0f0ff;
+  color: #f0fcff;
 }
 
 @keyframes pulse {
-  0%, 100% { box-shadow: 0 0 6px rgba(100, 180, 255, 0.2); }
-  50% { box-shadow: 0 0 12px rgba(100, 180, 255, 0.5); }
+  0%, 100% { box-shadow: 0 0 8px rgba(100, 180, 255, 0.25); }
+  50% { box-shadow: 0 0 14px rgba(100, 180, 255, 0.4); }
 }
 
 .modeContent {
@@ -362,7 +363,7 @@
 .modeDescription {
   display: block;
   font-size: 1rem;
-  color: #aaa;
+  color: #bbb;
   line-height: 1.6;
   font-family: 'Cinzel', 'Times New Roman', 'Georgia', serif;
   font-weight: 700;
@@ -376,9 +377,9 @@
   margin: 2rem 0 0 0;
   padding: 0.6rem 1.2rem;
   font-size: 1rem;
-  color: #aaa;
-  border: 1px solid rgba(255, 255, 255, 0.08);
-  background: rgba(255, 255, 255, 0.01);
+  color: #ccc;
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  background: rgba(255, 255, 255, 0.03);
   cursor: pointer;
   transition: all 0.3s ease;
   font-family: 'Cinzel', 'Times New Roman', 'Georgia', serif;
@@ -388,8 +389,8 @@
 
 .backButton:hover {
   color: #b0d0ff;
-  border-color: rgba(255, 255, 255, 0.15);
-  background: rgba(255, 255, 255, 0.02);
+  border-color: rgba(255, 255, 255, 0.2);
+  background: rgba(255, 255, 255, 0.05);
 }
 
 /* 管理者状態表示 */
