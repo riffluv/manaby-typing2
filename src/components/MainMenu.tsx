@@ -2,7 +2,7 @@ import PortalShortcut from '@/components/PortalShortcut';
 import React, { useState, useCallback, useMemo } from 'react';
 import { useTypingGameStore, useQuestionCount } from '@/store/typingGameStore';
 import { useGlobalShortcuts } from '@/hooks/useGlobalShortcuts';
-import styles from './MainMenu_production.module.css';
+import styles from './MainMenu.bem.module.css';
 import { deleteRankingEntriesByMode } from '@/lib/rankingManaby2';
 import CommonModal from './common/CommonModal';
 import CommonButton from './common/CommonButton';
@@ -113,14 +113,14 @@ const MainMenu: React.FC<MainMenuProps> = ({ onStart, onRetry, onRanking }) => {
   const handleAdminOverlayClick = (e: React.MouseEvent<HTMLDivElement>) => {
     if (e.target === e.currentTarget) {
       setAdminOpen(false);
-    }  };  return (
-    <div className={styles.isolatedMainMenu}>
+    }  };  return (    <div className={styles.mainMenu}>
       {/* メインコンテナ */}
-      <div className={styles.container}>
-        <h1 className={styles.titleMain}>manabytype</h1>
-        <h2 className={styles.titleSub}>II</h2>        <nav className={styles.menu} role="navigation" aria-label="メインメニュー">
-          <button 
-            className={styles.menuItem} 
+      <div className={styles.mainMenu__container}>
+        <h1 className={styles.mainMenu__title}>manabytype</h1>
+        <h2 className={styles.mainMenu__subtitle}>II</h2>
+
+        <nav className={styles.mainMenu__nav} role="navigation" aria-label="メインメニュー">          <button 
+            className={styles.mainMenu__navItem} 
             onClick={handleStart}
             type="button"
             aria-label="ゲームを開始"
@@ -129,7 +129,7 @@ const MainMenu: React.FC<MainMenuProps> = ({ onStart, onRetry, onRanking }) => {
             {isStarting ? 'STARTING...' : 'START GAME'}
           </button>
           <button 
-            className={styles.menuItem} 
+            className={styles.mainMenu__navItem} 
             onClick={() => setModeSelectOpen(true)}
             type="button"
             aria-label="プレイモードを選択"
@@ -138,7 +138,7 @@ const MainMenu: React.FC<MainMenuProps> = ({ onStart, onRetry, onRanking }) => {
             SELECT MODE
           </button>
           <button 
-            className={styles.menuItem} 
+            className={styles.mainMenu__navItem} 
             onClick={onRanking}
             type="button"
             aria-label="ランキングを表示"
@@ -147,7 +147,7 @@ const MainMenu: React.FC<MainMenuProps> = ({ onStart, onRetry, onRanking }) => {
             RANKING
           </button>
           <button 
-            className={styles.menuItem}
+            className={styles.mainMenu__navItem}
             type="button"
             aria-label="システム設定"
             disabled
@@ -158,12 +158,12 @@ const MainMenu: React.FC<MainMenuProps> = ({ onStart, onRetry, onRanking }) => {
         
         {/* エラー表示 */}
         {error && (
-          <div className={styles.errorMessage} role="alert" aria-live="assertive">
+          <div className={styles.mainMenu__error} role="alert" aria-live="assertive">
             {error}
           </div>
         )}
         
-        <div className={styles.selectedMode} role="status" aria-live="polite">
+        <div className={styles.mainMenu__selectedMode} role="status" aria-live="polite">
           Mode: {mode === 'normal' ? 'Normal' :
                  mode === 'hard' ? 'Hard' :
                  mode === 'sonkeigo' ? '尊敬語' :
@@ -176,14 +176,13 @@ const MainMenu: React.FC<MainMenuProps> = ({ onStart, onRetry, onRanking }) => {
           { key: 'Space', label: 'ゲーム開始' },
           { key: ['Alt', 'R'], label: 'ランキング' },
         ]}
-      />
+      />      {/* コピーライト */}
+      <div className={styles.mainMenu__copyright}>&copy;2025 manaby Omiya Studio. All rights reserved.</div>
 
-      {/* コピーライト */}
-      <div className={styles.copyright}>&copy;2025 manaby Omiya Studio. All rights reserved.</div>      {/* バージョン */}
-      <div className={styles.version}>App Ver. 1.01</div>      {/* モードセレクトモーダル */}
-      {modeSelectOpen && (
-        <div 
-          className={styles.modeSelectScreen}
+      {/* バージョン */}
+      <div className={styles.mainMenu__version}>App Ver. 1.01</div>{/* モードセレクトモーダル */}
+      {modeSelectOpen && (        <div 
+          className={styles.modeSelect}
           role="dialog"
           aria-modal="true"
           aria-labelledby="mode-select-title"
@@ -193,11 +192,11 @@ const MainMenu: React.FC<MainMenuProps> = ({ onStart, onRetry, onRanking }) => {
             }
           }}
         >
-          <div className={styles.modeWrapper}>
-            <div className={styles.modeSidebar} role="tablist" aria-label="プレイモード選択">
+          <div className={styles.modeSelect__wrapper}>
+            <div className={styles.modeSelect__sidebar} role="tablist" aria-label="プレイモード選択">
               <h3 id="mode-select-title" style={{ display: 'none' }}>プレイモード選択</h3>
               <button 
-                className={`${styles.modeOption} ${mode === 'normal' ? styles.selected : ''}`}
+                className={`${styles.modeSelect__option} ${mode === 'normal' ? styles['modeSelect__option--selected'] : ''}`}
                 onClick={() => handleModeSelect('normal')}
                 type="button"
                 role="tab"
@@ -207,7 +206,7 @@ const MainMenu: React.FC<MainMenuProps> = ({ onStart, onRetry, onRanking }) => {
                 Normal
               </button>
               <button 
-                className={`${styles.modeOption} ${mode === 'sonkeigo' ? styles.selected : ''}`}
+                className={`${styles.modeSelect__option} ${mode === 'sonkeigo' ? styles['modeSelect__option--selected'] : ''}`}
                 onClick={() => handleModeSelect('sonkeigo')}
                 type="button"
                 role="tab"
@@ -217,7 +216,7 @@ const MainMenu: React.FC<MainMenuProps> = ({ onStart, onRetry, onRanking }) => {
                 尊敬語
               </button>
               <button 
-                className={`${styles.modeOption} ${mode === 'kenjougo' ? styles.selected : ''}`}
+                className={`${styles.modeSelect__option} ${mode === 'kenjougo' ? styles['modeSelect__option--selected'] : ''}`}
                 onClick={() => handleModeSelect('kenjougo')}
                 type="button"
                 role="tab"
@@ -227,7 +226,7 @@ const MainMenu: React.FC<MainMenuProps> = ({ onStart, onRetry, onRanking }) => {
                 謙譲語
               </button>
               <button 
-                className={`${styles.modeOption} ${mode === 'business' ? styles.selected : ''}`}
+                className={`${styles.modeSelect__option} ${mode === 'business' ? styles['modeSelect__option--selected'] : ''}`}
                 onClick={() => handleModeSelect('business')}
                 type="button"
                 role="tab"
@@ -237,9 +236,9 @@ const MainMenu: React.FC<MainMenuProps> = ({ onStart, onRetry, onRanking }) => {
                 ビジネスマナー
               </button>
             </div>
-            <div className={styles.modeContent}>
+            <div className={styles.modeSelect__content}>
               <div 
-                className={styles.modeDescription}
+                className={styles.modeSelect__description}
                 id="mode-description"
                 role="tabpanel"
                 aria-live="polite"
@@ -252,7 +251,7 @@ const MainMenu: React.FC<MainMenuProps> = ({ onStart, onRetry, onRanking }) => {
                  '一般的な入力練習モードです。基本的な言葉遣いを扱います。'}
               </div>
               <button 
-                className={styles.backButton} 
+                className={styles.modeSelect__backButton} 
                 onClick={() => setModeSelectOpen(false)}
                 type="button"
                 aria-label="モード選択を閉じる"
@@ -295,7 +294,7 @@ const MainMenu: React.FC<MainMenuProps> = ({ onStart, onRetry, onRanking }) => {
             variant="secondary"
           >HARDランキングリセット</CommonButton>
         </div>
-        <div className={styles['admin-status']}>{adminStatus}</div>
+        <div className={styles.mainMenu__adminStatus}>{adminStatus}</div>
       </CommonModal>
     </div>
   );

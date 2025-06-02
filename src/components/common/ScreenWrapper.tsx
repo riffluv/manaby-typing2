@@ -1,5 +1,5 @@
 import React from 'react';
-import styles from './ScreenWrapper.module.css';
+import styles from './ScreenWrapper.bem.module.css';
 
 type ScreenWrapperProps = {
   children: React.ReactNode;
@@ -15,11 +15,10 @@ const ScreenWrapper: React.FC<ScreenWrapperProps> = ({
   boxShadow = false,
   className = '',
   style = {},
-}) => {
-  const wrapperClasses = [
+}) => {  const wrapperClasses = [
     styles.screenWrapper,
-    border ? styles.withBorder : '',
-    boxShadow ? styles.withBoxShadow : '',
+    border ? styles['screenWrapper--bordered'] : '',
+    boxShadow ? styles['screenWrapper--elevated'] : '',
     className,
   ]
     .filter(Boolean) // 空文字列を除外

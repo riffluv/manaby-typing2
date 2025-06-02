@@ -1,0 +1,347 @@
+/* ==========================================================================
+   MainMenu - BEM Design System Integration
+   プロダクションレベル BEM 設計による統一されたメインメニュー
+   ========================================================================== */
+
+/* メインメニューコンテナ */
+.mainMenu {
+  width: 100vw;
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  position: fixed;
+  top: 0;
+  left: 0;
+  font-family: var(--font-family-primary);
+  background: radial-gradient(ellipse at center, var(--color-bg-secondary), var(--color-bg-primary));
+  color: var(--color-text-primary);
+  overflow: hidden;
+  z-index: 1;
+}
+
+/* メインコンテナ */
+.mainMenu__container {
+  width: 100%;
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 0 var(--spacing-lg);
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  text-align: center;
+  position: relative;
+  z-index: 1;
+}
+
+/* タイトルセクション */
+.mainMenu__titleSection {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  margin-bottom: var(--spacing-4xl);
+}
+
+.mainMenu__title {
+  font-family: var(--font-family-primary);
+  font-weight: 700;
+  line-height: 1.1;
+  margin: 0;
+  font-size: 3rem;
+  background: linear-gradient(to right, #c9a76f, var(--color-accent-gold));
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+  letter-spacing: 0.3rem;
+  text-shadow: 0 0 6px rgba(255, 223, 128, 0.3);
+}
+
+.mainMenu__subtitle {
+  font-family: var(--font-family-primary);
+  font-weight: 700;
+  line-height: 1.1;
+  margin: 0;
+  font-size: 5rem;
+  color: var(--color-text-secondary);
+  letter-spacing: 0.6rem;
+  text-shadow: 0 0 12px rgba(100, 180, 255, 0.25);
+  margin: var(--spacing-sm) 0 var(--spacing-4xl);
+}
+
+/* ナビゲーションメニュー */
+.mainMenu__nav {
+  display: flex;
+  flex-direction: column;
+  gap: var(--spacing-lg);
+  align-items: center;
+}
+
+.mainMenu__navItem {
+  position: relative;
+  font-size: 1.6rem;
+  color: var(--color-text-muted);
+  cursor: pointer;
+  transition: color var(--transition-normal);
+  background: none;
+  border: none;
+  font-family: inherit;
+  font-weight: inherit;
+  text-decoration: none;
+  padding: 0;
+  margin: 0;
+  outline: none;
+}
+
+.mainMenu__navItem:disabled {
+  color: #666;
+  cursor: not-allowed;
+  opacity: 0.6;
+}
+
+.mainMenu__navItem:hover:not(:disabled) {
+  color: var(--color-text-primary);
+  text-shadow: 0 0 10px rgba(100, 180, 255, 0.5);
+}
+
+.mainMenu__navItem:disabled:hover {
+  color: #666;
+  text-shadow: none;
+}
+
+.mainMenu__navItem::after {
+  content: '';
+  position: absolute;
+  bottom: -6px;
+  left: 50%;
+  width: 120px;
+  height: 3px;
+  background: linear-gradient(to right, rgba(180, 220, 255, 0), var(--color-accent-blue), rgba(180, 220, 255, 0));
+  background-size: 300% auto;
+  opacity: 0;
+  transform: translateX(-50%);
+  border-radius: 3px;
+  filter: blur(4px);
+  transition: opacity var(--transition-normal);
+  animation: shimmer 1.2s linear infinite;
+  pointer-events: none;
+}
+
+.mainMenu__navItem:hover::after {
+  opacity: 1;
+}
+
+/* モード表示 */
+.mainMenu__selectedMode {
+  margin-top: var(--spacing-lg);
+  font-size: 1rem;
+  color: var(--color-text-muted);
+  font-style: italic;
+}
+
+/* エラーメッセージ */
+.mainMenu__error {
+  margin-top: var(--spacing-md);
+  padding: var(--spacing-sm) var(--spacing-md);
+  background: rgba(255, 100, 100, 0.1);
+  border: 1px solid rgba(255, 100, 100, 0.3);
+  border-radius: var(--border-radius-sm);
+  color: #ffcccc;
+  font-size: 0.9rem;
+}
+
+/* フッター情報 */
+.mainMenu__version {
+  position: absolute;
+  bottom: var(--spacing-xl);
+  right: var(--spacing-lg);
+  font-size: var(--font-size-xs);
+  color: var(--color-text-muted);
+  z-index: 1;
+}
+
+.mainMenu__copyright {
+  position: absolute;
+  bottom: var(--spacing-xl);
+  left: var(--spacing-lg);
+  font-size: var(--font-size-xs);
+  color: var(--color-text-muted);
+  z-index: 1;
+}
+
+/* 管理者ステータス */
+.mainMenu__adminStatus {
+  margin-top: var(--spacing-md);
+  padding: var(--spacing-sm);
+  background: rgba(0, 0, 0, 0.1);
+  border-radius: var(--border-radius-sm);
+  font-size: 0.9rem;
+  color: var(--color-text-muted);
+}
+
+/* ==========================================================================
+   モードセレクト モーダル
+   ========================================================================== */
+
+.modeSelect {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  background: var(--color-bg-overlay);
+  backdrop-filter: blur(8px);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: var(--z-index-modal);
+}
+
+.modeSelect__wrapper {
+  display: flex;
+  width: 800px;
+  height: 400px;
+  background: rgba(30, 35, 50, 0.75);
+  border: 1px solid var(--color-border-primary);
+  box-shadow: var(--shadow-2xl);
+  border-radius: var(--border-radius-lg);
+  overflow: hidden;
+}
+
+.modeSelect__sidebar {
+  width: 200px;
+  background: rgba(0, 0, 0, 0.2);
+  border-right: 1px solid var(--color-border-primary);
+  display: flex;
+  flex-direction: column;
+  padding: var(--spacing-md);
+}
+
+.modeSelect__option {
+  font-size: 1rem;
+  color: var(--color-text-muted);
+  padding: var(--spacing-sm) var(--spacing-md);
+  border: 1px solid transparent;
+  cursor: pointer;
+  margin-bottom: var(--spacing-sm);
+  transition: all var(--transition-normal);
+  background: none;
+  outline: none;
+  text-align: left;
+  width: 100%;
+}
+
+.modeSelect__option:hover {
+  background: rgba(120, 180, 255, 0.1);
+  box-shadow: 0 0 8px rgba(180, 220, 255, 0.15);
+  color: #e0f8ff;
+}
+
+.modeSelect__option--selected {
+  border: 1px solid var(--color-border-accent);
+  animation: pulse 1.6s infinite;
+  color: #f0fcff;
+}
+
+.modeSelect__content {
+  flex: 1;
+  padding: var(--spacing-xl);
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+}
+
+.modeSelect__description {
+  font-size: 1rem;
+  color: var(--color-text-muted);
+  line-height: 1.6;
+}
+
+.modeSelect__backButton {
+  align-self: flex-end;
+  margin-top: var(--spacing-lg);
+  padding: var(--spacing-sm) var(--spacing-lg);
+  font-size: 1rem;
+  color: var(--color-text-muted);
+  border: 1px solid var(--color-border-secondary);
+  background: var(--color-bg-surface);
+  cursor: pointer;
+  transition: all var(--transition-normal);
+  border-radius: var(--border-radius-sm);
+}
+
+.modeSelect__backButton:hover {
+  color: var(--color-accent-blue);
+  border-color: var(--color-border-primary);
+  background: rgba(255, 255, 255, 0.05);
+}
+
+/* ==========================================================================
+   アニメーション
+   ========================================================================== */
+
+@keyframes shimmer {
+  0% { background-position: -150% 0; }
+  50% { background-position: 150% 0; }
+  100% { background-position: -150% 0; }
+}
+
+@keyframes pulse {
+  0%, 100% { box-shadow: 0 0 8px rgba(100, 180, 255, 0.25); }
+  50% { box-shadow: 0 0 14px rgba(100, 180, 255, 0.4); }
+}
+
+/* ==========================================================================
+   フォーカス対応
+   ========================================================================== */
+
+.mainMenu__navItem:focus,
+.modeSelect__option:focus,
+.modeSelect__backButton:focus {
+  outline: 2px solid var(--color-accent-blue);
+  outline-offset: 2px;
+}
+
+/* ==========================================================================
+   レスポンシブ対応
+   ========================================================================== */
+
+@media (max-width: 768px) {
+  .mainMenu__title {
+    font-size: 2rem;
+    letter-spacing: 0.2rem;
+  }
+  
+  .mainMenu__subtitle {
+    font-size: 3rem;
+    letter-spacing: 0.4rem;
+  }
+  
+  .mainMenu__navItem {
+    font-size: 1.4rem;
+  }
+  
+  .modeSelect__wrapper {
+    width: 90vw;
+    height: 80vh;
+    flex-direction: column;
+  }
+  
+  .modeSelect__sidebar {
+    width: 100%;
+    height: 120px;
+    border-right: none;
+    border-bottom: 1px solid var(--color-border-primary);
+    display: flex;
+    flex-direction: row;
+    overflow-x: auto;
+  }
+  
+  .modeSelect__option {
+    flex-shrink: 0;
+    margin-right: var(--spacing-sm);
+    margin-bottom: 0;
+  }
+}

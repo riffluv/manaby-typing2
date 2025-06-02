@@ -1,5 +1,5 @@
 import React, { useEffect, useRef } from 'react';
-import styles from '../NewRankingScreen.module.css';
+import styles from './CommonModal.bem.module.css';
 
 interface CommonModalProps {
   open: boolean;
@@ -30,10 +30,9 @@ const CommonModal: React.FC<CommonModalProps> = ({
   }, [open, onClose]);
 
   if (!open) return null;
-
   return (
     <div
-      className={[styles.modalOverlay, overlayClassName].filter(Boolean).join(' ')}
+      className={[styles.modal__overlay, overlayClassName].filter(Boolean).join(' ')}
       ref={overlayRef}
       onClick={e => {
         if (e.target === overlayRef.current) onClose();
@@ -42,10 +41,10 @@ const CommonModal: React.FC<CommonModalProps> = ({
       aria-modal="true"
       role="dialog"
     >
-      <div className={[styles.modalContainer, className].filter(Boolean).join(' ')}>
+      <div className={[styles.modal__container, className].filter(Boolean).join(' ')}>
         {closeButton && (
           <button
-            className={styles.modalCloseButton}
+            className={styles.modal__closeButton}
             onClick={onClose}
             aria-label="閉じる"
             type="button"

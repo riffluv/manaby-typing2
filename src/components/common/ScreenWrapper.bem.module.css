@@ -1,0 +1,66 @@
+/* ==========================================================================
+   ScreenWrapper - BEM Design System Integration
+   プロダクションレベル スクリーンラッパー（BEM対応版）
+   ========================================================================== */
+
+.screenWrapper {
+  width: 100%;
+  max-width: 100%;
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  box-sizing: border-box;
+  overflow-x: hidden;
+  position: relative;
+  background: radial-gradient(ellipse at center, var(--color-bg-secondary), var(--color-bg-primary));
+  color: var(--color-text-primary);
+  font-family: var(--font-family-primary);
+}
+
+.screenWrapper--bordered {
+  border: 1px solid var(--color-border-primary);
+  border-radius: var(--border-radius-lg);
+}
+
+.screenWrapper--elevated {
+  box-shadow: var(--shadow-xl);
+  backdrop-filter: blur(12px);
+}
+
+.screenWrapper--glass {
+  background: rgba(255, 255, 255, 0.03);
+  box-shadow: 0 0 80px rgba(120, 180, 255, 0.06), 
+              inset 0 0 12px rgba(255, 255, 255, 0.02);
+}
+
+.screenWrapper--centered {
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+}
+
+.screenWrapper--padded {
+  padding: var(--spacing-xl);
+}
+
+.screenWrapper--fullscreen {
+  width: 100vw;
+  height: 100vh;
+  overflow: hidden;
+}
+
+/* ==========================================================================
+   レスポンシブ対応
+   ========================================================================== */
+
+@media (max-width: 768px) {
+  .screenWrapper--padded {
+    padding: var(--spacing-lg);
+  }
+}
+
+@media (max-width: 480px) {
+  .screenWrapper--padded {
+    padding: var(--spacing-md);
+  }
+}

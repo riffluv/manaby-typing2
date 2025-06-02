@@ -1,0 +1,124 @@
+/* ==========================================================================
+   CommonModal - BEM Design System Integration
+   共通モーダルコンポーネント用スタイル（BEM対応版）
+   ========================================================================== */
+
+/* 
+   注意: design-system.cssのBEMクラスとCSS変数を優先的に使用してください
+   コンポーネント固有のスタイルは最小限に抑制
+*/
+
+.modal {
+  /* モーダルのベースクラス */
+}
+
+.modal__overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(0, 0, 0, 0.7);
+  backdrop-filter: blur(8px);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: var(--z-index-modal);
+  animation: modalOverlayFadeIn var(--transition-normal) ease-out;
+}
+
+.modal__container {
+  background: var(--color-bg-surface);
+  border: 1px solid var(--color-border-primary);
+  border-radius: var(--border-radius-lg);
+  box-shadow: var(--shadow-xl);
+  max-width: 90vw;
+  max-height: 90vh;
+  overflow: auto;
+  position: relative;
+  padding: var(--spacing-xl);
+  margin: var(--spacing-lg);
+  animation: modalContainerSlideIn var(--transition-normal) ease-out;
+}
+
+.modal__closeButton {
+  position: absolute;
+  top: var(--spacing-md);
+  right: var(--spacing-md);
+  background: none;
+  border: none;
+  font-size: var(--font-size-xl);
+  color: var(--color-text-muted);
+  cursor: pointer;
+  width: 32px;
+  height: 32px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: var(--border-radius-sm);
+  transition: all var(--transition-fast);
+}
+
+.modal__closeButton:hover {
+  background: rgba(255, 255, 255, 0.1);
+  color: var(--color-text-primary);
+}
+
+.modal__closeButton:focus {
+  outline: 2px solid var(--color-accent-blue);
+  outline-offset: 2px;
+}
+
+/* ==========================================================================
+   アニメーション
+   ========================================================================== */
+
+@keyframes modalOverlayFadeIn {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+@keyframes modalContainerSlideIn {
+  from {
+    opacity: 0;
+    transform: translateY(-20px) scale(0.95);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+}
+
+/* ==========================================================================
+   レスポンシブ対応
+   ========================================================================== */
+
+@media (max-width: 768px) {
+  .modal__container {
+    margin: var(--spacing-md);
+    padding: var(--spacing-lg);
+    max-width: 95vw;
+  }
+}
+
+@media (max-width: 480px) {
+  .modal__container {
+    margin: var(--spacing-sm);
+    padding: var(--spacing-md);
+    max-width: 98vw;
+    max-height: 95vh;
+  }
+}
+
+/* ==========================================================================
+   使用推奨クラス例（design-system.cssから）:
+   
+   レイアウト: .d-flex, .flex-col, .items-center, .justify-center
+   テキスト: .text-center, .title--section, .text--muted
+   ボタン: .btn, .btn--primary
+   スペーシング: .p-lg, .m-lg, .mb-md
+   ========================================================================== */

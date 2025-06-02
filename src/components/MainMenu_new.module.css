@@ -1,64 +1,64 @@
 /* ==========================================================================
-   MainMenu - 最小限のコンポーネント固有スタイル
+   MainMenu - BEM設計による最小限のコンポーネント固有スタイル
    ========================================================================== */
 
 /* 
-   注意: globals.cssのユーティリティクラスを優先的に使用してください
+   注意: design-system.cssのBEMクラスを優先的に使用してください
    コンポーネント固有のスタイルは最小限に抑制
 */
 
-.mainMenuTitle {
+.main-menu__title--large {
   font-size: 2.5rem;
   font-weight: 700;
 }
 
-.menuTitleSub {
+.main-menu__subtitle--uppercase {
   text-transform: uppercase;
 }
 
-.menuStartButton {
+.main-menu__start-button {
   font-size: 1.5rem;
   min-width: 18rem;
 }
 
-.menuModeTitle {
+.main-menu__mode-title {
   text-transform: uppercase;
 }
 
-.menuModeGrid {
+.main-menu__mode-grid {
   max-width: 500px;
 }
 
-.menuModeButton {
-  padding: 1.2rem;
+.main-menu__mode-button {
+  padding: var(--spacing-lg);
 }
 
-.menuModeButtonNormal {
+.main-menu__mode-button--normal {
   background-color: #e8f5e8;
   border-color: #4caf50;
   color: #2e7d32;
 }
 
-.menuModeButtonHard {
+.main-menu__mode-button--hard {
   background-color: #ffe8e8;
   border-color: #f44336;
   color: #c62828;
 }
 
-.menuModeButtonInactiveNormal,
-.menuModeButtonInactiveHard {
+.main-menu__mode-button--inactive-normal,
+.main-menu__mode-button--inactive-hard {
   background-color: #f5f5f5;
   border-color: #ccc;
   color: #999;
 }
 
 /* ==========================================================================
-   使用推奨クラス例（globals.cssから）:
+   使用推奨BEMクラス例（design-system.cssから）:
    
-   レイアウト: .flex, .flex-col, .items-center, .justify-center, .gap-md
-   テキスト: .text-center, .text-2xl, .text-secondary, .font-bold
-   ボタン: .btn, .btn-primary, .btn-lg
-   スペーシング: .p-md, .m-lg, .mb-sm
-   グリッド: .grid, .grid-cols-2
-   コンテナ: .container
+   レイアウト: .layout, .layout--center, .layout--grid
+   テキスト: .text, .text--center, .text--large, .text--secondary
+   ボタン: .btn, .btn--primary, .btn--large
+   メニュー: .menu, .menu--vertical, .menu__item
+   カード: .card, .card--large
+   モーダル: .modal, .modal--overlay
    ========================================================================== */

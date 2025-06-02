@@ -7,8 +7,8 @@ import PortalShortcut from '@/components/PortalShortcut';
 import NewRankingTableRow from './NewRankingTableRow';
 import TabButton from './common/TabButton';
 import CommonButton from './common/CommonButton';
-import styles from './NewRankingScreen.module.css';
-import screenStyles from './common/ScreenWrapper.module.css';
+import styles from './NewRankingScreen.bem.module.css';
+import screenStyles from './common/ScreenWrapper.bem.module.css';
 import { useSceneNavigationStore } from '@/store/sceneNavigationStore';
 
 interface NewRankingScreenProps {
@@ -89,18 +89,18 @@ const NewRankingScreen: React.FC<NewRankingScreenProps> = ({ onGoMenu }) => {
   ], [goBack, onGoMenu]);  return (
     <div className={styles.rankingScreen}>
       <motion.div
-        className={styles.rankingContainer}
+        className={styles.rankingScreen__container}
         initial="hidden"
         animate="visible"
         variants={containerVariants}
       >
         {/* ヘッダー - サイバーパンク風 */}
-        <motion.div variants={itemVariants} className={styles.rankingHeader}>
-          <h1 className={styles.rankingTitle}>RANKING</h1>
+        <motion.div variants={itemVariants} className={styles.rankingScreen__header}>
+          <h1 className={styles.rankingScreen__title}>RANKING</h1>
         </motion.div>
         
         {/* 難易度選択 - monkeytype風 */}
-        <motion.div variants={itemVariants} className={styles.difficultySelector}>
+        <motion.div variants={itemVariants} className={styles.rankingScreen__difficultySelector}>
           {['normal', 'hard'].map((difficulty) => (
             <TabButton
               key={difficulty}
@@ -116,36 +116,36 @@ const NewRankingScreen: React.FC<NewRankingScreenProps> = ({ onGoMenu }) => {
         </motion.div>
         
         {/* ランキングテーブル */}
-        <motion.div variants={itemVariants} className={styles.rankingTableContainer}>
+        <motion.div variants={itemVariants} className={styles.rankingScreen__tableContainer}>
           {loading ? (
-            <div className={styles.loadingState}>
+            <div className={styles.rankingScreen__loadingState}>
               <div className="loading-text">ランキング読み込み中</div>
-              <div className={styles.loadingSpinner}></div>
+              <div className={styles.rankingScreen__loadingSpinner}></div>
             </div>
           ) : error ? (
-            <div className={styles.errorState}>
+            <div className={styles.rankingScreen__errorState}>
               <div className="error-text">{error}</div>
               <CommonButton onClick={fetchRankings} variant="primary">
                 リトライ
               </CommonButton>
             </div>
           ) : rankings.length === 0 ? (
-            <div className={styles.emptyState}>
+            <div className={styles.rankingScreen__emptyState}>
               <h3 className="empty-title">まだスコアがありません</h3>
               <p className="empty-message">
                 ゲームをプレイして最初のランキング入りを目指しましょう！
               </p>
             </div>
           ) : (
-            <table className={styles.rankingTable}>
-              <thead className={styles.tableHeader}>
+            <table className={styles.rankingScreen__table}>
+              <thead className={styles.rankingScreen__tableHeader}>
                 <tr>
-                  <th className={styles.tableHeaderCell}>順位</th>
-                  <th className={styles.tableHeaderCell}>プレイヤー</th>
-                  <th className={styles.tableHeaderCell}>KPM</th>
-                  <th className={styles.tableHeaderCell}>正確率</th>
-                  <th className={styles.tableHeaderCell}>正解</th>
-                  <th className={styles.tableHeaderCell}>ミス</th>
+                  <th className={styles.rankingScreen__tableHeaderCell}>順位</th>
+                  <th className={styles.rankingScreen__tableHeaderCell}>プレイヤー</th>
+                  <th className={styles.rankingScreen__tableHeaderCell}>KPM</th>
+                  <th className={styles.rankingScreen__tableHeaderCell}>正確率</th>
+                  <th className={styles.rankingScreen__tableHeaderCell}>正解</th>
+                  <th className={styles.rankingScreen__tableHeaderCell}>ミス</th>
                 </tr>
               </thead>
               <tbody>

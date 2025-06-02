@@ -1,0 +1,99 @@
+/* ==========================================================================
+   MainMenu New - BEM Design System Integration
+   最小限のコンポーネント固有スタイル（BEM対応版）
+   ========================================================================== */
+
+/* 
+   注意: design-system.cssのBEMクラスとCSS変数を優先的に使用してください
+   コンポーネント固有のスタイルは最小限に抑制
+*/
+
+.mainMenuTitle {
+  font-size: var(--font-size-4xl);
+  font-weight: 700;
+  color: var(--color-text-accent);
+}
+
+.menuTitleSub {
+  text-transform: uppercase;
+  letter-spacing: 0.2rem;
+}
+
+.menuStartButton {
+  font-size: var(--font-size-xl);
+  min-width: 18rem;
+  padding: var(--spacing-lg) var(--spacing-xl);
+}
+
+.menuModeTitle {
+  text-transform: uppercase;
+  font-size: var(--font-size-lg);
+  color: var(--color-text-secondary);
+  margin-bottom: var(--spacing-md);
+}
+
+.menuModeGrid {
+  max-width: 500px;
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: var(--spacing-md);
+}
+
+.menuModeButton {
+  padding: var(--spacing-lg);
+  border-radius: var(--border-radius-md);
+  border: 2px solid;
+  transition: all var(--transition-normal);
+  font-weight: 600;
+  cursor: pointer;
+}
+
+.menuModeButtonNormal {
+  background-color: rgba(76, 175, 80, 0.1);
+  border-color: var(--color-accent-success);
+  color: #2e7d32;
+}
+
+.menuModeButtonNormal:hover {
+  background-color: rgba(76, 175, 80, 0.2);
+  transform: translateY(-1px);
+  box-shadow: var(--shadow-md);
+}
+
+.menuModeButtonHard {
+  background-color: rgba(244, 67, 54, 0.1);
+  border-color: var(--color-accent-error);
+  color: #c62828;
+}
+
+.menuModeButtonHard:hover {
+  background-color: rgba(244, 67, 54, 0.2);
+  transform: translateY(-1px);
+  box-shadow: var(--shadow-md);
+}
+
+.menuModeButtonInactiveNormal,
+.menuModeButtonInactiveHard {
+  background-color: var(--color-bg-surface);
+  border-color: var(--color-border-secondary);
+  color: var(--color-text-muted);
+  cursor: not-allowed;
+  opacity: 0.6;
+}
+
+.menuModeButtonInactiveNormal:hover,
+.menuModeButtonInactiveHard:hover {
+  transform: none;
+  box-shadow: none;
+}
+
+/* ==========================================================================
+   使用推奨クラス例（design-system.cssから）:
+   
+   レイアウト: .d-flex, .flex-col, .items-center, .justify-center, .gap-md
+   テキスト: .text-center, .title--section, .text--muted
+   ボタン: .btn, .btn--primary, .btn--lg
+   スペーシング: .p-lg, .m-lg, .mb-sm
+   グリッド: .d-grid
+   コンテナ: .container
+   ========================================================================== */

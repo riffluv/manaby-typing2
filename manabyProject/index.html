@@ -1,24 +1,37 @@
 <!DOCTYPE html>
 <html lang="ja">
 <head>
-  <meta charset="UTF-8">
+  <meta charset="UTF-8" />
   <title>manabytype II</title>
-  <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@700&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@700&display=swap" rel="stylesheet" />
   <style>
-    * {
-      margin: 0;
-      padding: 0;
+    /* リセット環境に対応するための全明示スタイル */
+    *, *::before, *::after {
       box-sizing: border-box;
     }
+
     html, body {
+      margin: 0;
+      padding: 0;
       width: 100%;
       height: 100%;
       background: radial-gradient(ellipse at center, #0a0f1b, #000000);
-      color: #ccc;
       font-family: 'Cinzel', serif;
+      line-height: 1.5;
+      font-size: 16px;
+      color: #ccc;
       overflow: hidden;
     }
+
+    body {
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+    }
+
     .container {
+      width: 100%;
       height: 100%;
       display: flex;
       flex-direction: column;
@@ -29,6 +42,7 @@
       z-index: 1;
       animation: fadeIn 2s ease;
     }
+
     .title-main {
       font-size: 3rem;
       background: linear-gradient(to right, #c9a76f, #f8e6b0);
@@ -36,7 +50,9 @@
       -webkit-text-fill-color: transparent;
       letter-spacing: 0.3rem;
       text-shadow: 0 0 6px rgba(255, 223, 128, 0.3);
+      margin: 0;
     }
+
     .title-sub {
       font-size: 5rem;
       color: #b8cfe7;
@@ -44,6 +60,7 @@
       text-shadow: 0 0 12px rgba(100, 180, 255, 0.25);
       margin: 12px 0 60px;
     }
+
     .menu {
       display: flex;
       flex-direction: column;
@@ -51,17 +68,21 @@
       align-items: center;
       animation: fadeUp 2s ease-in-out;
     }
+
     .menu-item {
       font-size: 1.4rem;
       color: #ccc;
       position: relative;
       cursor: pointer;
       transition: all 0.3s ease;
+      line-height: 1.2;
     }
+
     .menu-item:hover,
     .menu-item.active {
       color: #b0d0ff;
     }
+
     .menu-item:hover::before,
     .menu-item.active::before {
       content: '';
@@ -74,31 +95,34 @@
       background: linear-gradient(to right, transparent, #88ccff, transparent);
       animation: pulse 2s infinite ease-in-out;
     }
+
     .version, .copyright {
       position: absolute;
       font-size: 0.7rem;
       color: #777;
     }
+
     .version {
       bottom: 40px;
       right: 20px;
     }
+
     .copyright {
       bottom: 40px;
       left: 20px;
     }
+
     .selected-mode {
       margin-top: 2rem;
       font-size: 1rem;
       color: #a99;
       font-style: italic;
     }
+
     .mode-select-screen {
       position: fixed;
-      top: 0;
-      left: 0;
-      width: 100vw;
-      height: 100vh;
+      top: 0; left: 0;
+      width: 100vw; height: 100vh;
       background: rgba(5, 10, 20, 0.95);
       display: none;
       flex-direction: column;
@@ -110,12 +134,13 @@
       backdrop-filter: blur(4px);
       animation: modalFade 0.6s ease forwards;
     }
+
     .mode-select-screen.active {
       display: flex;
       opacity: 1;
     }
+
     .mode-card {
-      font-family: 'Cinzel', serif;
       font-size: 1.6rem;
       color: #ccc;
       margin: 1rem;
@@ -126,12 +151,14 @@
       border: 1px solid rgba(255,255,255,0.1);
       border-radius: 12px;
     }
+
     .mode-card:hover,
     .mode-card.selected {
       color: #d0e8ff;
       background: rgba(255, 255, 255, 0.03);
       box-shadow: 0 0 10px rgba(100, 180, 255, 0.2);
     }
+
     .mode-card:hover::before,
     .mode-card.selected::before {
       content: '';
@@ -144,23 +171,25 @@
       background: linear-gradient(to right, transparent, #88ccff, transparent);
       animation: pulse 2s infinite ease-in-out;
     }
+
     .back-button {
       margin-top: 2.5rem;
       background: none;
       border: 1px solid rgba(255,255,255,0.1);
       color: #888;
-      font-family: 'Cinzel', serif;
       font-size: 1rem;
       cursor: pointer;
       padding: 0.4rem 1.5rem;
       border-radius: 8px;
       transition: all 0.3s ease;
     }
+
     .back-button:hover {
       color: #b0d0ff;
       background: rgba(255,255,255,0.03);
       box-shadow: 0 0 8px rgba(100, 180, 255, 0.1);
     }
+
     .shortcut-keys {
       position: absolute;
       bottom: 20px;
@@ -170,30 +199,34 @@
       gap: 2rem;
       font-size: 0.8rem;
       color: #999;
-      font-family: 'Cinzel', serif;
       letter-spacing: 0.05rem;
       background: rgba(255, 255, 255, 0.03);
       border: 1px solid rgba(255, 255, 255, 0.1);
       border-radius: 6px;
       padding: 0.3rem 1rem;
     }
+
     .shortcut-keys span {
       background: none;
       padding: 0 0.3rem;
       border: none;
     }
+
     @keyframes pulse {
       0%, 100% { opacity: 0.3; }
       50% { opacity: 1; }
     }
+
     @keyframes fadeIn {
       from { opacity: 0; transform: translateY(-20px); }
       to { opacity: 1; transform: translateY(0); }
     }
+
     @keyframes fadeUp {
       0% { opacity: 0; transform: translateY(20px); }
       100% { opacity: 1; transform: translateY(0); }
     }
+
     @keyframes modalFade {
       from { opacity: 0; transform: scale(0.95); }
       to { opacity: 1; transform: scale(1); }
@@ -212,6 +245,7 @@
     </div>
     <div class="selected-mode" id="selectedMode">Mode: Normal</div>
   </div>
+
   <div class="shortcut-keys">
     <span>Space：ゲーム開始</span>
     <span>Alt+R：ランキング</span>
@@ -248,17 +282,12 @@
     function highlightSelectedMode(mode) {
       const cards = document.querySelectorAll('.mode-card');
       cards.forEach(card => {
-        if (card.textContent === mode) {
-          card.classList.add('selected');
-        } else {
-          card.classList.remove('selected');
-        }
+        card.classList.toggle('selected', card.textContent === mode);
       });
     }
 
     function toggleModeScreen() {
-      const screen = document.getElementById('modeScreen');
-      screen.classList.toggle('active');
+      document.getElementById('modeScreen').classList.toggle('active');
     }
 
     function startGame() {
@@ -270,11 +299,9 @@
     }
 
     document.addEventListener('keydown', e => {
-      if (e.code === 'Space' && selectedMode) {
-        startGame();
-      } else if (e.key === 'Escape') {
-        document.getElementById('modeScreen').classList.remove('active');
-      }
+      if (e.code === 'Space' && selectedMode) startGame();
+      if (e.key === 'Escape') toggleModeScreen();
     });
   </script>
 </body>
+</html>
