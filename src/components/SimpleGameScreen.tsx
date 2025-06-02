@@ -70,80 +70,44 @@ const SimpleGameScreen: React.FC<SimpleGameScreenProps> = ({
       };
     }
   }, []);  return (
-    <div style={{
-      minHeight: '100vh',
-      width: '100%',
-      maxWidth: '100%',
-      display: 'flex',
-      flexDirection: 'column',
-      justifyContent: 'center',
-      alignItems: 'center',
-      padding: '2rem 1rem',
-      boxSizing: 'border-box',
-      overflowX: 'hidden'
-    }}>      {/* 日本語単語表示 */}
-      <div style={{
-        fontSize: 'clamp(1.5rem, 4vw, 2.5rem)',
-        marginBottom: '1.5rem',
-        textAlign: 'center',
-        fontWeight: '600',
-        color: '#111827',
-        maxWidth: '100%',
-        wordBreak: 'break-word'
-      }}>
-        {currentWord.japanese}
-      </div>
+    <div className="game-screen-ff16">
+      <div className="typing-container-ff16">
+        {/* 日本語単語表示 */}
+        <div className="japanese-text-ff16">
+          {currentWord.japanese}
+        </div>        {/* ローマ字表示エリア（ハイライト機能付き） */}
+        <div className="romaji-text-ff16">
+          <span className="typed">
+            {romajiDisplay.accepted}
+          </span>
+          {romajiDisplay.remaining && (
+            <>
+              <span className="active">
+                {romajiDisplay.remaining[0]}
+              </span>
+              <span className="char">
+                {romajiDisplay.remaining.slice(1)}
+              </span>
+            </>
+          )}
+        </div>
 
-      {/* ローマ字表示エリア（ハイライト機能付き） */}
-      <div style={{
-        fontSize: 'clamp(1.125rem, 3vw, 1.5rem)',
-        marginBottom: '2rem',
-        textAlign: 'center',
-        padding: '1rem',
-        maxWidth: '100%',
-        wordBreak: 'break-word'
-      }}>
-        <span className="typed-char">
-          {romajiDisplay.accepted}
-        </span>
-        {romajiDisplay.remaining && (
-          <>
-            <span className="current-char">
-              {romajiDisplay.remaining[0]}
-            </span>
-            <span className="pending-char">
-              {romajiDisplay.remaining.slice(1)}
-            </span>
-          </>
-        )}
-      </div>
-
-      {/* ショートカット案内 */}
-      <div style={{ marginBottom: '1rem' }}>
-        <PortalShortcut shortcuts={[{ key: 'Esc', label: 'メニューに戻る' }]} />
-      </div>      {/* タイピングエリア - BasicTypingEngineが制御 */}
-      <div 
-        ref={containerRef}
-        className="typing-area"
-        style={{
-          fontSize: 'clamp(1.25rem, 3vw, 2rem)',
-          textAlign: 'center',
-          padding: '1.5rem',
-          border: '2px solid #e5e7eb',
-          borderRadius: '0.5rem',
-          minHeight: '4rem',
-          width: '100%',
-          maxWidth: '600px',
-          display: 'flex',
-          alignItems: 'center',
-          justifyContent: 'center',
-          background: '#fafafa',
-          boxSizing: 'border-box'
-        }}
-        aria-live="polite"
-        aria-label="タイピングエリア"
-      >
-        {/* BasicTypingEngine が動的にコンテンツを挿入 */}
+        {/* ショートカット案内 */}
+        <div style={{ marginBottom: '1rem', position: 'relative', zIndex: 3 }}>
+          <PortalShortcut shortcuts={[{ key: 'Esc', label: 'メニューに戻る' }]} />
+        </div>        {/* タイピングエリア - BasicTypingEngineが制御 */}
+        <div 
+          ref={containerRef}
+          className="typing-area"
+          style={{
+            position: 'relative',
+            zIndex: 2
+          }}
+          aria-live="polite"
+          aria-label="タイピングエリア"
+        >
+          {/* BasicTypingEngine が動的にコンテンツを挿入 */}
+        </div>
       </div>
     </div>
   );
