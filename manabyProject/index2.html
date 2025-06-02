@@ -6,27 +6,31 @@
   <link href="https://fonts.googleapis.com/css2?family=Libre+Baskerville:wght@700&display=swap" rel="stylesheet">
   <script src="https://cdn.jsdelivr.net/npm/tsparticles@2/tsparticles.bundle.min.js"></script>
   <style>
-    /* （CSS省略なしで全文記載済み） */
-    * {
+    *, *::before, *::after {
       margin: 0;
       padding: 0;
       box-sizing: border-box;
     }
+
     html, body {
       width: 100%;
       height: 100%;
+      font-family: 'Libre Baskerville', serif;
+      font-size: 16px;
+      line-height: 1.5;
+      color: #ccc;
+      overflow: hidden;
       background: url('Final-Fantasy-XVI10252023-112844-78523.jpg') center center / cover no-repeat fixed;
       background-color: #000;
-      color: #ccc;
-      font-family: 'Libre Baskerville', serif;
-      overflow: hidden;
     }
+
     #tsparticles {
       position: absolute;
       width: 100%;
       height: 100%;
       z-index: 0;
     }
+
     .overlay {
       position: absolute;
       width: 100%;
@@ -34,31 +38,36 @@
       background: radial-gradient(ellipse at center, rgba(0,0,0,0.3), rgba(0,0,0,0.85));
       z-index: 0;
     }
+
     .container {
+      position: relative;
+      z-index: 1;
+      width: 100%;
       height: 100%;
       display: flex;
       flex-direction: column;
       justify-content: center;
       align-items: center;
       text-align: center;
-      position: relative;
-      z-index: 1;
       animation: fadeIn 2s ease;
     }
+
     .title-main {
       font-size: 4.5rem;
-      color: #ffffff;
+      color: #fff;
       letter-spacing: 0.3rem;
       text-shadow: 0 0 15px rgba(255,255,255,0.4), 0 0 35px rgba(200,200,255,0.15);
       text-transform: uppercase;
     }
+
     .title-sub {
       font-size: 3.5rem;
       color: #ddd;
       letter-spacing: 0.4rem;
-      text-shadow: 0 0 12px rgba(255, 255, 255, 0.25);
+      text-shadow: 0 0 12px rgba(255,255,255,0.25);
       margin: 10px 0 50px;
     }
+
     .menu {
       display: flex;
       flex-direction: column;
@@ -66,6 +75,7 @@
       align-items: center;
       animation: fadeUp 2s ease-in-out;
     }
+
     .menu-item {
       font-size: 1.4rem;
       color: #ccc;
@@ -73,30 +83,36 @@
       cursor: pointer;
       transition: all 0.3s ease;
     }
+
     .menu-item:hover,
     .menu-item.active {
       color: #ff4444;
       text-shadow: 0 0 8px rgba(255, 100, 100, 0.5);
     }
+
     .version, .copyright {
       position: absolute;
       font-size: 0.7rem;
       color: #777;
     }
+
     .version {
       bottom: 40px;
       right: 20px;
     }
+
     .copyright {
       bottom: 40px;
       left: 20px;
     }
+
     .selected-mode {
       margin-top: 2rem;
       font-size: 1rem;
       color: #ccc;
       font-style: italic;
     }
+
     .mode-select-screen {
       position: fixed;
       top: 0;
@@ -113,12 +129,13 @@
       transition: opacity 0.5s ease;
       backdrop-filter: blur(8px);
     }
+
     .mode-select-screen.active {
       display: flex;
       opacity: 1;
     }
+
     .mode-card {
-      font-family: 'Libre Baskerville', serif;
       font-size: 1.4rem;
       color: #eee;
       margin: 0.5rem;
@@ -127,33 +144,36 @@
       padding: 0.6rem 2rem;
       border: 1px solid rgba(255,255,255,0.2);
       border-radius: 12px;
-      background: rgba(255, 255, 255, 0.02);
-      box-shadow: 0 0 8px rgba(255, 255, 255, 0.04);
+      background: rgba(255,255,255,0.02);
+      box-shadow: 0 0 8px rgba(255,255,255,0.04);
     }
+
     .mode-card:hover,
     .mode-card.selected {
       color: #fff;
-      background: rgba(255, 255, 255, 0.06);
-      box-shadow: 0 0 10px rgba(255, 100, 100, 0.3);
+      background: rgba(255,255,255,0.06);
+      box-shadow: 0 0 10px rgba(255,100,100,0.3);
       transform: scale(1.03);
     }
+
     .back-button {
       margin-top: 1.5rem;
       background: none;
       border: 1px solid rgba(255,255,255,0.3);
       color: #aaa;
-      font-family: 'Libre Baskerville', serif;
       font-size: 1rem;
       cursor: pointer;
       padding: 0.5rem 1.5rem;
       border-radius: 8px;
       transition: all 0.3s ease;
     }
+
     .back-button:hover {
       color: #fff;
       background: rgba(255,255,255,0.04);
-      box-shadow: 0 0 8px rgba(255, 255, 255, 0.15);
+      box-shadow: 0 0 8px rgba(255,255,255,0.15);
     }
+
     .shortcut-keys {
       position: absolute;
       bottom: 20px;
@@ -163,17 +183,18 @@
       gap: 2rem;
       font-size: 0.8rem;
       color: #999;
-      font-family: 'Libre Baskerville', serif;
       letter-spacing: 0.05rem;
-      background: rgba(255, 255, 255, 0.03);
-      border: 1px solid rgba(255, 255, 255, 0.1);
+      background: rgba(255,255,255,0.03);
+      border: 1px solid rgba(255,255,255,0.1);
       border-radius: 6px;
       padding: 0.3rem 1rem;
     }
+
     @keyframes fadeIn {
       from { opacity: 0; transform: translateY(-20px); }
       to { opacity: 1; transform: translateY(0); }
     }
+
     @keyframes fadeUp {
       0% { opacity: 0; transform: translateY(20px); }
       100% { opacity: 1; transform: translateY(0); }
@@ -200,6 +221,7 @@
   </div>
   <div class="copyright">&copy;2025 manaby Omiya Studio. All rights reserved.</div>
   <div class="version">App Ver. 1.01</div>
+
   <div id="modeScreen" class="mode-select-screen">
     <div class="mode-card" onclick="setMode('Normal', this)">Normal</div>
     <div class="mode-card" onclick="setMode('尊敬語', this)">尊敬語</div>
@@ -207,6 +229,7 @@
     <div class="mode-card" onclick="setMode('ビジネスマナー', this)">ビジネスマナー</div>
     <div class="back-button" onclick="toggleModeScreen()">戻る</div>
   </div>
+
   <script>
     let selectedMode = localStorage.getItem('manabytype_mode') || null;
 

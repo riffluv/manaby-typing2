@@ -1,6 +1,6 @@
 /* ==========================================================================
    MainMenu - Elden Ring Style (manabytype II)
-   完全に添付されたindex.htmlのデザインを再現
+   完全に添付されたindex.htmlのデザインを再現（BEM対応版）
    ========================================================================== */
 
 /* Googleフォントのインポート（Cinzel） */
@@ -99,15 +99,16 @@
   outline: none;
 }
 
+/* ナビゲーションアイテムのホバー・アクティブ状態 */
 .mainMenu__navItem:hover,
-.mainMenu__navItem:focus,
-.mainMenu__navItem--active {
+.mainMenu__navItem:focus {
   color: #b0d0ff;
+  outline: none;
 }
 
+/* ナビゲーションアイテムのホバー・アクティブ時の装飾線 */
 .mainMenu__navItem:hover::before,
-.mainMenu__navItem:focus::before,
-.mainMenu__navItem--active::before {
+.mainMenu__navItem:focus::before {
   content: '';
   position: absolute;
   top: 50%;
@@ -119,38 +120,12 @@
   animation: pulse 2s infinite ease-in-out;
 }
 
-.mainMenu__navItem:disabled {
-  color: #666;
-  cursor: not-allowed;
-  opacity: 0.6;
-}
-
-/* セレクテッドモード表示（.selected-mode相当） */
+/* 選択モード表示（.selected-mode相当） */
 .mainMenu__selectedMode {
   margin-top: 2rem;
   font-size: 1rem;
   color: #a99;
   font-style: italic;
-  font-family: 'Cinzel', serif;
-}
-
-/* バージョン情報（.version相当） */
-.mainMenu__version {
-  position: absolute;
-  font-size: 0.7rem;
-  color: #777;
-  bottom: 40px;
-  right: 20px;
-  font-family: 'Cinzel', serif;
-}
-
-/* コピーライト（.copyright相当） */
-.mainMenu__copyright {
-  position: absolute;
-  font-size: 0.7rem;
-  color: #777;
-  bottom: 40px;
-  left: 20px;
   font-family: 'Cinzel', serif;
 }
 
@@ -178,7 +153,160 @@
   border: none;
 }
 
-/* アニメーション定義 */
+/* バージョンとコピーライト */
+.mainMenu__version, 
+.mainMenu__copyright {
+  position: absolute;
+  font-size: 0.7rem;
+  color: #777;
+  font-family: 'Cinzel', serif;
+}
+
+.mainMenu__version {
+  bottom: 40px;
+  right: 20px;
+}
+
+.mainMenu__copyright {
+  bottom: 40px;
+  left: 20px;
+}
+
+/* エラー表示 */
+.mainMenu__error {
+  position: absolute;
+  top: 20px;
+  left: 50%;
+  transform: translateX(-50%);
+  background: rgba(255, 50, 50, 0.1);
+  border: 1px solid rgba(255, 100, 100, 0.3);
+  color: #ffaaaa;
+  padding: 0.8rem 1.5rem;
+  border-radius: 8px;
+  font-size: 0.9rem;
+  text-align: center;
+  max-width: 80%;
+  font-family: 'Cinzel', serif;
+}
+
+/* ==========================================================================
+   モードセレクト（元のHTMLのモーダル部分は無視してシンプルに）
+   ========================================================================== */
+
+.modeSelect {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  background: rgba(5, 10, 20, 0.95);
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  z-index: 1000;
+  opacity: 1;
+  backdrop-filter: blur(4px);
+  animation: modalFade 0.6s ease forwards;
+}
+
+.modeSelect__wrapper {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 2rem;
+  padding: 2rem;
+}
+
+.modeSelect__sidebar {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+  align-items: center;
+}
+
+.modeSelect__option {
+  font-size: 1.6rem;
+  color: #ccc;
+  cursor: pointer;
+  position: relative;
+  transition: all 0.3s ease;
+  padding: 0.5rem 2rem;
+  border: 1px solid rgba(255,255,255,0.1);
+  border-radius: 12px;
+  background: none;
+  font-family: 'Cinzel', serif;
+}
+
+.modeSelect__option:hover,
+.modeSelect__option--selected {
+  color: #d0e8ff;
+  background: rgba(255, 255, 255, 0.03);
+  box-shadow: 0 0 10px rgba(100, 180, 255, 0.2);
+}
+
+.modeSelect__option:hover::before,
+.modeSelect__option--selected::before {
+  content: '';
+  position: absolute;
+  top: 50%;
+  left: -60px;
+  transform: translateY(-50%);
+  width: 120px;
+  height: 1px;
+  background: linear-gradient(to right, transparent, #88ccff, transparent);
+  animation: pulse 2s infinite ease-in-out;
+}
+
+.modeSelect__content {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 1rem;
+}
+
+.modeSelect__description {
+  color: #999;
+  font-size: 1rem;
+  text-align: center;
+  max-width: 400px;
+  line-height: 1.6;
+  font-family: 'Cinzel', serif;
+}
+
+.modeSelect__backButton {
+  margin-top: 1rem;
+  background: none;
+  border: 1px solid rgba(255,255,255,0.1);
+  color: #888;
+  font-size: 1rem;
+  cursor: pointer;
+  padding: 0.4rem 1.5rem;
+  border-radius: 8px;
+  transition: all 0.3s ease;
+  font-family: 'Cinzel', serif;
+}
+
+.modeSelect__backButton:hover,
+.modeSelect__backButton:focus {
+  color: #b0d0ff;
+  background: rgba(255,255,255,0.03);
+  box-shadow: 0 0 8px rgba(100, 180, 255, 0.1);
+  outline: none;
+}
+
+/* 管理者モードのステータス表示 */
+.mainMenu__adminStatus {
+  margin-top: 1rem;
+  color: #4ade80;
+  font-size: 0.9rem;
+  text-align: center;
+}
+
+/* ==========================================================================
+   アニメーション
+   ========================================================================== */
+
 @keyframes pulse {
   0%, 100% { opacity: 0.3; }
   50% { opacity: 1; }
@@ -199,27 +327,10 @@
   to { opacity: 1; transform: scale(1); }
 }
 
-/* エラー表示、ローディング表示 */
-.mainMenu__error {
-  position: absolute;
-  top: 50%;
-  left: 50%;
-  transform: translate(-50%, -50%);
-  background: rgba(255, 0, 0, 0.1);
-  border: 1px solid rgba(255, 0, 0, 0.3);
-  color: #ff6b6b;
-  padding: 1rem 2rem;
-  border-radius: 8px;
-  text-align: center;
-  font-family: 'Cinzel', serif;
-}
+/* ==========================================================================
+   レスポンシブ対応
+   ========================================================================== */
 
-.mainMenu__loading {
-  opacity: 0.7;
-  pointer-events: none;
-}
-
-/* レスポンシブ対応（オリジナルには無いが追加） */
 @media (max-width: 768px) {
   .mainMenu__title {
     font-size: 2rem;
@@ -237,41 +348,14 @@
   }
   
   .mainMenu__shortcutKeys {
-    flex-direction: column;
-    gap: 0.5rem;
+    bottom: 15px;
     font-size: 0.7rem;
-  }
-  
-  .mainMenu__version,
-  .mainMenu__copyright {
-    font-size: 0.6rem;
-    bottom: 20px;
-  }
-}
-
-@media (max-width: 480px) {
-  .mainMenu__title {
-    font-size: 1.5rem;
-    letter-spacing: 0.1rem;
-  }
-  
-  .mainMenu__subtitle {
-    font-size: 2rem;
-    letter-spacing: 0.2rem;
-    margin: 6px 0 30px;
-  }
-  
-  .mainMenu__nav {
     gap: 1rem;
+    padding: 0.2rem 0.8rem;
   }
   
-  .mainMenu__navItem {
-    font-size: 1rem;
-  }
-    .mainMenu__navItem:hover::before,
-  .mainMenu__navItem:focus::before,
-  .mainMenu__navItem--active::before {
-    left: -40px;
-    width: 80px;
+  .modeSelect__option {
+    font-size: 1.4rem;
+    padding: 0.4rem 1.5rem;
   }
 }

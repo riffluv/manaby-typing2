@@ -2,7 +2,7 @@ import PortalShortcut from '@/components/PortalShortcut';
 import React, { useState, useCallback, useMemo } from 'react';
 import { useTypingGameStore, useQuestionCount } from '@/store/typingGameStore';
 import { useGlobalShortcuts } from '@/hooks/useGlobalShortcuts';
-import styles from './MainMenu.bem.module.css';
+import styles from './MainMenu.eldenring.bem.module.css';
 import { deleteRankingEntriesByMode } from '@/lib/rankingManaby2';
 import CommonModal from './common/CommonModal';
 import CommonButton from './common/CommonButton';
@@ -113,55 +113,76 @@ const MainMenu: React.FC<MainMenuProps> = ({ onStart, onRetry, onRanking }) => {
   const handleAdminOverlayClick = (e: React.MouseEvent<HTMLDivElement>) => {
     if (e.target === e.currentTarget) {
       setAdminOpen(false);
-    }  };  return (    <div className={styles.mainMenu}>
+    }  };  return (
+    <div className={styles.mainMenu}>
       {/* メインコンテナ */}
       <div className={styles.mainMenu__container}>
-        <h1 className={styles.mainMenu__title}>manabytype</h1>
-        <h2 className={styles.mainMenu__subtitle}>II</h2>
+        <div className={styles.mainMenu__title}>manabytype</div>
+        <div className={styles.mainMenu__subtitle}>II</div>
 
-        <nav className={styles.mainMenu__nav} role="navigation" aria-label="メインメニュー">          <button 
+        <div className={styles.mainMenu__nav}>
+          <div 
             className={styles.mainMenu__navItem} 
             onClick={handleStart}
-            type="button"
+            tabIndex={0}
+            role="button"
             aria-label="ゲームを開始"
-            disabled={isStarting}
+            onKeyDown={(e) => {
+              if (e.key === 'Enter' || e.key === ' ') {
+                e.preventDefault();
+                handleStart();
+              }
+            }}
+            style={{ 
+              opacity: isStarting ? 0.6 : 1,
+              pointerEvents: isStarting ? 'none' : 'auto'
+            }}
           >
             {isStarting ? 'STARTING...' : 'START GAME'}
-          </button>
-          <button 
+          </div>
+          <div 
             className={styles.mainMenu__navItem} 
             onClick={() => setModeSelectOpen(true)}
-            type="button"
+            tabIndex={0}
+            role="button"
             aria-label="プレイモードを選択"
-            disabled={isStarting}
+            onKeyDown={(e) => {
+              if (e.key === 'Enter' || e.key === ' ') {
+                e.preventDefault();
+                setModeSelectOpen(true);
+              }
+            }}
           >
             SELECT MODE
-          </button>
-          <button 
+          </div>
+          <div 
             className={styles.mainMenu__navItem} 
             onClick={onRanking}
-            type="button"
+            tabIndex={0}
+            role="button"
             aria-label="ランキングを表示"
-            disabled={isStarting}
+            onKeyDown={(e) => {
+              if (e.key === 'Enter' || e.key === ' ') {
+                e.preventDefault();
+                onRanking();
+              }
+            }}
           >
             RANKING
-          </button>
-          <button 
+          </div>
+          <div 
             className={styles.mainMenu__navItem}
-            type="button"
-            aria-label="システム設定"
-            disabled
+            tabIndex={0}
+            role="button"
+            aria-label="システム設定（準備中）"
+            style={{ 
+              opacity: 0.6,
+              pointerEvents: 'none'
+            }}
           >
             SYSTEM
-          </button>
-        </nav>
-        
-        {/* エラー表示 */}
-        {error && (
-          <div className={styles.mainMenu__error} role="alert" aria-live="assertive">
-            {error}
           </div>
-        )}
+        </div>
         
         <div className={styles.mainMenu__selectedMode} role="status" aria-live="polite">
           Mode: {mode === 'normal' ? 'Normal' :
@@ -170,18 +191,28 @@ const MainMenu: React.FC<MainMenuProps> = ({ onStart, onRetry, onRanking }) => {
                  mode === 'kenjougo' ? '謙譲語' :
                  mode === 'business' ? 'ビジネスマナー' : 'Normal'}
         </div>
-      </div>{/* ショートカットキー */}
-      <PortalShortcut
-        shortcuts={[
-          { key: 'Space', label: 'ゲーム開始' },
-          { key: ['Alt', 'R'], label: 'ランキング' },
-        ]}
-      />      {/* コピーライト */}
+      </div>
+
+      {/* ショートカットキー表示（Elden Ringスタイル） */}
+      <div className={styles.mainMenu__shortcutKeys}>
+        <span>Space：ゲーム開始</span>
+        <span>Alt+R：ランキング</span>
+      </div>
+
+      {/* コピーライト */}
       <div className={styles.mainMenu__copyright}>&copy;2025 manaby Omiya Studio. All rights reserved.</div>
 
       {/* バージョン */}
-      <div className={styles.mainMenu__version}>App Ver. 1.01</div>{/* モードセレクトモーダル */}
-      {modeSelectOpen && (        <div 
+      <div className={styles.mainMenu__version}>App Ver. 1.01</div>
+
+      {/* エラー表示 */}
+      {error && (
+        <div className={styles.mainMenu__error} role="alert" aria-live="assertive">
+          {error}
+        </div>
+      )}      {/* モードセレクトモーダル（Elden Ring風にシンプル化） */}
+      {modeSelectOpen && (
+        <div 
           className={styles.modeSelect}
           role="dialog"
           aria-modal="true"
@@ -194,14 +225,12 @@ const MainMenu: React.FC<MainMenuProps> = ({ onStart, onRetry, onRanking }) => {
         >
           <div className={styles.modeSelect__wrapper}>
             <div className={styles.modeSelect__sidebar} role="tablist" aria-label="プレイモード選択">
-              <h3 id="mode-select-title" style={{ display: 'none' }}>プレイモード選択</h3>
               <button 
                 className={`${styles.modeSelect__option} ${mode === 'normal' ? styles['modeSelect__option--selected'] : ''}`}
                 onClick={() => handleModeSelect('normal')}
                 type="button"
                 role="tab"
                 aria-selected={mode === 'normal'}
-                aria-controls="mode-description"
               >
                 Normal
               </button>
@@ -211,7 +240,6 @@ const MainMenu: React.FC<MainMenuProps> = ({ onStart, onRetry, onRanking }) => {
                 type="button"
                 role="tab"
                 aria-selected={mode === 'sonkeigo'}
-                aria-controls="mode-description"
               >
                 尊敬語
               </button>
@@ -221,7 +249,6 @@ const MainMenu: React.FC<MainMenuProps> = ({ onStart, onRetry, onRanking }) => {
                 type="button"
                 role="tab"
                 aria-selected={mode === 'kenjougo'}
-                aria-controls="mode-description"
               >
                 謙譲語
               </button>
@@ -231,25 +258,11 @@ const MainMenu: React.FC<MainMenuProps> = ({ onStart, onRetry, onRanking }) => {
                 type="button"
                 role="tab"
                 aria-selected={mode === 'business'}
-                aria-controls="mode-description"
               >
                 ビジネスマナー
               </button>
             </div>
             <div className={styles.modeSelect__content}>
-              <div 
-                className={styles.modeSelect__description}
-                id="mode-description"
-                role="tabpanel"
-                aria-live="polite"
-              >
-                {mode === 'normal' ? '一般的な入力練習モードです。基本的な言葉遣いを扱います。' :
-                 mode === 'hard' ? '高難易度タイピング練習モードです。' :
-                 mode === 'sonkeigo' ? '敬語の中でも「相手を高める」言葉遣いを学びます。' :
-                 mode === 'kenjougo' ? '自分を下げて丁寧さを表現する「謙譲語」を練習します。' :
-                 mode === 'business' ? 'ビジネスシーンでの適切な言葉選びとマナーを学ぶモードです。' :
-                 '一般的な入力練習モードです。基本的な言葉遣いを扱います。'}
-              </div>
               <button 
                 className={styles.modeSelect__backButton} 
                 onClick={() => setModeSelectOpen(false)}
