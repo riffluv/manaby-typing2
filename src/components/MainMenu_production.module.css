@@ -19,9 +19,11 @@
   width: 100vw;
   height: 100vh;
   z-index: 999999;
-  
-  /* 背景とビジュアル */
+    /* 背景とビジュアル（ブラウザ互換性強化） */
   background: radial-gradient(ellipse at center, #0a0f1b, #000000);
+  background: -webkit-radial-gradient(ellipse at center, #0a0f1b, #000000);
+  background: -moz-radial-gradient(ellipse at center, #0a0f1b, #000000);
+  background: -o-radial-gradient(ellipse at center, #0a0f1b, #000000);
   overflow: hidden;
   
   /* フォント設定 - フォールバック強化 */
@@ -55,7 +57,7 @@
 .isolatedMainMenu *,
 .isolatedMainMenu *::before,
 .isolatedMainMenu *::after {
-  /* displayとpositionは保持 */
+  /* displayとpositionは保持しつつリセット */
   margin: 0;
   padding: 0;
   border: 0;
@@ -79,8 +81,6 @@
   white-space: normal;
   line-height: inherit;
 }
-  font-weight: 700;
-}
 
 /* コンテナ */
 .container {
@@ -94,16 +94,22 @@
   z-index: 1;
 }
 
-/* タイトル - メイン */
+/* タイトル - メイン（ブラウザ互換性強化） */
 .titleMain {
+  display: block;
   font-size: 3rem;
   background: linear-gradient(to right, #c9a76f, #f8e6b0);
+  background: -webkit-linear-gradient(to right, #c9a76f, #f8e6b0);
+  background: -moz-linear-gradient(to right, #c9a76f, #f8e6b0);
   -webkit-background-clip: text;
-  -webkit-text-fill-color: transparent;
+  -moz-background-clip: text;
   background-clip: text;
+  -webkit-text-fill-color: transparent;
+  -moz-text-fill-color: transparent;
+  color: transparent;
   letter-spacing: 0.3rem;
   text-shadow: 0 0 6px rgba(255, 223, 128, 0.3);
-  font-family: 'Cinzel', serif;
+  font-family: 'Cinzel', 'Times New Roman', 'Georgia', serif;
   font-weight: 700;
   margin: 0;
   padding: 0;
@@ -111,12 +117,13 @@
 
 /* タイトル - サブ */
 .titleSub {
+  display: block;
   font-size: 5rem;
   color: #b8cfe7;
   letter-spacing: 0.6rem;
   text-shadow: 0 0 12px rgba(100, 180, 255, 0.25);
   margin: 12px 0 60px 0;
-  font-family: 'Cinzel', serif;
+  font-family: 'Cinzel', 'Times New Roman', 'Georgia', serif;
   font-weight: 700;
   padding: 0;
 }
@@ -131,8 +138,9 @@
   padding: 0;
 }
 
-/* メニューアイテム */
+/* メニューアイテム（ボタン対応） */
 .menuItem {
+  display: block;
   position: relative;
   font-size: 1.4rem;
   color: #ccc;
@@ -140,13 +148,25 @@
   transition: color 0.3s ease;
   background: none;
   border: none;
-  font-family: 'Cinzel', serif;
+  font-family: 'Cinzel', 'Times New Roman', 'Georgia', serif;
   font-weight: 700;
   padding: 0;
   margin: 0;
   outline: none;
   text-decoration: none;
   line-height: 1;
+  width: auto;
+}
+
+.menuItem:disabled {
+  color: #666;
+  cursor: not-allowed;
+  opacity: 0.6;
+}
+
+.menuItem:disabled:hover {
+  color: #666;
+  text-shadow: none;
 }
 
 .menuItem:hover {
@@ -184,13 +204,35 @@
 
 /* 選択されたモード表示 */
 .selectedMode {
+  display: block;
   margin-top: 2rem;
   font-size: 1rem;
   color: #a99;
   font-style: italic;
-  font-family: 'Cinzel', serif;
+  font-family: 'Cinzel', 'Times New Roman', 'Georgia', serif;
   font-weight: 700;
   padding: 0;
+}
+
+/* エラーメッセージ */
+.errorMessage {
+  display: block;
+  margin-top: 1rem;
+  padding: 0.8rem 1.2rem;
+  font-size: 0.9rem;
+  color: #ff6b6b;
+  background: rgba(255, 107, 107, 0.1);
+  border: 1px solid rgba(255, 107, 107, 0.3);
+  border-radius: 6px;
+  font-family: 'Cinzel', 'Times New Roman', 'Georgia', serif;
+  font-weight: 700;
+  text-align: center;
+  animation: fadeInError 0.3s ease-out;
+}
+
+@keyframes fadeInError {
+  0% { opacity: 0; transform: translateY(-10px); }
+  100% { opacity: 1; transform: translateY(0); }
 }
 
 /* ショートカットキー */
@@ -208,9 +250,16 @@
   border-radius: 6px;
   padding: 0.3rem 1rem;
   z-index: 1;
-  font-family: 'Cinzel', serif;
+  font-family: 'Cinzel', 'Times New Roman', 'Georgia', serif;
   font-weight: 700;
   margin: 0;
+}
+
+/* ショートカットキー内のテキスト */
+.shortcutKeys div {
+  display: inline-block;
+  margin: 0;
+  padding: 0;
 }
 
 /* バージョンとコピーライト */
@@ -220,10 +269,11 @@
   font-size: 0.7rem;
   color: #777;
   z-index: 1;
-  font-family: 'Cinzel', serif;
+  font-family: 'Cinzel', 'Times New Roman', 'Georgia', serif;
   font-weight: 700;
   margin: 0;
   padding: 0;
+  display: block;
 }
 
 .version {
@@ -270,6 +320,7 @@
 }
 
 .modeOption {
+  display: block;
   font-size: 1rem;
   color: #ccc;
   padding: 0.6rem 0.8rem;
@@ -278,7 +329,7 @@
   margin: 0 0 0.5rem 0;
   transition: all 0.3s ease;
   background: none;
-  font-family: 'Cinzel', serif;
+  font-family: 'Cinzel', 'Times New Roman', 'Georgia', serif;
   font-weight: 700;
   outline: none;
 }
@@ -309,16 +360,18 @@
 }
 
 .modeDescription {
+  display: block;
   font-size: 1rem;
   color: #aaa;
   line-height: 1.6;
-  font-family: 'Cinzel', serif;
+  font-family: 'Cinzel', 'Times New Roman', 'Georgia', serif;
   font-weight: 700;
   margin: 0;
   padding: 0;
 }
 
 .backButton {
+  display: inline-block;
   align-self: flex-end;
   margin: 2rem 0 0 0;
   padding: 0.6rem 1.2rem;
@@ -328,7 +381,7 @@
   background: rgba(255, 255, 255, 0.01);
   cursor: pointer;
   transition: all 0.3s ease;
-  font-family: 'Cinzel', serif;
+  font-family: 'Cinzel', 'Times New Roman', 'Georgia', serif;
   font-weight: 700;
   outline: none;
 }
@@ -341,14 +394,58 @@
 
 /* 管理者状態表示 */
 .adminStatus {
+  display: block;
   margin: 1rem 0 0 0;
   padding: 0.5rem;
   background: rgba(0, 0, 0, 0.1);
   border-radius: 4px;
   font-size: 0.9rem;
   color: #999;
-  font-family: 'Cinzel', serif;
+  font-family: 'Cinzel', 'Times New Roman', 'Georgia', serif;
   font-weight: 700;
+}
+
+/* キーボードナビゲーション対応 */
+.menuItem:focus,
+.modeOption:focus,
+.backButton:focus {
+  outline: 2px solid #88ccff;
+  outline-offset: 2px;
+}
+
+/* ダークモード・ハイコントラスト対応 */
+@media (prefers-contrast: high) {
+  .titleMain {
+    background: linear-gradient(to right, #ffd700, #ffff00);
+  }
+  
+  .titleSub {
+    color: #ffffff;
+  }
+  
+  .menuItem {
+    color: #ffffff;
+  }
+}
+
+/* Reduced motion対応 */
+@media (prefers-reduced-motion: reduce) {
+  .menuItem {
+    transition: none;
+  }
+  
+  .menuItem::after {
+    animation: none;
+  }
+  
+  .modeOption {
+    transition: none;
+    animation: none;
+  }
+  
+  .backButton {
+    transition: none;
+  }
 }
 
 /* レスポンシブ対応 */
@@ -396,5 +493,36 @@
   .version,
   .copyright {
     font-size: 0.6rem;
+  }
+}
+
+@media (max-width: 480px) {
+  .titleMain {
+    font-size: 2rem;
+  }
+  
+  .titleSub {
+    font-size: 3rem;
+    margin: 6px 0 30px 0;
+  }
+  
+  .menuItem {
+    font-size: 1.1rem;
+  }
+}
+
+/* パフォーマンス最適化 */
+.menuItem::after {
+  will-change: opacity, background-position;
+}
+
+.modeOption.selected {
+  will-change: box-shadow;
+}
+
+/* 印刷スタイル */
+@media print {
+  .isolatedMainMenu {
+    display: none;
   }
 }
