@@ -18,7 +18,7 @@ const geistMono = Geist_Mono({
 const cinzel = Cinzel({
   variable: "--font-cinzel",
   subsets: ["latin"],
-  weight: ["400", "700"],
+  weight: ["700"],
 });
 
 export const metadata: Metadata = {

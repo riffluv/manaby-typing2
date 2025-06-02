@@ -3,18 +3,19 @@
    ========================================================================== */
 
 /* リセットと基本設定 */
-.mainMenuWrapper * {
+.mainMenuWrapper.mainMenuWrapper * {
   margin: 0;
   padding: 0;
   box-sizing: border-box;
+  font-family: var(--font-cinzel), 'Cinzel', serif;
 }
 
-.mainMenuWrapper {
+.mainMenuWrapper.mainMenuWrapper {
   width: 100%;
   height: 100vh;
   background: radial-gradient(ellipse at center, #0a0f1b, #000000);
   color: #ccc;
-  font-family: var(--font-cinzel), serif;
+  font-family: var(--font-cinzel), 'Cinzel', serif;
   overflow: hidden;
   position: fixed;
   top: 0;
@@ -22,7 +23,7 @@
   z-index: 1;
 }
 
-.container {
+.mainMenuWrapper .container {
   height: 100%;
   display: flex;
   flex-direction: column;
@@ -31,9 +32,10 @@
   text-align: center;
   position: relative;
   z-index: 1;
+  font-family: var(--font-cinzel), 'Cinzel', serif;
 }
 
-.titleMain {
+.mainMenuWrapper .titleMain {
   font-size: 3rem;
   background: linear-gradient(to right, #c9a76f, #f8e6b0);
   -webkit-background-clip: text;
@@ -41,24 +43,27 @@
   background-clip: text;
   letter-spacing: 0.3rem;
   text-shadow: 0 0 6px rgba(255, 223, 128, 0.3);
+  font-family: var(--font-cinzel), 'Cinzel', serif;
+  font-weight: 700;
 }
 
-.titleSub {
-  font-size: 5rem;
-  color: #b8cfe7;
+.mainMenuWrapper .titleSub {
+  font-size: 5rem;  color: #b8cfe7;
   letter-spacing: 0.6rem;
   text-shadow: 0 0 12px rgba(100, 180, 255, 0.25);
   margin: 12px 0 60px;
+  font-family: var(--font-cinzel), 'Cinzel', serif;
+  font-weight: 700;
 }
 
-.menu {
+.mainMenuWrapper .menu {
   display: flex;
   flex-direction: column;
   gap: 1.2rem;
   align-items: center;
 }
 
-.menuItem {
+.mainMenuWrapper .menuItem {
   position: relative;
   font-size: 1.4rem;
   color: #ccc;
@@ -66,16 +71,17 @@
   transition: color 0.3s ease;
   background: none;
   border: none;
-  font-family: var(--font-cinzel), serif;
+  font-family: var(--font-cinzel), 'Cinzel', serif;
   padding: 0;
+  font-weight: 700;
 }
 
-.menuItem:hover {
+.mainMenuWrapper .menuItem:hover {
   color: #e0f7ff;
   text-shadow: 0 0 10px rgba(100, 180, 255, 0.5);
 }
 
-.menuItem::after {
+.mainMenuWrapper .menuItem::after {
   content: '';
   position: absolute;
   bottom: -6px;
@@ -93,7 +99,7 @@
   pointer-events: none;
 }
 
-.menuItem:hover::after {
+.mainMenuWrapper .menuItem:hover::after {
   opacity: 1;
 }
 
@@ -103,14 +109,16 @@
   100% { background-position: -150% 0; }
 }
 
-.selectedMode {
+.mainMenuWrapper .selectedMode {
   margin-top: 2rem;
   font-size: 1rem;
   color: #a99;
   font-style: italic;
+  font-family: var(--font-cinzel), 'Cinzel', serif;
+  font-weight: 700;
 }
 
-.shortcutKeys {
+.mainMenuWrapper .shortcutKeys {
   position: absolute;
   bottom: 20px;
   left: 50%;
@@ -124,27 +132,32 @@
   border-radius: 6px;
   padding: 0.3rem 1rem;
   z-index: 1;
+  font-family: var(--font-cinzel), 'Cinzel', serif;
+  font-weight: 700;
 }
 
-.version, .copyright {
+.mainMenuWrapper .version, 
+.mainMenuWrapper .copyright {
   position: absolute;
   font-size: 0.7rem;
   color: #777;
   z-index: 1;
+  font-family: var(--font-cinzel), 'Cinzel', serif;
+  font-weight: 700;
 }
 
-.version {
+.mainMenuWrapper .version {
   bottom: 40px;
   right: 20px;
 }
 
-.copyright {
+.mainMenuWrapper .copyright {
   bottom: 40px;
   left: 20px;
 }
 
 /* モードセレクトモーダル */
-.modeSelectScreen {
+.mainMenuWrapper .modeSelectScreen {
   position: fixed;
   top: 0;
   left: 0;
@@ -158,7 +171,7 @@
   z-index: 10;
 }
 
-.modeWrapper {
+.mainMenuWrapper .modeWrapper {
   display: flex;
   width: 800px;
   height: 400px;
@@ -167,7 +180,7 @@
   box-shadow: 0 0 20px rgba(255, 255, 255, 0.06);
 }
 
-.modeSidebar {
+.mainMenuWrapper .modeSidebar {
   width: 200px;
   background: rgba(0, 0, 0, 0.2);
   border-right: 1px solid rgba(255, 255, 255, 0.08);
@@ -176,7 +189,7 @@
   padding: 1rem;
 }
 
-.modeOption {
+.mainMenuWrapper .modeOption {
   font-size: 1rem;
   color: #ccc;
   padding: 0.6rem 0.8rem;
@@ -188,13 +201,13 @@
   font-family: inherit;
 }
 
-.modeOption:hover {
+.mainMenuWrapper .modeOption:hover {
   background: rgba(120, 180, 255, 0.07);
   box-shadow: 0 0 8px rgba(180, 220, 255, 0.1);
   color: #d0e8ff;
 }
 
-.modeOption.selected {
+.mainMenuWrapper .modeOption.selected {
   border: 1px solid rgba(180, 220, 255, 0.3);
   animation: pulse 1.6s infinite;
   color: #e0f0ff;
@@ -205,7 +218,7 @@
   50% { box-shadow: 0 0 12px rgba(100, 180, 255, 0.5); }
 }
 
-.modeContent {
+.mainMenuWrapper .modeContent {
   flex: 1;
   padding: 1.5rem;
   display: flex;
@@ -213,13 +226,13 @@
   justify-content: space-between;
 }
 
-.modeDescription {
+.mainMenuWrapper .modeDescription {
   font-size: 1rem;
   color: #aaa;
   line-height: 1.6;
 }
 
-.backButton {
+.mainMenuWrapper .backButton {
   align-self: flex-end;
   margin-top: 2rem;
   padding: 0.6rem 1.2rem;
@@ -232,14 +245,14 @@
   font-family: inherit;
 }
 
-.backButton:hover {
+.mainMenuWrapper .backButton:hover {
   color: #b0d0ff;
   border-color: rgba(255, 255, 255, 0.15);
   background: rgba(255, 255, 255, 0.02);
 }
 
 /* 管理者状態表示 */
-.admin-status {
+.mainMenuWrapper .admin-status {
   margin-top: 1rem;
   padding: 0.5rem;
   background: rgba(0, 0, 0, 0.1);
@@ -250,26 +263,26 @@
 
 /* レスポンシブ対応 */
 @media (max-width: 768px) {
-  .titleMain {
+  .mainMenuWrapper .titleMain {
     font-size: 2.5rem;
   }
   
-  .titleSub {
+  .mainMenuWrapper .titleSub {
     font-size: 3.5rem;
     margin: 8px 0 40px;
   }
   
-  .menuItem {
+  .mainMenuWrapper .menuItem {
     font-size: 1.2rem;
   }
   
-  .modeWrapper {
+  .mainMenuWrapper .modeWrapper {
     width: 90vw;
     height: 70vh;
     flex-direction: column;
   }
   
-  .modeSidebar {
+  .mainMenuWrapper .modeSidebar {
     width: 100%;
     height: 120px;
     border-right: none;
@@ -279,18 +292,19 @@
     overflow-x: auto;
   }
   
-  .modeOption {
+  .mainMenuWrapper .modeOption {
     white-space: nowrap;
     margin-bottom: 0;
   }
 
-  .shortcutKeys {
+  .mainMenuWrapper .shortcutKeys {
     gap: 1rem;
     font-size: 0.7rem;
     padding: 0.2rem 0.8rem;
   }
 
-  .version, .copyright {
+  .mainMenuWrapper .version, 
+  .mainMenuWrapper .copyright {
     font-size: 0.6rem;
   }
 }

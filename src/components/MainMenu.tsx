@@ -89,9 +89,8 @@ const MainMenu: React.FC<MainMenuProps> = ({ onStart, onRetry, onRanking }) => {
   const handleAdminOverlayClick = (e: React.MouseEvent<HTMLDivElement>) => {
     if (e.target === e.currentTarget) {
       setAdminOpen(false);
-    }
-  };  return (
-    <div className={styles.mainMenuWrapper}>
+    }  };  return (
+    <div className={`${styles.mainMenuWrapper} ${styles.mainMenuWrapper}`}>
       {/* メインコンテナ */}
       <div className={styles.container}>
         <div className={styles.titleMain}>manabytype</div>
