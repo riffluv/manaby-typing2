@@ -53,7 +53,7 @@ const MainMenu: React.FC<MainMenuProps> = ({ onStart, onRetry, onRanking }) => {
     // モード選択ハンドラー
   const handleModeSelect = useCallback((newMode: 'normal' | 'hard' | 'sonkeigo' | 'kenjougo' | 'business') => {
     setMode(newMode);
-    setModeSelectOpen(false);
+    // setModeSelectOpen(false); // ← これを削除
   }, [setMode]);
 
   // モーダルのキーボードナビゲーション対応
@@ -171,10 +171,12 @@ const MainMenu: React.FC<MainMenuProps> = ({ onStart, onRetry, onRanking }) => {
                  mode === 'business' ? 'ビジネスマナー' : 'Normal'}
         </div>
       </div>{/* ショートカットキー */}
-      <div className={styles.shortcutKeys}>
-        <div>Space：ゲーム開始</div>
-        <div>Alt+R：ランキング</div>
-      </div>
+      <PortalShortcut
+        shortcuts={[
+          { key: 'Space', label: 'ゲーム開始' },
+          { key: ['Alt', 'R'], label: 'ランキング' },
+        ]}
+      />
 
       {/* コピーライト */}
       <div className={styles.copyright}>&copy;2025 manaby Omiya Studio. All rights reserved.</div>      {/* バージョン */}
