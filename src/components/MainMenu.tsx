@@ -1,10 +1,8 @@
 import PortalShortcut from '@/components/PortalShortcut';
 import React, { useState } from 'react';
-import { motion } from 'framer-motion';
 import { useTypingGameStore, useQuestionCount } from '@/store/typingGameStore';
 import { useGlobalShortcuts } from '@/hooks/useGlobalShortcuts';
-import screenStyles from './common/ScreenWrapper.module.css';
-import styles from './MainMenu.module.css';
+import styles from './MainMenu_manabytype_fixed.module.css';
 import { deleteRankingEntriesByMode } from '@/lib/rankingManaby2';
 import CommonModal from './common/CommonModal';
 import CommonButton from './common/CommonButton';
@@ -36,43 +34,10 @@ const MainMenu: React.FC<MainMenuProps> = ({ onStart, onRetry, onRanking }) => {
     resetGame();
     setGameStatus('playing');
     onStart();
-  };
-  // モード選択ハンドラー
+  };  // モード選択ハンドラー
   const handleModeSelect = (newMode: 'normal' | 'hard' | 'sonkeigo' | 'kenjougo' | 'business') => {
     setMode(newMode);
     setModeSelectOpen(false);
-  };
-
-  // アニメーションのバリアント定義
-  const containerVariants = {
-    hidden: { opacity: 0 },
-    visible: {
-      opacity: 1,
-      transition: {
-        staggerChildren: 0.15,
-        delayChildren: 0.3
-      }
-    }
-  };
-
-  const itemVariants = {
-    hidden: { y: 30, opacity: 0 },
-    visible: {
-      y: 0,
-      opacity: 1,
-      transition: { duration: 0.6, ease: [0.25, 0.1, 0.25, 1] }
-    }
-  };
-
-  const glitchVariants = {
-    hover: {
-      textShadow: [
-        "0 0 10px var(--color-accent-cyan)",
-        "2px 0 0 var(--color-error), -2px 0 0 var(--color-accent-neon)",
-        "0 0 10px var(--color-accent-cyan)"
-      ],
-      transition: { duration: 0.3, times: [0, 0.5, 1] }
-    }
   };
   // ショートカット定義
   useGlobalShortcuts([
@@ -120,104 +85,92 @@ const MainMenu: React.FC<MainMenuProps> = ({ onStart, onRetry, onRanking }) => {
     } finally {
       setAdminLoading(false);
     }
-  };
-  // 管理者モーダルの外側クリックで閉じる
+  };  // 管理者モーダルの外側クリックで閉じる
   const handleAdminOverlayClick = (e: React.MouseEvent<HTMLDivElement>) => {
     if (e.target === e.currentTarget) {
       setAdminOpen(false);
     }
-  };
+  };  return (
+    <div className={styles.mainMenuWrapper}>
+      {/* メインコンテナ */}
+      <div className={styles.container}>
+        <div className={styles.titleMain}>manabytype</div>
+        <div className={styles.titleSub}>II</div>
+        <div className={styles.menu}>
+          <div className={styles.menuItem} onClick={handleStart}>START GAME</div>
+          <div className={styles.menuItem} onClick={() => setModeSelectOpen(true)}>SELECT MODE</div>
+          <div className={styles.menuItem} onClick={onRanking}>RANKING</div>
+          <div className={styles.menuItem}>SYSTEM</div>
+        </div>
+        <div className={styles.selectedMode}>
+          Mode: {mode === 'normal' ? 'Normal' :
+                 mode === 'hard' ? 'Hard' :
+                 mode === 'sonkeigo' ? '尊敬語' :
+                 mode === 'kenjougo' ? '謙譲語' :
+                 mode === 'business' ? 'ビジネスマナー' : 'Normal'}
+        </div>
+      </div>
 
-  return (
-    <div className={screenStyles.screenWrapper}>
-      {/* モード選択モーダル */}
+      {/* ショートカットキー */}
+      <div className={styles.shortcutKeys}>
+        <span>Space：ゲーム開始</span>
+        <span>Alt+R：ランキング</span>
+      </div>
+
+      {/* コピーライト */}
+      <div className={styles.copyright}>&copy;2025 manaby Omiya Studio. All rights reserved.</div>
+
+      {/* バージョン */}
+      <div className={styles.version}>App Ver. 2.0.0</div>
+
+      {/* モードセレクトモーダル */}
       {modeSelectOpen && (
-        <div className={styles.modeSelectOverlay} onClick={() => setModeSelectOpen(false)}>
-          <motion.div 
-            className={styles.modeSelectModal}
-            onClick={(e) => e.stopPropagation()}
-            initial={{ opacity: 0, scale: 0.8 }}
-            animate={{ opacity: 1, scale: 1 }}
-            exit={{ opacity: 0, scale: 0.8 }}
-            transition={{ duration: 0.3 }}
-          >
-            <h2 className={styles.modeSelectTitle}>SELECT MODE</h2>
-            
-            <div className={styles.modeGrid}>
-              <motion.button
-                className={`${styles.modeButton} ${mode === 'normal' ? styles.modeButtonActive : ''}`}
+        <div className={styles.modeSelectScreen}>
+          <div className={styles.modeWrapper}>
+            <div className={styles.modeSidebar}>
+              <div 
+                className={`${styles.modeOption} ${mode === 'normal' ? styles.selected : ''}`}
                 onClick={() => handleModeSelect('normal')}
-                whileHover={{ scale: 1.05 }}
-                whileTap={{ scale: 0.95 }}
               >
-                <div className={styles.modeButtonContent}>
-                  <span className={styles.modeButtonTitle}>NORMAL</span>
-                  <span className={styles.modeButtonDesc}>標準タイピング練習</span>
-                </div>
-              </motion.button>
-
-              <motion.button
-                className={`${styles.modeButton} ${mode === 'hard' ? styles.modeButtonActive : ''}`}
-                onClick={() => handleModeSelect('hard')}
-                whileHover={{ scale: 1.05 }}
-                whileTap={{ scale: 0.95 }}
-              >
-                <div className={styles.modeButtonContent}>
-                  <span className={styles.modeButtonTitle}>HARD</span>
-                  <span className={styles.modeButtonDesc}>高難易度タイピング</span>
-                </div>
-              </motion.button>
-
-              <motion.button
-                className={`${styles.modeButton} ${mode === 'sonkeigo' ? styles.modeButtonActive : ''}`}
+                Normal
+              </div>
+              <div 
+                className={`${styles.modeOption} ${mode === 'sonkeigo' ? styles.selected : ''}`}
                 onClick={() => handleModeSelect('sonkeigo')}
-                whileHover={{ scale: 1.05 }}
-                whileTap={{ scale: 0.95 }}
               >
-                <div className={styles.modeButtonContent}>
-                  <span className={styles.modeButtonTitle}>尊敬語</span>
-                  <span className={styles.modeButtonDesc}>相手を高める言葉遣い</span>
-                </div>
-              </motion.button>
-
-              <motion.button
-                className={`${styles.modeButton} ${mode === 'kenjougo' ? styles.modeButtonActive : ''}`}
+                尊敬語
+              </div>
+              <div 
+                className={`${styles.modeOption} ${mode === 'kenjougo' ? styles.selected : ''}`}
                 onClick={() => handleModeSelect('kenjougo')}
-                whileHover={{ scale: 1.05 }}
-                whileTap={{ scale: 0.95 }}
               >
-                <div className={styles.modeButtonContent}>
-                  <span className={styles.modeButtonTitle}>謙譲語</span>
-                  <span className={styles.modeButtonDesc}>自分を下げる丁寧な表現</span>
-                </div>
-              </motion.button>
-
-              <motion.button
-                className={`${styles.modeButton} ${mode === 'business' ? styles.modeButtonActive : ''}`}
+                謙譲語
+              </div>
+              <div 
+                className={`${styles.modeOption} ${mode === 'business' ? styles.selected : ''}`}
                 onClick={() => handleModeSelect('business')}
-                whileHover={{ scale: 1.05 }}
-                whileTap={{ scale: 0.95 }}
               >
-                <div className={styles.modeButtonContent}>
-                  <span className={styles.modeButtonTitle}>ビジネスマナー</span>
-                  <span className={styles.modeButtonDesc}>ビジネスシーンでの言葉選び</span>
-                </div>
-              </motion.button>
+                ビジネスマナー
+              </div>
             </div>
-
-            <motion.button
-              className={styles.modeSelectCloseButton}
-              onClick={() => setModeSelectOpen(false)}
-              whileHover={{ scale: 1.05 }}
-              whileTap={{ scale: 0.95 }}
-            >
-              戻る
-            </motion.button>
-          </motion.div>
+            <div className={styles.modeContent}>
+              <div className={styles.modeDescription}>
+                {mode === 'normal' ? '一般的な入力練習モードです。基本的な言葉遣いを扱います。' :
+                 mode === 'hard' ? '高難易度タイピング練習モードです。' :
+                 mode === 'sonkeigo' ? '敬語の中でも「相手を高める」言葉遣いを学びます。' :
+                 mode === 'kenjougo' ? '自分を下げて丁寧さを表現する「謙譲語」を練習します。' :
+                 mode === 'business' ? 'ビジネスシーンでの適切な言葉選びとマナーを学ぶモードです。' :
+                 '一般的な入力練習モードです。基本的な言葉遣いを扱います。'}
+              </div>
+              <div className={styles.backButton} onClick={() => setModeSelectOpen(false)}>
+                戻る
+              </div>
+            </div>
+          </div>
         </div>
       )}
 
-      {/* 管理者モーダル（共通モーダルに統一） */}
+      {/* 管理者モーダル */}
       <CommonModal open={adminOpen} onClose={() => setAdminOpen(false)}>
         <h2>管理者モード</h2>
         <label>
@@ -248,151 +201,8 @@ const MainMenu: React.FC<MainMenuProps> = ({ onStart, onRetry, onRanking }) => {
             variant="secondary"
           >HARDランキングリセット</CommonButton>
         </div>
-        {/* <div className="admin-actions" style={{ marginTop: 8 }}>
-          <CommonButton
-            onClick={() => handleResetRanking('sonkeigo')}
-            disabled={adminLoading}
-            variant="secondary"
-            style={{ marginRight: 8 }}
-          >尊敬語ランキングリセット</CommonButton>
-          <CommonButton
-            onClick={() => handleResetRanking('kenjougo')}
-            disabled={adminLoading}
-            variant="secondary"
-            style={{ marginRight: 8 }}
-          >謙譲語ランキングリセット</CommonButton>
-        </div>
-        <div className="admin-actions" style={{ marginTop: 8 }}>
-          <CommonButton
-            onClick={() => handleResetRanking('business')}
-            disabled={adminLoading}
-            variant="secondary"
-          >ビジネスマナーランキングリセット</CommonButton>
-        </div> */}
         <div className={styles['admin-status']}>{adminStatus}</div>
-      </CommonModal>      <div className={styles.mainMenuContainer}>
-        {/* ゲームロゴ/タイトル */}
-        <div className={styles.mainMenuHeader}>
-          <h1 className={styles.mainMenuTitle}>
-            manabytype
-          </h1>
-          <p className={styles.menuTitleSub}>
-            II
-          </p>
-        </div>
-
-        <motion.div
-          initial="hidden"
-          animate="visible"
-          variants={containerVariants}
-          className={styles.menuContent}
-        >
-          {/* メインスタートボタン - THE FINALS風 */}
-          <motion.div variants={itemVariants}>
-            <motion.button
-              className={`btn-primary gpu-accelerated ${styles.menuStartButton}`}
-              onClick={handleStart}
-              whileHover={{ 
-                scale: 1.05,
-                boxShadow: "var(--glow-cyan), 0 0 3.125rem rgba(0, 245, 255, 0.4)"
-              }}
-              whileTap={{ 
-                scale: 0.98,
-                boxShadow: "var(--glow-cyan)"
-              }}
-            >
-              <motion.span
-                initial={{ x: 0 }}
-                whileHover={{ x: [0, -5, 5, 0] }}
-                transition={{ duration: 0.3 }}
-              >
-                START GAME
-              </motion.span>
-              
-              {/* ボタン内グリッチエフェクト */}
-              <motion.div
-                style={{
-                  position: 'absolute',
-                  top: 0,
-                  left: '-100%',
-                  width: '100%',
-                  height: '100%',
-                  background: 'linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.2), transparent)',
-                  pointerEvents: 'none'
-                }}
-                animate={{
-                  left: ['100%', '-100%']
-                }}
-                transition={{
-                  duration: 2,
-                  repeat: Infinity,
-                  ease: 'linear'
-                }}
-              />
-            </motion.button>
-          </motion.div>          {/* 現在のモード表示 */}
-          <motion.div 
-            variants={itemVariants}
-            className={styles.currentModeDisplay}
-          >
-            <span className={styles.currentModeLabel}>Mode:</span>            <span className={styles.currentModeValue}>
-              {mode === 'normal' ? 'Normal' :
-               mode === 'hard' ? 'Hard' :
-               mode === 'sonkeigo' ? '尊敬語' :
-               mode === 'kenjougo' ? '謙譲語' :
-               mode === 'business' ? 'ビジネスマナー' : 'Normal'}
-            </span>
-          </motion.div>          {/* メインボタンセクション */}
-          <motion.div 
-            variants={itemVariants}
-            className={styles.menuSubButtons}
-          >
-            <motion.button
-              className={`btn-secondary ${styles.menuSubButton}`}
-              onClick={() => setModeSelectOpen(true)}
-              whileHover={{ scale: 1.05, y: -2 }}
-              whileTap={{ scale: 0.98 }}
-            >
-              SELECT MODE
-            </motion.button>
-            <motion.button
-              className={`btn-secondary ${styles.menuSubButton}`}
-              onClick={onRanking}
-              whileHover={{ scale: 1.05, y: -2 }}
-              whileTap={{ scale: 0.98 }}
-            >
-              RANKING
-            </motion.button>
-            <motion.button
-              className={`btn-secondary ${styles.menuSubButton}`}
-              onClick={() => {/* TODO: システム設定画面を実装 */}}
-              whileHover={{ scale: 1.05, y: -2 }}
-              whileTap={{ scale: 0.98 }}
-            >
-              SYSTEM
-            </motion.button>
-          </motion.div>
-
-          {/* ショートカットヘルプ */}
-          <PortalShortcut shortcuts={[
-            { key: 'Space', label: 'ゲーム開始' },
-            { key: 'Alt+R', label: 'ランキング' }
-          ]} />
-        </motion.div>
-      </div>      {/* バージョン情報 - 控えめに */}
-      <motion.div 
-        variants={itemVariants}
-        className={styles.menuVersion}
-      >
-        <motion.span
-          whileHover={{ 
-            color: 'var(--color-accent-cyan)',
-            textShadow: 'var(--glow-cyan)'
-          }}
-        >
-          v2.0.0
-        </motion.span>
-      </motion.div>
+      </CommonModal>
     </div>
   );
 };
