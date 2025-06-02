@@ -22,14 +22,19 @@ export default function Home() {
 
   return (
     <AnimatePresence mode="wait">
-      <ScreenLayout 
-        variant={getLayoutVariant(currentScene)}
-        key={currentScene}
-      >        {currentScene === 'menu' && <MainMenu onStart={goToGame} onRanking={goToRanking} onRetry={goToGame} />}
-        {currentScene === 'game' && <SimpleUnifiedTypingGame onGoMenu={goToMenu} onGoRanking={goToRanking} />}
-        {currentScene === 'ranking' && <NewRankingScreen onGoMenu={goToMenu} />}
-        {/* GameResultScreenは直接使用せず、TypingGameコンポーネント内で管理します */}
-      </ScreenLayout>
+      {currentScene === 'menu' ? (
+        // MainMenuは完全独立 - ScreenLayoutを使用しない
+        <MainMenu onStart={goToGame} onRanking={goToRanking} onRetry={goToGame} key={currentScene} />
+      ) : (
+        <ScreenLayout 
+          variant={getLayoutVariant(currentScene)}
+          key={currentScene}
+        >
+          {currentScene === 'game' && <SimpleUnifiedTypingGame onGoMenu={goToMenu} onGoRanking={goToRanking} />}
+          {currentScene === 'ranking' && <NewRankingScreen onGoMenu={goToMenu} />}
+          {/* GameResultScreenは直接使用せず、TypingGameコンポーネント内で管理します */}
+        </ScreenLayout>
+      )}
     </AnimatePresence>
   );
 }

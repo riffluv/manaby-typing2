@@ -2,7 +2,7 @@ import PortalShortcut from '@/components/PortalShortcut';
 import React, { useState } from 'react';
 import { useTypingGameStore, useQuestionCount } from '@/store/typingGameStore';
 import { useGlobalShortcuts } from '@/hooks/useGlobalShortcuts';
-import styles from './MainMenu_manabytype_fixed.module.css';
+import styles from './MainMenu_isolated.module.css';
 import { deleteRankingEntriesByMode } from '@/lib/rankingManaby2';
 import CommonModal from './common/CommonModal';
 import CommonButton from './common/CommonButton';
@@ -90,7 +90,7 @@ const MainMenu: React.FC<MainMenuProps> = ({ onStart, onRetry, onRanking }) => {
     if (e.target === e.currentTarget) {
       setAdminOpen(false);
     }  };  return (
-    <div className={`${styles.mainMenuWrapper} ${styles.mainMenuWrapper}`}>
+    <div className={styles.isolatedMainMenu}>
       {/* メインコンテナ */}
       <div className={styles.container}>
         <div className={styles.titleMain}>manabytype</div>
@@ -108,19 +108,15 @@ const MainMenu: React.FC<MainMenuProps> = ({ onStart, onRetry, onRanking }) => {
                  mode === 'kenjougo' ? '謙譲語' :
                  mode === 'business' ? 'ビジネスマナー' : 'Normal'}
         </div>
-      </div>
-
-      {/* ショートカットキー */}
+      </div>      {/* ショートカットキー */}
       <div className={styles.shortcutKeys}>
-        <span>Space：ゲーム開始</span>
-        <span>Alt+R：ランキング</span>
+        <div>Space：ゲーム開始</div>
+        <div>Alt+R：ランキング</div>
       </div>
 
       {/* コピーライト */}
-      <div className={styles.copyright}>&copy;2025 manaby Omiya Studio. All rights reserved.</div>
-
-      {/* バージョン */}
-      <div className={styles.version}>App Ver. 2.0.0</div>
+      <div className={styles.copyright}>&copy;2025 manaby Omiya Studio. All rights reserved.</div>      {/* バージョン */}
+      <div className={styles.version}>App Ver. 1.01</div>
 
       {/* モードセレクトモーダル */}
       {modeSelectOpen && (

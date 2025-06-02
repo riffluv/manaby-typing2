@@ -1,0 +1,370 @@
+/* ==========================================================================
+   MainMenu - 完全隔離版 (indexselect.htmlの1:1再現)
+   外部CSS干渉を完全に排除し、製品化レベルの精度を実現
+   ========================================================================== */
+
+/* Google Fonts の確実なロード */
+@import url('https://fonts.googleapis.com/css2?family=Cinzel:wght@700&display=swap');
+
+/* 完全リセット & 隔離 */
+.isolatedMainMenu {
+  /* 完全隔離 */
+  all: initial;
+  
+  /* 基本設定の再定義 */
+  width: 100vw;
+  height: 100vh;
+  background: radial-gradient(ellipse at center, #0a0f1b, #000000);
+  color: #ccc;
+  font-family: 'Cinzel', serif;
+  font-weight: 700;
+  overflow: hidden;
+  position: fixed;
+  top: 0;
+  left: 0;
+  z-index: 999999;
+  
+  /* ボックスモデルとレイアウト */
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+  
+  /* テキスト設定 */
+  line-height: normal;
+  text-align: left;
+  direction: ltr;
+  font-style: normal;
+  font-variant: normal;
+  text-decoration: none;
+  text-transform: none;
+  letter-spacing: normal;
+  word-spacing: normal;
+  white-space: normal;
+}
+
+/* 子要素の完全リセット */
+.isolatedMainMenu *,
+.isolatedMainMenu *::before,
+.isolatedMainMenu *::after {
+  all: unset;
+  box-sizing: border-box;
+  font-family: 'Cinzel', serif;
+  font-weight: 700;
+}
+
+/* コンテナ */
+.container {
+  height: 100vh;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  text-align: center;
+  position: relative;
+  z-index: 1;
+}
+
+/* タイトル - メイン */
+.titleMain {
+  font-size: 3rem;
+  background: linear-gradient(to right, #c9a76f, #f8e6b0);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+  letter-spacing: 0.3rem;
+  text-shadow: 0 0 6px rgba(255, 223, 128, 0.3);
+  font-family: 'Cinzel', serif;
+  font-weight: 700;
+  margin: 0;
+  padding: 0;
+}
+
+/* タイトル - サブ */
+.titleSub {
+  font-size: 5rem;
+  color: #b8cfe7;
+  letter-spacing: 0.6rem;
+  text-shadow: 0 0 12px rgba(100, 180, 255, 0.25);
+  margin: 12px 0 60px 0;
+  font-family: 'Cinzel', serif;
+  font-weight: 700;
+  padding: 0;
+}
+
+/* メニューコンテナ */
+.menu {
+  display: flex;
+  flex-direction: column;
+  gap: 1.2rem;
+  align-items: center;
+  margin: 0;
+  padding: 0;
+}
+
+/* メニューアイテム */
+.menuItem {
+  position: relative;
+  font-size: 1.4rem;
+  color: #ccc;
+  cursor: pointer;
+  transition: color 0.3s ease;
+  background: none;
+  border: none;
+  font-family: 'Cinzel', serif;
+  font-weight: 700;
+  padding: 0;
+  margin: 0;
+  outline: none;
+  text-decoration: none;
+  line-height: 1;
+}
+
+.menuItem:hover {
+  color: #e0f7ff;
+  text-shadow: 0 0 10px rgba(100, 180, 255, 0.5);
+}
+
+.menuItem::after {
+  content: '';
+  position: absolute;
+  bottom: -6px;
+  left: 50%;
+  width: 120px;
+  height: 3px;
+  background: linear-gradient(to right, rgba(120, 200, 255, 0), #88ccff, rgba(120, 200, 255, 0));
+  background-size: 300% auto;
+  opacity: 0;
+  transform: translateX(-50%);
+  border-radius: 3px;
+  filter: blur(3px);
+  transition: opacity 0.3s ease;
+  animation: shimmer 1.2s linear infinite;
+  pointer-events: none;
+}
+
+.menuItem:hover::after {
+  opacity: 1;
+}
+
+@keyframes shimmer {
+  0% { background-position: -150% 0; }
+  50% { background-position: 150% 0; }
+  100% { background-position: -150% 0; }
+}
+
+/* 選択されたモード表示 */
+.selectedMode {
+  margin-top: 2rem;
+  font-size: 1rem;
+  color: #a99;
+  font-style: italic;
+  font-family: 'Cinzel', serif;
+  font-weight: 700;
+  padding: 0;
+}
+
+/* ショートカットキー */
+.shortcutKeys {
+  position: absolute;
+  bottom: 20px;
+  left: 50%;
+  transform: translateX(-50%);
+  display: flex;
+  gap: 2rem;
+  font-size: 0.8rem;
+  color: #999;
+  background: rgba(255, 255, 255, 0.03);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: 6px;
+  padding: 0.3rem 1rem;
+  z-index: 1;
+  font-family: 'Cinzel', serif;
+  font-weight: 700;
+  margin: 0;
+}
+
+/* バージョンとコピーライト */
+.version,
+.copyright {
+  position: absolute;
+  font-size: 0.7rem;
+  color: #777;
+  z-index: 1;
+  font-family: 'Cinzel', serif;
+  font-weight: 700;
+  margin: 0;
+  padding: 0;
+}
+
+.version {
+  bottom: 40px;
+  right: 20px;
+}
+
+.copyright {
+  bottom: 40px;
+  left: 20px;
+}
+
+/* モードセレクトモーダル */
+.modeSelectScreen {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  background: rgba(5, 10, 20, 0.92);
+  backdrop-filter: blur(6px);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 10;
+}
+
+.modeWrapper {
+  display: flex;
+  width: 800px;
+  height: 400px;
+  background: rgba(20, 25, 35, 0.7);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  box-shadow: 0 0 20px rgba(255, 255, 255, 0.06);
+}
+
+.modeSidebar {
+  width: 200px;
+  background: rgba(0, 0, 0, 0.2);
+  border-right: 1px solid rgba(255, 255, 255, 0.08);
+  display: flex;
+  flex-direction: column;
+  padding: 1rem;
+}
+
+.modeOption {
+  font-size: 1rem;
+  color: #ccc;
+  padding: 0.6rem 0.8rem;
+  border: 1px solid transparent;
+  cursor: pointer;
+  margin: 0 0 0.5rem 0;
+  transition: all 0.3s ease;
+  background: none;
+  font-family: 'Cinzel', serif;
+  font-weight: 700;
+  outline: none;
+}
+
+.modeOption:hover {
+  background: rgba(120, 180, 255, 0.07);
+  box-shadow: 0 0 8px rgba(180, 220, 255, 0.1);
+  color: #d0e8ff;
+}
+
+.modeOption.selected {
+  border: 1px solid rgba(180, 220, 255, 0.3);
+  animation: pulse 1.6s infinite;
+  color: #e0f0ff;
+}
+
+@keyframes pulse {
+  0%, 100% { box-shadow: 0 0 6px rgba(100, 180, 255, 0.2); }
+  50% { box-shadow: 0 0 12px rgba(100, 180, 255, 0.5); }
+}
+
+.modeContent {
+  flex: 1;
+  padding: 1.5rem;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+}
+
+.modeDescription {
+  font-size: 1rem;
+  color: #aaa;
+  line-height: 1.6;
+  font-family: 'Cinzel', serif;
+  font-weight: 700;
+  margin: 0;
+  padding: 0;
+}
+
+.backButton {
+  align-self: flex-end;
+  margin: 2rem 0 0 0;
+  padding: 0.6rem 1.2rem;
+  font-size: 1rem;
+  color: #aaa;
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  background: rgba(255, 255, 255, 0.01);
+  cursor: pointer;
+  transition: all 0.3s ease;
+  font-family: 'Cinzel', serif;
+  font-weight: 700;
+  outline: none;
+}
+
+.backButton:hover {
+  color: #b0d0ff;
+  border-color: rgba(255, 255, 255, 0.15);
+  background: rgba(255, 255, 255, 0.02);
+}
+
+/* 管理者状態表示 */
+.adminStatus {
+  margin: 1rem 0 0 0;
+  padding: 0.5rem;
+  background: rgba(0, 0, 0, 0.1);
+  border-radius: 4px;
+  font-size: 0.9rem;
+  color: #999;
+  font-family: 'Cinzel', serif;
+  font-weight: 700;
+}
+
+/* レスポンシブ対応 */
+@media (max-width: 768px) {
+  .titleMain {
+    font-size: 2.5rem;
+  }
+  
+  .titleSub {
+    font-size: 3.5rem;
+    margin: 8px 0 40px 0;
+  }
+  
+  .menuItem {
+    font-size: 1.2rem;
+  }
+  
+  .modeWrapper {
+    width: 90vw;
+    height: 70vh;
+    flex-direction: column;
+  }
+  
+  .modeSidebar {
+    width: 100%;
+    height: 120px;
+    border-right: none;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+    flex-direction: row;
+    gap: 0.5rem;
+    overflow-x: auto;
+  }
+  
+  .modeOption {
+    white-space: nowrap;
+    margin: 0;
+  }
+
+  .shortcutKeys {
+    gap: 1rem;
+    font-size: 0.7rem;
+    padding: 0.2rem 0.8rem;
+  }
+
+  .version,
+  .copyright {
+    font-size: 0.6rem;
+  }
+}
