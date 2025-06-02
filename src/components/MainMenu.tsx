@@ -274,10 +274,10 @@ const MainMenu: React.FC<MainMenuProps> = ({ onStart, onRetry, onRanking }) => {
         {/* ゲームロゴ/タイトル */}
         <div className={styles.mainMenuHeader}>
           <h1 className={styles.mainMenuTitle}>
-            TYPING GAME
+            manabytype
           </h1>
           <p className={styles.menuTitleSub}>
-            PRACTICE MODE
+            II
           </p>
         </div>
 
@@ -335,13 +335,12 @@ const MainMenu: React.FC<MainMenuProps> = ({ onStart, onRetry, onRanking }) => {
             variants={itemVariants}
             className={styles.currentModeDisplay}
           >
-            <span className={styles.currentModeLabel}>Current Mode:</span>
-            <span className={styles.currentModeValue}>
-              {mode === 'normal' ? 'NORMAL' :
-               mode === 'hard' ? 'HARD' :
+            <span className={styles.currentModeLabel}>Mode:</span>            <span className={styles.currentModeValue}>
+              {mode === 'normal' ? 'Normal' :
+               mode === 'hard' ? 'Hard' :
                mode === 'sonkeigo' ? '尊敬語' :
                mode === 'kenjougo' ? '謙譲語' :
-               mode === 'business' ? 'ビジネスマナー' : 'NORMAL'}
+               mode === 'business' ? 'ビジネスマナー' : 'Normal'}
             </span>
           </motion.div>          {/* メインボタンセクション */}
           <motion.div 

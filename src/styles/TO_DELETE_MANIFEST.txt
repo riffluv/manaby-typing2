@@ -1,7 +1,0 @@
-削除候補:
-- src/styles/TypingModule.module.css
-- src/styles/TypingGame.module.css
-- src/styles/TypingGameRefactored.module.css
-- src/styles/TypingArea.module.css
-
-※TypingCharacters.module.css のみが現状のローマ字表示に必要です。他は参照されていません。

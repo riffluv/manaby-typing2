@@ -1,103 +1,36 @@
-/* Simple Main Menu Styles */
-.mainMenuScreen {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: flex-start;
-  min-height: 100vh;
-  padding: 2rem;
-  box-sizing: border-box;
-}
+/* ==========================================================================
+   MainMenu - 最小限のコンポーネント固有スタイル
+   ========================================================================== */
 
-.mainMenuContainer {
-  width: 100%;
-  max-width: 800px;
-  margin: 0 auto;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-}
-
-.mainMenuHeader {
-  text-align: center;
-  margin-bottom: 2rem;
-}
+/* 
+   注意: globals.cssのユーティリティクラスを優先的に使用してください
+   コンポーネント固有のスタイルは最小限に抑制
+*/
 
 .mainMenuTitle {
   font-size: 2.5rem;
   font-weight: 700;
-  color: #000000;
-  margin-bottom: 0.5rem;
-}
-
-.menuContent {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  gap: 2rem;
-  width: 100%;
 }
 
 .menuTitleSub {
-  color: #666666;
-  font-size: 1.1rem;
-  font-weight: 500;
   text-transform: uppercase;
 }
 
 .menuStartButton {
   font-size: 1.5rem;
-  padding: 1.2rem 3rem;
   min-width: 18rem;
-  background: #f0f0f0;
-  border: 1px solid #ccc;
-  color: #000;
-  cursor: pointer;
-  border-radius: 4px;
-  font-family: inherit;
-}
-
-.menuStartButton:hover {
-  background: #e0e0e0;
-}
-
-.menuModeSection {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  gap: 1.5rem;
-  width: 100%;
 }
 
 .menuModeTitle {
-  color: #000000;
-  font-size: 1.3rem;
-  font-weight: 600;
   text-transform: uppercase;
-  margin-bottom: 1rem;
 }
 
 .menuModeGrid {
-  display: grid;
-  grid-template-columns: repeat(2, 1fr);
-  gap: 1.5rem;
-  width: 100%;
   max-width: 500px;
 }
 
 .menuModeButton {
   padding: 1.2rem;
-  background: #f0f0f0;
-  border: 1px solid #ccc;
-  color: #000;
-  cursor: pointer;
-  border-radius: 4px;
-  transition: all 0.2s ease;
-}
-
-.menuModeButton:hover {
-  background: #e0e0e0;
-  border-color: #999;
 }
 
 .menuModeButtonNormal {
@@ -119,36 +52,13 @@
   color: #999;
 }
 
-.menuModeButtonLabel {
-  font-size: 1.1rem;
-  font-weight: 600;
-}
-
-.menuSubButtons {
-  display: flex;
-  gap: 1.5rem;
-  margin-top: 2rem;
-  flex-wrap: wrap;
-  justify-content: center;
-}
-
-.menuSubButton {
-  padding: 0.8rem 1.2rem;
-  font-size: 1rem;
-  background: #f0f0f0;
-  border: 1px solid #ccc;
-  color: #000;
-  cursor: pointer;
-  border-radius: 4px;
-}
-
-.menuSubButton:hover {
-  background: #e0e0e0;
-}
-
-.menuVersion {
-  color: #999999;
-  font-size: 0.85rem;
-  font-weight: 400;
-  margin-top: 1.2rem;
-}
+/* ==========================================================================
+   使用推奨クラス例（globals.cssから）:
+   
+   レイアウト: .flex, .flex-col, .items-center, .justify-center, .gap-md
+   テキスト: .text-center, .text-2xl, .text-secondary, .font-bold
+   ボタン: .btn, .btn-primary, .btn-lg
+   スペーシング: .p-md, .m-lg, .mb-sm
+   グリッド: .grid, .grid-cols-2
+   コンテナ: .container
+   ========================================================================== */
