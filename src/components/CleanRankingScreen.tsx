@@ -1,6 +1,7 @@
 "use client";
 import React, { useEffect, useState, useCallback } from 'react';
 import { getRankingEntries, RankingEntry } from '@/lib/rankingManaby2';
+import { useSceneNavigationStore } from '@/store/sceneNavigationStore';
 import { useGlobalShortcuts } from '@/hooks/useGlobalShortcuts';
 
 interface CleanRankingScreenProps {
@@ -12,6 +13,8 @@ interface CleanRankingScreenProps {
  * デザインは後で追加予定
  */
 const CleanRankingScreen: React.FC<CleanRankingScreenProps> = ({ onGoMenu }) => {
+  const { setLastScore } = useSceneNavigationStore(); // 状態管理ストアの使用
+  
   const [rankings, setRankings] = useState<RankingEntry[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState('');
@@ -30,8 +33,12 @@ const CleanRankingScreen: React.FC<CleanRankingScreenProps> = ({ onGoMenu }) => 
       setRankings([]);
     } finally {
       setLoading(false);
-    }
-  }, [activeDifficulty]);
+    }  }, [activeDifficulty]);
+
+  // メニューに戻る処理をメモ化
+  const handleGoMenu = useCallback(() => {
+    onGoMenu();
+  }, [onGoMenu]);
 
   useEffect(() => {
     fetchRankings();
@@ -42,17 +49,16 @@ const CleanRankingScreen: React.FC<CleanRankingScreenProps> = ({ onGoMenu }) => 
     if (difficulty === activeDifficulty) return;
     setActiveDifficulty(difficulty);
   };
-
   // ショートカットキー
   useGlobalShortcuts([
     {
       key: 'Escape',
       handler: (e) => {
         e.preventDefault();
-        onGoMenu();
+        handleGoMenu();
       },
     },
-  ], [onGoMenu]);
+  ], [handleGoMenu]);
 
   return (
     <div style={{
@@ -205,12 +211,10 @@ const CleanRankingScreen: React.FC<CleanRankingScreenProps> = ({ onGoMenu }) => 
             </tbody>
           </table>
         )}
-      </div>
-
-      {/* 戻るボタン */}
+      </div>      {/* 戻るボタン */}
       <div style={{ marginTop: '2rem' }}>
         <button
-          onClick={onGoMenu}
+          onClick={handleGoMenu}
           style={{
             padding: '0.75rem 1.5rem',
             fontSize: '1rem',

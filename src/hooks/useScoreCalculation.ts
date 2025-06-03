@@ -1,100 +1,61 @@
 'use client';
 
-import { useEffect, useCallback } from 'react';
+import { useEffect, useCallback, useRef } from 'react';
 import type { PerWordScoreLog, GameScoreLog } from '@/types';
-import type { ScoreWorkerRequest, ScoreWorkerResponse } from '@/workers/scoreWorker';
-
-// Worker管理（モジュールスコープでWorkerを一度だけ作成）
-let scoreWorker: Worker | null = null;
-function getScoreWorker() {
-  if (!scoreWorker && typeof window !== 'undefined') {
-    // Next.jsではpublic配下のscoreWorker.jsを直接参照
-    scoreWorker = new Worker('/scoreWorker.js');
-  }
-  return scoreWorker;
-}
 
 /**
- * ゲームスコア計算のためのカスタムフック
- * WebWorkerを使用して計算を行い、UIブロッキングを防止
+ * ゲームスコア計算のためのカスタムフック（無限ループ修正版）
+ * WebWorkerを使用せず、シンプルな計算に変更
  */
 export function useScoreCalculation(
   gameStatus: string, 
   scoreLog: PerWordScoreLog[],
   onScoreCalculated: (score: GameScoreLog['total']) => void
 ) {
-  // WebWorkerを使ったスコア計算
-  const calcScoreWithWorker = useCallback((payload: ScoreWorkerRequest['payload']): Promise<ScoreWorkerResponse['payload']> => {
-    return new Promise((resolve, reject) => {
-      const worker = getScoreWorker();
-      if (!worker) {
-        reject(new Error('Worker initialization failed'));
-        return;
-      }
+  // onScoreCalculatedのrefを作成して依存配列から除外し、無限ループを防ぐ
+  const onScoreCalculatedRef = useRef(onScoreCalculated);
+  
+  // 常に最新のコールバックを参照
+  useEffect(() => {
+    onScoreCalculatedRef.current = onScoreCalculated;
+  }, [onScoreCalculated]);
 
-      const handleMessage = (e: MessageEvent<any>) => {
-        const data = e.data;
-        if (data && data.type === 'scoreResult' && data.payload) {
-          resolve(data.payload);
-        } else {
-          reject(new Error('Workerから不正なレスポンス'));
-        }
-        worker.removeEventListener('message', handleMessage);
-      };
-
-      worker.addEventListener('message', handleMessage);
-      worker.postMessage({ type: 'calcScore', payload });
-    });
-  }, []);
-
-  // ゲーム終了時にスコア計算実行
+  // ゲーム終了時にスコア計算実行（依存配列からonScoreCalculatedを除外）
   useEffect(() => {
     if (gameStatus === 'finished' && scoreLog.length > 0) {
-      try {
-        // スコアデータをWorker用に整形
-        const mappedData = scoreLog.map(log => ({
-          keyCount: typeof log.keyCount === 'number' ? log.keyCount : 0,
-          missCount: typeof log.miss === 'number' ? log.miss : 0,
-          correctCount: typeof log.correct === 'number' ? log.correct : 0,
-          startTime: typeof log.startTime === 'number' ? log.startTime : 0,
-          endTime: typeof log.endTime === 'number' ? log.endTime : 0,
-        }));
+      // 直接計算（WebWorkerを使わずシンプルに）
+      const totalCorrect = scoreLog.reduce((sum, log) => sum + (log.correct || 0), 0);
+      const totalMiss = scoreLog.reduce((sum, log) => sum + (log.miss || 0), 0);
+      const totalKeyCount = scoreLog.reduce((sum, log) => sum + (log.keyCount || 0), 0);
+      const avgKpm = scoreLog.length > 0 ? scoreLog.reduce((sum, log) => sum + (log.kpm || 0), 0) / scoreLog.length : 0;
+      const avgAccuracy = scoreLog.length > 0 ? scoreLog.reduce((sum, log) => sum + (log.accuracy || 0), 0) / scoreLog.length : 0;
 
-        if (mappedData.length === 0) {
-          onScoreCalculated({ kpm: 0, accuracy: 0, correct: 0, miss: 0 });
-          return;
-        }
+      const result = {
+        kpm: Math.floor(avgKpm),
+        accuracy: Math.floor(avgAccuracy * 100),
+        correct: totalCorrect,
+        miss: totalMiss
+      };
 
-        // Workerでスコア計算
-        calcScoreWithWorker({ results: mappedData })
-          .then(result => {
-            onScoreCalculated({
-              kpm: typeof result.kpm === 'number' ? result.kpm : 0,
-              accuracy: typeof result.accuracy === 'number' ? result.accuracy : 0,
-              correct: typeof result.correct === 'number' ? result.correct : 0,
-              miss: typeof result.miss === 'number' ? result.miss : 0,
-            });
-          })
-          .catch(error => {
-            console.error('Score calculation error:', error);
-            onScoreCalculated({ kpm: 0, accuracy: 0, correct: 0, miss: 0 });
-          });
-      } catch (e) {
-        console.error('Score processing error:', e);
-        onScoreCalculated({ kpm: 0, accuracy: 0, correct: 0, miss: 0 });
-      }
+      // refを使用してコールバックを呼び出し
+      onScoreCalculatedRef.current(result);
     }
-  }, [gameStatus, scoreLog, calcScoreWithWorker, onScoreCalculated]);
+  }, [gameStatus, scoreLog]); // onScoreCalculatedを依存配列から除外
 
-  // フォールバックスコア計算（Workerが失敗した場合）
+  // フォールバックスコア計算
   const calculateFallbackScore = useCallback(() => {
     if (scoreLog.length === 0) return { kpm: 0, accuracy: 0, correct: 0, miss: 0 };
     
+    const totalCorrect = scoreLog.reduce((sum, log) => sum + (log.correct || 0), 0);
+    const totalMiss = scoreLog.reduce((sum, log) => sum + (log.miss || 0), 0);
+    const avgKpm = scoreLog.reduce((sum, log) => sum + (log.kpm || 0), 0) / scoreLog.length;
+    const avgAccuracy = scoreLog.reduce((sum, log) => sum + (log.accuracy || 0), 0) / scoreLog.length;
+    
     return {
-      kpm: Math.floor(scoreLog.reduce((sum, log) => sum + (log.kpm || 0), 0) / scoreLog.length || 0),
-      accuracy: scoreLog.reduce((sum, log) => sum + (log.accuracy || 0), 0) / scoreLog.length || 0,
-      correct: scoreLog.reduce((sum, log) => sum + (log.correct || 0), 0),
-      miss: scoreLog.reduce((sum, log) => sum + (log.miss || 0), 0)
+      kpm: Math.floor(avgKpm),
+      accuracy: Math.floor(avgAccuracy * 100),
+      correct: totalCorrect,
+      miss: totalMiss
     };
   }, [scoreLog]);
 
@@ -102,9 +63,3 @@ export function useScoreCalculation(
     calculateFallbackScore
   };
 }
-
-/**
- * スコア計算フック
- * @param scoreLog スコアログ
- * @returns スコア・正答率等の集計値
- */

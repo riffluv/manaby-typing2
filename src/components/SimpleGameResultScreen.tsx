@@ -1,6 +1,7 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
 import type { GameScoreLog, PerWordScoreLog } from '@/types';
 import { useRankingModal } from '@/hooks/useRankingModal';
+import { useSceneNavigationStore } from '@/store/sceneNavigationStore';
 import RankingModal from './RankingModal';
 import PortalShortcut from './PortalShortcut';
 
@@ -28,11 +29,32 @@ const SimpleGameResultScreen: React.FC<SimpleGameResultScreenProps> = ({
   scoreLog,
   onCalculateFallbackScore
 }) => {
+  // 状態管理ストアの使用
+  const { setLastScore } = useSceneNavigationStore();
+  
   // ランキング登録状態管理
   const [isScoreRegistered, setIsScoreRegistered] = useState(false);
   
   // 現在のスコア状態（propsまたはsessionStorageから復元）
   const [currentScore, setCurrentScore] = useState<GameScoreLog['total'] | null>(null);
+
+  // メニューに戻る処理をメモ化
+  const handleGoMenu = useCallback(() => {
+    // スコアデータをストアに保存
+    if (currentScore && scoreLog) {
+      setLastScore(scoreLog, currentScore);
+    }
+    onGoMenu();
+  }, [currentScore, scoreLog, setLastScore, onGoMenu]);
+
+  // ランキングに移動する処理をメモ化
+  const handleGoRanking = useCallback(() => {
+    // スコアデータをストアに保存
+    if (currentScore && scoreLog) {
+      setLastScore(scoreLog, currentScore);
+    }
+    onGoRanking();
+  }, [currentScore, scoreLog, setLastScore, onGoRanking]);
 
   // 初期化時にスコアを設定
   useEffect(() => {
@@ -75,20 +97,20 @@ const SimpleGameResultScreen: React.FC<SimpleGameResultScreenProps> = ({
     e.preventDefault();
     handleRegisterRanking();
   };
-
-  // キーボードショートカット
+  // キーボードショートカット（メモ化されたハンドラーを使用）
   useEffect(() => {
     const handleKeyDown = (e: KeyboardEvent) => {
       if (modalState.show) return; // モーダルが開いている場合は無視
       
       switch (e.key) {
         case 'Escape':
-          onGoMenu();
+          handleGoMenu();
           break;
         case 'r':
         case 'R':
-          onGoRanking();
-          break;        case 'Enter':
+          handleGoRanking();
+          break;
+        case 'Enter':
           if (currentScore && !isScoreRegistered) {
             handleOpenRankingModal();
           }
@@ -98,7 +120,7 @@ const SimpleGameResultScreen: React.FC<SimpleGameResultScreenProps> = ({
 
     window.addEventListener('keydown', handleKeyDown);
     return () => window.removeEventListener('keydown', handleKeyDown);
-  }, [onGoMenu, onGoRanking, currentScore, isScoreRegistered, modalState.show, handleOpenRankingModal]);    return (
+  }, [handleGoMenu, handleGoRanking, currentScore, isScoreRegistered, modalState.show, handleOpenRankingModal]);return (
     <div style={{
       minHeight: '100vh',
       width: '100%',
@@ -209,16 +231,15 @@ const SimpleGameResultScreen: React.FC<SimpleGameResultScreenProps> = ({
               ランキング登録
             </button>
           )}
-          
-          <button
-            onClick={onGoMenu}
+            <button
+            onClick={handleGoMenu}
             className="btn"
           >
             メニューに戻る
           </button>
           
           <button
-            onClick={onGoRanking}
+            onClick={handleGoRanking}
             className="btn"
           >
             ランキング

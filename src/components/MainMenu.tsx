@@ -1,6 +1,7 @@
 import PortalShortcut from '@/components/PortalShortcut';
 import React, { useState, useCallback, useMemo } from 'react';
 import { useTypingGameStore, useQuestionCount } from '@/store/typingGameStore';
+import { useSceneNavigationStore } from '@/store/sceneNavigationStore';
 import { useGlobalShortcuts } from '@/hooks/useGlobalShortcuts';
 import styles from './MainMenu.eldenring.bem.module.css';
 import { deleteRankingEntriesByMode } from '@/lib/rankingManaby2';
@@ -20,6 +21,7 @@ interface MainMenuProps {
  */
 const MainMenu: React.FC<MainMenuProps> = ({ onStart, onRetry, onRanking }) => {
   const { resetGame, setGameStatus, setMode, setQuestionCount, mode } = useTypingGameStore();
+  const { setLastScore } = useSceneNavigationStore(); // 状態管理ストアの使用
   const questionCount = useQuestionCount();
     // 状態管理
   const [adminOpen, setAdminOpen] = useState(false);
@@ -29,8 +31,7 @@ const MainMenu: React.FC<MainMenuProps> = ({ onStart, onRetry, onRanking }) => {
   const [modeSelectOpen, setModeSelectOpen] = useState(false);
   const [isStarting, setIsStarting] = useState(false);
   const [error, setError] = useState<string | null>(null);
-  
-  // パフォーマンス最適化 - useCallback
+    // パフォーマンス最適化 - useCallback
   const handleStart = useCallback(async () => {
     if (isStarting) return; // 重複実行防止
     
@@ -49,7 +50,12 @@ const MainMenu: React.FC<MainMenuProps> = ({ onStart, onRetry, onRanking }) => {
     } finally {
       setIsStarting(false);
     }
-  }, [resetGame, setGameStatus, onStart, isStarting]);  // 依存関係追加
+  }, [resetGame, setGameStatus, onStart, isStarting]);
+
+  // ランキング画面への移動をメモ化
+  const handleGoRanking = useCallback(() => {
+    onRanking();
+  }, [onRanking]);
     // モード選択ハンドラー
   const handleModeSelect = useCallback((newMode: 'normal' | 'hard' | 'sonkeigo' | 'kenjougo' | 'business') => {
     setMode(newMode);
@@ -72,12 +78,11 @@ const MainMenu: React.FC<MainMenuProps> = ({ onStart, onRetry, onRanking }) => {
         e.preventDefault();
         await handleStart();
       },
-    },
-    {
-      key: 'r',
-      altKey: true,
-      handler: (e) => { if (!adminOpen && !modeSelectOpen) { e.preventDefault(); onRanking(); } },
-    },
+    },      {
+        key: 'r',
+        altKey: true,
+        handler: (e) => { if (!adminOpen && !modeSelectOpen) { e.preventDefault(); handleGoRanking(); } },
+      },
     {
       key: 'Escape',
       handler: (e) => {
@@ -94,9 +99,8 @@ const MainMenu: React.FC<MainMenuProps> = ({ onStart, onRetry, onRanking }) => {
         e.preventDefault();
         setAdminOpen((v) => !v);
       },
-      allowInputFocus: true
-    },
-  ], [handleStart, onRanking, adminOpen, modeSelectOpen]);
+      allowInputFocus: true    },
+  ], [handleStart, handleGoRanking, adminOpen, modeSelectOpen]);
   // ランキングリセット関数
   const handleResetRanking = async (mode: 'normal' | 'hard') => {
     setAdminLoading(true);
@@ -154,17 +158,16 @@ const MainMenu: React.FC<MainMenuProps> = ({ onStart, onRetry, onRanking }) => {
             }}
           >
             SELECT MODE
-          </div>
-          <div 
+          </div>          <div 
             className={styles.mainMenu__navItem} 
-            onClick={onRanking}
+            onClick={handleGoRanking}
             tabIndex={0}
             role="button"
             aria-label="ランキングを表示"
             onKeyDown={(e) => {
               if (e.key === 'Enter' || e.key === ' ') {
                 e.preventDefault();
-                onRanking();
+                handleGoRanking();
               }
             }}
           >

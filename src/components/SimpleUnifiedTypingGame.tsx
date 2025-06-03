@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
 import { useRouter } from 'next/navigation';
 import { useGameStatus, useTypingGameStore, useCurrentWord } from '@/store/typingGameStore';
 import { TypingWord, PerWordScoreLog, GameScoreLog } from '@/types';
@@ -36,14 +36,16 @@ const SimpleUnifiedTypingGame: React.FC<{
   // スコア管理の追加
   const [scoreLog, setScoreLog] = useState<PerWordScoreLog[]>([]);
   const [resultScore, setResultScore] = useState<GameScoreLog['total'] | null>(null);
+  // スコア計算コールバックをメモ化して無限ループを防ぐ
+  const onScoreCalculated = useCallback((calculatedScore: GameScoreLog['total']) => {
+    setResultScore(calculatedScore);
+  }, []);
 
   // WebWorkerを使用したスコア計算
   const { calculateFallbackScore } = useScoreCalculation(
     gameStatus, 
     scoreLog, 
-    (calculatedScore) => {
-      setResultScore(calculatedScore);
-    }
+    onScoreCalculated
   );
 
   // 直アクセス防止
