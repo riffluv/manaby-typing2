@@ -13,19 +13,24 @@ interface CleanRankingScreenProps {
  */
 const CleanRankingScreen: React.FC<CleanRankingScreenProps> = ({ onGoMenu }) => {
   const { setLastScore } = useSceneNavigationStore();
-  
-  const [rankings, setRankings] = useState<RankingEntry[]>([]);
+    const [rankings, setRankings] = useState<RankingEntry[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState('');
   const [activeDifficulty, setActiveDifficulty] = useState<string>('normal');
-
+  
+  // ページネーション状態
+  const [currentPage, setCurrentPage] = useState(1);
+  const perPage = 6; // 1ページあたりの表示件数
   // ランキングデータを取得
   const fetchRankings = useCallback(async () => {
     setLoading(true);
     try {
-      const realRankingData = await getRankingEntries(15, activeDifficulty as 'normal' | 'hard');
+      // より多くのデータを取得（ページネーション対応）
+      const realRankingData = await getRankingEntries(100, activeDifficulty as 'normal' | 'hard');
       setRankings(realRankingData);
       setError('');
+      // 難易度変更時は1ページ目に戻る
+      setCurrentPage(1);
     } catch (error) {
       console.error('ランキングデータの取得に失敗しました:', error);
       setError('ランキングの取得に失敗しました');
@@ -43,11 +48,21 @@ const CleanRankingScreen: React.FC<CleanRankingScreenProps> = ({ onGoMenu }) => 
   useEffect(() => {
     fetchRankings();
   }, [fetchRankings]);
-
   // 難易度変更ハンドラ
   const handleDifficultyChange = (difficulty: string) => {
     if (difficulty === activeDifficulty) return;
     setActiveDifficulty(difficulty);
+  };
+
+  // ページネーション用のデータ計算
+  const totalPages = Math.ceil(rankings.length / perPage);
+  const startIndex = (currentPage - 1) * perPage;
+  const endIndex = startIndex + perPage;
+  const currentPageData = rankings.slice(startIndex, endIndex);
+
+  // ページ変更ハンドラ
+  const handlePageChange = (page: number) => {
+    setCurrentPage(page);
   };
 
   // ショートカットキー
@@ -59,11 +74,12 @@ const CleanRankingScreen: React.FC<CleanRankingScreenProps> = ({ onGoMenu }) => 
         handleGoMenu();
       },
     },
-  ], [handleGoMenu]);  return (
+  ], [handleGoMenu]);
+
+  return (
     <div style={{
       boxSizing: 'border-box',
       margin: 0,
-      padding: 0,
       width: '100%',
       minHeight: '100vh',
       fontFamily: 'Cinzel, serif',
@@ -81,15 +97,13 @@ const CleanRankingScreen: React.FC<CleanRankingScreenProps> = ({ onGoMenu }) => 
         width: '100%',
         maxWidth: '900px',
         animation: 'fadeIn 1.2s ease',
-        textAlign: 'center'
-      }}>
+        textAlign: 'center'      }}>
         {/* Title */}
         <h1 style={{
           fontSize: '4rem',
           color: '#c9a76f',
           letterSpacing: '0.4rem',
           textShadow: '0 0 12px rgba(255, 200, 120, 0.3)',
-          marginBottom: '2rem',
           margin: '0 0 2rem 0'
         }}>
           RANKING
@@ -221,14 +235,14 @@ const CleanRankingScreen: React.FC<CleanRankingScreenProps> = ({ onGoMenu }) => 
               </tr>
             </thead>
             <tbody>
-              {rankings.map((entry, index) => (
+              {currentPageData.map((entry, index) => (
                 <tr key={index}>
                   <td style={{
                     padding: '0.8rem 1rem',
                     borderBottom: '1px solid rgba(255,255,255,0.1)',
                     textAlign: 'center'
                   }}>
-                    {index + 1}
+                    {startIndex + index + 1}
                   </td>
                   <td style={{
                     padding: '0.8rem 1rem',
@@ -269,6 +283,48 @@ const CleanRankingScreen: React.FC<CleanRankingScreenProps> = ({ onGoMenu }) => 
               ))}
             </tbody>
           </table>
+        )}
+
+        {/* Pagination */}
+        {!loading && !error && rankings.length > 0 && totalPages > 1 && (
+          <div style={{
+            display: 'flex',
+            justifyContent: 'center',
+            gap: '1rem',
+            marginBottom: '2rem'
+          }}>
+            {Array.from({ length: totalPages }, (_, i) => i + 1).map((page) => (
+              <div
+                key={page}
+                onClick={() => handlePageChange(page)}
+                style={{
+                  cursor: 'pointer',
+                  padding: '0.3rem 1rem',
+                  border: page === currentPage ? '1px solid #88ccff' : '1px solid rgba(255, 255, 255, 0.3)',
+                  background: 'rgba(0,0,0,0.3)',
+                  color: page === currentPage ? '#b0d0ff' : '#ccc',
+                  borderRadius: '2px',
+                  transition: '0.2s',
+                  boxShadow: page === currentPage ? '0 0 6px rgba(100, 180, 255, 0.3)' : 'none'
+                }}
+                onMouseEnter={(e) => {
+                  if (page !== currentPage) {
+                    e.currentTarget.style.color = '#b0d0ff';
+                    e.currentTarget.style.borderColor = '#88ccff';
+                    e.currentTarget.style.boxShadow = '0 0 6px rgba(100, 180, 255, 0.3)';
+                  }
+                }}
+                onMouseLeave={(e) => {
+                  if (page !== currentPage) {
+                    e.currentTarget.style.color = '#ccc';
+                    e.currentTarget.style.borderColor = 'rgba(255, 255, 255, 0.3)';
+                    e.currentTarget.style.boxShadow = 'none';
+                  }
+                }}
+              >
+                {page}
+              </div>
+            ))}          </div>
         )}
 
         {/* Buttons */}
