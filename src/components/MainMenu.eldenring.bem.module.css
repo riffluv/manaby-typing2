@@ -190,117 +190,112 @@
 }
 
 /* ==========================================================================
-   モードセレクト（元のHTMLのモーダル部分は無視してシンプルに）
+   モードセレクト（modeselect.htmlと同一デザインを採用）
    ========================================================================== */
 
 .modeSelect {
   position: fixed;
-  top: 0;
-  left: 0;
-  width: 100vw;
-  height: 100vh;
-  background: rgba(5, 10, 20, 0.95);
+  inset: 0;
   display: flex;
-  flex-direction: column;
   justify-content: center;
   align-items: center;
-  z-index: 1000;
-  opacity: 1;
-  backdrop-filter: blur(4px);
-  animation: modalFade 0.6s ease forwards;
+  z-index: 20;
+}
+
+.modeSelect__overlay {
+  position: absolute;
+  inset: 0;
+  background: rgba(5, 10, 20, 0.95);
+  backdrop-filter: blur(8px);
 }
 
 .modeSelect__wrapper {
+  position: relative;
   display: flex;
-  flex-direction: column;
-  align-items: center;
-  gap: 2rem;
-  padding: 2rem;
+  width: 80%;
+  max-width: 900px;
+  height: 440px;
+  background: linear-gradient(135deg, rgba(30,30,50,0.95), rgba(15,20,40,0.95));
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  box-shadow: 0 0 30px rgba(100, 180, 255, 0.1);
+  z-index: 1;
 }
 
 .modeSelect__sidebar {
+  width: 240px;
+  background: rgba(0, 0, 0, 0.25);
+  border-right: 1px solid rgba(255, 255, 255, 0.08);
+  padding: 1.5rem;
   display: flex;
   flex-direction: column;
   gap: 1rem;
-  align-items: center;
 }
 
 .modeSelect__option {
-  font-size: 1.6rem;
   color: #ccc;
-  cursor: pointer;
-  position: relative;
+  font-size: 1.1rem;
+  padding: 0.75rem 1rem;
+  border: 1px solid transparent;
   transition: all 0.3s ease;
-  padding: 0.5rem 2rem;
-  border: 1px solid rgba(255,255,255,0.1);
-  border-radius: 12px;
   background: none;
+  cursor: pointer;
+  text-align: left;
   font-family: 'Cinzel', serif;
 }
 
-.modeSelect__option:hover,
-.modeSelect__option--selected {
-  color: #d0e8ff;
-  background: rgba(255, 255, 255, 0.03);
-  box-shadow: 0 0 10px rgba(100, 180, 255, 0.2);
+.modeSelect__option:hover {
+  color: #dcefff;
+  background: rgba(120,180,255,0.05);
+  box-shadow: 0 0 10px rgba(120,180,255,0.2);
 }
 
-.modeSelect__option:hover::before,
-.modeSelect__option--selected::before {
-  content: '';
-  position: absolute;
-  top: 50%;
-  left: -60px;
-  transform: translateY(-50%);
-  width: 120px;
-  height: 1px;
-  background: linear-gradient(to right, transparent, #88ccff, transparent);
-  animation: pulse 2s infinite ease-in-out;
+.modeSelect__option--selected {
+  border: 1px solid #88ccff;
+  color: #e0f8ff;
+  animation: glow 1.5s infinite alternate;
+}
+
+@keyframes glow {
+  from {
+    box-shadow: 0 0 6px rgba(100,180,255,0.3);
+  }
+  to {
+    box-shadow: 0 0 12px rgba(100,180,255,0.6);
+  }
 }
 
 .modeSelect__content {
+  flex: 1;
+  padding: 2rem;
   display: flex;
   flex-direction: column;
-  align-items: center;
-  gap: 1rem;
+  justify-content: space-between;
 }
 
 .modeSelect__description {
-  color: #999;
-  font-size: 1rem;
-  text-align: center;
-  max-width: 400px;
-  line-height: 1.6;
-  font-family: 'Cinzel', serif;
+  font-size: 1.1rem;
+  line-height: 1.7;
+  color: #d5c8a6;
+  background: linear-gradient(to right, #d5c8a6, #b8cfe7);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  text-shadow: 0 0 10px rgba(255, 240, 200, 0.1);
 }
 
 .modeSelect__backButton {
-  margin-top: 1rem;
-  background: none;
-  border: 1px solid rgba(255,255,255,0.1);
-  color: #888;
+  align-self: flex-end;
+  padding: 0.5rem 1.5rem;
   font-size: 1rem;
-  cursor: pointer;
-  padding: 0.4rem 1.5rem;
-  border-radius: 8px;
+  color: #aacfff;
+  border: 1px solid rgba(255,255,255,0.12);
+  background: rgba(255,255,255,0.02);
   transition: all 0.3s ease;
   font-family: 'Cinzel', serif;
 }
 
-.modeSelect__backButton:hover,
-.modeSelect__backButton:focus {
-  color: #b0d0ff;
-  background: rgba(255,255,255,0.03);
-  box-shadow: 0 0 8px rgba(100, 180, 255, 0.1);
-  outline: none;
-}
-
-/* 管理者モードのステータス表示 */
-.mainMenu__adminStatus {
-  margin-top: 1rem;
-  color: #4ade80;
-  font-size: 0.9rem;
-  text-align: center;
+.modeSelect__backButton:hover {
+  background: rgba(180,220,255,0.03);
+  border-color: rgba(180,220,255,0.3);
 }
 
 /* ==========================================================================

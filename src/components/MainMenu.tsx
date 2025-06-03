@@ -15,6 +15,15 @@ interface MainMenuProps {
   onRanking: () => void;
 }
 
+// モード説明文オブジェクト
+const modeDescriptions = {
+  'normal': '一般的な入力練習モードです。基本的な言葉遣いを扱います。',
+  'hard': '難易度の高い入力練習モードです。さらに高度な言葉を扱います。',
+  'sonkeigo': '敬語の中でも「相手を高める」言葉遣いを学びます。',
+  'kenjougo': '自分を下げて丁寧さを表現する「謙譲語」を練習します。',
+  'business': 'ビジネスシーンでの適切な言葉選びとマナーを学ぶモードです。'
+};
+
 /**
  * MainMenu - 製品化レベル高品質メインメニュー
  * indexselect.htmlの完全再現 + アクセシビリティ + パフォーマンス最適化
@@ -213,19 +222,18 @@ const MainMenu: React.FC<MainMenuProps> = ({ onStart, onRetry, onRanking }) => {
         <div className={styles.mainMenu__error} role="alert" aria-live="assertive">
           {error}
         </div>
-      )}      {/* モードセレクトモーダル（Elden Ring風にシンプル化） */}
+      )}      {/* モードセレクトモーダル（modeselect.htmlと同一デザイン） */}
       {modeSelectOpen && (
         <div 
           className={styles.modeSelect}
           role="dialog"
           aria-modal="true"
           aria-labelledby="mode-select-title"
-          onClick={(e) => {
-            if (e.target === e.currentTarget) {
-              setModeSelectOpen(false);
-            }
-          }}
         >
+          <div 
+            className={styles.modeSelect__overlay} 
+            onClick={() => setModeSelectOpen(false)}
+          ></div>
           <div className={styles.modeSelect__wrapper}>
             <div className={styles.modeSelect__sidebar} role="tablist" aria-label="プレイモード選択">
               <button 
@@ -266,6 +274,9 @@ const MainMenu: React.FC<MainMenuProps> = ({ onStart, onRetry, onRanking }) => {
               </button>
             </div>
             <div className={styles.modeSelect__content}>
+              <div className={styles.modeSelect__description}>
+                {modeDescriptions[mode]}
+              </div>
               <button 
                 className={styles.modeSelect__backButton} 
                 onClick={() => setModeSelectOpen(false)}
