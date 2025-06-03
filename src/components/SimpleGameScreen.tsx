@@ -42,58 +42,47 @@ const SimpleGameScreen: React.FC<SimpleGameScreenProps> = ({
     onWordComplete,
   });  // typingmania-ref流: 効率的なローマ字位置計算とハイライト表示
   const romajiDisplay = React.useMemo(() => {
+    // エンジンが初期化されていない、または詳細進捗がない場合は初期状態
     if (!romajiString || !detailedProgress?.currentKanaDisplay) {
+      console.log('🔄 [SimpleGameScreen] romajiDisplay: Initial state - no progress data');
       return { accepted: '', remaining: romajiString || '' };
     }
     
-    // 詳細デバッグ情報をコンソールに出力
-    console.log('🔍 Debug romajiDisplay:', {
-      currentKanaIndex: detailedProgress.currentKanaIndex,
-      acceptedText: detailedProgress.currentKanaDisplay.acceptedText,
-      remainingText: detailedProgress.currentKanaDisplay.remainingText,
-      romajiString,
-      typingCharsLength: typingChars.length
-    });
-    
-    // 正確な同期計算：romajiString生成と同じロジックを使用
     const currentKanaIndex = detailedProgress.currentKanaIndex;
     const currentAcceptedLength = detailedProgress.currentKanaDisplay.acceptedText.length;
     
-    console.log('🔧 SYNC DEBUG:', {
+    console.log('📊 [SimpleGameScreen] romajiDisplay calculation:', {
       currentKanaIndex,
       currentAcceptedLength,
-      currentKanaChar: typingChars[currentKanaIndex]?.kana,
-      currentKanaPattern: typingChars[currentKanaIndex]?.patterns[0],
-      displayAcceptedText: detailedProgress.currentKanaDisplay.acceptedText,
-      displayRemainingText: detailedProgress.currentKanaDisplay.remainingText
+      totalKanaCount: detailedProgress.totalKanaCount,
+      currentKanaDisplayAccepted: detailedProgress.currentKanaDisplay.acceptedText,
+      currentKanaDisplayRemaining: detailedProgress.currentKanaDisplay.remainingText
     });
-      // 累積長さ計算（完了済み文字 + 現在文字の進行分）
+    
+    // 累積長さ計算（完了済み文字 + 現在文字の進行分）
     let totalAcceptedLength = 0;
     
     // 完了済み文字の長さを正確に計算
     for (let i = 0; i < currentKanaIndex && i < typingChars.length; i++) {
-      const char = typingChars[i];
-      const charPattern = char.patterns[0] || '';
+      const charPattern = typingChars[i].patterns[0] || '';
       totalAcceptedLength += charPattern.length;
-      console.log(`Completed Char ${i}: kana="${char.kana}" pattern="${charPattern}" (length: ${charPattern.length}), total: ${totalAcceptedLength}`);
     }
     
     // 現在処理中の文字での進行分を追加
     totalAcceptedLength += currentAcceptedLength;
-    console.log(`Current progress: +${currentAcceptedLength}, final total: ${totalAcceptedLength}`);
 
     const result = {
       accepted: romajiString.slice(0, totalAcceptedLength),
       remaining: romajiString.slice(totalAcceptedLength)
     };
     
-    console.log('🎯 Final romajiDisplay:', {
+    console.log('✨ [SimpleGameScreen] romajiDisplay result:', {
       totalAcceptedLength,
-      acceptedString: result.accepted,
-      remainingString: result.remaining,
-      expectedNextChar: result.remaining[0]
+      accepted: result.accepted,
+      remaining: result.remaining,
+      romajiStringTotal: romajiString
     });
-    
+
     return result;
   }, [romajiString, detailedProgress?.currentKanaIndex, detailedProgress?.currentKanaDisplay?.acceptedText, typingChars]);React.useEffect(() => {
     // デバッグ用：グローバルテスト関数を追加

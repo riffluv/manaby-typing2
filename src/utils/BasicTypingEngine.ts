@@ -38,7 +38,6 @@ export class BasicTypingEngine {
       startTime: 0,
     };
   }
-
   /**
    * エンジンの初期化
    * typingmania-ref流: 最小限のセットアップ
@@ -49,6 +48,9 @@ export class BasicTypingEngine {
     onProgress?: (index: number, display: KanaDisplay) => void,
     onComplete?: (scoreLog: PerWordScoreLog) => void
   ): void {
+    const wordText = typingChars.map(c => c.kana).join('');
+    console.log('🚀 [BasicTypingEngine] Initializing engine for word:', wordText);
+    
     this.container = container;
     this.state.typingChars = typingChars;
     this.state.currentIndex = 0;
@@ -57,6 +59,12 @@ export class BasicTypingEngine {
     this.state.startTime = 0;
     this.onProgress = onProgress;
     this.onComplete = onComplete;
+
+    console.log('📊 [BasicTypingEngine] Initial state:', {
+      currentIndex: this.state.currentIndex,
+      totalChars: this.state.typingChars.length,
+      firstChar: this.state.typingChars[0]?.getDisplayInfo().displayText
+    });
 
     // 初期表示の構築
     this.buildDisplay();
@@ -135,27 +143,29 @@ export class BasicTypingEngine {
       remainingText: currentChar.remainingText,
       completed: currentChar.completed,
       result
-    });
-
-    if (result >= 0) {
+    });    if (result >= 0) {
       // 正解
+      // まず表示更新と進捗通知（現在の文字の状態で）
+      this.updateDisplay();
+      this.notifyProgress();
+      
       if (currentChar.isCompleted()) {
         console.log('✅ Character completed, advancing to next');
         this.state.currentIndex++;
         console.log('🔄 New currentIndex:', this.state.currentIndex);
+        
+        // 文字完了後の進捗通知も実行
+        this.notifyProgress();
         
         // 単語完了チェック
         if (this.state.currentIndex >= this.state.typingChars.length) {
           this.handleWordComplete();
           return;
         }
+        
+        // 新しい文字への表示更新
+        this.updateDisplay();
       }
-      
-      // 表示更新
-      this.updateDisplay();
-      
-      // 進捗通知
-      this.notifyProgress();
     } else {
       // ミス
       console.log('❌ Key miss');
@@ -272,11 +282,13 @@ export class BasicTypingEngine {
 
     this.onComplete(scoreLog);
   }
-
   /**
    * エンジンのクリーンアップ
    */
   destroy(): void {
+    const wordText = this.state.typingChars.map(c => c.kana).join('') || 'unknown';
+    console.log('🧹 [BasicTypingEngine] Destroying engine for word:', wordText);
+    
     if (this.keyHandler) {
       document.removeEventListener('keydown', this.keyHandler);
       this.keyHandler = undefined;
