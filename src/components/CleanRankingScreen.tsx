@@ -74,13 +74,13 @@ const CleanRankingScreen: React.FC<CleanRankingScreenProps> = ({ onGoMenu }) => 
         handleGoMenu();
       },
     },
-  ], [handleGoMenu]);
-
-  return (
-    <div style={{
+  ], [handleGoMenu]);  return (
+    <div className="ranking-screen-container" style={{
       boxSizing: 'border-box',
       margin: 0,
-      width: '100%',
+      width: '100vw', // ビューポート幅を使用
+      minWidth: '800px', // 最小幅を設定
+      height: '100%',
       minHeight: '100vh',
       fontFamily: 'Cinzel, serif',
       background: 'radial-gradient(ellipse at center, #0a0f1b, #000)',
@@ -90,12 +90,17 @@ const CleanRankingScreen: React.FC<CleanRankingScreenProps> = ({ onGoMenu }) => 
       flexDirection: 'column',
       alignItems: 'center',
       justifyContent: 'center',
-      padding: '2rem'
+      padding: '2rem 5%', // 左右のパディングを百分率で
+      position: 'absolute', // absoluteに変更
+      top: 0,
+      left: 0,
+      right: 0,
+      bottom: 0
     }}>
       {/* Ranking Section */}
       <section style={{
         width: '100%',
-        maxWidth: '900px',
+        maxWidth: '1200px', // 最大幅を広げる
         animation: 'fadeIn 1.2s ease',
         textAlign: 'center'      }}>
         {/* Title */}

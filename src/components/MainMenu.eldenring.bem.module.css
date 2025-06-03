@@ -275,8 +275,8 @@
 .modeSelect__description {
   font-size: 1.1rem;
   line-height: 1.7;
-  color: #d5c8a6;
-  background: linear-gradient(to right, #d5c8a6, #b8cfe7);
+  color: #d5c8a6;  background: linear-gradient(to right, #d5c8a6, #b8cfe7);
+  background-clip: text;
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
   text-shadow: 0 0 10px rgba(255, 240, 200, 0.1);

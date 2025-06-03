@@ -2,6 +2,7 @@ import { create } from 'zustand';
 import { createSelectors } from '@/store/createSelectors';
 import type { PerWordScoreLog } from '@/types/score';
 import type { GameScoreLog } from '@/types/score';
+import { TransitionManager } from '@/core/transition/TransitionManager';
 
 // --- 型定義を強化 ---
 export interface ScoreLogEntry {
@@ -26,13 +27,16 @@ export type SceneType = 'menu' | 'game' | 'ranking' | 'result';
 // 画面ナビゲーション用のストア
 interface SceneNavigationStore {
   currentScene: SceneType;
+  previousScene: SceneType | null;
   sceneHistory: SceneType[];
+  isTransitioning: boolean;
   navigateTo: (scene: SceneType) => void;
   goBack: () => void;
   goToMenu: () => void;
   goToGame: () => void;
   goToRanking: () => void;
   goToResult: () => void;
+  setTransitioning: (isTransitioning: boolean) => void;
   lastScoreLog: PerWordScoreLog[];
   lastResultScore: GameScoreLog['total'] | null;
   setLastScore: (scoreLog: PerWordScoreLog[], resultScore: GameScoreLog['total'] | null) => void;
@@ -41,42 +45,56 @@ interface SceneNavigationStore {
 // Zustandストアの作成
 const useSceneNavigationStoreBase = create<SceneNavigationStore>((set, get) => ({
   currentScene: 'menu',
+  previousScene: null,
   sceneHistory: [],
+  isTransitioning: false,
   lastScoreLog: [],
   lastResultScore: null,
 
-  navigateTo: (scene) => set((state) => ({
-    sceneHistory: [...state.sceneHistory, state.currentScene],
-    currentScene: scene,
-  })),
+  navigateTo: (scene) => set((state) => {
+    // 同一シーンへの遷移の場合は何もしない
+    if (state.currentScene === scene) return state;
+
+    // 遷移中フラグを設定
+    set({ isTransitioning: true });
+
+    // トランジション用の最適な設定を取得
+    const transitionConfig = TransitionManager.getSceneConfig(scene);
+
+    // トランジション記録（開発モードのみ）
+    if (process.env.NODE_ENV === 'development') {
+      console.log(`[Navigation] ${state.currentScene} -> ${scene}`, transitionConfig);
+    }
+
+    return {
+      previousScene: state.currentScene,
+      sceneHistory: [...state.sceneHistory, state.currentScene],
+      currentScene: scene,
+    };
+  }),
 
   goBack: () => set((state) => {
     if (state.sceneHistory.length === 0) {
-      return { currentScene: 'menu', sceneHistory: [] };
+      return { currentScene: 'menu', previousScene: state.currentScene, sceneHistory: [] };
     }
     const prev = state.sceneHistory[state.sceneHistory.length - 1];
+    
+    // 遷移中フラグを設定
+    set({ isTransitioning: true });
+    
     return {
       currentScene: prev,
+      previousScene: state.currentScene,
       sceneHistory: state.sceneHistory.slice(0, -1),
     };
   }),
 
-  goToMenu: () => set((state) => ({
-    sceneHistory: [...state.sceneHistory, state.currentScene],
-    currentScene: 'menu',
-  })),
-  goToGame: () => set((state) => ({
-    sceneHistory: [...state.sceneHistory, state.currentScene],
-    currentScene: 'game',
-  })),
-  goToRanking: () => set((state) => ({
-    sceneHistory: [...state.sceneHistory, state.currentScene],
-    currentScene: 'ranking',
-  })),
-  goToResult: () => set((state) => ({
-    sceneHistory: [...state.sceneHistory, state.currentScene],
-    currentScene: 'result',
-  })),
+  goToMenu: () => get().navigateTo('menu'),
+  goToGame: () => get().navigateTo('game'),
+  goToRanking: () => get().navigateTo('ranking'),
+  goToResult: () => get().navigateTo('result'),
+  
+  setTransitioning: (isTransitioning) => set({ isTransitioning }),
 
   setLastScore: (scoreLog, resultScore) => set({
     lastScoreLog: scoreLog,

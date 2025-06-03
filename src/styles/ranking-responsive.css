@@ -1,0 +1,60 @@
+/* 
+ * ranking-responsive.css
+ * ランキング画面のレスポンシブ対応スタイル
+ */
+
+/* ランキング画面用のコンテナスタイル */
+.ranking-screen-container {
+  box-sizing: border-box;
+  width: 100vw !important;
+  min-height: 100vh !important;
+  overflow-x: hidden;
+}
+
+@media (min-width: 1200px) {
+  /* 大きな画面用 */
+  .ranking-screen-container section {
+    width: 80% !important;
+    max-width: 1200px !important;
+  }
+}
+
+@media (max-width: 1199px) and (min-width: 768px) {
+  /* 中程度の画面用 */
+  .ranking-screen-container section {
+    width: 90% !important;
+    max-width: 900px !important;
+  }
+}
+
+@media (max-width: 767px) {
+  /* 小さな画面用 */
+  .ranking-screen-container section {
+    width: 95% !important;
+    max-width: 100% !important;
+  }
+  
+  .ranking-screen-container {
+    padding: 1rem !important;
+  }
+}
+
+/* トランジション関連の修正 */
+.fullscreen-transition {
+  width: 100vw !important;
+  height: 100vh !important;
+}
+
+/* ランキングテーブルのセル幅調整 */
+.ranking-table th,
+.ranking-table td {
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+/* ランキング画面の背景を確実に全画面に */
+.scene-ranking {
+  background-size: cover !important;
+  background-position: center center !important;
+}
