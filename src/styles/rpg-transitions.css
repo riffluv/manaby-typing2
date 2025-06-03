@@ -1,0 +1,186 @@
+/* RPG風画面遷移エフェクト */
+
+/* ==========================================================================
+   フェード・スライドトランジション
+   ========================================================================== */
+@keyframes rpgFadeIn {
+  0% {
+    opacity: 0;
+    transform: translateY(20px) scale(0.98);
+  }
+  100% {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+}
+
+@keyframes rpgFadeOut {
+  0% {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+  100% {
+    opacity: 0;
+    transform: translateY(-20px) scale(0.98);
+  }
+}
+
+@keyframes rpgSlideInFromBottom {
+  0% {
+    opacity: 0;
+    transform: translateY(100vh);
+  }
+  100% {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes rpgSlideOutToTop {
+  0% {
+    opacity: 1;
+    transform: translateY(0);
+  }
+  100% {
+    opacity: 0;
+    transform: translateY(-100vh);
+  }
+}
+
+/* ==========================================================================
+   パーティクルエフェクト
+   ========================================================================== */
+@keyframes sparkle {
+  0%, 100% {
+    opacity: 0;
+    transform: scale(0);
+  }
+  50% {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+
+@keyframes float {
+  0%, 100% {
+    transform: translateY(0px);
+  }
+  50% {
+    transform: translateY(-10px);
+  }
+}
+
+/* ==========================================================================
+   RPGトランジションクラス
+   ========================================================================== */
+.rpg-transition-enter {
+  animation: rpgFadeIn 0.8s cubic-bezier(0.25, 0.46, 0.45, 0.94) forwards;
+}
+
+.rpg-transition-exit {
+  animation: rpgFadeOut 0.6s cubic-bezier(0.55, 0.06, 0.68, 0.19) forwards;
+}
+
+.rpg-slide-enter {
+  animation: rpgSlideInFromBottom 1.2s cubic-bezier(0.25, 0.46, 0.45, 0.94) forwards;
+}
+
+.rpg-slide-exit {
+  animation: rpgSlideOutToTop 0.8s cubic-bezier(0.55, 0.06, 0.68, 0.19) forwards;
+}
+
+/* ==========================================================================
+   FF16風グローエフェクト
+   ========================================================================== */
+.ff16-glow {
+  position: relative;
+  overflow: visible;
+}
+
+.ff16-glow::before {
+  content: '';
+  position: absolute;
+  top: -2px;
+  left: -2px;
+  right: -2px;
+  bottom: -2px;
+  background: linear-gradient(45deg, 
+    rgba(136, 204, 255, 0.3) 0%,
+    rgba(255, 216, 138, 0.2) 50%,
+    rgba(136, 204, 255, 0.3) 100%
+  );
+  border-radius: inherit;
+  z-index: -1;
+  opacity: 0;
+  animation: glowPulse 3s ease-in-out infinite;
+}
+
+@keyframes glowPulse {
+  0%, 100% {
+    opacity: 0;
+    transform: scale(1);
+  }
+  50% {
+    opacity: 1;
+    transform: scale(1.02);
+  }
+}
+
+/* ==========================================================================
+   パーティクルシステム
+   ========================================================================== */
+.particle-container {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  pointer-events: none;
+  z-index: 1000;
+}
+
+.particle {
+  position: absolute;
+  width: 4px;
+  height: 4px;
+  background: radial-gradient(circle, rgba(136, 204, 255, 0.8) 0%, transparent 70%);
+  border-radius: 50%;
+  animation: sparkle 2s ease-in-out infinite;
+}
+
+.particle:nth-child(2n) {
+  background: radial-gradient(circle, rgba(255, 216, 138, 0.6) 0%, transparent 70%);
+  animation-delay: 0.5s;
+}
+
+.particle:nth-child(3n) {
+  animation-delay: 1s;
+}
+
+/* ==========================================================================
+   アニメーション遅延クラス
+   ========================================================================== */
+.delay-100 { animation-delay: 0.1s; }
+.delay-200 { animation-delay: 0.2s; }
+.delay-300 { animation-delay: 0.3s; }
+.delay-400 { animation-delay: 0.4s; }
+.delay-500 { animation-delay: 0.5s; }
+
+/* ==========================================================================
+   スコアカード専用アニメーション
+   ========================================================================== */
+.score-card-enter {
+  animation: 
+    rpgFadeIn 1s cubic-bezier(0.25, 0.46, 0.45, 0.94) forwards,
+    float 3s ease-in-out infinite 1s;
+}
+
+.score-item-enter {
+  opacity: 0;
+  animation: rpgFadeIn 0.6s cubic-bezier(0.25, 0.46, 0.45, 0.94) forwards;
+}
+
+.score-item-enter:nth-child(1) { animation-delay: 0.2s; }
+.score-item-enter:nth-child(2) { animation-delay: 0.4s; }
+.score-item-enter:nth-child(3) { animation-delay: 0.6s; }
+.score-item-enter:nth-child(4) { animation-delay: 0.8s; }
