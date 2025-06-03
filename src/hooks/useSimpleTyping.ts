@@ -59,9 +59,7 @@ export function useSimpleTyping({
     const isSameWord = currentWordRef.current === word.hiragana;
     const isAlreadyInitialized = isInitializedRef.current && engineRef.current;
     
-    if (isSameWord && isAlreadyInitialized) {
-      console.log('⏸️ [useSimpleTyping] Skipping re-initialization - same word and already initialized:', word.hiragana);
-      return;
+    if (isSameWord && isAlreadyInitialized) {      return;
     }
 
     console.log('🔄 [useSimpleTyping] Initializing engine:', {
@@ -69,14 +67,11 @@ export function useSimpleTyping({
       newWord: word.hiragana,
       wasInitialized: isInitializedRef.current,
       hasEngine: !!engineRef.current
-    });
-
-    // 既存のエンジンをクリーンアップ（異なる単語または初期化が必要な場合のみ）
+    });    // 既存のエンジンをクリーンアップ（異なる単語または初期化が必要な場合のみ）
     if (engineRef.current) {
-      console.log('🔄 [useSimpleTyping] Cleaning up existing engine for:', currentWordRef.current || 'unknown');
       engineRef.current.cleanup();
       engineRef.current = null;
-    }        console.log('🚀 [useSimpleTyping] Creating new engine for word:', word.hiragana);
+    }
 
     // UI状態を初期化（エンジン初期化前に実行）
     setCurrentCharIndex(0);
@@ -84,13 +79,11 @@ export function useSimpleTyping({
     setDetailedProgress(null);
 
     // 新しいエンジンを作成
-    engineRef.current = new BasicTypingEngine();    
+    engineRef.current = new BasicTypingEngine();
     engineRef.current.initialize(
       containerRef.current,
-      typingChars,      
-      (index: number, display: KanaDisplay) => {
+      typingChars,        (index: number, display: KanaDisplay) => {
         // onProgress - 進行状況を更新
-        console.log('📊 [useSimpleTyping] Progress update:', { index, word: word.hiragana });
         setCurrentCharIndex(index);
         setKanaDisplay(display);
         
@@ -101,7 +94,6 @@ export function useSimpleTyping({
       },
       (scoreLog: PerWordScoreLog) => {
         // onComplete - BasicTypingEngineからの実際のスコアデータを受け取る
-        console.log('✅ [useSimpleTyping] Word completed:', word.hiragana);
         if (onWordComplete) {
           onWordComplete(scoreLog);
         }
@@ -109,18 +101,13 @@ export function useSimpleTyping({
 
     // 現在の単語と初期化状態を更新
     currentWordRef.current = word.hiragana;
-    isInitializedRef.current = true;
-
-    // エンジン初期化直後の初期状態を取得して設定
-    console.log('🎯 [useSimpleTyping] Setting initial detailed progress');
+    isInitializedRef.current = true;    // エンジン初期化直後の初期状態を取得して設定
     const initialProgress = engineRef.current.getDetailedProgress();
     setDetailedProgress(initialProgress);
-    console.log('📋 [useSimpleTyping] Initial detailed progress set:', initialProgress);
 
     // クリーンアップ関数
     return () => {
       if (engineRef.current) {
-        console.log('🧹 [useSimpleTyping] Cleanup on effect cleanup:', word.hiragana);
         engineRef.current.cleanup();
         engineRef.current = null;
       }
@@ -129,10 +116,8 @@ export function useSimpleTyping({
   }, [word.hiragana]); // 依存関係を単語のみに限定
 
   // コンポーネントアンマウント時のクリーンアップ
-  useEffect(() => {
-    return () => {
+  useEffect(() => {    return () => {
       if (engineRef.current) {
-        console.log('🧹 [useSimpleTyping] Final cleanup on component unmount');
         engineRef.current.cleanup();
         engineRef.current = null;
       }
@@ -147,9 +132,7 @@ export function useSimpleTyping({
     if (currentWordRef.current === word.hiragana) {
       return;
     }
-    
-    console.log('🔄 [useSimpleTyping] Resetting UI state for new word:', word.hiragana);
-    setCurrentCharIndex(0);
+      setCurrentCharIndex(0);
     setKanaDisplay(null);
     setDetailedProgress(null);
   }, [word.hiragana]);

@@ -27,8 +27,6 @@ export type ScoreWorkerResponse = {
 
 self.onmessage = (e: MessageEvent<any>) => {
   try {
-    console.log('Worker: メッセージ受信', e.data);
-    
     if (!e.data || typeof e.data !== 'object') {
       throw new Error('不正なメッセージ形式');
     }
@@ -36,11 +34,9 @@ self.onmessage = (e: MessageEvent<any>) => {
     const { type, payload } = e.data;
     
     if (type !== 'calcScore' || !payload || !payload.results) {
-      throw new Error(`不正なメッセージタイプまたはデータ: ${type}`);
-    }
+      throw new Error(`不正なメッセージタイプまたはデータ: ${type}`);    }
     
     const { results } = payload;
-    console.log('Worker: 計算開始', results);
     
     let kpmSum = 0;
     let kpmCount = 0;
@@ -52,10 +48,7 @@ self.onmessage = (e: MessageEvent<any>) => {
     if (!Array.isArray(results) || results.length === 0) {
       throw new Error('結果データが配列ではないか空です');
     }
-    
-    for (const r of results) {
-      console.log('Worker: 処理中のデータ', r);
-      
+      for (const r of results) {
       // 厳格なプロパティチェック
       const correctCount = typeof r.correctCount === 'number' ? r.correctCount : 
                          (typeof r.correct === 'number' ? r.correct : 0);
@@ -90,10 +83,8 @@ self.onmessage = (e: MessageEvent<any>) => {
         accuracy,
         correct: totalCorrect,
         miss: totalMiss,
-      },
-    };
+      },    };
     
-    console.log('Worker: 計算結果', result);
     self.postMessage(result);
     
   } catch (error) {

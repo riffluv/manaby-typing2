@@ -1,0 +1,64 @@
+/* Simple Transitions CSS */
+
+/* シンプルなフェードトランジション */
+.simple-fade-enter {
+  animation: simpleFadeIn 0.6s ease-in-out forwards;
+}
+
+.simple-fade-exit {
+  animation: simpleFadeOut 0.4s ease-in-out forwards;
+}
+
+@keyframes simpleFadeIn {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+@keyframes simpleFadeOut {
+  from {
+    opacity: 1;
+  }
+  to {
+    opacity: 0;
+  }
+}
+
+/* シンプルなスライドトランジション */
+.simple-slide-enter {
+  animation: simpleSlideIn 0.6s ease-in-out forwards;
+}
+
+.simple-slide-exit {
+  animation: simpleSlideOut 0.4s ease-in-out forwards;
+}
+
+@keyframes simpleSlideIn {
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes simpleSlideOut {
+  from {
+    opacity: 1;
+    transform: translateY(0);
+  }
+  to {
+    opacity: 0;
+    transform: translateY(-20px);
+  }
+}
+
+/* シンプルなトランジションコンテナ */
+.simple-transition-container {
+  transition: opacity 0.6s ease-in-out;
+}

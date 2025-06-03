@@ -47,9 +47,7 @@ export class BasicTypingEngine {
     typingChars: BasicTypingChar[],
     onProgress?: (index: number, display: KanaDisplay) => void,
     onComplete?: (scoreLog: PerWordScoreLog) => void
-  ): void {
-    const wordText = typingChars.map(c => c.kana).join('');
-    console.log('🚀 [BasicTypingEngine] Initializing engine for word:', wordText);
+  ): void {    const wordText = typingChars.map(c => c.kana).join('');
     
     this.container = container;
     this.state.typingChars = typingChars;
@@ -59,12 +57,6 @@ export class BasicTypingEngine {
     this.state.startTime = 0;
     this.onProgress = onProgress;
     this.onComplete = onComplete;
-
-    console.log('📊 [BasicTypingEngine] Initial state:', {
-      currentIndex: this.state.currentIndex,
-      totalChars: this.state.typingChars.length,
-      firstChar: this.state.typingChars[0]?.getDisplayInfo().displayText
-    });
 
     // 初期表示の構築
     this.buildDisplay();
@@ -127,32 +119,19 @@ export class BasicTypingEngine {
     // 初回入力時のタイマー開始
     if (this.state.keyCount === 0) {
       this.state.startTime = performance.now();
-    }
-
-    this.state.keyCount++;
+    }    this.state.keyCount++;
 
     const currentChar = this.state.typingChars[this.state.currentIndex];
     const result = currentChar.accept(key);
 
-    // デバッグ情報を追加
-    console.log('🔧 BasicTypingEngine key processing:', {
-      key,
-      currentIndex: this.state.currentIndex,
-      currentKana: currentChar.kana,
-      acceptedInput: currentChar.acceptedInput,
-      remainingText: currentChar.remainingText,
-      completed: currentChar.completed,
-      result
-    });    if (result >= 0) {
+    if (result >= 0) {
       // 正解
       // まず表示更新と進捗通知（現在の文字の状態で）
       this.updateDisplay();
       this.notifyProgress();
       
       if (currentChar.isCompleted()) {
-        console.log('✅ Character completed, advancing to next');
         this.state.currentIndex++;
-        console.log('🔄 New currentIndex:', this.state.currentIndex);
         
         // 文字完了後の進捗通知も実行
         this.notifyProgress();
@@ -163,12 +142,10 @@ export class BasicTypingEngine {
           return;
         }
         
-        // 新しい文字への表示更新
-        this.updateDisplay();
+        // 新しい文字への表示更新        this.updateDisplay();
       }
     } else {
       // ミス
-      console.log('❌ Key miss');
       this.state.mistakeCount++;
     }
   }

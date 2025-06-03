@@ -33,21 +33,16 @@ class BGMPlayer {
   constructor() {
     this.initialize();
   }
-
   private async initialize() {
     if (this.isInitialized) return;
     
-    console.log('[BGMPlayer] 🎵 BGM専用システム初期化');
     this.isInitialized = true;
   }
 
   /**
    * BGMモード切り替え（フェード付き）
-   */
-  async switchMode(mode: BGMMode): Promise<void> {
+   */  async switchMode(mode: BGMMode): Promise<void> {
     if (this.currentMode === mode) return;
-    
-    console.log(`[BGMPlayer] 🎵 BGMモード切り替え: ${this.currentMode} → ${mode}`);
     
     const track = BGM_TRACKS[mode];
     
@@ -89,11 +84,8 @@ class BGMPlayer {
 
       // 再生開始
       await this.currentAudio.play();
-      
-      // フェードイン
+        // フェードイン
       await this.fadeIn(track.volume * this.globalVolume);
-      
-      console.log(`[BGMPlayer] ✅ BGM再生開始: ${track.filename}`);
       
     } catch (error) {
       console.warn(`[BGMPlayer] ⚠️ BGM再生エラー: ${track.filename}`, error);
@@ -162,11 +154,9 @@ class BGMPlayer {
   async stop(): Promise<void> {
     if (this.currentAudio) {
       await this.fadeOut();
-      this.currentAudio.pause();
-      this.currentAudio = null;
+      this.currentAudio.pause();      this.currentAudio = null;
     }
     this.currentMode = 'silent';
-    console.log('[BGMPlayer] 🔇 BGM停止');
   }
 
   /**
@@ -177,12 +167,9 @@ class BGMPlayer {
     
     if (this.currentAudio && this.currentMode !== 'silent') {
       const track = BGM_TRACKS[this.currentMode];
-      if (track) {
-        this.currentAudio.volume = track.volume * this.globalVolume;
+      if (track) {        this.currentAudio.volume = track.volume * this.globalVolume;
       }
     }
-    
-    console.log(`[BGMPlayer] 🔊 マスター音量: ${(this.globalVolume * 100).toFixed(0)}%`);
   }
 
   /**

@@ -70,7 +70,7 @@ const SimpleUnifiedTypingGame: React.FC<{
   }, [gameStatus, setGameStatus]);  // 現在のお題が変わったときに更新 - 深い比較で不要な更新を防ぐ
   useEffect(() => {
     if (storeWord && storeWord.hiragana && storeWord.hiragana !== currentWord.hiragana) {
-      console.log('🔄 [SimpleUnifiedTypingGame] Updating currentWord:', storeWord.hiragana);
+
       setCurrentWord(storeWord);
     }
   }, [storeWord?.hiragana, currentWord.hiragana]);// 単語完了時の処理（実際のスコアデータを使用）

@@ -1,115 +1,69 @@
-import React, { useState, useEffect, useRef, useCallback } from 'react';
-import { ParticleEffect } from './ParticleEffect';
+import React, { useState, useEffect, useRef } from 'react';
 import { useTransition } from '@/hooks/useTransition';
-import { TransitionManager, TransitionType } from '@/core/transition/TransitionManager';
-import { AnimationSystem } from '@/core/animation/AnimationSystem';
+import { TransitionType } from '@/core/transition/TransitionManager';
 
-interface RPGTransitionSystemProps {
+interface SimpleTransitionSystemProps {
   children: React.ReactNode;
   transitionType?: TransitionType;
-  showParticles?: boolean;
-  particleCount?: number;
-  enableGlow?: boolean;
   delayMs?: number;
   className?: string;
   onEnterComplete?: () => void;
 }
 
 /**
- * RPGゲーム風の高級感あるトランジションシステム
- * PS5/Steamライクな演出を実現するためのコンポーネント
+ * シンプルなトランジションシステム
+ * 基本的なfade/slide遷移のみをサポート
  */
-export const RPGTransitionSystem: React.FC<RPGTransitionSystemProps> = ({
+export const RPGTransitionSystem: React.FC<SimpleTransitionSystemProps> = ({
   children,
   transitionType = 'fade',
-  showParticles = true,
-  particleCount = 20,
-  enableGlow = true,
   delayMs = 0,
   className = '',
-  onEnterComplete: parentOnEnterComplete
+  onEnterComplete
 }) => {
-  // 初期表示状態（delayMsを考慮）
   const [show, setShow] = useState(delayMs === 0);
-  const [particlesActive, setParticlesActive] = useState(false);
-  const containerRef = useRef<HTMLDivElement>(null);
+  const nodeRef = useRef<HTMLDivElement>(null);
   
-  // トランジション入場完了時の処理
-  const handleEnterComplete = useCallback(() => {
-    // 高級感演出: 入場完了後に追加エフェクト
-    if (containerRef.current && enableGlow) {
-      try {
-        AnimationSystem.animate(
-          containerRef.current,
-          'glow',
-          { 
-            duration: 600, 
-            intensity: 3,
-            fillMode: 'forwards'
-          }
-        );
-      } catch (err) {
-        console.error('アニメーション適用エラー:', err);
-      }
-    }
-    
-    // パーティクルエフェクト制御
-    if (showParticles) {
-      setParticlesActive(true);
-      setTimeout(() => {
-        setParticlesActive(false);
-      }, 2000);
-    }
-    
-    // 親コンポーネントのコールバックを実行
-    if (typeof parentOnEnterComplete === 'function') {
-      parentOnEnterComplete();
-    }
-  }, [containerRef, enableGlow, showParticles, parentOnEnterComplete]);
-  
-  // トランジション効果の適用
-  const {
-    isVisible,
-    animationClass,
-    nodeRef
-  } = useTransition(
-    show,
-    transitionType,
-    {
-      duration: 800,
-      easing: 'cubic-bezier(0.16, 1, 0.3, 1)', // イージング調整
-      delay: delayMs
-    }
-  );
-
-  // 遅延表示があれば適用
+  // 遅延表示の処理
   useEffect(() => {
     if (delayMs > 0) {
       const timer = setTimeout(() => {
         setShow(true);
       }, delayMs);
-
       return () => clearTimeout(timer);
     }
   }, [delayMs]);
-  
-  // 表示状態が変わったときにトランジション完了イベントを発火
+
+  // トランジション効果の適用
+  const {
+    isVisible,
+    animationClass
+  } = useTransition(
+    show,
+    transitionType,
+    {
+      duration: 600,
+      easing: 'ease-in-out',
+      delay: 0
+    }
+  );
+
+  // トランジション完了時の処理
   useEffect(() => {
     if (show && isVisible) {
-      // トランジションの完了を検知するタイマー
-      // 実際のCSSトランジションの時間に合わせる
       const transitionTimer = setTimeout(() => {
-        handleEnterComplete();
-      }, 800); // トランジションのdurationに合わせる
+        if (onEnterComplete) {
+          onEnterComplete();
+        }
+      }, 600);
       
       return () => clearTimeout(transitionTimer);
     }
-  }, [show, isVisible, handleEnterComplete]);
+  }, [show, isVisible, onEnterComplete]);
 
   const containerClass = [
-    'fullscreen-transition',
+    'simple-transition-container',
     className,
-    enableGlow ? 'rpg-glow-container' : '',
     animationClass
   ].filter(Boolean).join(' ');
 
@@ -131,7 +85,6 @@ export const RPGTransitionSystem: React.FC<RPGTransitionSystemProps> = ({
       }}
     >
       <div 
-        ref={containerRef} 
         className="transition-content" 
         style={{ 
           width: '100%', 
@@ -143,14 +96,6 @@ export const RPGTransitionSystem: React.FC<RPGTransitionSystemProps> = ({
       >
         {children}
       </div>
-      
-      {showParticles && (
-        <ParticleEffect
-          show={particlesActive}
-          count={particleCount}
-          duration={3000}
-        />
-      )}
     </div>
   );
 };

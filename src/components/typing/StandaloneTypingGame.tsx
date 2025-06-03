@@ -9,7 +9,7 @@
  */
 
 import React, { useState, useEffect, useCallback, useRef } from 'react';
-import { TypingWord, PerWordScoreLog } from '@/types';
+import { TypingWord, PerWordScoreLog, KanaDisplay } from '@/types';
 import { useCurrentWord } from '@/store/typingGameStore';
 import { createBasicTypingChars } from '@/utils/basicJapaneseUtils';
 import { getRomajiString } from '@/utils/japaneseUtils';
@@ -56,38 +56,40 @@ const StandaloneTypingGame: React.FC<StandaloneTypingGameProps> = ({
     setRomajiDisplay({
       accepted: '',
       remaining: romajiString
-    });
-
-    // エンジンを初期化
+    });    // エンジンを初期化
     try {
-      engineRef.current = new BasicTypingEngine(
-        containerRef.current,
-        typingChars,
-        (progress) => {
-          // 進捗に基づいてローマ字表示を更新
-          const currentKanaIndex = progress.currentKanaIndex;
-          const currentAcceptedText = progress.currentKanaDisplay?.acceptedText || '';
-          
-          let totalAcceptedLength = 0;
-          
-          // 完了した文字までの長さを計算
-          for (let i = 0; i < currentKanaIndex; i++) {
-            totalAcceptedLength += typingChars[i]?.patterns[0]?.length || 0;
-          }
-          
-          // 現在の文字の進行分を追加
-          totalAcceptedLength += currentAcceptedText.length;
+      engineRef.current = new BasicTypingEngine();
+      
+      if (containerRef.current) {
+        engineRef.current.initialize(
+          containerRef.current,
+          typingChars,
+          (index: number, display: KanaDisplay) => {
+            // 進捗に基づいてローマ字表示を更新
+            const currentKanaIndex = index;
+            const currentAcceptedText = display.acceptedText || '';
+            
+            let totalAcceptedLength = 0;
+            
+            // 完了した文字までの長さを計算
+            for (let i = 0; i < currentKanaIndex; i++) {
+              totalAcceptedLength += typingChars[i]?.patterns[0]?.length || 0;
+            }
+            
+            // 現在の文字の進行分を追加
+            totalAcceptedLength += currentAcceptedText.length;
 
-          setRomajiDisplay({
-            accepted: romajiString.slice(0, totalAcceptedLength),
-            remaining: romajiString.slice(totalAcceptedLength)
-          });
-        },
-        (scoreLog) => {
-          // 単語完了時
-          onWordComplete?.(scoreLog);
-        }
-      );
+            setRomajiDisplay({
+              accepted: romajiString.slice(0, totalAcceptedLength),
+              remaining: romajiString.slice(totalAcceptedLength)
+            });
+          },
+          (scoreLog: PerWordScoreLog) => {
+            // 単語完了時
+            onWordComplete?.(scoreLog);
+          }
+        );
+      }
 
       setIsInitialized(true);
     } catch (error) {

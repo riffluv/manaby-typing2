@@ -9,7 +9,6 @@ const AudioSystemInitializer = () => {
     const initializeAudio = async () => {
       try {
         OptimizedAudioSystem.init();
-        console.log('[AudioSystemInitializer] 音響システムの初期化が完了しました');
       } catch (error) {
         console.error('[AudioSystemInitializer] 音響システムの初期化に失敗:', error);
       }
