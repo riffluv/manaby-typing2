@@ -3,7 +3,6 @@ import type { GameScoreLog, PerWordScoreLog } from '@/types';
 import { useRankingModal } from '@/hooks/useRankingModal';
 import { useSceneNavigationStore } from '@/store/sceneNavigationStore';
 import RankingModal from './RankingModal';
-import PortalShortcut from './PortalShortcut';
 
 // sessionStorageのキー
 const LAST_SCORE_KEY = 'typing_game_last_score';
@@ -17,9 +16,9 @@ export type SimpleGameResultScreenProps = {
 };
 
 /**
- * シンプルなゲーム結果画面（スコア表示機能付き）
+ * エルデンリング風リザルト画面（スコア表示機能付き）
+ * - HTMLファイルと同じデザインを適用
  * - WebWorkerで計算されたスコアを表示
- * - 基本的な結果表示
  * - ランキング登録機能
  */
 const SimpleGameResultScreen: React.FC<SimpleGameResultScreenProps> = ({ 
@@ -97,6 +96,7 @@ const SimpleGameResultScreen: React.FC<SimpleGameResultScreenProps> = ({
     e.preventDefault();
     handleRegisterRanking();
   };
+
   // キーボードショートカット（メモ化されたハンドラーを使用）
   useEffect(() => {
     const handleKeyDown = (e: KeyboardEvent) => {
@@ -120,81 +120,41 @@ const SimpleGameResultScreen: React.FC<SimpleGameResultScreenProps> = ({
 
     window.addEventListener('keydown', handleKeyDown);
     return () => window.removeEventListener('keydown', handleKeyDown);
-  }, [handleGoMenu, handleGoRanking, currentScore, isScoreRegistered, modalState.show, handleOpenRankingModal]);return (
-    <div style={{
-      minHeight: '100vh',
-      width: '100%',
-      maxWidth: '100%',
-      display: 'flex',
-      flexDirection: 'column',
-      justifyContent: 'center',
-      alignItems: 'center',
-      padding: '2rem 1rem',
-      boxSizing: 'border-box',
-      overflowX: 'hidden'
-    }}>      <div style={{
-        textAlign: 'center',
-        maxWidth: '800px',
-        width: '100%',
-        padding: '2rem',
-        background: '#ffffff',
-        borderRadius: '1rem',
-        boxShadow: '0 10px 25px rgba(0, 0, 0, 0.1)',
-        border: '1px solid #e5e7eb',
-        boxSizing: 'border-box'
-      }}>{/* タイトル */}
-        <h1 style={{
-          fontSize: 'clamp(1.75rem, 4vw, 2.5rem)',
-          fontWeight: '700',
-          color: '#111827',
-          marginBottom: '2rem',
-          letterSpacing: '-0.025em'
-        }}>
-          お疲れ様でした！
-        </h1>
+  }, [handleGoMenu, handleGoRanking, currentScore, isScoreRegistered, modalState.show, handleOpenRankingModal]);
+
+  return (
+    <div className="result-screen">
+      <main className="result">
+        <h1 className="result__title">RESULT</h1>
 
         {/* スコア表示 */}
         {currentScore ? (
-          <div style={{
-            marginBottom: '2rem',
-            padding: '2rem',
-            border: '1px solid #e5e7eb',
-            borderRadius: '0.75rem',
-            textAlign: 'center',
-            background: '#fafafa',
-            boxShadow: '0 4px 6px rgba(0, 0, 0, 0.05)'
-          }}>
-            <div style={{
-              display: 'grid',
-              gridTemplateColumns: 'repeat(auto-fit, minmax(120px, 1fr))',
-              gap: '1.5rem',
-              fontSize: '1rem'
-            }}>
-              <div>
-                <div>KPM</div>
-                <div style={{ fontSize: '1.5rem' }}>{Math.floor(currentScore.kpm)}</div>
-              </div>
-              <div>
-                <div>精度</div>
-                <div style={{ fontSize: '1.5rem' }}>{Math.floor(currentScore.accuracy)}%</div>
-              </div>
-              <div>
-                <div>正解</div>
-                <div style={{ fontSize: '1.2rem' }}>{currentScore.correct}</div>
-              </div>
-              <div>
-                <div>ミス</div>
-                <div style={{ fontSize: '1.2rem' }}>{currentScore.miss}</div>
-              </div>
+          <section className="result__stats">
+            <div className="result__stat">
+              <span className="result__stat-label">KPM</span>
+              <span className="result__stat-value">{Math.floor(currentScore.kpm)}</span>
             </div>
-          </div>
+            <div className="result__stat">
+              <span className="result__stat-label">精度</span>
+              <span className="result__stat-value">{Math.floor(currentScore.accuracy)}%</span>
+            </div>
+            <div className="result__stat">
+              <span className="result__stat-label">正解</span>
+              <span className="result__stat-value">{currentScore.correct}</span>
+            </div>
+            <div className="result__stat">
+              <span className="result__stat-label">ミス</span>
+              <span className="result__stat-value">{currentScore.miss}</span>
+            </div>
+          </section>
         ) : scoreLog && scoreLog.length > 0 ? (
           <div style={{
             marginBottom: '2rem',
             padding: '1rem',
-            border: '1px solid #ccc',
+            border: '1px solid rgba(255,255,255,0.1)',
             borderRadius: '4px',
-            textAlign: 'center'
+            textAlign: 'center',
+            color: '#ccc'
           }}>
             <div style={{ fontSize: '1rem', marginBottom: '1rem' }}>
               スコア計算中...
@@ -202,71 +162,73 @@ const SimpleGameResultScreen: React.FC<SimpleGameResultScreenProps> = ({
             {onCalculateFallbackScore && (
               <button
                 onClick={onCalculateFallbackScore}
-                className="btn"
+                className="result__button"
               >
                 スコアを表示
               </button>
             )}
           </div>
         ) : null}
-        
-        {/* 最小スペース確保 */}
-        {!currentScore && (!scoreLog || scoreLog.length === 0) && (
-          <div style={{ height: '2rem' }} />
-        )}
-        
-        {/* ボタン */}
-        <div style={{
-          display: 'flex',
-          gap: '1rem',
-          justifyContent: 'center',
-          flexWrap: 'wrap'
-        }}>
+
+        <div className="result__buttons">
           {/* ランキング登録ボタン（スコアがあり、まだ登録していない場合のみ表示） */}
           {currentScore && !isScoreRegistered && (
-            <button
-              onClick={handleOpenRankingModal}
-              className="btn"
-            >
+            <div className="result__button" onClick={handleOpenRankingModal}>
               ランキング登録
-            </button>
+            </div>
           )}
-            <button
-            onClick={handleGoMenu}
-            className="btn"
-          >
+          <div className="result__button" onClick={handleGoMenu}>
             メニューに戻る
-          </button>
-          
-          <button
-            onClick={handleGoRanking}
-            className="btn"
-          >
+          </div>
+          <div className="result__button" onClick={handleGoRanking}>
             ランキング
-          </button>
-        </div>        
-        {/* ショートカット情報（デザイン統一・ポータル表示） */}
-        <PortalShortcut
-          shortcuts={[
-            { key: 'ESC', label: 'メニューに戻る' },
-            { key: 'R', label: 'ランキング' },
-            ...(currentScore && !isScoreRegistered ? [{ key: 'ENTER', label: 'ランキング登録' }] : [])
-          ]}
-        />
-      </div>
+          </div>
+        </div>
+      </main>
 
       {/* ランキング登録モーダル */}
-      <RankingModal
-        show={modalState.show}
-        name={modalState.name}
-        registering={modalState.registering}
-        done={modalState.done}
-        error={modalState.error}
-        isScoreRegistered={isScoreRegistered}
-        onSubmit={handleSubmitRanking}
-        onChangeName={(name) => dispatch({ type: 'setName', name })}
-        onClose={() => dispatch({ type: 'close' })}
-      />
+      <div className={`result__modal ${modalState.show ? 'result__modal--active' : ''}`}>
+        <div className="result__modal-content">
+          <h2 className="result__modal-title">名前を入力</h2>
+          <form onSubmit={handleSubmitRanking}>
+            <input
+              type="text"
+              className="result__modal-input"
+              value={modalState.name}
+              onChange={(e) => dispatch({ type: 'setName', name: e.target.value })}
+              placeholder="Your Name"
+              disabled={modalState.registering}
+            />
+            <div className="result__modal-actions">
+              <button
+                type="submit"
+                className="result__modal-button"
+                disabled={modalState.registering || !modalState.name.trim()}
+              >
+                {modalState.registering ? '登録中...' : '登録'}
+              </button>
+              <button
+                type="button"
+                className="result__modal-button"
+                onClick={() => dispatch({ type: 'close' })}
+                disabled={modalState.registering}
+              >
+                キャンセル
+              </button>
+            </div>
+          </form>
+          {modalState.error && (
+            <div style={{ color: '#ff6b6b', marginTop: '1rem', fontSize: '0.9rem' }}>
+              {modalState.error}
+            </div>
+          )}
+          {modalState.done && (
+            <div style={{ color: '#22c55e', marginTop: '1rem', fontSize: '0.9rem' }}>
+              ランキングに登録されました！
+            </div>
+          )}
+        </div>
+      </div>
     </div>
   );
 };
