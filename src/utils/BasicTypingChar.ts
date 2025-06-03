@@ -62,11 +62,13 @@ export class BasicTypingChar {
       this.completed = true;
     }
   }
-
   /**
    * typingmania-ref流：入力可能判定
    */
   canAccept(character: string): boolean {
+    // 既に完了している場合は受け付けない
+    if (this.completed) return false;
+    
     const char = character.toLowerCase();
     const newInput = this.acceptedInput + char;
     
@@ -105,13 +107,26 @@ export class BasicTypingChar {
     
     return -1;
   }
-
   /**
    * 表示情報を取得
    */
   getDisplayInfo(): BasicDisplayInfo {
+    // 現在入力されているパターンを特定
+    let currentPattern = this.patterns[0] || '';
+    
+    // 入力済みテキストが存在する場合、どのパターンが使われているかを判定
+    if (this.acceptedInput.length > 0) {
+      for (const pattern of this.patterns) {
+        if (this.acceptedInput.length <= pattern.length && 
+            this.acceptedInput === pattern.substring(0, this.acceptedInput.length)) {
+          currentPattern = pattern;
+          break;
+        }
+      }
+    }
+    
     return {
-      displayText: this.patterns[0] || '',
+      displayText: currentPattern,
       acceptedText: this.acceptedInput,
       remainingText: this.remainingText,
       isCompleted: this.completed

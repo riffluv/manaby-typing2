@@ -26,27 +26,23 @@ class SimpleKeyInput {
     // typingmania-ref流：グローバルに1つだけのkeydownイベント
     window.addEventListener('keydown', this.handleKeyDown.bind(this));
     this.initialized = true;
-  }
-  private handleKeyDown(e: KeyboardEvent): void {
+  }  private handleKeyDown(e: KeyboardEvent): void {
     // ブラウザ環境チェック
     if (typeof window === 'undefined') return;
     
-    // typingmania-ref流：即座にイベント制御（さらに高速化）
+    // 🚀 重要なシステムキーは通す
     if (e.key.toLowerCase() === 'r' && (e.metaKey || e.ctrlKey)) {
       // ページリフレッシュは許可
       return;
-    } else if (e.key === 'F12') {
-      // デベロッパーツールは許可
+    } else if (e.key === 'F12' || e.key === 'F5') {
+      // デベロッパーツールやリフレッシュは許可
       return;
-    } else {
-      // 🚀 超高速化: preventDefault/stopPropagationを同時実行
-      e.preventDefault();
-      e.stopPropagation();
     }
 
-    // 🚀 超高速化: ハンドラー実行を最適化（typingmania-ref流）
+    // ハンドラーが存在しない場合は何もしない
     if (this.handlers.length === 0) return;
     
+    // 🚀 超高速化: ハンドラー実行を最適化（typingmania-ref流）
     const remainingHandlers: SimpleKeyHandler[] = [];
     for (let i = 0; i < this.handlers.length; i++) {
       try {

@@ -50,7 +50,6 @@ export function useSimpleTyping({
     totalRomajiCount: number;
     currentKanaDisplay: KanaDisplay | null;
   } | null>(null);
-
   // エンジンの初期化
   useEffect(() => {
     if (!containerRef.current || typingChars.length === 0) return;
@@ -58,12 +57,15 @@ export function useSimpleTyping({
     // 既存のエンジンをクリーンアップ
     if (engineRef.current) {
       engineRef.current.cleanup();
+      engineRef.current = null;
     }    
 
     // 新しいエンジンを作成
-    engineRef.current = new BasicTypingEngine();    engineRef.current.initialize(
+    engineRef.current = new BasicTypingEngine();    
+    engineRef.current.initialize(
       containerRef.current,
-      typingChars,      (index: number, display: KanaDisplay) => {
+      typingChars,      
+      (index: number, display: KanaDisplay) => {
         // onProgress - 進行状況を更新
         setCurrentCharIndex(index);
         setKanaDisplay(display);
@@ -88,7 +90,7 @@ export function useSimpleTyping({
         engineRef.current = null;
       }
     };
-  }, [word.hiragana, typingChars, onWordComplete]);  // 単語が変わったときに進行状況をリセット
+  }, [word.hiragana, typingChars, onWordComplete]);// 単語が変わったときに進行状況をリセット
   useEffect(() => {
     setCurrentCharIndex(0);
     setKanaDisplay(null);

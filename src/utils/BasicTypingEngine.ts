@@ -113,11 +113,8 @@ export class BasicTypingEngine {
   /**
    * キー入力処理
    * typingmania-ref流: シンプルな判定ロジック
-   */
-  private handleKeyInput(key: string): void {
-    const { typingChars, currentIndex } = this.state;
-    
-    if (currentIndex >= typingChars.length) return;
+   */  private handleKeyInput(key: string): void {
+    if (this.state.currentIndex >= this.state.typingChars.length) return;
 
     // 初回入力時のタイマー開始
     if (this.state.keyCount === 0) {
@@ -126,16 +123,29 @@ export class BasicTypingEngine {
 
     this.state.keyCount++;
 
-    const currentChar = typingChars[currentIndex];
+    const currentChar = this.state.typingChars[this.state.currentIndex];
     const result = currentChar.accept(key);
+
+    // デバッグ情報を追加
+    console.log('🔧 BasicTypingEngine key processing:', {
+      key,
+      currentIndex: this.state.currentIndex,
+      currentKana: currentChar.kana,
+      acceptedInput: currentChar.acceptedInput,
+      remainingText: currentChar.remainingText,
+      completed: currentChar.completed,
+      result
+    });
 
     if (result >= 0) {
       // 正解
       if (currentChar.isCompleted()) {
+        console.log('✅ Character completed, advancing to next');
         this.state.currentIndex++;
+        console.log('🔄 New currentIndex:', this.state.currentIndex);
         
         // 単語完了チェック
-        if (this.state.currentIndex >= typingChars.length) {
+        if (this.state.currentIndex >= this.state.typingChars.length) {
           this.handleWordComplete();
           return;
         }
@@ -148,6 +158,7 @@ export class BasicTypingEngine {
       this.notifyProgress();
     } else {
       // ミス
+      console.log('❌ Key miss');
       this.state.mistakeCount++;
     }
   }

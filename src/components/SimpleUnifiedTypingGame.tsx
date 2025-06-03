@@ -88,11 +88,12 @@ const SimpleUnifiedTypingGame: React.FC<{
       advanceToNextWord();
     }
   };
-
-  // Escキーでメニューに戻る
+  // Escキーでメニューに戻る（ゲーム中のみ）
   useEffect(() => {
     const handleKeyDown = (e: KeyboardEvent) => {
+      // ゲーム中のEscキーのみハンドル（タイピング入力との競合を避ける）
       if (e.key === 'Escape' && gameStatus === 'playing') {
+        // タイピングエンジンがキャプチャモードなので、通常のイベントとして処理
         if (onGoMenu) {
           onGoMenu();
         } else {
@@ -101,6 +102,7 @@ const SimpleUnifiedTypingGame: React.FC<{
       }
     };
 
+    // captureフェーズではなく通常のイベントとして登録
     window.addEventListener('keydown', handleKeyDown);
     return () => window.removeEventListener('keydown', handleKeyDown);
   }, [gameStatus, onGoMenu, router]);
