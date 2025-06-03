@@ -1,42 +1,7 @@
 'use client';
-import React, { useEffect } from 'react';
-import { AnimatePresence } from 'framer-motion';
-import SimpleUnifiedTypingGame from '@/components/SimpleUnifiedTypingGame';
-import MainMenu from '@/components/MainMenu';
-import CleanRankingScreen from '@/components/CleanRankingScreen';
-import { useSceneNavigationStore, SceneType } from '@/store/sceneNavigationStore';
-import ScreenLayout from '@/components/common/ScreenLayout';
+import React from 'react';
+import AppRouter from '@/navigation/AppRouter';
 
 export default function Home() {
-  const { currentScene, goToMenu, goToGame, goToRanking } = useSceneNavigationStore();
-
-  // シーンに基づいてレイアウトバリアントを選択
-  const getLayoutVariant = (scene: SceneType): 'default' | 'game' | 'result' | 'ranking' => {
-    switch (scene) {
-      case 'game': return 'game';
-      case 'result': return 'result';
-      case 'ranking': return 'ranking';
-      default: return 'default';
-    }
-  };
-
-  return (
-    <AnimatePresence mode="wait">
-      {currentScene === 'menu' ? (
-        // MainMenuは完全独立 - ScreenLayoutを使用しない
-        <MainMenu onStart={goToGame} onRanking={goToRanking} onRetry={goToGame} key={currentScene} />
-      ) : currentScene === 'ranking' ? (
-        // ランキング画面も完全独立 - ScreenLayoutを使用しない（CSS競合回避）
-        <CleanRankingScreen onGoMenu={goToMenu} key={currentScene} />
-      ) : (
-        <ScreenLayout 
-          variant={getLayoutVariant(currentScene)}
-          key={currentScene}
-        >
-          {currentScene === 'game' && <SimpleUnifiedTypingGame onGoMenu={goToMenu} onGoRanking={goToRanking} />}
-          {/* GameResultScreenは直接使用せず、TypingGameコンポーネント内で管理します */}
-        </ScreenLayout>
-      )}
-    </AnimatePresence>
-  );
+  return <AppRouter />;
 }
