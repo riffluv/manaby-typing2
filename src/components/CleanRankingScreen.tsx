@@ -9,11 +9,10 @@ interface CleanRankingScreenProps {
 }
 
 /**
- * クリーンなランキング画面 - CSS競合を避けるため最小限の実装
- * デザインは後で追加予定
+ * ランキング画面 - ranking.htmlのデザインを完全に再現
  */
 const CleanRankingScreen: React.FC<CleanRankingScreenProps> = ({ onGoMenu }) => {
-  const { setLastScore } = useSceneNavigationStore(); // 状態管理ストアの使用
+  const { setLastScore } = useSceneNavigationStore();
   
   const [rankings, setRankings] = useState<RankingEntry[]>([]);
   const [loading, setLoading] = useState(true);
@@ -33,7 +32,8 @@ const CleanRankingScreen: React.FC<CleanRankingScreenProps> = ({ onGoMenu }) => 
       setRankings([]);
     } finally {
       setLoading(false);
-    }  }, [activeDifficulty]);
+    }
+  }, [activeDifficulty]);
 
   // メニューに戻る処理をメモ化
   const handleGoMenu = useCallback(() => {
@@ -49,6 +49,7 @@ const CleanRankingScreen: React.FC<CleanRankingScreenProps> = ({ onGoMenu }) => 
     if (difficulty === activeDifficulty) return;
     setActiveDifficulty(difficulty);
   };
+
   // ショートカットキー
   useGlobalShortcuts([
     {
@@ -58,80 +59,74 @@ const CleanRankingScreen: React.FC<CleanRankingScreenProps> = ({ onGoMenu }) => 
         handleGoMenu();
       },
     },
-  ], [handleGoMenu]);
-
-  return (
+  ], [handleGoMenu]);  return (
     <div style={{
-      width: '100vw',
-      height: '100vh',
+      boxSizing: 'border-box',
+      margin: 0,
+      padding: 0,
+      width: '100%',
+      minHeight: '100vh',
+      fontFamily: 'Cinzel, serif',
+      background: 'radial-gradient(ellipse at center, #0a0f1b, #000)',
+      color: '#ccc',
+      lineHeight: 1.5,
       display: 'flex',
       flexDirection: 'column',
       alignItems: 'center',
       justifyContent: 'center',
-      background: 'radial-gradient(ellipse at center, #1a2740, #0a0f1b)',
-      color: '#e0e0e0',
-      fontFamily: 'Cinzel, serif',
-      padding: '2rem',
-      boxSizing: 'border-box'
+      padding: '2rem'
     }}>
-      {/* ヘッダー */}
-      <div style={{ textAlign: 'center', marginBottom: '2rem' }}>
+      {/* Ranking Section */}
+      <section style={{
+        width: '100%',
+        maxWidth: '900px',
+        animation: 'fadeIn 1.2s ease',
+        textAlign: 'center'
+      }}>
+        {/* Title */}
         <h1 style={{
-          fontSize: '3rem',
-          fontWeight: 700,
-          color: '#ffd88a',
-          margin: 0,
-          marginBottom: '1rem'
+          fontSize: '4rem',
+          color: '#c9a76f',
+          letterSpacing: '0.4rem',
+          textShadow: '0 0 12px rgba(255, 200, 120, 0.3)',
+          marginBottom: '2rem',
+          margin: '0 0 2rem 0'
         }}>
           RANKING
         </h1>
-        <p style={{ margin: 0, color: '#b8cfe7' }}>
-          タイピングスコアランキング
-        </p>
-      </div>
 
-      {/* 難易度選択 */}
-      <div style={{
-        display: 'flex',
-        gap: '1rem',
-        marginBottom: '2rem'
-      }}>
-        {['normal', 'hard'].map((difficulty) => (
-          <button
-            key={difficulty}
-            onClick={() => handleDifficultyChange(difficulty)}
-            style={{
-              padding: '0.75rem 1.5rem',
-              fontSize: '1rem',
-              border: activeDifficulty === difficulty ? '2px solid #88ccff' : '1px solid rgba(255,255,255,0.2)',
-              background: activeDifficulty === difficulty ? 'rgba(136, 204, 255, 0.1)' : 'rgba(255,255,255,0.05)',
-              color: activeDifficulty === difficulty ? '#88ccff' : '#e0e0e0',
-              borderRadius: '0.5rem',
-              cursor: 'pointer',
-              transition: 'all 0.3s ease',
-              fontFamily: 'inherit',
-              fontWeight: 600
-            }}
-          >
-            {difficulty === 'normal' ? 'NORMAL' : 'HARD'}
-          </button>
-        ))}
-      </div>
+        {/* Tabs */}
+        <div style={{
+          display: 'flex',
+          justifyContent: 'center',
+          gap: '2rem',
+          marginBottom: '2rem'
+        }}>
+          {['normal', 'hard'].map((difficulty) => (
+            <div
+              key={difficulty}
+              onClick={() => handleDifficultyChange(difficulty)}
+              style={{
+                padding: '0.5rem 1.5rem',
+                border: activeDifficulty === difficulty ? '1px solid #88ccff' : '1px solid rgba(255, 255, 255, 0.3)',
+                background: 'rgba(0,0,0,0.4)',
+                color: activeDifficulty === difficulty ? '#b0d0ff' : '#ccc',
+                cursor: 'pointer',
+                transition: '0.3s',
+                boxShadow: activeDifficulty === difficulty ? '0 0 6px rgba(100, 180, 255, 0.3)' : 'none'
+              }}
+            >
+              {difficulty === 'normal' ? 'Normal' : 'Hard'}
+            </div>
+          ))}
+        </div>
 
-      {/* ランキングテーブル */}
-      <div style={{
-        width: '100%',
-        maxWidth: '900px',
-        background: 'rgba(255,255,255,0.03)',
-        border: '1px solid rgba(255,255,255,0.08)',
-        borderRadius: '1rem',
-        overflow: 'hidden'
-      }}>
+        {/* Table */}
         {loading ? (
           <div style={{
             textAlign: 'center',
             padding: '3rem',
-            color: '#b8cfe7'
+            color: '#ccc'
           }}>
             <div>ランキング読み込み中...</div>
           </div>
@@ -146,12 +141,17 @@ const CleanRankingScreen: React.FC<CleanRankingScreenProps> = ({ onGoMenu }) => 
               onClick={fetchRankings}
               style={{
                 marginTop: '1rem',
-                padding: '0.5rem 1rem',
-                background: '#88ccff',
-                color: '#0a0f1b',
-                border: 'none',
-                borderRadius: '0.5rem',
-                cursor: 'pointer'
+                padding: '0.6rem 2.5rem',
+                background: 'rgba(0, 0, 0, 0.4)',
+                border: '1px solid rgba(255, 255, 255, 0.4)',
+                color: '#ddd',
+                borderRadius: '2px',
+                fontSize: '1rem',
+                letterSpacing: '0.05em',
+                textTransform: 'uppercase',
+                transition: '0.2s ease',
+                cursor: 'pointer',
+                boxShadow: 'inset 0 0 0px rgba(255, 255, 255, 0.05)'
               }}
             >
               リトライ
@@ -161,7 +161,7 @@ const CleanRankingScreen: React.FC<CleanRankingScreenProps> = ({ onGoMenu }) => 
           <div style={{
             textAlign: 'center',
             padding: '3rem',
-            color: '#b8cfe7'
+            color: '#ccc'
           }}>
             <h3 style={{ margin: '0 0 1rem 0' }}>まだスコアがありません</h3>
             <p style={{ margin: 0 }}>
@@ -171,39 +171,98 @@ const CleanRankingScreen: React.FC<CleanRankingScreenProps> = ({ onGoMenu }) => 
         ) : (
           <table style={{
             width: '100%',
-            borderCollapse: 'collapse'
+            borderCollapse: 'collapse',
+            marginBottom: '2.5rem'
           }}>
-            <thead style={{ background: 'rgba(255,255,255,0.015)' }}>
+            <thead>
               <tr>
-                <th style={{ padding: '1rem', textAlign: 'center', borderBottom: '2px solid rgba(255,255,255,0.08)', color: '#b8cfe7', fontWeight: 600 }}>順位</th>
-                <th style={{ padding: '1rem', textAlign: 'center', borderBottom: '2px solid rgba(255,255,255,0.08)', color: '#b8cfe7', fontWeight: 600 }}>プレイヤー</th>
-                <th style={{ padding: '1rem', textAlign: 'center', borderBottom: '2px solid rgba(255,255,255,0.08)', color: '#b8cfe7', fontWeight: 600 }}>KPM</th>
-                <th style={{ padding: '1rem', textAlign: 'center', borderBottom: '2px solid rgba(255,255,255,0.08)', color: '#b8cfe7', fontWeight: 600 }}>正確率</th>
-                <th style={{ padding: '1rem', textAlign: 'center', borderBottom: '2px solid rgba(255,255,255,0.08)', color: '#b8cfe7', fontWeight: 600 }}>正解</th>
-                <th style={{ padding: '1rem', textAlign: 'center', borderBottom: '2px solid rgba(255,255,255,0.08)', color: '#b8cfe7', fontWeight: 600 }}>ミス</th>
+                <th style={{
+                  padding: '0.8rem 1rem',
+                  borderBottom: '1px solid rgba(255,255,255,0.1)',
+                  textAlign: 'center',
+                  color: '#a9c9ff',
+                  fontWeight: 'normal'
+                }}>順位</th>
+                <th style={{
+                  padding: '0.8rem 1rem',
+                  borderBottom: '1px solid rgba(255,255,255,0.1)',
+                  textAlign: 'center',
+                  color: '#a9c9ff',
+                  fontWeight: 'normal'
+                }}>プレイヤー</th>
+                <th style={{
+                  padding: '0.8rem 1rem',
+                  borderBottom: '1px solid rgba(255,255,255,0.1)',
+                  textAlign: 'center',
+                  color: '#a9c9ff',
+                  fontWeight: 'normal'
+                }}>KPM</th>
+                <th style={{
+                  padding: '0.8rem 1rem',
+                  borderBottom: '1px solid rgba(255,255,255,0.1)',
+                  textAlign: 'center',
+                  color: '#a9c9ff',
+                  fontWeight: 'normal'
+                }}>正確率</th>
+                <th style={{
+                  padding: '0.8rem 1rem',
+                  borderBottom: '1px solid rgba(255,255,255,0.1)',
+                  textAlign: 'center',
+                  color: '#a9c9ff',
+                  fontWeight: 'normal'
+                }}>正解</th>
+                <th style={{
+                  padding: '0.8rem 1rem',
+                  borderBottom: '1px solid rgba(255,255,255,0.1)',
+                  textAlign: 'center',
+                  color: '#a9c9ff',
+                  fontWeight: 'normal'
+                }}>ミス</th>
               </tr>
             </thead>
             <tbody>
               {rankings.map((entry, index) => (
-                <tr key={index} style={{
-                  background: index % 2 === 0 ? 'rgba(255,255,255,0.02)' : 'transparent'
-                }}>
-                  <td style={{ padding: '0.75rem', textAlign: 'center', borderBottom: '1px solid rgba(255,255,255,0.02)' }}>
+                <tr key={index}>
+                  <td style={{
+                    padding: '0.8rem 1rem',
+                    borderBottom: '1px solid rgba(255,255,255,0.1)',
+                    textAlign: 'center'
+                  }}>
                     {index + 1}
                   </td>
-                  <td style={{ padding: '0.75rem', textAlign: 'center', borderBottom: '1px solid rgba(255,255,255,0.02)' }}>
+                  <td style={{
+                    padding: '0.8rem 1rem',
+                    borderBottom: '1px solid rgba(255,255,255,0.1)',
+                    textAlign: 'center'
+                  }}>
                     {entry.name}
                   </td>
-                  <td style={{ padding: '0.75rem', textAlign: 'center', borderBottom: '1px solid rgba(255,255,255,0.02)', color: '#88ccff', fontWeight: 600 }}>
-                    {entry.kpm}
+                  <td style={{
+                    padding: '0.8rem 1rem',
+                    borderBottom: '1px solid rgba(255,255,255,0.1)',
+                    textAlign: 'center'
+                  }}>
+                    {entry.kpm.toFixed(1)}
                   </td>
-                  <td style={{ padding: '0.75rem', textAlign: 'center', borderBottom: '1px solid rgba(255,255,255,0.02)' }}>
-                    {entry.accuracy}%
+                  <td style={{
+                    padding: '0.8rem 1rem',
+                    borderBottom: '1px solid rgba(255,255,255,0.1)',
+                    textAlign: 'center'
+                  }}>
+                    {entry.accuracy.toFixed(1)}%
                   </td>
-                  <td style={{ padding: '0.75rem', textAlign: 'center', borderBottom: '1px solid rgba(255,255,255,0.02)' }}>
+                  <td style={{
+                    padding: '0.8rem 1rem',
+                    borderBottom: '1px solid rgba(255,255,255,0.1)',
+                    textAlign: 'center'
+                  }}>
                     {entry.correct}
                   </td>
-                  <td style={{ padding: '0.75rem', textAlign: 'center', borderBottom: '1px solid rgba(255,255,255,0.02)' }}>
+                  <td style={{
+                    padding: '0.8rem 1rem',
+                    borderBottom: '1px solid rgba(255,255,255,0.1)',
+                    textAlign: 'center'
+                  }}>
                     {entry.miss}
                   </td>
                 </tr>
@@ -211,42 +270,73 @@ const CleanRankingScreen: React.FC<CleanRankingScreenProps> = ({ onGoMenu }) => 
             </tbody>
           </table>
         )}
-      </div>      {/* 戻るボタン */}
-      <div style={{ marginTop: '2rem' }}>
-        <button
-          onClick={handleGoMenu}
-          style={{
-            padding: '0.75rem 1.5rem',
-            fontSize: '1rem',
-            border: '1px solid rgba(255,255,255,0.2)',
-            background: 'rgba(255,255,255,0.05)',
-            color: '#e0e0e0',
-            borderRadius: '0.5rem',
-            cursor: 'pointer',
-            transition: 'all 0.3s ease',
-            fontFamily: 'inherit',
-            fontWeight: 600
-          }}
-        >
-          ← メニューに戻る
-        </button>
-      </div>
 
-      {/* ショートカット表示 */}
-      <div style={{
-        position: 'fixed',
-        bottom: '2rem',
-        left: '50%',
-        transform: 'translateX(-50%)',
-        background: 'rgba(0,0,0,0.8)',
-        padding: '0.5rem 1rem',
-        borderRadius: '1rem',
-        border: '1px solid rgba(255,255,255,0.1)',
-        fontSize: '0.875rem',
-        color: '#b8cfe7'
-      }}>
-        ESC: メニューに戻る
-      </div>
+        {/* Buttons */}
+        <div style={{
+          display: 'flex',
+          gap: '1.5rem',
+          justifyContent: 'center'
+        }}>
+          <div
+            onClick={handleGoMenu}
+            style={{
+              cursor: 'pointer',
+              padding: '0.6rem 2.5rem',
+              background: 'rgba(0, 0, 0, 0.4)',
+              border: '1px solid rgba(255, 255, 255, 0.4)',
+              color: '#ddd',
+              borderRadius: '2px',
+              fontSize: '1rem',
+              letterSpacing: '0.05em',
+              textTransform: 'uppercase',
+              transition: '0.2s ease',
+              textAlign: 'center',
+              boxShadow: 'inset 0 0 0px rgba(255, 255, 255, 0.05)'
+            }}
+            onMouseEnter={(e) => {
+              e.currentTarget.style.borderColor = '#88ccff';
+              e.currentTarget.style.color = '#b0d0ff';
+              e.currentTarget.style.boxShadow = '0 0 6px rgba(100, 180, 255, 0.3)';
+            }}
+            onMouseLeave={(e) => {
+              e.currentTarget.style.borderColor = 'rgba(255, 255, 255, 0.4)';
+              e.currentTarget.style.color = '#ddd';
+              e.currentTarget.style.boxShadow = 'inset 0 0 0px rgba(255, 255, 255, 0.05)';
+            }}
+          >
+            戻る
+          </div>
+          <div
+            onClick={handleGoMenu}
+            style={{
+              cursor: 'pointer',
+              padding: '0.6rem 2.5rem',
+              background: 'rgba(0, 0, 0, 0.4)',
+              border: '1px solid rgba(255, 255, 255, 0.4)',
+              color: '#ddd',
+              borderRadius: '2px',
+              fontSize: '1rem',
+              letterSpacing: '0.05em',
+              textTransform: 'uppercase',
+              transition: '0.2s ease',
+              textAlign: 'center',
+              boxShadow: 'inset 0 0 0px rgba(255, 255, 255, 0.05)'
+            }}
+            onMouseEnter={(e) => {
+              e.currentTarget.style.borderColor = '#88ccff';
+              e.currentTarget.style.color = '#b0d0ff';
+              e.currentTarget.style.boxShadow = '0 0 6px rgba(100, 180, 255, 0.3)';
+            }}
+            onMouseLeave={(e) => {
+              e.currentTarget.style.borderColor = 'rgba(255, 255, 255, 0.4)';
+              e.currentTarget.style.color = '#ddd';
+              e.currentTarget.style.boxShadow = 'inset 0 0 0px rgba(255, 255, 255, 0.05)';
+            }}
+          >
+            メインメニューに戻る
+          </div>
+        </div>
+      </section>
     </div>
   );
 };
