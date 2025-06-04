@@ -3,13 +3,13 @@
 .gameScreen {
   width: 100%;
   height: 100vh;
-  background: radial-gradient(circle, #0a0f1b 0%, #000000 100%);
+  background: var(--color-bg-primary);
   font-family: 'Cinzel', serif;
   display: flex;
   flex-direction: column;
   justify-content: center;
   align-items: center;
-  color: #ccc;
+  color: var(--color-gaming-text-secondary);
   margin: 0;
   padding: 2rem 0;
   box-sizing: border-box;
@@ -28,7 +28,7 @@
   font-family: 'Cinzel', serif;
   font-size: 1.1rem;
   font-weight: bold;
-  color: #ffe18d;
+  color: var(--color-gaming-text-accent);
   letter-spacing: 0.1rem;
   text-shadow: 0 0 8px rgba(255, 225, 141, 0.5);
 }
@@ -45,7 +45,7 @@
   max-width: 720px;
   width: 90%;
   padding: 2rem;
-  background: linear-gradient(to bottom, #f6f1e3, #e9dec6);
+  background: var(--color-game-window-bg);
   background-image: url('/textures/old-wall.png'), url('https://www.transparenttextures.com/patterns/old-wall.png');
   background-blend-mode: overlay;
   border: 1px solid rgba(0, 0, 0, 0.15);
@@ -62,7 +62,7 @@
   letter-spacing: 0.05rem;
   margin-bottom: 1.5rem;
   line-height: 1.8;
-  background: linear-gradient(to right, #2b1e12, #3a2c1d);
+  background: var(--color-game-text-gradient);
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
   background-clip: text;
@@ -78,15 +78,15 @@
 }
 
 .typed {
-  color: #a3d8ff;
+  color: var(--color-game-typed);
 }
 
 .active {
-  color: #ffe18d;
+  color: var(--color-game-focus);
 }
 
 .remaining {
-  color: #9c7e5c;
+  color: var(--color-game-remaining);
 }
 
 /* Show shortcut guide in bottom area */
@@ -94,7 +94,7 @@
   display: block;
   font-family: 'Cinzel', serif;
   font-size: 0.9rem;
-  color: #9ca3af;
+  color: var(--color-gaming-text-muted);
   letter-spacing: 0.05rem;
 }
 

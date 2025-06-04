@@ -83,10 +83,10 @@
 }
 
 .mainMenu__button:hover {
-  border-color: var(--color-accent-secondary);
-  color: var(--color-accent-secondary);
-  background: rgba(136, 204, 255, 0.1);
-  box-shadow: 0 0 20px rgba(100, 180, 255, 0.3);
+  border-color: var(--color-text-accent);
+  color: var(--color-text-accent);
+  background: var(--color-interactive-hover);
+  box-shadow: 0 0 20px rgba(255, 216, 138, 0.3);
   transform: translateY(-2px);
 }
 
@@ -153,8 +153,8 @@
 }
 
 .mainMenu__modeButton:hover {
-  border-color: var(--color-accent-secondary);
-  color: var(--color-accent-secondary);
+  border-color: var(--color-text-accent);
+  color: var(--color-text-accent);
 }
 
 .mainMenu__modeButton--active {
@@ -322,7 +322,7 @@
 .mainMenu__adminInput:focus {
   outline: none;
   border-color: var(--color-accent-secondary);
-  box-shadow: 0 0 0 2px rgba(136, 204, 255, 0.2);
+  box-shadow: 0 0 0 2px var(--color-interactive-hover);
 }
 
 .mainMenu__adminStatus {
@@ -479,8 +479,8 @@
 .mainMenu__navItem:hover {
   border-color: var(--color-accent-secondary);
   color: var(--color-accent-secondary);
-  background: rgba(136, 204, 255, 0.1);
-  box-shadow: 0 0 20px rgba(100, 180, 255, 0.3);
+  background: var(--color-interactive-hover);
+  box-shadow: 0 0 20px rgba(255, 215, 138, 0.3);
   transform: translateY(-2px);
 }
 

@@ -41,9 +41,9 @@
 
 .rankingScreen__title {
   font-size: clamp(2.5rem, 4vw, 4rem);
-  color: var(--color-accent-primary);
+  color: var(--color-text-accent);
   letter-spacing: 0.4rem;
-  text-shadow: 0 0 12px rgba(255, 200, 120, 0.3);
+  text-shadow: 0 0 12px rgba(255, 216, 138, 0.3);
   margin: 0 0 min(2rem, 3vh) 0;
   flex-shrink: 0;
   font-weight: var(--font-weight-bold);
@@ -77,16 +77,17 @@
 }
 
 .rankingScreen__tab:hover {
-  border-color: var(--color-accent-secondary);
-  color: var(--color-accent-secondary);
-  background: rgba(136, 204, 255, 0.1);
+  border-color: var(--color-text-accent);
+  color: var(--color-text-accent);
+  background: var(--color-interactive-hover);
+  transform: translateY(-1px);
 }
 
 .rankingScreen__tab--active {
-  border-color: var(--color-accent-secondary);
-  color: var(--color-accent-secondary);
-  background: rgba(136, 204, 255, 0.15);
-  box-shadow: 0 0 6px rgba(100, 180, 255, 0.3);
+  border-color: var(--color-text-accent);
+  color: var(--color-text-accent);
+  background: var(--color-interactive-active);
+  box-shadow: 0 0 8px rgba(255, 216, 138, 0.2);
 }
 
 /* ==========================================================================
@@ -147,9 +148,10 @@
 }
 
 .rankingScreen__retryButton:hover {
-  border-color: var(--color-accent-secondary);
-  color: var(--color-accent-secondary);
-  box-shadow: 0 0 6px rgba(100, 180, 255, 0.3);
+  border-color: var(--color-text-accent);
+  color: var(--color-text-accent);
+  box-shadow: 0 0 8px rgba(255, 216, 138, 0.2);
+  transform: translateY(-1px);
 }
 
 /* ==========================================================================
@@ -202,13 +204,13 @@
 }
 
 .rankingScreen__tableRow:hover {
-  background: rgba(136, 204, 255, 0.05);
+  background: var(--color-interactive-hover);
 }
 
 .rankingScreen__tableHeader {
   padding: min(0.8rem, 1.5vh) min(1rem, 2vw);
   text-align: center;
-  color: var(--color-accent-secondary);
+  color: var(--color-text-accent);
   font-weight: var(--font-weight-normal);
   font-size: clamp(0.8rem, 1.5vw, 1rem);
   text-transform: uppercase;
@@ -250,16 +252,17 @@
 }
 
 .rankingScreen__pageButton:hover {
-  border-color: var(--color-accent-secondary);
-  color: var(--color-accent-secondary);
-  box-shadow: 0 0 6px rgba(100, 180, 255, 0.3);
+  border-color: var(--color-text-accent);
+  color: var(--color-text-accent);
+  box-shadow: 0 0 8px rgba(255, 216, 138, 0.2);
+  transform: translateY(-1px);
 }
 
 .rankingScreen__pageButton--active {
-  border-color: var(--color-accent-secondary);
-  color: var(--color-accent-secondary);
-  background: rgba(136, 204, 255, 0.15);
-  box-shadow: 0 0 6px rgba(100, 180, 255, 0.3);
+  border-color: var(--color-text-accent);
+  color: var(--color-text-accent);
+  background: var(--color-interactive-active);
+  box-shadow: 0 0 8px rgba(255, 216, 138, 0.3);
 }
 
 /* ==========================================================================
@@ -291,9 +294,10 @@
 }
 
 .rankingScreen__button:hover {
-  border-color: var(--color-accent-secondary);
-  color: var(--color-accent-secondary);
-  box-shadow: 0 0 6px rgba(100, 180, 255, 0.3);
+  border-color: var(--color-text-accent);
+  color: var(--color-text-accent);
+  box-shadow: 0 0 8px rgba(255, 216, 138, 0.2);
+  transform: translateY(-1px);
 }
 
 /* ==========================================================================

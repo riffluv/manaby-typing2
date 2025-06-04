@@ -42,12 +42,11 @@
 
 .loadingScreen::after {
   content: '';
-  display: inline-block;
-  width: 20px;
+  display: inline-block;  width: 20px;
   height: 20px;
   margin-left: var(--spacing-xs);
   border: 2px solid var(--border-primary);
-  border-top: 2px solid var(--accent-primary);
+  border-top: 2px solid var(--color-gaming-text-accent);
   border-radius: 50%;
   animation: loading 1s linear infinite;
 }

@@ -77,13 +77,21 @@
   --color-border-secondary: rgba(255, 255, 255, 0.05);
   --color-border-accent: rgba(136, 204, 255, 0.3);
   --color-border-focus: var(--color-brand-accent);
-  
-  /* ==========================================================================
+    /* ==========================================================================
      Interactive States
      ========================================================================== */
   --color-interactive-hover: rgba(255, 255, 255, 0.1);
   --color-interactive-active: rgba(255, 255, 255, 0.15);
   --color-interactive-disabled: rgba(255, 255, 255, 0.3);
+    /* ==========================================================================
+     Legacy Compatibility (Deprecated - Use semantic tokens above)
+     ========================================================================== */
+  --color-accent-primary: var(--color-gaming-text-accent);
+  --color-accent-secondary: var(--color-gaming-text-accent);
+  --color-accent-secondary-hover: #e6c563;
+  --accent-primary: var(--color-gaming-text-accent);
+  --accent-hover: #e6c563;
+  --color-text-primary-inverted: #000000;
 }
 
 /* ==========================================================================
