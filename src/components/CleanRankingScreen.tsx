@@ -140,11 +140,14 @@ const CleanRankingScreen: React.FC<CleanRankingScreenProps> = ({ onGoMenu }) => 
           ))}
         </div>
 
-        {/* Table */}
-        {loading ? (
+        {/* Table */}        {loading ? (
           <div style={{
             textAlign: 'center',
-            padding: '3rem',
+            height: '21.6rem', /* 読み込み中でも高さ固定 */
+            display: 'flex',
+            flexDirection: 'column',
+            justifyContent: 'center',
+            alignItems: 'center',
             color: '#ccc'
           }}>
             <div>ランキング読み込み中...</div>
@@ -152,7 +155,11 @@ const CleanRankingScreen: React.FC<CleanRankingScreenProps> = ({ onGoMenu }) => 
         ) : error ? (
           <div style={{
             textAlign: 'center',
-            padding: '3rem',
+            height: '21.6rem', /* エラー時も高さ固定 */
+            display: 'flex',
+            flexDirection: 'column',
+            justifyContent: 'center',
+            alignItems: 'center',
             color: '#ff6b6b'
           }}>
             <div>{error}</div>
@@ -175,11 +182,14 @@ const CleanRankingScreen: React.FC<CleanRankingScreenProps> = ({ onGoMenu }) => 
             >
               リトライ
             </button>
-          </div>
-        ) : rankings.length === 0 ? (
+          </div>) : rankings.length === 0 ? (
           <div style={{
             textAlign: 'center',
-            padding: '3rem',
+            height: '21.6rem', /* 空の場合でも高さを固定 */
+            display: 'flex',
+            flexDirection: 'column',
+            justifyContent: 'center',
+            alignItems: 'center',
             color: '#ccc'
           }}>
             <h3 style={{ margin: '0 0 1rem 0' }}>まだスコアがありません</h3>
@@ -187,14 +197,21 @@ const CleanRankingScreen: React.FC<CleanRankingScreenProps> = ({ onGoMenu }) => 
               ゲームをプレイして最初のランキング入りを目指しましょう！
             </p>
           </div>
-        ) : (
-          <table style={{
+        ) : (<table style={{
             width: '100%',
             borderCollapse: 'collapse',
             marginBottom: '2.5rem'
           }}>
-            <thead>
-              <tr>
+            <thead style={{
+              display: 'table',
+              width: '100%',
+              tableLayout: 'fixed'
+            }}>
+              <tr style={{
+                display: 'table',
+                width: '100%',
+                tableLayout: 'fixed'
+              }}>
                 <th style={{
                   padding: '0.8rem 1rem',
                   borderBottom: '1px solid rgba(255,255,255,0.1)',
@@ -239,9 +256,17 @@ const CleanRankingScreen: React.FC<CleanRankingScreenProps> = ({ onGoMenu }) => 
                 }}>ミス</th>
               </tr>
             </thead>
-            <tbody>
+            <tbody style={{
+              display: 'block',
+              height: '21.6rem', /* 6行分の固定高さ */
+              overflowY: currentPageData.length > 6 ? 'auto' : 'hidden'
+            }}>
               {currentPageData.map((entry, index) => (
-                <tr key={index}>
+                <tr key={index} style={{
+                  display: 'table',
+                  width: '100%',
+                  tableLayout: 'fixed'
+                }}>
                   <td style={{
                     padding: '0.8rem 1rem',
                     borderBottom: '1px solid rgba(255,255,255,0.1)',
