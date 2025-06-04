@@ -210,13 +210,12 @@ const CleanRankingScreen: React.FC<CleanRankingScreenProps> = ({ onGoMenu }) => 
             display: 'flex',
             flexDirection: 'column',
             minHeight: 0
-          }}>
-            <thead style={{
+          }}>            <thead style={{
               display: 'table',
               width: '100%',
               tableLayout: 'fixed',
               flexShrink: 0
-            }}>              <tr style={{
+            }}><tr style={{
                 display: 'table',
                 width: '100%',
                 tableLayout: 'fixed'
@@ -236,7 +235,7 @@ const CleanRankingScreen: React.FC<CleanRankingScreenProps> = ({ onGoMenu }) => 
                   color: '#a9c9ff',
                   fontWeight: 'normal',
                   fontSize: 'clamp(0.8rem, 1.5vw, 1rem)'
-                }}>プレイヤー</th>                <th style={{
+                }}>プレイヤー</th><th style={{
                   padding: 'min(0.8rem, 1.5vh) min(1rem, 2vw)',
                   borderBottom: '1px solid rgba(255,255,255,0.1)',
                   textAlign: 'center',
@@ -266,7 +265,8 @@ const CleanRankingScreen: React.FC<CleanRankingScreenProps> = ({ onGoMenu }) => 
                   textAlign: 'center',
                   color: '#a9c9ff',
                   fontWeight: 'normal',
-                  fontSize: 'clamp(0.8rem, 1.5vw, 1rem)'                }}>ミス</th>
+                  fontSize: 'clamp(0.8rem, 1.5vw, 1rem)'
+                }}>ミス</th>
               </tr>
             </thead>
             <tbody style={{
@@ -275,7 +275,7 @@ const CleanRankingScreen: React.FC<CleanRankingScreenProps> = ({ onGoMenu }) => 
               overflowY: 'hidden',
               minHeight: 0
             }}>
-              {currentPageData.map((entry, index) => (                <tr key={index} style={{
+              {currentPageData.map((entry, index) => (<tr key={index} style={{
                   display: 'table',
                   width: '100%',
                   tableLayout: 'fixed'
@@ -300,10 +300,9 @@ const CleanRankingScreen: React.FC<CleanRankingScreenProps> = ({ onGoMenu }) => 
                     padding: 'min(0.8rem, 1.5vh) min(1rem, 2vw)',
                     borderBottom: '1px solid rgba(255,255,255,0.1)',
                     textAlign: 'center',
-                    fontSize: 'clamp(0.8rem, 1.4vw, 0.95rem)'
-                  }}>
+                    fontSize: 'clamp(0.8rem, 1.4vw, 0.95rem)'                  }}>
                     {entry.kpm.toFixed(1)}
-                  </td>                  <td style={{
+                  </td><td style={{
                     padding: 'min(0.8rem, 1.5vh) min(1rem, 2vw)',
                     borderBottom: '1px solid rgba(255,255,255,0.1)',
                     textAlign: 'center',
@@ -323,9 +322,9 @@ const CleanRankingScreen: React.FC<CleanRankingScreenProps> = ({ onGoMenu }) => 
                     padding: 'min(0.8rem, 1.5vh) min(1rem, 2vw)',
                     borderBottom: '1px solid rgba(255,255,255,0.1)',
                     textAlign: 'center',
-                    fontSize: 'clamp(0.8rem, 1.4vw, 0.95rem)'
-                  }}>
-                    {entry.miss}                  </td>
+                    fontSize: 'clamp(0.8rem, 1.4vw, 0.95rem)'                  }}>
+                    {entry.miss}
+                  </td>
                 </tr>
               ))}
             </tbody>
@@ -342,10 +341,10 @@ const CleanRankingScreen: React.FC<CleanRankingScreenProps> = ({ onGoMenu }) => 
             marginBottom: 'min(2rem, 3vh)',
             flexShrink: 0 // ページネーションが縮まないように
           }}>
-            {Array.from({ length: totalPages }, (_, i) => i + 1).map((page) => (
-              <div
+            {Array.from({ length: totalPages }, (_, i) => i + 1).map((page) => (              <div
                 key={page}
-                onClick={() => handlePageChange(page)}                style={{
+                onClick={() => handlePageChange(page)}
+                style={{
                   cursor: 'pointer',
                   padding: 'min(0.3rem, 0.8vh) min(1rem, 2vw)',
                   border: page === currentPage ? '1px solid #88ccff' : '1px solid rgba(255, 255, 255, 0.3)',
