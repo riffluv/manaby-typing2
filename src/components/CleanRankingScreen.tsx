@@ -99,10 +99,8 @@ const CleanRankingScreen: React.FC<CleanRankingScreenProps> = ({ onGoMenu }) => 
             <div className={styles.ranking__pagination}>
               <button className={styles.ranking__pageBtn} onClick={() => changePage(-1)}>Prev</button>
               <button className={styles.ranking__pageBtn} onClick={() => changePage(1)}>Next</button>
-            </div>
-
-            <div className={styles.ranking__buttons}>
-              <button className={styles.button} onClick={() => window.history.back()}>Back</button>
+            </div>            <div className={styles.ranking__buttons}>
+              <button className={styles.button} onClick={handleGoMenu}>Back</button>
               <button className={styles.button} onClick={handleGoMenu}>Main Menu</button>
             </div>
           </>
