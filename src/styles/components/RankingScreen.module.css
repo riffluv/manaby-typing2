@@ -1,0 +1,389 @@
+/* ==========================================================================
+   Ranking Screen Component - Production Level
+   ========================================================================== */
+
+.rankingScreen {
+  width: 100vw;
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: flex-start;
+  position: relative;
+  padding: var(--spacing-4);
+  overflow: hidden;
+  background: linear-gradient(135deg, 
+    rgba(20, 30, 48, 0.95) 0%, 
+    rgba(32, 42, 68, 0.95) 50%, 
+    rgba(25, 35, 55, 0.95) 100%
+  );
+  animation: fadeIn var(--transition-slow) ease;
+}
+
+/* ==========================================================================
+   Main Content Section
+   ========================================================================== */
+
+.rankingScreen__section {
+  width: 100%;
+  max-width: min(1200px, 90vw);
+  height: calc(100vh - 8vh);
+  display: flex;
+  flex-direction: column;
+  animation: fadeIn 1.2s ease;
+  text-align: center;
+  overflow: hidden;
+}
+
+/* ==========================================================================
+   Title
+   ========================================================================== */
+
+.rankingScreen__title {
+  font-size: clamp(2.5rem, 4vw, 4rem);
+  color: var(--color-accent-primary);
+  letter-spacing: 0.4rem;
+  text-shadow: 0 0 12px rgba(255, 200, 120, 0.3);
+  margin: 0 0 min(2rem, 3vh) 0;
+  flex-shrink: 0;
+  font-weight: var(--font-weight-bold);
+  text-transform: uppercase;
+}
+
+/* ==========================================================================
+   Difficulty Tabs
+   ========================================================================== */
+
+.rankingScreen__tabs {
+  display: flex;
+  justify-content: center;
+  gap: min(2rem, 3vw);
+  margin-bottom: min(2rem, 3vh);
+  flex-shrink: 0;
+}
+
+.rankingScreen__tab {
+  padding: var(--spacing-3) var(--spacing-6);
+  border: 1px solid var(--color-border-secondary);
+  background: var(--color-bg-surface);
+  color: var(--color-text-secondary);
+  cursor: pointer;
+  transition: var(--transition-fast);
+  border-radius: var(--radius-sm);
+  font-size: var(--font-size-sm);
+  font-weight: var(--font-weight-medium);
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+}
+
+.rankingScreen__tab:hover {
+  border-color: var(--color-accent-secondary);
+  color: var(--color-accent-secondary);
+  background: rgba(136, 204, 255, 0.1);
+}
+
+.rankingScreen__tab--active {
+  border-color: var(--color-accent-secondary);
+  color: var(--color-accent-secondary);
+  background: rgba(136, 204, 255, 0.15);
+  box-shadow: 0 0 6px rgba(100, 180, 255, 0.3);
+}
+
+/* ==========================================================================
+   Content Area
+   ========================================================================== */
+
+.rankingScreen__content {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  min-height: 0;
+  margin-bottom: min(1rem, 2vh);
+}
+
+/* ==========================================================================
+   Loading, Error, and Empty States
+   ========================================================================== */
+
+.rankingScreen__state {
+  text-align: center;
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  color: var(--color-text-secondary);
+}
+
+.rankingScreen__state--error {
+  color: var(--color-error);
+}
+
+.rankingScreen__state__title {
+  margin: 0 0 min(1rem, 2vh) 0;
+  font-size: clamp(1.2rem, 2.5vw, 1.5rem);
+  font-weight: var(--font-weight-medium);
+}
+
+.rankingScreen__state__text {
+  margin: 0;
+  font-size: clamp(0.9rem, 1.8vw, 1rem);
+  line-height: var(--line-height-relaxed);
+}
+
+.rankingScreen__retryButton {
+  margin-top: min(1rem, 2vh);
+  padding: var(--spacing-3) var(--spacing-8);
+  background: var(--color-bg-surface);
+  border: 1px solid var(--color-border-primary);
+  color: var(--color-text-primary);
+  border-radius: var(--radius-sm);
+  font-size: clamp(0.8rem, 1.5vw, 1rem);
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+  transition: var(--transition-fast);
+  cursor: pointer;
+  font-weight: var(--font-weight-medium);
+}
+
+.rankingScreen__retryButton:hover {
+  border-color: var(--color-accent-secondary);
+  color: var(--color-accent-secondary);
+  box-shadow: 0 0 6px rgba(100, 180, 255, 0.3);
+}
+
+/* ==========================================================================
+   Table Container
+   ========================================================================== */
+
+.rankingScreen__tableContainer {
+  width: 100%;
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  min-height: 0;
+  background: var(--color-bg-surface);
+  border-radius: var(--radius-lg);
+  border: 1px solid var(--color-border-secondary);
+  overflow: hidden;
+}
+
+.rankingScreen__table {
+  width: 100%;
+  border-collapse: collapse;
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  min-height: 0;
+}
+
+.rankingScreen__tableHead {
+  display: table;
+  width: 100%;
+  table-layout: fixed;
+  flex-shrink: 0;
+  background: rgba(255, 255, 255, 0.02);
+  border-bottom: 1px solid var(--color-border-primary);
+}
+
+.rankingScreen__tableBody {
+  display: block;
+  flex: 1;
+  overflow-y: hidden;
+  min-height: 0;
+}
+
+.rankingScreen__tableRow {
+  display: table;
+  width: 100%;
+  table-layout: fixed;
+  transition: background-color var(--transition-fast);
+  border-bottom: 1px solid var(--color-border-secondary);
+}
+
+.rankingScreen__tableRow:hover {
+  background: rgba(136, 204, 255, 0.05);
+}
+
+.rankingScreen__tableHeader {
+  padding: min(0.8rem, 1.5vh) min(1rem, 2vw);
+  text-align: center;
+  color: var(--color-accent-secondary);
+  font-weight: var(--font-weight-normal);
+  font-size: clamp(0.8rem, 1.5vw, 1rem);
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+}
+
+.rankingScreen__tableCell {
+  padding: min(0.8rem, 1.5vh) min(1rem, 2vw);
+  text-align: center;
+  font-size: clamp(0.8rem, 1.4vw, 0.95rem);
+  color: var(--color-text-primary);
+  line-height: var(--line-height-normal);
+}
+
+/* ==========================================================================
+   Pagination
+   ========================================================================== */
+
+.rankingScreen__pagination {
+  display: flex;
+  justify-content: center;
+  gap: var(--spacing-2);
+  margin-top: var(--spacing-4);
+  flex-shrink: 0;
+}
+
+.rankingScreen__pageButton {
+  cursor: pointer;
+  padding: min(0.3rem, 0.8vh) min(1rem, 2vw);
+  border: 1px solid var(--color-border-secondary);
+  background: var(--color-bg-surface);
+  color: var(--color-text-secondary);
+  border-radius: var(--radius-sm);
+  transition: var(--transition-fast);
+  font-size: clamp(0.8rem, 1.4vw, 0.9rem);
+  font-weight: var(--font-weight-medium);
+  min-width: 2.5rem;
+  text-align: center;
+}
+
+.rankingScreen__pageButton:hover {
+  border-color: var(--color-accent-secondary);
+  color: var(--color-accent-secondary);
+  box-shadow: 0 0 6px rgba(100, 180, 255, 0.3);
+}
+
+.rankingScreen__pageButton--active {
+  border-color: var(--color-accent-secondary);
+  color: var(--color-accent-secondary);
+  background: rgba(136, 204, 255, 0.15);
+  box-shadow: 0 0 6px rgba(100, 180, 255, 0.3);
+}
+
+/* ==========================================================================
+   Action Buttons
+   ========================================================================== */
+
+.rankingScreen__actions {
+  display: flex;
+  gap: min(1.5rem, 3vw);
+  justify-content: center;
+  flex-shrink: 0;
+  margin-top: var(--spacing-4);
+}
+
+.rankingScreen__button {
+  cursor: pointer;
+  padding: min(0.6rem, 1.2vh) min(2.5rem, 4vw);
+  background: var(--color-bg-surface);
+  border: 1px solid var(--color-border-primary);
+  color: var(--color-text-primary);
+  border-radius: var(--radius-sm);
+  font-size: clamp(0.8rem, 1.5vw, 1rem);
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+  transition: var(--transition-fast);
+  text-align: center;
+  font-weight: var(--font-weight-medium);
+  min-width: 120px;
+}
+
+.rankingScreen__button:hover {
+  border-color: var(--color-accent-secondary);
+  color: var(--color-accent-secondary);
+  box-shadow: 0 0 6px rgba(100, 180, 255, 0.3);
+}
+
+/* ==========================================================================
+   Responsive Design
+   ========================================================================== */
+
+@media (max-width: 768px) {
+  .rankingScreen__section {
+    max-width: 95vw;
+    height: calc(100vh - 4vh);
+  }
+  
+  .rankingScreen__title {
+    font-size: clamp(2rem, 6vw, 3rem);
+    margin-bottom: var(--spacing-4);
+  }
+  
+  .rankingScreen__tabs {
+    gap: var(--spacing-4);
+    margin-bottom: var(--spacing-4);
+  }
+  
+  .rankingScreen__tab {
+    padding: var(--spacing-2) var(--spacing-4);
+    font-size: var(--font-size-xs);
+  }
+  
+  .rankingScreen__tableHeader,
+  .rankingScreen__tableCell {
+    padding: var(--spacing-2) var(--spacing-1);
+    font-size: var(--font-size-xs);
+  }
+  
+  .rankingScreen__actions {
+    flex-direction: column;
+    gap: var(--spacing-3);
+  }
+  
+  .rankingScreen__button {
+    padding: var(--spacing-3) var(--spacing-6);
+    min-width: auto;
+    width: 100%;
+    max-width: 280px;
+  }
+}
+
+@media (max-width: 480px) {
+  .rankingScreen {
+    padding: var(--spacing-2);
+  }
+  
+  .rankingScreen__section {
+    max-width: 98vw;
+  }
+  
+  .rankingScreen__title {
+    letter-spacing: 0.2rem;
+  }
+  
+  .rankingScreen__tableContainer {
+    border-radius: var(--radius-md);
+  }
+  
+  .rankingScreen__tableHeader,
+  .rankingScreen__tableCell {
+    padding: var(--spacing-1) var(--spacing-half);
+  }
+  
+  .rankingScreen__pagination {
+    gap: var(--spacing-1);
+  }
+  
+  .rankingScreen__pageButton {
+    padding: var(--spacing-1) var(--spacing-2);
+    min-width: 2rem;
+    font-size: var(--font-size-xs);
+  }
+}
+
+/* ==========================================================================
+   Animations
+   ========================================================================== */
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}

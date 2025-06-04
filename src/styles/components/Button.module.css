@@ -1,0 +1,190 @@
+/* ==========================================================================
+   Button Component - Production Level
+   ========================================================================== */
+
+.button {
+  /* Base styles */
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: var(--spacing-2);
+  
+  /* Typography */
+  font-family: var(--font-family-primary);
+  font-weight: var(--font-weight-semibold);
+  font-size: var(--font-size-base);
+  letter-spacing: var(--letter-spacing-wide);
+  text-transform: uppercase;
+  line-height: 1;
+  
+  /* Layout */
+  padding: var(--spacing-3) var(--spacing-6);
+  border-radius: var(--radius-base);
+  border: 1px solid transparent;
+  
+  /* Interaction */
+  cursor: pointer;
+  transition: all var(--transition-base);
+  outline: none;
+  
+  /* Prevent text selection */
+  user-select: none;
+  -webkit-user-select: none;
+}
+
+.button:disabled {
+  opacity: var(--color-interactive-disabled);
+  cursor: not-allowed;
+  pointer-events: none;
+}
+
+/* ==========================================================================
+   Button Variants
+   ========================================================================== */
+
+/* Primary */
+.button--primary {
+  background: var(--color-bg-surface);
+  border-color: var(--color-border-primary);
+  color: var(--color-text-primary);
+  box-shadow: inset 0 0 0 rgba(255, 255, 255, 0.05);
+}
+
+.button--primary:hover:not(:disabled) {
+  border-color: var(--color-border-accent);
+  color: var(--color-brand-accent);
+  box-shadow: var(--shadow-glow);
+  transform: translateY(-1px);
+}
+
+.button--primary:active:not(:disabled) {
+  transform: translateY(0);
+  box-shadow: var(--shadow-sm);
+}
+
+/* Ghost */
+.button--ghost {
+  background: rgba(0, 0, 0, 0.4);
+  border-color: rgba(255, 255, 255, 0.4);
+  color: var(--color-text-secondary);
+}
+
+.button--ghost:hover:not(:disabled) {
+  border-color: var(--color-border-accent);
+  color: var(--color-brand-accent);
+  background: rgba(255, 255, 255, 0.05);
+  box-shadow: var(--shadow-glow);
+}
+
+/* Accent */
+.button--accent {
+  background: linear-gradient(135deg, var(--color-brand-accent), var(--color-brand-primary));
+  border-color: var(--color-brand-accent);
+  color: var(--color-text-inverse);
+}
+
+.button--accent:hover:not(:disabled) {
+  box-shadow: var(--shadow-glow);
+  transform: translateY(-1px);
+}
+
+/* ==========================================================================
+   Button Sizes
+   ========================================================================== */
+
+.button--sm {
+  padding: var(--spacing-2) var(--spacing-4);
+  font-size: var(--font-size-sm);
+}
+
+.button--lg {
+  padding: var(--spacing-4) var(--spacing-8);
+  font-size: var(--font-size-lg);
+}
+
+.button--xl {
+  padding: var(--spacing-5) var(--spacing-10);
+  font-size: var(--font-size-xl);
+}
+
+/* ==========================================================================
+   Button with Icon
+   ========================================================================== */
+
+.button__icon {
+  width: 1em;
+  height: 1em;
+  flex-shrink: 0;
+}
+
+.button--iconOnly {
+  padding: var(--spacing-3);
+  aspect-ratio: 1;
+}
+
+.button--iconOnly.button--sm {
+  padding: var(--spacing-2);
+}
+
+.button--iconOnly.button--lg {
+  padding: var(--spacing-4);
+}
+
+/* ==========================================================================
+   Button States
+   ========================================================================== */
+
+.button--loading {
+  position: relative;
+  color: transparent;
+}
+
+.button--loading::after {
+  content: '';
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: 1em;
+  height: 1em;
+  margin: -0.5em 0 0 -0.5em;
+  border: 2px solid currentColor;
+  border-radius: 50%;
+  border-top-color: transparent;
+  animation: spin 1s linear infinite;
+}
+
+@keyframes spin {
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+/* ==========================================================================
+   Responsive Adjustments
+   ========================================================================== */
+
+@media (max-width: 768px) {
+  .button {
+    padding: var(--spacing-3) var(--spacing-5);
+    font-size: var(--font-size-sm);
+  }
+  
+  .button--lg {
+    padding: var(--spacing-3) var(--spacing-6);
+    font-size: var(--font-size-base);
+  }
+}
+
+/* ==========================================================================
+   High Contrast Mode
+   ========================================================================== */
+
+@media (prefers-contrast: high) {
+  .button {
+    border-width: 2px;
+  }
+  
+  .button--primary {
+    border-color: currentColor;
+  }
+}

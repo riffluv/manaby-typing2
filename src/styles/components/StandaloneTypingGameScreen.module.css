@@ -1,0 +1,268 @@
+/* ==========================================================================
+   Standalone Typing Game Screen Component - Production Level
+   ========================================================================== */
+
+.standaloneGame {
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  gap: var(--spacing-8);
+  background: var(--color-bg-primary);
+  padding: var(--spacing-4);
+}
+
+/* ==========================================================================
+   Title and Content
+   ========================================================================== */
+
+.standaloneGame__title {
+  font-size: clamp(1.5rem, 4vw, 2rem);
+  color: var(--color-text-primary);
+  text-align: center;
+  margin: 0;
+  font-weight: var(--font-weight-bold);
+  text-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
+}
+
+.standaloneGame__description {
+  font-size: clamp(1rem, 2.5vw, 1.2rem);
+  color: var(--color-text-secondary);
+  text-align: center;
+  margin: 0;
+  line-height: var(--line-height-relaxed);
+}
+
+/* ==========================================================================
+   Buttons
+   ========================================================================== */
+
+.standaloneGame__button {
+  padding: var(--spacing-4) var(--spacing-8);
+  font-size: var(--font-size-lg);
+  background-color: var(--color-accent-secondary);
+  color: var(--color-text-primary-inverted);
+  border: none;
+  border-radius: var(--radius-md);
+  cursor: pointer;
+  font-weight: var(--font-weight-medium);
+  transition: var(--transition-fast);
+  min-width: 200px;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+}
+
+.standaloneGame__button:hover {
+  background-color: var(--color-accent-secondary-hover);
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(136, 204, 255, 0.3);
+}
+
+.standaloneGame__button:active {
+  transform: translateY(0);
+}
+
+.standaloneGame__button--secondary {
+  background-color: var(--color-bg-muted);
+  color: var(--color-text-primary);
+  font-size: var(--font-size-base);
+  padding: var(--spacing-3) var(--spacing-6);
+  min-width: 150px;
+}
+
+.standaloneGame__button--secondary:hover {
+  background-color: var(--color-bg-hover);
+  box-shadow: 0 2px 8px rgba(255, 255, 255, 0.1);
+}
+
+/* ==========================================================================
+   Button Group
+   ========================================================================== */
+
+.standaloneGame__buttonGroup {
+  display: flex;
+  gap: var(--spacing-4);
+  flex-wrap: wrap;
+  justify-content: center;
+}
+
+.standaloneGame__button--success {
+  background-color: var(--color-success);
+  color: var(--color-text-primary-inverted);
+}
+
+.standaloneGame__button--success:hover {
+  background-color: var(--color-success-hover);
+  box-shadow: 0 4px 12px rgba(76, 175, 80, 0.3);
+}
+
+/* ==========================================================================
+   Results Display
+   ========================================================================== */
+
+.standaloneGame__results {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: var(--spacing-4);
+  padding: var(--spacing-8);
+  background: rgba(255, 255, 255, 0.1);
+  border-radius: var(--radius-lg);
+  min-width: 300px;
+  max-width: 400px;
+  backdrop-filter: blur(10px);
+  border: 1px solid var(--color-border-secondary);
+}
+
+.standaloneGame__resultItem {
+  text-align: center;
+  display: flex;
+  flex-direction: column;
+  gap: var(--spacing-1);
+}
+
+.standaloneGame__resultLabel {
+  font-size: var(--font-size-sm);
+  color: var(--color-text-secondary);
+  font-weight: var(--font-weight-medium);
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+}
+
+.standaloneGame__resultValue {
+  font-size: var(--font-size-xl);
+  color: var(--color-text-primary);
+  font-weight: var(--font-weight-bold);
+  text-shadow: 0 1px 2px rgba(0, 0, 0, 0.2);
+}
+
+/* ==========================================================================
+   Game Progress Counter
+   ========================================================================== */
+
+.standaloneGame__gameContainer {
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  position: relative;
+}
+
+.standaloneGame__progressCounter {
+  position: fixed;
+  top: var(--spacing-5);
+  right: var(--spacing-5);
+  font-size: var(--font-size-lg);
+  color: var(--color-text-primary);
+  background: rgba(255, 255, 255, 0.9);
+  padding: var(--spacing-2) var(--spacing-4);
+  border-radius: var(--radius-md);
+  border: 1px solid var(--color-border-secondary);
+  font-weight: var(--font-weight-medium);
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+  z-index: var(--z-overlay);
+}
+
+/* ==========================================================================
+   Loading State
+   ========================================================================== */
+
+.standaloneGame__loading {
+  min-height: 100vh;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  font-size: var(--font-size-xl);
+  color: var(--color-text-primary);
+  text-align: center;
+}
+
+/* ==========================================================================
+   Responsive Design
+   ========================================================================== */
+
+@media (max-width: 768px) {
+  .standaloneGame {
+    gap: var(--spacing-6);
+    padding: var(--spacing-6);
+  }
+  
+  .standaloneGame__button {
+    padding: var(--spacing-3) var(--spacing-6);
+    font-size: var(--font-size-base);
+    min-width: 180px;
+  }
+  
+  .standaloneGame__button--secondary {
+    padding: var(--spacing-2) var(--spacing-4);
+    font-size: var(--font-size-sm);
+    min-width: 120px;
+  }
+  
+  .standaloneGame__results {
+    grid-template-columns: 1fr;
+    gap: var(--spacing-3);
+    padding: var(--spacing-6);
+    min-width: 250px;
+  }
+}
+
+@media (max-width: 480px) {
+  .standaloneGame {
+    gap: var(--spacing-4);
+    padding: var(--spacing-4);
+  }
+  
+  .standaloneGame__button {
+    width: 100%;
+    max-width: 250px;
+  }
+  
+  .standaloneGame__results {
+    width: 100%;
+    max-width: 300px;
+  }
+}
+
+/* ==========================================================================
+   Animations
+   ========================================================================== */
+
+.standaloneGame__title {
+  animation: fadeInUp 0.6s ease;
+}
+
+.standaloneGame__description {
+  animation: fadeInUp 0.8s ease;
+}
+
+.standaloneGame__button {
+  animation: fadeInUp 1s ease;
+}
+
+.standaloneGame__results {
+  animation: fadeInScale 0.6s ease;
+}
+
+@keyframes fadeInUp {
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes fadeInScale {
+  from {
+    opacity: 0;
+    transform: scale(0.9);
+  }
+  to {
+    opacity: 1;
+    transform: scale(1);
+  }
+}

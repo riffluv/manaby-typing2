@@ -1,0 +1,237 @@
+/* ==========================================================================
+   Table Component - Production Level
+   ========================================================================== */
+
+.table {
+  width: 100%;
+  border-collapse: collapse;
+  border-spacing: 0;
+  background: transparent;
+}
+
+/* ==========================================================================
+   Table Structure
+   ========================================================================== */
+
+.table__wrapper {
+  width: 100%;
+  overflow-x: auto;
+  background: var(--color-bg-surface);
+  border-radius: var(--radius-lg);
+  border: 1px solid var(--color-border-secondary);
+}
+
+.table__head {
+  background: rgba(255, 255, 255, 0.02);
+  border-bottom: 1px solid var(--color-border-primary);
+}
+
+.table__body {
+  background: transparent;
+}
+
+.table__row {
+  transition: background-color var(--transition-fast);
+  border-bottom: 1px solid var(--color-border-secondary);
+}
+
+.table__row:last-child {
+  border-bottom: none;
+}
+
+.table__row:hover {
+  background: rgba(136, 204, 255, 0.05);
+}
+
+/* ==========================================================================
+   Table Cells
+   ========================================================================== */
+
+.table__header {
+  padding: var(--spacing-4) var(--spacing-6);
+  text-align: center;
+  font-family: var(--font-family-primary);
+  font-weight: var(--font-weight-semibold);
+  font-size: var(--font-size-sm);
+  color: var(--color-brand-accent);
+  letter-spacing: var(--letter-spacing-wide);
+  text-transform: uppercase;
+  white-space: nowrap;
+}
+
+.table__cell {
+  padding: var(--spacing-4) var(--spacing-6);
+  text-align: center;
+  font-size: var(--font-size-sm);
+  color: var(--color-text-primary);
+  line-height: var(--line-height-normal);
+  vertical-align: middle;
+}
+
+/* ==========================================================================
+   Table Cell Alignments
+   ========================================================================== */
+
+.table__header--left,
+.table__cell--left {
+  text-align: left;
+}
+
+.table__header--right,
+.table__cell--right {
+  text-align: right;
+}
+
+.table__header--center,
+.table__cell--center {
+  text-align: center;
+}
+
+/* ==========================================================================
+   Table Variants
+   ========================================================================== */
+
+/* Ranking Table Specific */
+.table--ranking {
+  font-family: var(--font-family-secondary);
+}
+
+.table--ranking .table__header {
+  color: var(--color-brand-accent);
+  font-size: var(--font-size-xs);
+  padding: var(--spacing-3) var(--spacing-4);
+}
+
+.table--ranking .table__cell {
+  font-size: var(--font-size-sm);
+  padding: var(--spacing-3) var(--spacing-4);
+}
+
+/* Highlighted Row */
+.table__row--highlighted {
+  background: linear-gradient(
+    to right,
+    rgba(255, 215, 100, 0.08),
+    rgba(255, 215, 100, 0.03)
+  );
+  border-left: 3px solid var(--color-brand-secondary);
+}
+
+.table__row--highlighted .table__cell {
+  color: var(--color-gaming-text-accent);
+  font-weight: var(--font-weight-medium);
+}
+
+/* ==========================================================================
+   Responsive Design
+   ========================================================================== */
+
+@media (max-width: 768px) {
+  .table__wrapper {
+    border-radius: var(--radius-base);
+  }
+  
+  .table__header,
+  .table__cell {
+    padding: var(--spacing-2) var(--spacing-3);
+    font-size: var(--font-size-xs);
+  }
+  
+  .table--ranking .table__header,
+  .table--ranking .table__cell {
+    padding: var(--spacing-2);
+  }
+  
+  /* Hide less important columns on mobile */
+  .table__header--hideMobile,
+  .table__cell--hideMobile {
+    display: none;
+  }
+}
+
+@media (max-width: 480px) {
+  .table__wrapper {
+    font-size: var(--font-size-xs);
+  }
+  
+  .table__header,
+  .table__cell {
+    padding: var(--spacing-1) var(--spacing-2);
+  }
+}
+
+/* ==========================================================================
+   Loading State
+   ========================================================================== */
+
+.table--loading {
+  opacity: 0.6;
+  pointer-events: none;
+}
+
+.table__skeleton {
+  background: linear-gradient(
+    90deg,
+    transparent,
+    rgba(255, 255, 255, 0.1),
+    transparent
+  );
+  background-size: 200% 100%;
+  animation: shimmer 1.5s infinite;
+  border-radius: var(--radius-sm);
+  height: 1em;
+}
+
+@keyframes shimmer {
+  0% {
+    background-position: -200% 0;
+  }
+  100% {
+    background-position: 200% 0;
+  }
+}
+
+/* ==========================================================================
+   Empty State
+   ========================================================================== */
+
+.table__empty {
+  padding: var(--spacing-12);
+  text-align: center;
+  color: var(--color-text-muted);
+}
+
+.table__emptyIcon {
+  font-size: var(--font-size-4xl);
+  margin-bottom: var(--spacing-4);
+  opacity: 0.5;
+}
+
+.table__emptyTitle {
+  font-size: var(--font-size-lg);
+  font-weight: var(--font-weight-medium);
+  margin-bottom: var(--spacing-2);
+  color: var(--color-text-secondary);
+}
+
+.table__emptyText {
+  font-size: var(--font-size-sm);
+  line-height: var(--line-height-relaxed);
+}
+
+/* ==========================================================================
+   Accessibility
+   ========================================================================== */
+
+.table__row:focus-within {
+  outline: 2px solid var(--color-border-focus);
+  outline-offset: -2px;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .table__row,
+  .table__skeleton {
+    transition: none;
+    animation: none;
+  }
+}

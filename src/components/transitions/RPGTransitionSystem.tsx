@@ -1,6 +1,7 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { useTransition } from '@/hooks/useTransition';
 import { TransitionType } from '@/core/transition/TransitionManager';
+import styles from '@/styles/components/RPGTransitionSystem.module.css';
 
 interface SimpleTransitionSystemProps {
   children: React.ReactNode;
@@ -72,28 +73,9 @@ export const RPGTransitionSystem: React.FC<SimpleTransitionSystemProps> = ({
   return (
     <div 
       ref={nodeRef} 
-      className={containerClass} 
-      style={{ 
-        width: '100%', 
-        height: '100%',
-        position: 'fixed',
-        top: 0,
-        left: 0,
-        right: 0,
-        bottom: 0,
-        overflow: 'auto'
-      }}
+      className={`${containerClass} ${styles.transitionContainer}`}
     >
-      <div 
-        className="transition-content" 
-        style={{ 
-          width: '100%', 
-          height: '100%',
-          display: 'flex',
-          justifyContent: 'center',
-          alignItems: 'center'
-        }}
-      >
+      <div className={styles.transitionContent}>
         {children}
       </div>
     </div>

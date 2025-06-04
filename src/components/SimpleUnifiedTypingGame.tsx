@@ -5,6 +5,7 @@ import { TypingWord, PerWordScoreLog, GameScoreLog } from '@/types';
 import { useScoreCalculation } from '@/hooks/useScoreCalculation';
 import SimpleGameScreen from './SimpleGameScreen';
 import SimpleGameResultScreen from './SimpleGameResultScreen';
+import styles from '@/styles/components/SimpleUnifiedTypingGame.module.css';
 
 /**
  * シンプル統合タイピングゲーム
@@ -118,27 +119,11 @@ const SimpleUnifiedTypingGame: React.FC<{
         onCalculateFallbackScore={() => setResultScore(calculateFallbackScore())}
       />
     );
-  }
-  if (gameStatus === 'playing' && currentWord.japanese) {
+  }  if (gameStatus === 'playing' && currentWord.japanese) {
     return (
-      <div style={{
-        minHeight: '100vh',
-        display: 'flex',
-        flexDirection: 'column',
-        justifyContent: 'center',
-        alignItems: 'center'
-      }}>        {/* プログレス表示 */}
-        <div style={{
-          position: 'fixed',
-          top: '20px',
-          right: '20px',
-          fontSize: '1.2rem',
-          color: '#000',
-          background: 'rgba(255,255,255,0.8)',
-          padding: '8px 16px',
-          borderRadius: '8px',
-          border: '1px solid #ccc'
-        }}>
+      <div className={styles.gameContainer}>
+        {/* プログレス表示 */}
+        <div className={styles.progressIndicator}>
           {completedCount + 1} / {questionLimit}
         </div>
 
@@ -151,13 +136,7 @@ const SimpleUnifiedTypingGame: React.FC<{
   }
   // ローディング状態
   return (
-    <div style={{
-      minHeight: '100vh',
-      display: 'flex',
-      justifyContent: 'center',
-      alignItems: 'center',
-      fontSize: '1.5rem'
-    }}>
+    <div className={styles.loadingScreen}>
       ゲームを準備中...
     </div>
   );

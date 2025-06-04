@@ -3,6 +3,7 @@ import type { GameScoreLog, PerWordScoreLog } from '@/types';
 import { useRankingModal } from '@/hooks/useRankingModal';
 import { useSceneNavigationStore } from '@/store/sceneNavigationStore';
 import RankingModal from './RankingModal';
+import styles from '@/styles/components/SimpleGameResultScreen.module.css';
 
 // sessionStorageのキー
 const LAST_SCORE_KEY = 'typing_game_last_score';
@@ -146,23 +147,15 @@ const SimpleGameResultScreen: React.FC<SimpleGameResultScreenProps> = ({
               <span className="result__stat-label">ミス</span>
               <span className="result__stat-value">{currentScore.miss}</span>
             </div>
-          </section>
-        ) : scoreLog && scoreLog.length > 0 ? (
-          <div style={{
-            marginBottom: '2rem',
-            padding: '1rem',
-            border: '1px solid rgba(255,255,255,0.1)',
-            borderRadius: '4px',
-            textAlign: 'center',
-            color: '#ccc'
-          }}>
-            <div style={{ fontSize: '1rem', marginBottom: '1rem' }}>
+          </section>        ) : scoreLog && scoreLog.length > 0 ? (
+          <div className={styles.scoreCalculating}>
+            <div className={styles.message}>
               スコア計算中...
             </div>
             {onCalculateFallbackScore && (
               <button
                 onClick={onCalculateFallbackScore}
-                className="result__button"
+                className={styles.button}
               >
                 スコアを表示
               </button>
@@ -216,14 +209,13 @@ const SimpleGameResultScreen: React.FC<SimpleGameResultScreenProps> = ({
                 キャンセル
               </button>
             </div>
-          </form>
-          {modalState.error && (
-            <div style={{ color: '#ff6b6b', marginTop: '1rem', fontSize: '0.9rem' }}>
+          </form>          {modalState.error && (
+            <div className={styles.modalError}>
               {modalState.error}
             </div>
           )}
           {modalState.done && (
-            <div style={{ color: '#22c55e', marginTop: '1rem', fontSize: '0.9rem' }}>
+            <div className={styles.modalSuccess}>
               ランキングに登録されました！
             </div>
           )}

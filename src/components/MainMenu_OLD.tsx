@@ -2,7 +2,7 @@ import React, { useState, useCallback } from 'react';
 import { useTypingGameStore, useQuestionCount } from '@/store/typingGameStore';
 import { useSceneNavigationStore } from '@/store/sceneNavigationStore';
 import { useGlobalShortcuts } from '@/hooks/useGlobalShortcuts';
-import styles from './MainMenu.eldenring.bem.module.css';
+import styles from '@/styles/components/MainMenu.module.css';
 import { deleteRankingEntriesByMode } from '@/lib/rankingManaby2';
 import CommonModal from './common/CommonModal';
 import CommonButton from './common/CommonButton';
@@ -29,7 +29,7 @@ const modeDescriptions = {
  */
 const MainMenu: React.FC<MainMenuProps> = ({ onStart, onRetry, onRanking }) => {
   const { resetGame, setGameStatus, setMode, setQuestionCount, mode } = useTypingGameStore();
-  const { setLastScore, goToOptimization } = useSceneNavigationStore();
+  const { setLastScore, goToGame } = useSceneNavigationStore();
   const questionCount = useQuestionCount();
   
   // 状態管理
@@ -38,6 +38,10 @@ const MainMenu: React.FC<MainMenuProps> = ({ onStart, onRetry, onRanking }) => {
   const [adminStatus, setAdminStatus] = useState('');
   const [adminLoading, setAdminLoading] = useState(false);
   const [modeSelectOpen, setModeSelectOpen] = useState(false);
+  const [settingsOpen, setSettingsOpen] = useState(false);
+  const [enableOptimization, setEnableOptimization] = useState(true);
+  const [enablePerformanceMonitoring, setEnablePerformanceMonitoring] = useState(false);
+  const [enableDebugMode, setEnableDebugMode] = useState(false);
   const [isStarting, setIsStarting] = useState(false);
   const [error, setError] = useState<string | null>(null);
     // パフォーマンス最適化 - useCallback
@@ -65,8 +69,8 @@ const MainMenu: React.FC<MainMenuProps> = ({ onStart, onRetry, onRanking }) => {
     onRanking();
   }, [onRanking]);  // 最適化ダッシュボードへの移動
   const handleOptimizationDashboard = useCallback(() => {
-    goToOptimization();
-  }, [goToOptimization]);
+    goToGame();
+  }, [goToGame]);
     // モード選択ハンドラー
   const handleModeSelect = useCallback((newMode: 'normal' | 'hard' | 'sonkeigo' | 'kenjougo' | 'business') => {
     setMode(newMode);
@@ -137,7 +141,7 @@ const MainMenu: React.FC<MainMenuProps> = ({ onStart, onRetry, onRanking }) => {
 
         <div className={styles.mainMenu__nav}>
           <div 
-            className={styles.mainMenu__navItem} 
+            className={`${styles.mainMenu__navItem} ${isStarting ? styles['mainMenu__navItem--loading'] : ''}`}
             onClick={handleStart}
             tabIndex={0}
             role="button"
@@ -147,10 +151,6 @@ const MainMenu: React.FC<MainMenuProps> = ({ onStart, onRetry, onRanking }) => {
                 e.preventDefault();
                 handleStart();
               }
-            }}
-            style={{ 
-              opacity: isStarting ? 0.6 : 1,
-              pointerEvents: isStarting ? 'none' : 'auto'
             }}
           >
             {isStarting ? 'STARTING...' : 'START GAME'}
@@ -199,14 +199,10 @@ const MainMenu: React.FC<MainMenuProps> = ({ onStart, onRetry, onRanking }) => {
             OPTIMIZATION DEMO
           </div>
           <div 
-            className={styles.mainMenu__navItem}
+            className={`${styles.mainMenu__navItem} ${styles['mainMenu__navItem--disabled']}`}
             tabIndex={0}
             role="button"
             aria-label="システム設定（準備中）"
-            style={{ 
-              opacity: 0.6,
-              pointerEvents: 'none'
-            }}
           >
             SYSTEM
           </div>
@@ -342,13 +338,13 @@ const MainMenu: React.FC<MainMenuProps> = ({ onStart, onRetry, onRanking }) => {
         open={settingsOpen}
         onClose={() => setSettingsOpen(false)}
       >
-        <div style={{ fontSize: '1.3rem', fontWeight: 'bold', marginBottom: '1rem', color: '#333' }}>
+        <div className={styles.settingsModal__title}>
           ⚙️ 設定
         </div>
-        <div style={{ display: 'flex', flexDirection: 'column', gap: '1rem' }}>
-          <div style={{ fontSize: '1.1rem', fontWeight: 'bold', color: '#333', marginBottom: '0.5rem' }}>
+        <div className={styles.settingsModal__content}>
+          <div className={styles.settingsModal__section}>
             🚀 最適化設定
-          </div>          <label style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', cursor: 'pointer' }}>
+          </div>          <label className={styles.settingsModal__option}>
             <input
               type="checkbox"
               checked={enableOptimization}
@@ -358,18 +354,18 @@ const MainMenu: React.FC<MainMenuProps> = ({ onStart, onRetry, onRanking }) => {
                 setEnableOptimization(e.target.checked);
               }}
               onClick={(e) => e.stopPropagation()} // クリックの伝播を防ぐ
-              style={{ transform: 'scale(1.2)' }}
+              className={styles.settingsModal__checkbox}
             />
-            <span style={{ fontSize: '1rem' }}>
+            <span className={styles.settingsModal__optionText}>
               最適化エンジンを使用 {enableOptimization ? '✅' : '❌'}
             </span>
           </label>
           
-          <div style={{ fontSize: '0.9rem', color: '#666', marginLeft: '2rem' }}>
+          <div className={styles.settingsModal__description}>
             typingmania-ref流の超高速タイピングエンジンを使用します。
             従来版より約50%高速な応答速度を実現します。
           </div>
-            <label style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', cursor: 'pointer' }}>
+            <label className={styles.settingsModal__option}>
             <input
               type="checkbox"
               checked={enablePerformanceMonitoring}
@@ -379,14 +375,14 @@ const MainMenu: React.FC<MainMenuProps> = ({ onStart, onRetry, onRanking }) => {
                 setEnablePerformanceMonitoring(e.target.checked);
               }}
               onClick={(e) => e.stopPropagation()}
-              style={{ transform: 'scale(1.2)' }}
+              className={styles.settingsModal__checkbox}
             />
-            <span style={{ fontSize: '1rem' }}>
+            <span className={styles.settingsModal__optionText}>
               パフォーマンス監視 {enablePerformanceMonitoring ? '✅' : '❌'}
             </span>
           </label>
           
-          <label style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', cursor: 'pointer' }}>
+          <label className={styles.settingsModal__option}>
             <input
               type="checkbox"
               checked={enableDebugMode}
@@ -396,47 +392,34 @@ const MainMenu: React.FC<MainMenuProps> = ({ onStart, onRetry, onRanking }) => {
                 setEnableDebugMode(e.target.checked);
               }}
               onClick={(e) => e.stopPropagation()}
-              style={{ transform: 'scale(1.2)' }}
+              className={styles.settingsModal__checkbox}
             />
-            <span style={{ fontSize: '1rem' }}>
+            <span className={styles.settingsModal__optionText}>
               デバッグモード {enableDebugMode ? '✅' : '❌'}
             </span>
           </label>
           
-          <div style={{ 
-            padding: '1rem', 
-            backgroundColor: enableOptimization ? '#e8f5e8' : '#f5f5f5', 
-            borderRadius: '8px',
-            marginTop: '1rem'
-          }}>
-            <div style={{ fontWeight: 'bold', marginBottom: '0.5rem' }}>
+          <div className={`${styles.settingsModal__status} ${enableOptimization ? styles['settingsModal__status--optimized'] : ''}`}>
+            <div className={styles.settingsModal__statusTitle}>
               現在の設定状況:
             </div>
-            <div style={{ fontSize: '0.9rem' }}>
+            <div className={styles.settingsModal__statusItem}>
               エンジン: {enableOptimization ? '🚀 最適化版 (Ultra Fast)' : '🔧 従来版 (Traditional)'}
             </div>
-            <div style={{ fontSize: '0.9rem' }}>
+            <div className={styles.settingsModal__statusItem}>
               監視: {enablePerformanceMonitoring ? '📊 有効' : '📊 無効'}
             </div>
-            <div style={{ fontSize: '0.9rem' }}>
+            <div className={styles.settingsModal__statusItem}>
               デバッグ: {enableDebugMode ? '🐛 有効' : '🐛 無効'}
             </div>
-          </div>          <div style={{ marginTop: '1rem', textAlign: 'center' }}>
+          </div>          <div className={styles.settingsModal__actions}>
             <button
               onClick={(e) => {
                 console.log('🔧 [Settings] Save button clicked');
                 e.stopPropagation();
                 setSettingsOpen(false);
               }}
-              style={{
-                padding: '0.75rem 1.5rem',
-                fontSize: '1rem',
-                backgroundColor: '#007bff',
-                color: '#fff',
-                border: 'none',
-                borderRadius: '4px',
-                cursor: 'pointer',
-              }}
+              className={styles.settingsModal__saveButton}
               type="button"
             >
               設定を保存

@@ -1,0 +1,647 @@
+/* ==========================================================================
+   Main Menu Component - Production Level
+   ========================================================================== */
+
+.mainMenu {
+  width: 100vw;
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  position: relative;
+  background: var(--color-bg-primary);
+  overflow: hidden;
+  animation: fadeIn var(--transition-slow) ease;
+}
+
+/* ==========================================================================
+   Menu Container
+   ========================================================================== */
+
+.mainMenu__container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: var(--spacing-6);
+  max-width: 90vw;
+  width: 100%;
+}
+
+/* ==========================================================================
+   Logo and Title
+   ========================================================================== */
+
+.mainMenu__logo {
+  max-width: min(400px, 80vw);
+  height: auto;
+  margin-bottom: var(--spacing-4);
+  filter: drop-shadow(0 0 20px rgba(255, 200, 120, 0.3));
+  animation: logoGlow 3s ease-in-out infinite alternate;
+}
+
+.mainMenu__title {
+  font-size: clamp(2rem, 5vw, 4rem);
+  color: var(--color-accent-primary);
+  text-align: center;
+  letter-spacing: 0.2rem;
+  text-shadow: 0 0 20px rgba(255, 200, 120, 0.4);
+  margin-bottom: var(--spacing-6);
+  font-weight: var(--font-weight-bold);
+  text-transform: uppercase;
+}
+
+/* ==========================================================================
+   Menu Buttons
+   ========================================================================== */
+
+.mainMenu__buttonGroup {
+  display: flex;
+  flex-direction: column;
+  gap: var(--spacing-4);
+  align-items: center;
+  width: 100%;
+  max-width: 400px;
+}
+
+.mainMenu__button {
+  width: 100%;
+  padding: var(--spacing-4) var(--spacing-6);
+  background: var(--color-bg-surface);
+  border: 1px solid var(--color-border-primary);
+  color: var(--color-text-primary);
+  border-radius: var(--radius-md);
+  font-size: var(--font-size-lg);
+  font-weight: var(--font-weight-medium);
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  cursor: pointer;
+  transition: var(--transition-fast);
+  text-align: center;
+  position: relative;
+  overflow: hidden;
+}
+
+.mainMenu__button:hover {
+  border-color: var(--color-accent-secondary);
+  color: var(--color-accent-secondary);
+  background: rgba(136, 204, 255, 0.1);
+  box-shadow: 0 0 20px rgba(100, 180, 255, 0.3);
+  transform: translateY(-2px);
+}
+
+.mainMenu__button:active {
+  transform: translateY(0);
+}
+
+.mainMenu__button--primary {
+  background: var(--color-accent-primary);
+  color: var(--color-bg-primary);
+  border-color: var(--color-accent-primary);
+}
+
+.mainMenu__button--primary:hover {
+  background: var(--color-accent-secondary);
+  border-color: var(--color-accent-secondary);
+  color: var(--color-bg-primary);
+}
+
+.mainMenu__button--disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+  pointer-events: none;
+}
+
+/* ==========================================================================
+   Mode Selection
+   ========================================================================== */
+
+.mainMenu__modeSection {
+  display: flex;
+  flex-direction: column;
+  gap: var(--spacing-3);
+  align-items: center;
+  margin-top: var(--spacing-4);
+}
+
+.mainMenu__modeLabel {
+  font-size: var(--font-size-sm);
+  color: var(--color-text-secondary);
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  font-weight: var(--font-weight-medium);
+}
+
+.mainMenu__modeButtons {
+  display: flex;
+  gap: var(--spacing-2);
+  flex-wrap: wrap;
+  justify-content: center;
+}
+
+.mainMenu__modeButton {
+  padding: var(--spacing-2) var(--spacing-4);
+  background: var(--color-bg-surface);
+  border: 1px solid var(--color-border-secondary);
+  color: var(--color-text-secondary);
+  border-radius: var(--radius-sm);
+  font-size: var(--font-size-sm);
+  cursor: pointer;
+  transition: var(--transition-fast);
+  text-transform: capitalize;
+  font-weight: var(--font-weight-medium);
+}
+
+.mainMenu__modeButton:hover {
+  border-color: var(--color-accent-secondary);
+  color: var(--color-accent-secondary);
+}
+
+.mainMenu__modeButton--active {
+  border-color: var(--color-accent-primary);
+  color: var(--color-accent-primary);
+  background: rgba(201, 167, 111, 0.1);
+}
+
+/* ==========================================================================
+   Settings Modal
+   ========================================================================== */
+
+.mainMenu__modal {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(0, 0, 0, 0.8);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: var(--z-modal);
+  animation: fadeIn var(--transition-fast) ease;
+}
+
+.mainMenu__modalContent {
+  background: var(--color-bg-surface);
+  border: 1px solid var(--color-border-primary);
+  border-radius: var(--radius-lg);
+  padding: var(--spacing-8);
+  max-width: 90vw;
+  max-height: 90vh;
+  overflow-y: auto;
+  box-shadow: 0 20px 60px rgba(0, 0, 0, 0.5);
+  position: relative;
+}
+
+.mainMenu__modalTitle {
+  font-size: var(--font-size-xl);
+  font-weight: var(--font-weight-bold);
+  margin-bottom: var(--spacing-6);
+  color: var(--color-text-primary);
+  text-align: center;
+}
+
+.mainMenu__modalClose {
+  position: absolute;
+  top: var(--spacing-4);
+  right: var(--spacing-4);
+  background: none;
+  border: none;
+  color: var(--color-text-secondary);
+  font-size: var(--font-size-xl);
+  cursor: pointer;
+  padding: var(--spacing-2);
+  border-radius: var(--radius-sm);
+  transition: var(--transition-fast);
+}
+
+.mainMenu__modalClose:hover {
+  color: var(--color-text-primary);
+  background: var(--color-bg-primary);
+}
+
+/* ==========================================================================
+   Settings Controls
+   ========================================================================== */
+
+.mainMenu__settingsGroup {
+  display: flex;
+  flex-direction: column;
+  gap: var(--spacing-4);
+}
+
+.mainMenu__settingItem {
+  display: flex;
+  flex-direction: column;
+  gap: var(--spacing-2);
+}
+
+.mainMenu__settingLabel {
+  font-size: var(--font-size-base);
+  font-weight: var(--font-weight-medium);
+  color: var(--color-text-primary);
+}
+
+.mainMenu__settingDescription {
+  font-size: var(--font-size-sm);
+  color: var(--color-text-secondary);
+  line-height: var(--line-height-relaxed);
+}
+
+.mainMenu__checkbox {
+  display: flex;
+  align-items: center;
+  gap: var(--spacing-3);
+  cursor: pointer;
+  padding: var(--spacing-2);
+  border-radius: var(--radius-sm);
+  transition: var(--transition-fast);
+}
+
+.mainMenu__checkbox:hover {
+  background: rgba(255, 255, 255, 0.05);
+}
+
+.mainMenu__checkboxInput {
+  transform: scale(1.2);
+  accent-color: var(--color-accent-primary);
+}
+
+.mainMenu__checkboxText {
+  font-size: var(--font-size-base);
+  color: var(--color-text-primary);
+}
+
+/* ==========================================================================
+   Performance Info
+   ========================================================================== */
+
+.mainMenu__performanceInfo {
+  margin-top: var(--spacing-6);
+  padding: var(--spacing-4);
+  background: rgba(255, 255, 255, 0.02);
+  border-radius: var(--radius-md);
+  border: 1px solid var(--color-border-secondary);
+}
+
+.mainMenu__performanceTitle {
+  font-weight: var(--font-weight-bold);
+  margin-bottom: var(--spacing-2);
+  color: var(--color-text-primary);
+}
+
+.mainMenu__performanceItem {
+  font-size: var(--font-size-sm);
+  color: var(--color-text-secondary);
+  margin-bottom: var(--spacing-1);
+}
+
+/* ==========================================================================
+   Admin Panel
+   ========================================================================== */
+
+.mainMenu__adminPanel {
+  margin-top: var(--spacing-6);
+  padding: var(--spacing-4);
+  background: rgba(255, 200, 120, 0.05);
+  border: 1px solid var(--color-accent-primary);
+  border-radius: var(--radius-md);
+}
+
+.mainMenu__adminInput {
+  width: 100%;
+  padding: var(--spacing-3);
+  background: var(--color-bg-surface);
+  border: 1px solid var(--color-border-primary);
+  color: var(--color-text-primary);
+  border-radius: var(--radius-sm);
+  font-size: var(--font-size-base);
+  margin-bottom: var(--spacing-3);
+}
+
+.mainMenu__adminInput:focus {
+  outline: none;
+  border-color: var(--color-accent-secondary);
+  box-shadow: 0 0 0 2px rgba(136, 204, 255, 0.2);
+}
+
+.mainMenu__adminStatus {
+  font-size: var(--font-size-sm);
+  margin-top: var(--spacing-2);
+  padding: var(--spacing-2);
+  border-radius: var(--radius-sm);
+  text-align: center;
+}
+
+.mainMenu__adminStatus--success {
+  background: rgba(76, 175, 80, 0.1);
+  color: #4caf50;
+  border: 1px solid rgba(76, 175, 80, 0.3);
+}
+
+.mainMenu__adminStatus--error {
+  background: rgba(244, 67, 54, 0.1);
+  color: #f44336;
+  border: 1px solid rgba(244, 67, 54, 0.3);
+}
+
+/* ==========================================================================
+   Settings Modal Styles
+   ========================================================================== */
+
+.settingsModal__title {
+  font-size: var(--font-size-xl);
+  font-weight: var(--font-weight-bold);
+  margin-bottom: var(--spacing-4);
+  color: var(--color-text-primary);
+}
+
+.settingsModal__content {
+  display: flex;
+  flex-direction: column;
+  gap: var(--spacing-4);
+}
+
+.settingsModal__section {
+  font-size: var(--font-size-lg);
+  font-weight: var(--font-weight-bold);
+  color: var(--color-text-primary);
+  margin-bottom: var(--spacing-2);
+}
+
+.settingsModal__option {
+  display: flex;
+  align-items: center;
+  gap: var(--spacing-2);
+  cursor: pointer;
+  padding: var(--spacing-2);
+  border-radius: var(--radius-sm);
+  transition: var(--transition-fast);
+}
+
+.settingsModal__option:hover {
+  background-color: var(--color-bg-hover);
+}
+
+.settingsModal__checkbox {
+  transform: scale(1.2);
+  cursor: pointer;
+}
+
+.settingsModal__optionText {
+  font-size: var(--font-size-base);
+  color: var(--color-text-primary);
+}
+
+.settingsModal__description {
+  font-size: var(--font-size-sm);
+  color: var(--color-text-secondary);
+  margin-left: var(--spacing-8);
+  line-height: 1.4;
+}
+
+.settingsModal__status {
+  padding: var(--spacing-4);
+  background-color: var(--color-bg-surface);
+  border-radius: var(--radius-md);
+  margin-top: var(--spacing-4);
+  border: 1px solid var(--color-border-primary);
+  transition: var(--transition-fast);
+}
+
+.settingsModal__status--optimized {
+  background-color: rgba(72, 187, 120, 0.1);
+  border-color: var(--color-success);
+}
+
+.settingsModal__statusTitle {
+  font-weight: var(--font-weight-bold);
+  margin-bottom: var(--spacing-2);
+  color: var(--color-text-primary);
+}
+
+.settingsModal__statusItem {
+  font-size: var(--font-size-sm);
+  color: var(--color-text-secondary);
+  margin-bottom: var(--spacing-1);
+}
+
+.settingsModal__actions {
+  margin-top: var(--spacing-4);
+  text-align: center;
+}
+
+.settingsModal__saveButton {
+  padding: var(--spacing-3) var(--spacing-6);
+  font-size: var(--font-size-base);
+  background-color: var(--color-accent-primary);
+  color: var(--color-text-primary-inverted);
+  border: none;
+  border-radius: var(--radius-md);
+  cursor: pointer;
+  font-weight: var(--font-weight-medium);
+  transition: var(--transition-fast);
+  min-width: 120px;
+}
+
+.settingsModal__saveButton:hover {
+  background-color: var(--color-accent-primary-hover);
+  transform: translateY(-1px);
+  box-shadow: 0 4px 12px rgba(255, 200, 120, 0.3);
+}
+
+.settingsModal__saveButton:active {
+  transform: translateY(0);
+}
+
+/* ==========================================================================
+   Navigation Items and State Styles
+   ========================================================================== */
+
+.mainMenu__navItem {
+  width: 100%;
+  padding: var(--spacing-4) var(--spacing-6);
+  background: var(--color-bg-surface);
+  border: 1px solid var(--color-border-primary);
+  color: var(--color-text-primary);
+  border-radius: var(--radius-md);
+  font-size: var(--font-size-lg);
+  font-weight: var(--font-weight-medium);
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  cursor: pointer;
+  transition: var(--transition-fast);
+  text-align: center;
+  position: relative;
+  overflow: hidden;
+}
+
+.mainMenu__navItem:hover {
+  border-color: var(--color-accent-secondary);
+  color: var(--color-accent-secondary);
+  background: rgba(136, 204, 255, 0.1);
+  box-shadow: 0 0 20px rgba(100, 180, 255, 0.3);
+  transform: translateY(-2px);
+}
+
+.mainMenu__navItem:active {
+  transform: translateY(0);
+}
+
+.mainMenu__navItem:focus {
+  outline: 2px solid var(--color-accent-primary);
+  outline-offset: 2px;
+}
+
+/* Loading state */
+.mainMenu__navItem--loading {
+  opacity: 0.6;
+  pointer-events: none;
+  cursor: not-allowed;
+}
+
+.mainMenu__navItem--loading::after {
+  content: '';
+  position: absolute;
+  top: 50%;
+  right: var(--spacing-4);
+  transform: translateY(-50%);
+  width: 16px;
+  height: 16px;
+  border: 2px solid transparent;
+  border-top: 2px solid var(--color-accent-primary);
+  border-radius: 50%;
+  animation: spin 1s linear infinite;
+}
+
+/* Disabled state */
+.mainMenu__navItem--disabled {
+  opacity: 0.6;
+  pointer-events: none;
+  cursor: not-allowed;
+  background: var(--color-bg-secondary);
+  color: var(--color-text-disabled);
+}
+
+.mainMenu__navItem--disabled:hover {
+  transform: none;
+  box-shadow: none;
+  border-color: var(--color-border-primary);
+  background: var(--color-bg-secondary);
+}
+
+@keyframes spin {
+  0% { transform: translateY(-50%) rotate(0deg); }
+  100% { transform: translateY(-50%) rotate(360deg); }
+}
+
+/* ==========================================================================
+   Responsive Design
+   ========================================================================== */
+
+@media (max-width: 768px) {
+  .mainMenu__container {
+    gap: var(--spacing-4);
+    padding: var(--spacing-4);
+  }
+  
+  .mainMenu__title {
+    font-size: clamp(1.5rem, 8vw, 2.5rem);
+    margin-bottom: var(--spacing-4);
+  }
+  
+  .mainMenu__buttonGroup {
+    max-width: none;
+    width: 100%;
+  }
+  
+  .mainMenu__button {
+    padding: var(--spacing-3) var(--spacing-4);
+    font-size: var(--font-size-base);
+  }
+  
+  .mainMenu__modeButtons {
+    justify-content: center;
+  }
+  
+  .mainMenu__modeButton {
+    padding: var(--spacing-1) var(--spacing-3);
+    font-size: var(--font-size-xs);
+  }
+  
+  .mainMenu__modalContent {
+    margin: var(--spacing-4);
+    padding: var(--spacing-6);
+  }
+}
+
+@media (max-width: 480px) {
+  .mainMenu__logo {
+    max-width: 70vw;
+  }
+  
+  .mainMenu__title {
+    letter-spacing: 0.1rem;
+  }
+  
+  .mainMenu__button {
+    font-size: var(--font-size-sm);
+  }
+  
+  .mainMenu__modalContent {
+    margin: var(--spacing-2);
+    padding: var(--spacing-4);
+  }
+}
+
+/* ==========================================================================
+   Animations
+   ========================================================================== */
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes logoGlow {
+  from {
+    filter: drop-shadow(0 0 20px rgba(255, 200, 120, 0.3));
+  }
+  to {
+    filter: drop-shadow(0 0 30px rgba(255, 200, 120, 0.6));
+  }
+}
+
+/* ==========================================================================
+   Loading States
+   ========================================================================== */
+
+.mainMenu__loading {
+  position: relative;
+  pointer-events: none;
+}
+
+.mainMenu__loading::after {
+  content: '';
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: 20px;
+  height: 20px;
+  margin: -10px 0 0 -10px;
+  border: 2px solid transparent;
+  border-top: 2px solid var(--color-accent-primary);
+  border-radius: 50%;
+  animation: spin 1s linear infinite;
+}
+
+@keyframes spin {
+  0% { transform: rotate(0deg); }
+  100% { transform: rotate(360deg); }
+}

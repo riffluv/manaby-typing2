@@ -1,0 +1,107 @@
+/* SimpleUnifiedTypingGame.module.css */
+
+.gameContainer {
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  background: var(--bg-primary);
+}
+
+.progressIndicator {
+  position: fixed;
+  top: var(--spacing-sm);
+  right: var(--spacing-sm);
+  font-size: var(--font-size-lg);
+  color: var(--text-primary);
+  background: var(--surface-overlay);
+  padding: var(--spacing-xs) var(--spacing-sm);
+  border-radius: var(--border-radius-sm);
+  border: 1px solid var(--border-primary);
+  backdrop-filter: blur(4px);
+  font-weight: var(--font-weight-bold);
+  z-index: var(--z-index-overlay);
+  box-shadow: var(--shadow-sm);
+  transition: all 0.2s ease;
+}
+
+.progressIndicator:hover {
+  transform: translateY(-1px);
+  box-shadow: var(--shadow-md);
+}
+
+.loadingScreen {
+  min-height: 100vh;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  font-size: var(--font-size-xl);
+  color: var(--text-secondary);
+  background: var(--bg-primary);
+  font-weight: var(--font-weight-medium);
+}
+
+.loadingScreen::after {
+  content: '';
+  display: inline-block;
+  width: 20px;
+  height: 20px;
+  margin-left: var(--spacing-xs);
+  border: 2px solid var(--border-primary);
+  border-top: 2px solid var(--accent-primary);
+  border-radius: 50%;
+  animation: loading 1s linear infinite;
+}
+
+@keyframes loading {
+  0% { transform: rotate(0deg); }
+  100% { transform: rotate(360deg); }
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+  .progressIndicator {
+    top: var(--spacing-xs);
+    right: var(--spacing-xs);
+    font-size: var(--font-size-md);
+    padding: var(--spacing-2xs) var(--spacing-xs);
+  }
+  
+  .loadingScreen {
+    font-size: var(--font-size-lg);
+    padding: var(--spacing-md);
+    text-align: center;
+  }
+}
+
+/* High DPI screens */
+@media (-webkit-min-device-pixel-ratio: 2), (min-resolution: 192dpi) {
+  .progressIndicator {
+    border-width: 0.5px;
+  }
+}
+
+/* Dark mode support */
+@media (prefers-color-scheme: dark) {
+  .progressIndicator {
+    background: rgba(0, 0, 0, 0.8);
+    border-color: var(--border-secondary);
+  }
+}
+
+/* Accessibility */
+@media (prefers-reduced-motion: reduce) {
+  .loadingScreen::after {
+    animation: none;
+  }
+  
+  .progressIndicator {
+    transition: none;
+  }
+}
+
+/* Focus management */
+.gameContainer:focus-within .progressIndicator {
+  opacity: 0.7;
+}

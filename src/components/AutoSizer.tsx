@@ -1,4 +1,5 @@
 import * as React from 'react';
+import styles from '@/styles/components/AutoSizer.module.css';
 
 interface AutoSizerProps {
   children: (size: { width: number; height: number }) => React.ReactNode;
@@ -21,9 +22,8 @@ export default function AutoSizer({ children }: AutoSizerProps) {
     window.addEventListener('resize', updateSize);
     return () => window.removeEventListener('resize', updateSize);
   }, []);
-
   return (
-    <div ref={containerRef} style={{ width: '100%', height: '100%' }}>
+    <div ref={containerRef} className={styles.container}>
       {size.width > 0 && size.height > 0 ? children(size) : null}
     </div>
   );

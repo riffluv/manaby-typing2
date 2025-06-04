@@ -1,0 +1,40 @@
+/* StandaloneTypingGame.module.css */
+
+.typingArea {
+  min-height: 200px;
+  border: 1px solid var(--border-primary);
+  padding: var(--spacing-md);
+  margin-top: var(--spacing-md);
+  border-radius: var(--border-radius-md);
+  background: var(--surface-primary);
+  box-shadow: var(--shadow-sm);
+  transition: all 0.3s ease;
+}
+
+.typingArea:focus-within {
+  border-color: var(--accent-primary);
+  box-shadow: var(--shadow-accent);
+}
+
+/* Responsive design */
+@media (max-width: 768px) {
+  .typingArea {
+    min-height: 150px;
+    padding: var(--spacing-sm);
+    margin-top: var(--spacing-sm);
+  }
+}
+
+/* High contrast mode */
+@media (prefers-contrast: high) {
+  .typingArea {
+    border-width: 2px;
+  }
+}
+
+/* Reduced motion */
+@media (prefers-reduced-motion: reduce) {
+  .typingArea {
+    transition: none;
+  }
+}

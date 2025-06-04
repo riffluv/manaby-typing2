@@ -4,6 +4,7 @@ import PortalShortcut from './PortalShortcut';
 import { useSimpleTyping } from '@/hooks/useSimpleTyping';
 import { createBasicTypingChars, debugSokuonProcessing } from '@/utils/basicJapaneseUtils';
 import { getRomajiString } from '@/utils/japaneseUtils';
+import styles from '@/styles/components/SimpleGameScreen.module.css';
 
 export type SimpleGameScreenProps = {
   currentWord: TypingWord;
@@ -92,13 +93,15 @@ const SimpleGameScreen: React.FC<SimpleGameScreenProps> = ({
       };
     }
   }, []);  return (
-    <div className="game-screen-ff16">
-      <div className="typing-container-ff16">
+    <div className={styles.gameScreen}>
+      <div className={styles.typingContainer}>
         {/* 日本語単語表示 */}
-        <div className="japanese-text-ff16">
+        <div className={styles.japaneseText}>
           {currentWord.japanese}
-        </div>        {/* ローマ字表示エリア（ハイライト機能付き） */}
-        <div className="romaji-text-ff16">
+        </div>
+
+        {/* ローマ字表示エリア（ハイライト機能付き） */}
+        <div className={styles.romajiText}>
           <span className="typed">
             {romajiDisplay.accepted}
           </span>
@@ -115,16 +118,14 @@ const SimpleGameScreen: React.FC<SimpleGameScreenProps> = ({
         </div>
 
         {/* ショートカット案内 */}
-        <div style={{ marginBottom: '1rem', position: 'relative', zIndex: 3 }}>
+        <div className={styles.shortcutGuide}>
           <PortalShortcut shortcuts={[{ key: 'Esc', label: 'メニューに戻る' }]} />
-        </div>        {/* タイピングエリア - BasicTypingEngineが制御 */}
+        </div>
+
+        {/* タイピングエリア - BasicTypingEngineが制御 */}
         <div 
           ref={containerRef}
-          className="typing-area"
-          style={{
-            position: 'relative',
-            zIndex: 2
-          }}
+          className={styles.typingArea}
           aria-live="polite"
           aria-label="タイピングエリア"
         >

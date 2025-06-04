@@ -1,0 +1,278 @@
+/* ==========================================================================
+   Screen Layout Component - Production Level
+   ========================================================================== */
+
+.screenLayout {
+  width: 100vw;
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: flex-start;
+  position: relative;
+  padding: var(--spacing-section);
+  overflow: hidden;
+}
+
+/* ==========================================================================
+   Layout Variants
+   ========================================================================== */
+
+.screenLayout--centered {
+  justify-content: center;
+  text-align: center;
+}
+
+.screenLayout--fullscreen {
+  height: 100vh;
+  padding: 0;
+}
+
+.screenLayout--game {
+  background: radial-gradient(
+    ellipse at center,
+    var(--color-gaming-bg-secondary),
+    var(--color-gaming-bg-primary)
+  );
+}
+
+.screenLayout--ranking {
+  background: radial-gradient(
+    ellipse at center,
+    #0a0f1b,
+    #000
+  );
+}
+
+/* ==========================================================================
+   Content Container
+   ========================================================================== */
+
+.screenLayout__content {
+  width: 100%;
+  max-width: min(1200px, 90vw);
+  height: calc(100vh - 8vh);
+  display: flex;
+  flex-direction: column;
+  animation: fadeIn 1.2s ease;
+  position: relative;
+  z-index: var(--z-index-base);
+}
+
+.screenLayout__header {
+  flex-shrink: 0;
+  margin-bottom: var(--spacing-8);
+}
+
+.screenLayout__main {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  min-height: 0;
+}
+
+.screenLayout__footer {
+  flex-shrink: 0;
+  margin-top: var(--spacing-8);
+}
+
+/* ==========================================================================
+   Title Styles
+   ========================================================================== */
+
+.screenLayout__title {
+  font-family: var(--font-family-primary);
+  font-size: var(--font-size-5xl);
+  font-weight: var(--font-weight-bold);
+  color: var(--color-brand-secondary);
+  letter-spacing: var(--letter-spacing-widest);
+  text-shadow: 0 0 12px rgba(255, 200, 120, 0.3);
+  margin: 0;
+  text-align: center;
+}
+
+.screenLayout__subtitle {
+  font-family: var(--font-family-secondary);
+  font-size: var(--font-size-lg);
+  color: var(--color-text-muted);
+  text-align: center;
+  margin-top: var(--spacing-4);
+}
+
+/* ==========================================================================
+   State Screens
+   ========================================================================== */
+
+.screenLayout__loading,
+.screenLayout__error,
+.screenLayout__empty {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  flex: 1;
+  text-align: center;
+  gap: var(--spacing-4);
+}
+
+.screenLayout__loading {
+  color: var(--color-text-muted);
+}
+
+.screenLayout__error {
+  color: var(--color-error);
+}
+
+.screenLayout__empty {
+  color: var(--color-text-muted);
+}
+
+.screenLayout__stateIcon {
+  font-size: var(--font-size-4xl);
+  margin-bottom: var(--spacing-4);
+  opacity: 0.7;
+}
+
+.screenLayout__stateTitle {
+  font-size: var(--font-size-xl);
+  font-weight: var(--font-weight-medium);
+  margin: 0 0 var(--spacing-2) 0;
+}
+
+.screenLayout__stateText {
+  font-size: var(--font-size-base);
+  line-height: var(--line-height-relaxed);
+  margin: 0;
+  max-width: 400px;
+}
+
+/* ==========================================================================
+   Action Bar
+   ========================================================================== */
+
+.screenLayout__actions {
+  display: flex;
+  gap: var(--spacing-4);
+  justify-content: center;
+  flex-wrap: wrap;
+  margin-top: var(--spacing-6);
+}
+
+/* ==========================================================================
+   Background Effects
+   ========================================================================== */
+
+.screenLayout::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 20 20"><circle cx="10" cy="10" r="0.5" fill="rgba(255,255,255,0.02)"/></svg>') repeat;
+  opacity: 0.3;
+  z-index: var(--z-index-hide);
+}
+
+/* ==========================================================================
+   Animations
+   ========================================================================== */
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.screenLayout__content--animated {
+  animation: fadeIn 0.6s ease-out;
+}
+
+/* ==========================================================================
+   Responsive Design
+   ========================================================================== */
+
+@media (max-width: 1024px) {
+  .screenLayout {
+    padding: var(--spacing-6);
+  }
+  
+  .screenLayout__content {
+    max-width: 95vw;
+    height: calc(100vh - 6vh);
+  }
+  
+  .screenLayout__title {
+    font-size: var(--font-size-4xl);
+  }
+}
+
+@media (max-width: 768px) {
+  .screenLayout {
+    padding: var(--spacing-4);
+  }
+  
+  .screenLayout__content {
+    max-width: 100vw;
+    height: calc(100vh - 4vh);
+  }
+  
+  .screenLayout__title {
+    font-size: var(--font-size-3xl);
+    letter-spacing: var(--letter-spacing-wider);
+  }
+  
+  .screenLayout__actions {
+    gap: var(--spacing-3);
+    flex-direction: column;
+  }
+}
+
+@media (max-width: 480px) {
+  .screenLayout {
+    padding: var(--spacing-2);
+  }
+  
+  .screenLayout__title {
+    font-size: var(--font-size-2xl);
+  }
+  
+  .screenLayout__header {
+    margin-bottom: var(--spacing-6);
+  }
+  
+  .screenLayout__footer {
+    margin-top: var(--spacing-6);
+  }
+}
+
+/* ==========================================================================
+   Accessibility
+   ========================================================================== */
+
+@media (prefers-reduced-motion: reduce) {
+  .screenLayout__content,
+  .screenLayout__content--animated {
+    animation: none;
+  }
+}
+
+@media (prefers-contrast: high) {
+  .screenLayout__title {
+    color: #ffffff;
+    text-shadow: none;
+  }
+}
+
+/* ==========================================================================
+   Layout Utilities
+   ========================================================================== */
+
+.screenLayout--noBorder {
+  border: none;
+}

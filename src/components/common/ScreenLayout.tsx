@@ -1,4 +1,5 @@
 import React from 'react';
+import styles from '@/styles/components/ScreenLayout.module.css';
 
 type ScreenLayoutProps = {
   children: React.ReactNode;
@@ -21,12 +22,9 @@ const ScreenLayout: React.FC<ScreenLayoutProps> = ({
     game: null,
     result: null,
     ranking: null
-  };
-
-  return (
+  };  return (
     <div 
-      className={`screen-layout ${className}`}
-      style={{ border: 'none' }}
+      className={`screen-layout ${className} ${styles['screenLayout--noBorder']}`}
     >
       {/* 画面タイプに応じた背景 */}
       {backgroundComponents[variant]}

@@ -14,6 +14,7 @@ import { useCurrentWord } from '@/store/typingGameStore';
 import { createBasicTypingChars } from '@/utils/basicJapaneseUtils';
 import { getRomajiString } from '@/utils/japaneseUtils';
 import { BasicTypingEngine } from '@/utils/BasicTypingEngine';
+import styles from '@/styles/components/StandaloneTypingGame.module.css';
 
 export type StandaloneTypingGameProps = {
   onWordComplete?: (scoreLog: PerWordScoreLog) => void;
@@ -152,18 +153,10 @@ const StandaloneTypingGame: React.FC<StandaloneTypingGameProps> = ({
               <span className="remaining">{romajiDisplay.remaining.slice(1)}</span>
             </>
           )}
-        </div>
-
-        {/* タイピングエリア（エンジンが制御） */}
+        </div>        {/* タイピングエリア（エンジンが制御） */}
         <div 
           ref={containerRef}
-          className="typing-area"
-          style={{
-            minHeight: '200px',
-            border: '1px solid #ccc',
-            padding: '1rem',
-            marginTop: '1rem'
-          }}
+          className={styles.typingArea}
         />
 
         {/* 操作ガイド */}

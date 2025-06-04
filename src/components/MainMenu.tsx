@@ -132,9 +132,8 @@ const MainMenu: React.FC<MainMenuProps> = ({ onStart, onRetry, onRanking }) => {
         <div className={styles.mainMenu__title}>manabytype</div>
         <div className={styles.mainMenu__subtitle}>II</div>
 
-        <div className={styles.mainMenu__nav}>
-          <div 
-            className={styles.mainMenu__navItem} 
+        <div className={styles.mainMenu__nav}>          <div 
+            className={`${styles.mainMenu__navItem} ${isStarting ? styles['mainMenu__navItem--loading'] : ''}`}
             onClick={handleStart}
             tabIndex={0}
             role="button"
@@ -144,10 +143,6 @@ const MainMenu: React.FC<MainMenuProps> = ({ onStart, onRetry, onRanking }) => {
                 e.preventDefault();
                 handleStart();
               }
-            }}
-            style={{ 
-              opacity: isStarting ? 0.6 : 1,
-              pointerEvents: isStarting ? 'none' : 'auto'
             }}
           >
             {isStarting ? 'STARTING...' : 'START GAME'}
@@ -180,16 +175,11 @@ const MainMenu: React.FC<MainMenuProps> = ({ onStart, onRetry, onRanking }) => {
             }}
           >
             RANKING
-          </div>
-          <div 
-            className={styles.mainMenu__navItem}
+          </div>          <div 
+            className={`${styles.mainMenu__navItem} ${styles['mainMenu__navItem--disabled']}`}
             tabIndex={0}
             role="button"
             aria-label="システム設定（準備中）"
-            style={{ 
-              opacity: 0.6,
-              pointerEvents: 'none'
-            }}
           >
             SYSTEM
           </div>
