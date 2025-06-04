@@ -138,7 +138,8 @@ const CleanRankingScreen: React.FC<CleanRankingScreenProps> = ({ onGoMenu }) => 
                     <th className={styles.rankingScreen__tableHeader}>正解</th>
                     <th className={styles.rankingScreen__tableHeader}>ミス</th>
                   </tr>
-                </thead>                <tbody className={styles.rankingScreen__tableBody}>
+                </thead>
+                <tbody className={styles.rankingScreen__tableBody}>
                   {/* 実際のランキングデータ */}
                   {currentPageData.map((entry, index) => (
                     <tr key={index} className={styles.rankingScreen__tableRow}>
@@ -177,7 +178,6 @@ const CleanRankingScreen: React.FC<CleanRankingScreenProps> = ({ onGoMenu }) => 
                   }
                 </tbody>
               </table>
-              
               {/* Pagination */}
               {!loading && !error && rankings.length > 0 && totalPages > 1 && (
                 <div className={styles.rankingScreen__pagination}>
