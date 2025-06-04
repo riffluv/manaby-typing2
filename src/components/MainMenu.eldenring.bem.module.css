@@ -102,7 +102,7 @@
 /* ナビゲーションアイテムのホバー・アクティブ状態 */
 .mainMenu__navItem:hover,
 .mainMenu__navItem:focus {
-  color: #b0d0ff;
+  color: var(--color-gaming-text-accent);
   outline: none;
 }
 
@@ -112,11 +112,10 @@
   content: '';
   position: absolute;
   top: 50%;
-  left: -60px;
-  transform: translateY(-50%);
+  left: -60px;  transform: translateY(-50%);
   width: 120px;
   height: 1px;
-  background: linear-gradient(to right, transparent, #88ccff, transparent);
+  background: linear-gradient(to right, transparent, var(--color-gaming-text-accent), transparent);
   animation: pulse 2s infinite ease-in-out;
 }
 
@@ -250,7 +249,7 @@
 }
 
 .modeSelect__option--selected {
-  border: 1px solid #88ccff;
+  border: 1px solid var(--color-gaming-text-accent);
   color: #e0f8ff;
   animation: glow 1.5s infinite alternate;
 }
