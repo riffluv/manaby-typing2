@@ -71,10 +71,12 @@
 
 .romajiText {
   font-size: 1.2rem;
+  font-weight: 900; /* ローマ字を太く */
   letter-spacing: 0.05rem;
   line-height: 1.6;
   display: inline-block;
   white-space: pre-wrap;
+  text-shadow: 0 0 1px rgba(0,0,0,0.3); /* 輪郭効果を追加 */
 }
 
 .typed {
@@ -119,9 +121,9 @@
     font-size: 1.2rem;
     margin-bottom: 1.2rem;
   }
-  
-  .romajiText {
+    .romajiText {
     font-size: 1.1rem;
+    font-weight: 900; /* モバイルでもローマ字を太く */
   }
   
   .progressText {
@@ -149,9 +151,9 @@
     font-size: 1rem;
     margin-bottom: 1rem;
   }
-  
-  .romajiText {
+    .romajiText {
     font-size: 1rem;
+    font-weight: 900; /* 小画面でもローマ字を太く */
   }
   
   .progressText {
