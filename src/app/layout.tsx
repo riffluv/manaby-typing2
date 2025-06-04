@@ -24,8 +24,8 @@ const cinzel = Cinzel({
 });
 
 export const metadata: Metadata = {
-  title: "manabytype II - FF16風タイピングゲーム",
-  description: "Final Fantasy XVI風デザインのタイピングゲーム",
+  title: "manabytype II",
+  description: "manaby",
 };
 
 export const viewport: Viewport = {
