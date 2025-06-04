@@ -1,20 +1,37 @@
 /* 
  * ranking-responsive.css
- * ランキング画面のレスポンシブ対応スタイル
+ * ランキング画面のレスポンシブ対応スタイル - DPI対応強化版
  */
 
 /* ランキング画面用のコンテナスタイル */
 .ranking-screen-container {
   box-sizing: border-box;
   width: 100vw !important;
-  min-height: 100vh !important;
-  overflow-x: hidden;
+  height: 100vh !important;
+  overflow: hidden !important; /* スクロール完全禁止 */
+  position: fixed !important; /* positionをfixedに強制 */
+  top: 0 !important;
+  left: 0 !important;
+  right: 0 !important;
+  bottom: 0 !important;
+}
+
+/* DPI対応のメディアクエリ */
+@media (min-resolution: 120dpi), (-webkit-min-device-pixel-ratio: 1.25) {
+  .ranking-screen-container {
+    /* 高DPI環境での調整 */
+    font-size: 16px;
+  }
+  
+  .ranking-screen-container section {
+    padding: min(2vh, 2rem) min(3vw, 3rem) !important;
+  }
 }
 
 @media (min-width: 1200px) {
   /* 大きな画面用 */
   .ranking-screen-container section {
-    width: 80% !important;
+    width: min(80%, 1200px) !important;
     max-width: 1200px !important;
   }
 }
@@ -22,7 +39,7 @@
 @media (max-width: 1199px) and (min-width: 768px) {
   /* 中程度の画面用 */
   .ranking-screen-container section {
-    width: 90% !important;
+    width: min(90%, 900px) !important;
     max-width: 900px !important;
   }
 }
@@ -35,7 +52,24 @@
   }
   
   .ranking-screen-container {
-    padding: 1rem !important;
+    padding: min(1rem, 2vh) !important;  }
+}
+
+/* DPI対応の専用スタイル */
+/* 125%スケール対応 */
+@media (min-resolution: 120dpi) and (max-resolution: 144dpi), 
+       (-webkit-min-device-pixel-ratio: 1.25) and (-webkit-max-device-pixel-ratio: 1.5) {
+  .ranking-screen-container {
+    transform: scale(0.98); /* 微調整でスクロール防止 */
+    transform-origin: top left;
+  }
+}
+
+/* 150%スケール対応 */
+@media (min-resolution: 144dpi), (-webkit-min-device-pixel-ratio: 1.5) {
+  .ranking-screen-container {
+    transform: scale(0.95); /* さらに縮小 */
+    transform-origin: top left;
   }
 }
 
@@ -43,6 +77,7 @@
 .fullscreen-transition {
   width: 100vw !important;
   height: 100vh !important;
+  overflow: hidden !important;
 }
 
 /* ランキングテーブルのセル幅調整 */

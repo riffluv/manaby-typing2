@@ -78,10 +78,8 @@ const CleanRankingScreen: React.FC<CleanRankingScreenProps> = ({ onGoMenu }) => 
     <div className="ranking-screen-container" style={{
       boxSizing: 'border-box',
       margin: 0,
-      width: '100vw', // ビューポート幅を使用
-      minWidth: '800px', // 最小幅を設定
-      height: '100%',
-      minHeight: '100vh',
+      width: '100vw',
+      height: '100vh', // 明確にビューポート高さを設定
       fontFamily: 'Cinzel, serif',
       background: 'radial-gradient(ellipse at center, #0a0f1b, #000)',
       color: '#ccc',
@@ -89,37 +87,41 @@ const CleanRankingScreen: React.FC<CleanRankingScreenProps> = ({ onGoMenu }) => 
       display: 'flex',
       flexDirection: 'column',
       alignItems: 'center',
-      justifyContent: 'center',
-      padding: '2rem 5%', // 左右のパディングを百分率で
-      position: 'absolute', // absoluteに変更
+      justifyContent: 'flex-start', // centerからflex-startに変更
+      padding: 'min(2rem, 2vh) min(5%, 2rem)', // DPI対応のpadding
+      position: 'fixed', // fixedに変更してスクロール防止
       top: 0,
       left: 0,
       right: 0,
-      bottom: 0
-    }}>
-      {/* Ranking Section */}
+      bottom: 0,
+      overflow: 'hidden' // スクロール完全禁止
+    }}>      {/* Ranking Section */}
       <section style={{
         width: '100%',
-        maxWidth: '1200px', // 最大幅を広げる
+        maxWidth: 'min(1200px, 90vw)', // DPI対応の最大幅
+        height: 'calc(100vh - 8vh)', // 利用可能な高さを計算（パディング分を差し引く）
+        display: 'flex',
+        flexDirection: 'column',
         animation: 'fadeIn 1.2s ease',
-        textAlign: 'center'      }}>
-        {/* Title */}
+        textAlign: 'center',
+        overflow: 'hidden' // セクション内でもスクロール制御
+      }}>        {/* Title */}
         <h1 style={{
-          fontSize: '4rem',
+          fontSize: 'clamp(2.5rem, 4vw, 4rem)', // DPI対応のレスポンシブフォント
           color: '#c9a76f',
           letterSpacing: '0.4rem',
           textShadow: '0 0 12px rgba(255, 200, 120, 0.3)',
-          margin: '0 0 2rem 0'
+          margin: '0 0 min(2rem, 3vh) 0', // DPI対応のマージン
+          flexShrink: 0 // タイトルが縮まないように
         }}>
           RANKING
-        </h1>
-
-        {/* Tabs */}
+        </h1>        {/* Tabs */}
         <div style={{
           display: 'flex',
           justifyContent: 'center',
-          gap: '2rem',
-          marginBottom: '2rem'
+          gap: 'min(2rem, 3vw)', // DPI対応のgap
+          marginBottom: 'min(2rem, 3vh)', // DPI対応のマージン
+          flexShrink: 0 // タブが縮まないように
         }}>
           {['normal', 'hard'].map((difficulty) => (
             <div
@@ -138,12 +140,18 @@ const CleanRankingScreen: React.FC<CleanRankingScreenProps> = ({ onGoMenu }) => 
               {difficulty === 'normal' ? 'Normal' : 'Hard'}
             </div>
           ))}
-        </div>
-
-        {/* Table */}        {loading ? (
+        </div>        {/* Table */}
+        <div style={{
+          flex: 1, // 残りのスペースを占有
+          display: 'flex',
+          flexDirection: 'column',
+          minHeight: 0, // flexで高さを制御するため
+          marginBottom: 'min(1rem, 2vh)' // DPI対応のマージン
+        }}>
+        {loading ? (
           <div style={{
             textAlign: 'center',
-            height: '21.6rem', /* 読み込み中でも高さ固定 */
+            flex: 1, // 利用可能な高さを使用
             display: 'flex',
             flexDirection: 'column',
             justifyContent: 'center',
@@ -155,24 +163,23 @@ const CleanRankingScreen: React.FC<CleanRankingScreenProps> = ({ onGoMenu }) => 
         ) : error ? (
           <div style={{
             textAlign: 'center',
-            height: '21.6rem', /* エラー時も高さ固定 */
+            flex: 1, // 利用可能な高さを使用
             display: 'flex',
             flexDirection: 'column',
             justifyContent: 'center',
             alignItems: 'center',
             color: '#ff6b6b'
-          }}>
-            <div>{error}</div>
+          }}>            <div>{error}</div>
             <button
               onClick={fetchRankings}
               style={{
-                marginTop: '1rem',
+                marginTop: 'min(1rem, 2vh)',
                 padding: '0.6rem 2.5rem',
                 background: 'rgba(0, 0, 0, 0.4)',
                 border: '1px solid rgba(255, 255, 255, 0.4)',
                 color: '#ddd',
                 borderRadius: '2px',
-                fontSize: '1rem',
+                fontSize: 'clamp(0.8rem, 1.5vw, 1rem)', // DPI対応のフォントサイズ
                 letterSpacing: '0.05em',
                 textTransform: 'uppercase',
                 transition: '0.2s ease',
@@ -181,161 +188,173 @@ const CleanRankingScreen: React.FC<CleanRankingScreenProps> = ({ onGoMenu }) => 
               }}
             >
               リトライ
-            </button>
-          </div>) : rankings.length === 0 ? (
+            </button>          </div>) : rankings.length === 0 ? (
           <div style={{
             textAlign: 'center',
-            height: '21.6rem', /* 空の場合でも高さを固定 */
+            flex: 1, // 利用可能な高さを使用
             display: 'flex',
             flexDirection: 'column',
             justifyContent: 'center',
             alignItems: 'center',
             color: '#ccc'
           }}>
-            <h3 style={{ margin: '0 0 1rem 0' }}>まだスコアがありません</h3>
-            <p style={{ margin: 0 }}>
+            <h3 style={{ margin: '0 0 min(1rem, 2vh) 0', fontSize: 'clamp(1.2rem, 2.5vw, 1.5rem)' }}>まだスコアがありません</h3>
+            <p style={{ margin: 0, fontSize: 'clamp(0.9rem, 1.8vw, 1rem)' }}>
               ゲームをプレイして最初のランキング入りを目指しましょう！
             </p>
-          </div>
-        ) : (<table style={{
+          </div>        ) : (
+          <table style={{
             width: '100%',
             borderCollapse: 'collapse',
-            marginBottom: '2.5rem'
+            flex: 1,
+            display: 'flex',
+            flexDirection: 'column',
+            minHeight: 0
           }}>
             <thead style={{
               display: 'table',
               width: '100%',
-              tableLayout: 'fixed'
-            }}>
-              <tr style={{
+              tableLayout: 'fixed',
+              flexShrink: 0
+            }}>              <tr style={{
                 display: 'table',
                 width: '100%',
                 tableLayout: 'fixed'
               }}>
                 <th style={{
-                  padding: '0.8rem 1rem',
+                  padding: 'min(0.8rem, 1.5vh) min(1rem, 2vw)',
                   borderBottom: '1px solid rgba(255,255,255,0.1)',
                   textAlign: 'center',
                   color: '#a9c9ff',
-                  fontWeight: 'normal'
+                  fontWeight: 'normal',
+                  fontSize: 'clamp(0.8rem, 1.5vw, 1rem)'
                 }}>順位</th>
                 <th style={{
-                  padding: '0.8rem 1rem',
+                  padding: 'min(0.8rem, 1.5vh) min(1rem, 2vw)',
                   borderBottom: '1px solid rgba(255,255,255,0.1)',
                   textAlign: 'center',
                   color: '#a9c9ff',
-                  fontWeight: 'normal'
-                }}>プレイヤー</th>
-                <th style={{
-                  padding: '0.8rem 1rem',
+                  fontWeight: 'normal',
+                  fontSize: 'clamp(0.8rem, 1.5vw, 1rem)'
+                }}>プレイヤー</th>                <th style={{
+                  padding: 'min(0.8rem, 1.5vh) min(1rem, 2vw)',
                   borderBottom: '1px solid rgba(255,255,255,0.1)',
                   textAlign: 'center',
                   color: '#a9c9ff',
-                  fontWeight: 'normal'
+                  fontWeight: 'normal',
+                  fontSize: 'clamp(0.8rem, 1.5vw, 1rem)'
                 }}>KPM</th>
                 <th style={{
-                  padding: '0.8rem 1rem',
+                  padding: 'min(0.8rem, 1.5vh) min(1rem, 2vw)',
                   borderBottom: '1px solid rgba(255,255,255,0.1)',
                   textAlign: 'center',
                   color: '#a9c9ff',
-                  fontWeight: 'normal'
+                  fontWeight: 'normal',
+                  fontSize: 'clamp(0.8rem, 1.5vw, 1rem)'
                 }}>正確率</th>
                 <th style={{
-                  padding: '0.8rem 1rem',
+                  padding: 'min(0.8rem, 1.5vh) min(1rem, 2vw)',
                   borderBottom: '1px solid rgba(255,255,255,0.1)',
                   textAlign: 'center',
                   color: '#a9c9ff',
-                  fontWeight: 'normal'
+                  fontWeight: 'normal',
+                  fontSize: 'clamp(0.8rem, 1.5vw, 1rem)'
                 }}>正解</th>
                 <th style={{
-                  padding: '0.8rem 1rem',
+                  padding: 'min(0.8rem, 1.5vh) min(1rem, 2vw)',
                   borderBottom: '1px solid rgba(255,255,255,0.1)',
                   textAlign: 'center',
                   color: '#a9c9ff',
-                  fontWeight: 'normal'
-                }}>ミス</th>
+                  fontWeight: 'normal',
+                  fontSize: 'clamp(0.8rem, 1.5vw, 1rem)'                }}>ミス</th>
               </tr>
             </thead>
             <tbody style={{
               display: 'block',
-              height: '21.6rem', /* 6行分の固定高さ */
-              overflowY: currentPageData.length > 6 ? 'auto' : 'hidden'
+              flex: 1,
+              overflowY: 'hidden',
+              minHeight: 0
             }}>
-              {currentPageData.map((entry, index) => (
-                <tr key={index} style={{
+              {currentPageData.map((entry, index) => (                <tr key={index} style={{
                   display: 'table',
                   width: '100%',
                   tableLayout: 'fixed'
                 }}>
                   <td style={{
-                    padding: '0.8rem 1rem',
+                    padding: 'min(0.8rem, 1.5vh) min(1rem, 2vw)',
                     borderBottom: '1px solid rgba(255,255,255,0.1)',
-                    textAlign: 'center'
+                    textAlign: 'center',
+                    fontSize: 'clamp(0.8rem, 1.4vw, 0.95rem)'
                   }}>
                     {startIndex + index + 1}
                   </td>
                   <td style={{
-                    padding: '0.8rem 1rem',
+                    padding: 'min(0.8rem, 1.5vh) min(1rem, 2vw)',
                     borderBottom: '1px solid rgba(255,255,255,0.1)',
-                    textAlign: 'center'
+                    textAlign: 'center',
+                    fontSize: 'clamp(0.8rem, 1.4vw, 0.95rem)'
                   }}>
                     {entry.name}
                   </td>
                   <td style={{
-                    padding: '0.8rem 1rem',
+                    padding: 'min(0.8rem, 1.5vh) min(1rem, 2vw)',
                     borderBottom: '1px solid rgba(255,255,255,0.1)',
-                    textAlign: 'center'
+                    textAlign: 'center',
+                    fontSize: 'clamp(0.8rem, 1.4vw, 0.95rem)'
                   }}>
                     {entry.kpm.toFixed(1)}
-                  </td>
-                  <td style={{
-                    padding: '0.8rem 1rem',
+                  </td>                  <td style={{
+                    padding: 'min(0.8rem, 1.5vh) min(1rem, 2vw)',
                     borderBottom: '1px solid rgba(255,255,255,0.1)',
-                    textAlign: 'center'
+                    textAlign: 'center',
+                    fontSize: 'clamp(0.8rem, 1.4vw, 0.95rem)'
                   }}>
                     {entry.accuracy.toFixed(1)}%
                   </td>
                   <td style={{
-                    padding: '0.8rem 1rem',
+                    padding: 'min(0.8rem, 1.5vh) min(1rem, 2vw)',
                     borderBottom: '1px solid rgba(255,255,255,0.1)',
-                    textAlign: 'center'
+                    textAlign: 'center',
+                    fontSize: 'clamp(0.8rem, 1.4vw, 0.95rem)'
                   }}>
                     {entry.correct}
                   </td>
                   <td style={{
-                    padding: '0.8rem 1rem',
+                    padding: 'min(0.8rem, 1.5vh) min(1rem, 2vw)',
                     borderBottom: '1px solid rgba(255,255,255,0.1)',
-                    textAlign: 'center'
+                    textAlign: 'center',
+                    fontSize: 'clamp(0.8rem, 1.4vw, 0.95rem)'
                   }}>
-                    {entry.miss}
-                  </td>
+                    {entry.miss}                  </td>
                 </tr>
               ))}
             </tbody>
           </table>
         )}
+        </div>
 
         {/* Pagination */}
         {!loading && !error && rankings.length > 0 && totalPages > 1 && (
           <div style={{
             display: 'flex',
             justifyContent: 'center',
-            gap: '1rem',
-            marginBottom: '2rem'
+            gap: 'min(1rem, 2vw)',
+            marginBottom: 'min(2rem, 3vh)',
+            flexShrink: 0 // ページネーションが縮まないように
           }}>
             {Array.from({ length: totalPages }, (_, i) => i + 1).map((page) => (
               <div
                 key={page}
-                onClick={() => handlePageChange(page)}
-                style={{
+                onClick={() => handlePageChange(page)}                style={{
                   cursor: 'pointer',
-                  padding: '0.3rem 1rem',
+                  padding: 'min(0.3rem, 0.8vh) min(1rem, 2vw)',
                   border: page === currentPage ? '1px solid #88ccff' : '1px solid rgba(255, 255, 255, 0.3)',
                   background: 'rgba(0,0,0,0.3)',
                   color: page === currentPage ? '#b0d0ff' : '#ccc',
                   borderRadius: '2px',
                   transition: '0.2s',
-                  boxShadow: page === currentPage ? '0 0 6px rgba(100, 180, 255, 0.3)' : 'none'
+                  boxShadow: page === currentPage ? '0 0 6px rgba(100, 180, 255, 0.3)' : 'none',
+                  fontSize: 'clamp(0.8rem, 1.4vw, 0.9rem)'
                 }}
                 onMouseEnter={(e) => {
                   if (page !== currentPage) {
@@ -355,24 +374,23 @@ const CleanRankingScreen: React.FC<CleanRankingScreenProps> = ({ onGoMenu }) => 
                 {page}
               </div>
             ))}          </div>
-        )}
-
-        {/* Buttons */}
+        )}        {/* Buttons */}
         <div style={{
           display: 'flex',
-          gap: '1.5rem',
-          justifyContent: 'center'
+          gap: 'min(1.5rem, 3vw)',
+          justifyContent: 'center',
+          flexShrink: 0 // ボタンが縮まないように
         }}>
           <div
             onClick={handleGoMenu}
             style={{
               cursor: 'pointer',
-              padding: '0.6rem 2.5rem',
+              padding: 'min(0.6rem, 1.2vh) min(2.5rem, 4vw)',
               background: 'rgba(0, 0, 0, 0.4)',
               border: '1px solid rgba(255, 255, 255, 0.4)',
               color: '#ddd',
               borderRadius: '2px',
-              fontSize: '1rem',
+              fontSize: 'clamp(0.8rem, 1.5vw, 1rem)',
               letterSpacing: '0.05em',
               textTransform: 'uppercase',
               transition: '0.2s ease',
@@ -391,17 +409,16 @@ const CleanRankingScreen: React.FC<CleanRankingScreenProps> = ({ onGoMenu }) => 
             }}
           >
             戻る
-          </div>
-          <div
+          </div>          <div
             onClick={handleGoMenu}
             style={{
               cursor: 'pointer',
-              padding: '0.6rem 2.5rem',
+              padding: 'min(0.6rem, 1.2vh) min(2.5rem, 4vw)',
               background: 'rgba(0, 0, 0, 0.4)',
               border: '1px solid rgba(255, 255, 255, 0.4)',
               color: '#ddd',
               borderRadius: '2px',
-              fontSize: '1rem',
+              fontSize: 'clamp(0.8rem, 1.5vw, 1rem)',
               letterSpacing: '0.05em',
               textTransform: 'uppercase',
               transition: '0.2s ease',
