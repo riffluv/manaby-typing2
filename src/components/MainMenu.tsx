@@ -29,7 +29,7 @@ const modeDescriptions = {
  */
 const MainMenu: React.FC<MainMenuProps> = ({ onStart, onRetry, onRanking }) => {
   const { resetGame, setGameStatus, setMode, setQuestionCount, mode } = useTypingGameStore();
-  const { setLastScore } = useSceneNavigationStore(); // 状態管理ストアの使用
+  const { setLastScore, goToSettings } = useSceneNavigationStore(); // 状態管理ストアの使用
   const questionCount = useQuestionCount();
     // 状態管理
   const [adminOpen, setAdminOpen] = useState(false);
@@ -59,11 +59,15 @@ const MainMenu: React.FC<MainMenuProps> = ({ onStart, onRetry, onRanking }) => {
       setIsStarting(false);
     }
   }, [resetGame, setGameStatus, onStart, isStarting]);
-
   // ランキング画面への移動をメモ化
   const handleGoRanking = useCallback(() => {
     onRanking();
   }, [onRanking]);
+
+  // 設定画面への移動をメモ化
+  const handleGoSettings = useCallback(() => {
+    goToSettings();
+  }, [goToSettings]);
     // モード選択ハンドラー
   const handleModeSelect = useCallback((newMode: 'normal' | 'hard' | 'sonkeigo' | 'kenjougo' | 'business') => {
     setMode(newMode);
@@ -175,12 +179,18 @@ const MainMenu: React.FC<MainMenuProps> = ({ onStart, onRetry, onRanking }) => {
             }}
           >
             RANKING
-          </div>
-          <div 
-            className={`${styles.mainMenu__navItem} ${styles.menu__item} ${styles['mainMenu__navItem--disabled']}`}
+          </div>          <div 
+            className={`${styles.mainMenu__navItem} ${styles.menu__item}`}
+            onClick={handleGoSettings}
             tabIndex={0}
             role="button"
-            aria-label="システム設定（準備中）"
+            aria-label="システム設定"
+            onKeyDown={(e) => {
+              if (e.key === 'Enter' || e.key === ' ') {
+                e.preventDefault();
+                handleGoSettings();
+              }
+            }}
           >
             SYSTEM
           </div>

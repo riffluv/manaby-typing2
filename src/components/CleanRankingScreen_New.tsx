@@ -32,10 +32,9 @@ const CleanRankingScreen: React.FC<CleanRankingScreenProps> = ({ onGoMenu }) => 
       setRankings(realRankingData);
       setError('');
       // 難易度変更時は1ページ目に戻る
-      setCurrentPage(1);
-    } catch (error) {
-      console.error('ランキングデータの取得に失敗しました:', error);
-      setError('ランキングの取得に失敗しました');
+      setCurrentPage(1);    } catch (error) {
+      console.error('Failed to fetch ranking data:', error);
+      setError('Failed to fetch rankings');
       setRankings([]);
     } finally {
       setLoading(false);
@@ -104,10 +103,9 @@ const CleanRankingScreen: React.FC<CleanRankingScreenProps> = ({ onGoMenu }) => 
         </div>
 
         {/* Content */}
-        <div className={styles.rankingScreen__content}>
-          {loading ? (
+        <div className={styles.rankingScreen__content}>          {loading ? (
             <div className={styles.rankingScreen__state}>
-              <div>ランキング読み込み中...</div>
+              <div>Loading rankings...</div>
             </div>
           ) : error ? (
             <div className={`${styles.rankingScreen__state} ${styles['rankingScreen__state--error']}`}>
@@ -116,27 +114,25 @@ const CleanRankingScreen: React.FC<CleanRankingScreenProps> = ({ onGoMenu }) => 
                 onClick={fetchRankings}
                 className={styles.rankingScreen__retryButton}
               >
-                リトライ
+                Retry
               </button>
             </div>
           ) : rankings.length === 0 ? (
             <div className={styles.rankingScreen__state}>
-              <h3 className={styles.rankingScreen__state__title}>まだスコアがありません</h3>
+              <h3 className={styles.rankingScreen__state__title}>No scores yet</h3>
               <p className={styles.rankingScreen__state__text}>
-                ゲームをプレイして最初のランキング入りを目指しましょう！
+                Play the game and aim for your first ranking entry!
               </p>
-            </div>
-          ) : (
+            </div>          ) : (
             <div className={styles.rankingScreen__tableContainer}>
               <table className={styles.rankingScreen__table}>
                 <thead className={styles.rankingScreen__tableHead}>
-                  <tr className={styles.rankingScreen__tableRow}>
-                    <th className={styles.rankingScreen__tableHeader}>順位</th>
-                    <th className={styles.rankingScreen__tableHeader}>プレイヤー</th>
+                  <tr className={styles.rankingScreen__tableRow}>                    <th className={styles.rankingScreen__tableHeader}>Rank</th>
+                    <th className={styles.rankingScreen__tableHeader}>Player</th>
                     <th className={styles.rankingScreen__tableHeader}>KPM</th>
-                    <th className={styles.rankingScreen__tableHeader}>正確率</th>
-                    <th className={styles.rankingScreen__tableHeader}>正解</th>
-                    <th className={styles.rankingScreen__tableHeader}>ミス</th>
+                    <th className={styles.rankingScreen__tableHeader}>Accuracy</th>
+                    <th className={styles.rankingScreen__tableHeader}>Correct</th>
+                    <th className={styles.rankingScreen__tableHeader}>Misses</th>
                   </tr>
                 </thead>
                 <tbody className={styles.rankingScreen__tableBody}>
@@ -160,8 +156,7 @@ const CleanRankingScreen: React.FC<CleanRankingScreenProps> = ({ onGoMenu }) => 
                       <td className={styles.rankingScreen__tableCell}>
                         {entry.miss}
                       </td>
-                    </tr>
-                  ))}
+                    </tr>                  ))}
                 </tbody>
               </table>
               
@@ -183,21 +178,13 @@ const CleanRankingScreen: React.FC<CleanRankingScreenProps> = ({ onGoMenu }) => 
               )}
             </div>
           )}
-        </div>
-
-        {/* Buttons */}
+        </div>        {/* Buttons */}
         <div className={styles.rankingScreen__actions}>
           <div
             onClick={handleGoMenu}
             className={styles.rankingScreen__button}
           >
-            戻る
-          </div>
-          <div
-            onClick={handleGoMenu}
-            className={styles.rankingScreen__button}
-          >
-            メインメニューに戻る
+            Back to Menu
           </div>
         </div>
       </section>

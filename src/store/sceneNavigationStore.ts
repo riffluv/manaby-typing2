@@ -22,7 +22,7 @@ export interface ResultScore {
 }
 
 // 画面の種類
-export type SceneType = 'menu' | 'game' | 'ranking' | 'result';
+export type SceneType = 'menu' | 'game' | 'ranking' | 'result' | 'settings';
 
 // 画面ナビゲーション用のストア
 interface SceneNavigationStore {
@@ -31,11 +31,11 @@ interface SceneNavigationStore {
   sceneHistory: SceneType[];
   isTransitioning: boolean;
   navigateTo: (scene: SceneType) => void;
-  goBack: () => void;
-  goToMenu: () => void;
+  goBack: () => void;  goToMenu: () => void;
   goToGame: () => void;
   goToRanking: () => void;
   goToResult: () => void;
+  goToSettings: () => void;
   setTransitioning: (isTransitioning: boolean) => void;
   lastScoreLog: PerWordScoreLog[];
   lastResultScore: GameScoreLog['total'] | null;
@@ -88,11 +88,11 @@ const useSceneNavigationStoreBase = create<SceneNavigationStore>((set, get) => (
       sceneHistory: state.sceneHistory.slice(0, -1),
     };
   }),
-
   goToMenu: () => get().navigateTo('menu'),
   goToGame: () => get().navigateTo('game'),
   goToRanking: () => get().navigateTo('ranking'),
   goToResult: () => get().navigateTo('result'),
+  goToSettings: () => get().navigateTo('settings'),
   
   setTransitioning: (isTransitioning) => set({ isTransitioning }),
 

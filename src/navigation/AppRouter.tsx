@@ -2,6 +2,7 @@ import React from 'react';
 import MainMenu from '@/components/MainMenu';
 import SimpleUnifiedTypingGame from '@/components/SimpleUnifiedTypingGame';
 import CleanRankingScreen from '@/components/CleanRankingScreen';
+import SettingsScreen from '@/components/SettingsScreen';
 import { useSceneNavigationStore } from '@/store/sceneNavigationStore';
 
 /**
@@ -20,6 +21,9 @@ const AppRouter: React.FC = () => {
       )}
       {currentScene === 'ranking' && (
         <CleanRankingScreen onGoMenu={goToMenu} />
+      )}
+      {currentScene === 'settings' && (
+        <SettingsScreen />
       )}
       {currentScene === 'game' && (
         <SimpleUnifiedTypingGame onGoMenu={goToMenu} onGoRanking={goToRanking} />

@@ -157,6 +157,7 @@
   text-shadow: 0 0 3px rgba(0,0,0,0.4);
   box-shadow: 0 0 8px rgba(150,180,255,0.1);
   transition: all 0.25s ease;
+  font-family: 'Cinzel', serif;
 }
 
 .rankingScreen__button:hover {
@@ -203,6 +204,7 @@
   font-size: 1rem;
   cursor: pointer;
   transition: all 0.25s ease;
+  font-family: 'Cinzel', serif;
 }
 
 .rankingScreen__retryButton:hover {
