@@ -1,15 +1,16 @@
-/* RankingScreen.module.css - Exact match with ranking.html design */
+/* RankingScreen.module.css - ranking.html完全一致デザイン */
 
-/* CSS Reset for ranking components */
-.rankingScreen *, 
-.rankingScreen *::before, 
-.rankingScreen *::after {
+/* CSS Reset */
+.ranking *, 
+.ranking *::before, 
+.ranking *::after {
   box-sizing: border-box;
   margin: 0;
   padding: 0;
 }
 
-.rankingScreen {
+/* メインコンテナ - bodyスタイルを再現 */
+.ranking {
   width: 100%;
   height: 100vh;
   font-family: 'Cinzel', serif;
@@ -19,134 +20,82 @@
   display: flex;
   flex-direction: column;
   align-items: center;
-  justify-content: center;
-  padding-top: 6vh;
+  padding-top: 10vh;
+  padding-bottom: 3rem;
 }
 
-.rankingScreen__section {
+/* ランキングコンテナ */
+.ranking__container {
   width: 100%;
   max-width: 960px;
   text-align: center;
-  animation: fadeIn 1.2s ease;
 }
 
-.rankingScreen__title {
-  font-size: 3rem;
-  color: #c9a76f;
-  letter-spacing: 0.3rem;
-  text-shadow: 0 0 12px rgba(255, 200, 120, 0.3);
-  margin-bottom: 1.5rem;
+/* タイトル */
+.ranking__title {
+  font-size: 2.6rem;
+  margin-bottom: 3rem;
+  color: #e5ccaa;
+  letter-spacing: 0.2rem;
+  text-shadow: 0 0 8px rgba(255, 220, 150, 0.3);
 }
 
-.rankingScreen__tabs {
-  display: flex;
-  justify-content: center;
-  gap: 1.5rem;
-  margin-bottom: 1.5rem;
-}
-
-.rankingScreen__tab {
-  padding: 0.4rem 1.2rem;
-  border: 1px solid rgba(255, 255, 255, 0.2);
-  background: rgba(0,0,0,0.4);
-  color: #ccc;
-  cursor: pointer;
-  transition: 0.3s;
-  font-size: 1rem;
-}
-
-.rankingScreen__tab--active,
-.rankingScreen__tab:hover {
-  color: #b0d0ff;
-  border-color: #88ccff;
-  box-shadow: 0 0 6px rgba(100, 180, 255, 0.3);
-}
-
-.rankingScreen__content {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-}
-
-.rankingScreen__tableContainer {
-  width: 100%;
-  margin-bottom: 2rem;
-}
-
-.rankingScreen__table {
+/* テーブル */
+.ranking__table {
   width: 100%;
   border-collapse: collapse;
   margin-bottom: 2rem;
-  min-height: calc(6 * 3.2rem); /* 6行分の最小高度を確保 */
 }
 
-.rankingScreen__table th,
-.rankingScreen__table td {
-  padding: 0.7rem 0.6rem;
-  border-bottom: 1px solid rgba(255,255,255,0.1);
-  text-align: center;
-  font-size: 0.95rem;
+.ranking__table th,
+.ranking__table td {
+  padding: 1rem;
+  font-size: 1rem;
+  border-bottom: 1px solid rgba(255,255,255,0.08);
 }
 
-.rankingScreen__tableHeader {
-  color: #a9c9ff;
-  font-weight: normal;
+.ranking__table th {
+  color: #c8b78d;
+  font-weight: bold;
+  text-shadow: 0 0 5px rgba(255, 255, 255, 0.05);
 }
 
-.rankingScreen__tableCell {
-  color: #ccc;
+.ranking__table td {
+  color: #eee;
 }
 
-.rankingScreen__tableRow {
-  transition: background-color 0.2s;
-}
-
-.rankingScreen__tableRow:hover {
-  background: rgba(255, 255, 255, 0.05);
-}
-
-/* 空の行（高さ一貫性のため） */
-.rankingScreen__emptyRow {
-  opacity: 0.3;
-  pointer-events: none;
-}
-
-.rankingScreen__emptyRow:hover {
-  background: transparent;
-}
-
-.rankingScreen__pagination {
+/* ページネーション */
+.ranking__pagination {
   display: flex;
   justify-content: center;
-  gap: 0.8rem;
-  margin-bottom: 1.5rem;
+  gap: 1rem;
+  margin-bottom: 2rem;
 }
 
-.rankingScreen__pageButton {
+.ranking__pageBtn {
+  padding: 0.4rem 1rem;
+  font-size: 0.9rem;
+  color: #cce0ff;
+  background: rgba(255,255,255,0.02);
+  border: 1px solid rgba(255,255,255,0.05);
+  border-radius: 4px;
   cursor: pointer;
-  padding: 0.3rem 0.8rem;
-  border: 1px solid rgba(255, 255, 255, 0.3);
-  background: rgba(0,0,0,0.3);
-  color: #ccc;
-  border-radius: 2px;
-  transition: 0.2s;
+  transition: all 0.3s ease;
 }
 
-.rankingScreen__pageButton:hover,
-.rankingScreen__pageButton--active {
-  color: #b0d0ff;
-  border-color: #88ccff;
-  box-shadow: 0 0 6px rgba(100, 180, 255, 0.3);
+.ranking__pageBtn:hover {
+  background: rgba(100, 180, 255, 0.05);
+  border-color: rgba(100, 180, 255, 0.2);
 }
 
-.rankingScreen__actions {
+/* ボタン群 */
+.ranking__buttons {
   display: flex;
-  gap: 2rem;
   justify-content: center;
-  margin-top: 2rem;
+  gap: 2rem;
 }
 
-.rankingScreen__button {
+.button {
   padding: 0.5rem 2rem;
   border: 1px solid rgba(200, 200, 255, 0.1);
   background: rgba(255, 255, 255, 0.02);
@@ -157,70 +106,11 @@
   text-shadow: 0 0 3px rgba(0,0,0,0.4);
   box-shadow: 0 0 8px rgba(150,180,255,0.1);
   transition: all 0.25s ease;
-  font-family: 'Cinzel', serif;
 }
 
-.rankingScreen__button:hover {
+.button:hover {
   background: rgba(180, 220, 255, 0.05);
   border-color: rgba(150, 180, 255, 0.3);
   color: #fff;
   box-shadow: 0 0 12px rgba(120,180,255,0.2);
-}
-
-/* Loading, Error, and Empty States */
-.rankingScreen__state {
-  text-align: center;
-  flex: 1;
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-  align-items: center;
-  color: #ccc;
-}
-
-.rankingScreen__state--error {
-  color: #ff6b6b;
-}
-
-.rankingScreen__state__title {
-  margin: 0 0 1rem 0;
-  font-size: 1.5rem;
-  font-weight: normal;
-}
-
-.rankingScreen__state__text {
-  margin: 0;
-  font-size: 1rem;
-  line-height: 1.6;
-}
-
-.rankingScreen__retryButton {
-  margin-top: 1rem;
-  padding: 0.5rem 2rem;
-  background: rgba(255, 255, 255, 0.02);
-  border: 1px solid rgba(200, 200, 255, 0.1);
-  color: #cce0ff;
-  border-radius: 4px;
-  font-size: 1rem;
-  cursor: pointer;
-  transition: all 0.25s ease;
-  font-family: 'Cinzel', serif;
-}
-
-.rankingScreen__retryButton:hover {
-  background: rgba(180, 220, 255, 0.05);
-  border-color: rgba(150, 180, 255, 0.3);
-  color: #fff;
-  box-shadow: 0 0 12px rgba(120,180,255,0.2);
-}
-
-@keyframes fadeIn {
-  from { 
-    opacity: 0; 
-    transform: translateY(10px); 
-  }
-  to { 
-    opacity: 1; 
-    transform: translateY(0); 
-  }
 }

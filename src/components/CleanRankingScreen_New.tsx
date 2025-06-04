@@ -123,15 +123,15 @@ const CleanRankingScreen: React.FC<CleanRankingScreenProps> = ({ onGoMenu }) => 
               <p className={styles.rankingScreen__state__text}>
                 Play the game and aim for your first ranking entry!
               </p>
-            </div>          ) : (
-            <div className={styles.rankingScreen__tableContainer}>
+            </div>          ) : (            <div className={styles.rankingScreen__tableContainer}>
               <table className={styles.rankingScreen__table}>
                 <thead className={styles.rankingScreen__tableHead}>
-                  <tr className={styles.rankingScreen__tableRow}>                    <th className={styles.rankingScreen__tableHeader}>Rank</th>
+                  <tr className={styles.rankingScreen__tableRow}>
+                    <th className={styles.rankingScreen__tableHeader}>Rank</th>
                     <th className={styles.rankingScreen__tableHeader}>Player</th>
                     <th className={styles.rankingScreen__tableHeader}>KPM</th>
                     <th className={styles.rankingScreen__tableHeader}>Accuracy</th>
-                    <th className={styles.rankingScreen__tableHeader}>Correct</th>
+                    <th className={styles.rankingScreen__tableHeader}>Date</th>
                     <th className={styles.rankingScreen__tableHeader}>Misses</th>
                   </tr>
                 </thead>
@@ -145,13 +145,12 @@ const CleanRankingScreen: React.FC<CleanRankingScreenProps> = ({ onGoMenu }) => 
                         {entry.name}
                       </td>
                       <td className={styles.rankingScreen__tableCell}>
-                        {entry.kpm.toFixed(1)}
-                      </td>
+                        {entry.kpm.toFixed(1)}                      </td>
                       <td className={styles.rankingScreen__tableCell}>
                         {entry.accuracy.toFixed(1)}%
                       </td>
                       <td className={styles.rankingScreen__tableCell}>
-                        {entry.correct}
+                        {entry.createdAt ? new Date(entry.createdAt).toLocaleDateString() : '-'}
                       </td>
                       <td className={styles.rankingScreen__tableCell}>
                         {entry.miss}

@@ -173,11 +173,8 @@ const SimpleGameResultScreen: React.FC<SimpleGameResultScreenProps> = ({
           </div>
           <div className={styles.resultButton} onClick={handleGoRanking}>
             View Ranking
-          </div>
-        </div>
+          </div>        </div>
       </div>
-
-      <div className={styles.resultFooter}>&copy;2025 manabytype II</div>
 
       {/* ランキング登録モーダル */}
       <div className={`${styles.modalOverlay} ${modalState.show ? styles.modalActive : ''}`}>
