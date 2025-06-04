@@ -130,10 +130,9 @@ const MainMenu: React.FC<MainMenuProps> = ({ onStart, onRetry, onRanking }) => {
       {/* メインコンテナ */}
       <div className={styles.mainMenu__container}>
         <div className={styles.mainMenu__title}>manabytype</div>
-        <div className={styles.mainMenu__subtitle}>II</div>
-
-        <div className={styles.mainMenu__nav}>          <div 
-            className={`${styles.mainMenu__navItem} ${isStarting ? styles['mainMenu__navItem--loading'] : ''}`}
+        <div className={styles.mainMenu__subtitle}>II</div>        <div className={styles.mainMenu__nav}>
+          <div 
+            className={`${styles.mainMenu__navItem} ${styles.menu__item} ${isStarting ? styles['mainMenu__navItem--loading'] : ''}`}
             onClick={handleStart}
             tabIndex={0}
             role="button"
@@ -148,7 +147,7 @@ const MainMenu: React.FC<MainMenuProps> = ({ onStart, onRetry, onRanking }) => {
             {isStarting ? 'STARTING...' : 'START GAME'}
           </div>
           <div 
-            className={styles.mainMenu__navItem} 
+            className={`${styles.mainMenu__navItem} ${styles.menu__item}`}
             onClick={() => setModeSelectOpen(true)}
             tabIndex={0}
             role="button"
@@ -161,8 +160,9 @@ const MainMenu: React.FC<MainMenuProps> = ({ onStart, onRetry, onRanking }) => {
             }}
           >
             SELECT MODE
-          </div>          <div 
-            className={styles.mainMenu__navItem} 
+          </div>
+          <div 
+            className={`${styles.mainMenu__navItem} ${styles.menu__item}`}
             onClick={handleGoRanking}
             tabIndex={0}
             role="button"
@@ -175,8 +175,9 @@ const MainMenu: React.FC<MainMenuProps> = ({ onStart, onRetry, onRanking }) => {
             }}
           >
             RANKING
-          </div>          <div 
-            className={`${styles.mainMenu__navItem} ${styles['mainMenu__navItem--disabled']}`}
+          </div>
+          <div 
+            className={`${styles.mainMenu__navItem} ${styles.menu__item} ${styles['mainMenu__navItem--disabled']}`}
             tabIndex={0}
             role="button"
             aria-label="システム設定（準備中）"
@@ -192,41 +193,40 @@ const MainMenu: React.FC<MainMenuProps> = ({ onStart, onRetry, onRanking }) => {
                  mode === 'kenjougo' ? '謙譲語' :
                  mode === 'business' ? 'ビジネスマナー' : 'Normal'}
         </div>
+      </div>      {/* ショートカットキー表示（index.htmlスタイル完全再現） */}
+      <div className={styles.shortcut}>
+        <span>[Space] Start</span>
+        <span>[Alt+R] Rank</span>
       </div>
 
-      {/* ショートカットキー表示（Elden Ringスタイル） */}
-      <div className={styles.mainMenu__shortcutKeys}>
-        <span>Space：ゲーム開始</span>
-        <span>Alt+R：ランキング</span>
+      {/* フッター（index.htmlスタイル完全再現） */}
+      <div className={styles.footer}>
+        <div className={styles.footer__copyright}>&copy;2025 manaby Omiya Studio</div>
+        <div className={styles.footer__version}>ver. 0.9.3 (Beta)</div>
       </div>
-
-      {/* コピーライト */}
-      <div className={styles.mainMenu__copyright}>&copy;2025 manaby Omiya Studio. All rights reserved.</div>
-
-      {/* バージョン */}
-      <div className={styles.mainMenu__version}>App Ver. 1.01</div>
 
       {/* エラー表示 */}
       {error && (
         <div className={styles.mainMenu__error} role="alert" aria-live="assertive">
           {error}
         </div>
-      )}      {/* モードセレクトモーダル（modeselect.htmlと同一デザイン） */}
+      )}      {/* モードセレクトモーダル（index.htmlと完全同一デザイン） */}
       {modeSelectOpen && (
         <div 
-          className={styles.modeSelect}
+          className={`${styles.modal} ${styles['modal--active']}`}
           role="dialog"
           aria-modal="true"
           aria-labelledby="mode-select-title"
+          id="modeModal"
         >
           <div 
-            className={styles.modeSelect__overlay} 
+            className={styles.modal__overlay} 
             onClick={() => setModeSelectOpen(false)}
           ></div>
-          <div className={styles.modeSelect__wrapper}>
-            <div className={styles.modeSelect__sidebar} role="tablist" aria-label="プレイモード選択">
+          <div className={styles.modal__content}>
+            <div className={styles.modal__sidebar} role="tablist" aria-label="プレイモード選択">
               <button 
-                className={`${styles.modeSelect__option} ${mode === 'normal' ? styles['modeSelect__option--selected'] : ''}`}
+                className={`${styles.modal__option} ${mode === 'normal' ? styles['modal__option--selected'] : ''}`}
                 onClick={() => handleModeSelect('normal')}
                 type="button"
                 role="tab"
@@ -235,7 +235,7 @@ const MainMenu: React.FC<MainMenuProps> = ({ onStart, onRetry, onRanking }) => {
                 Normal
               </button>
               <button 
-                className={`${styles.modeSelect__option} ${mode === 'sonkeigo' ? styles['modeSelect__option--selected'] : ''}`}
+                className={`${styles.modal__option} ${mode === 'sonkeigo' ? styles['modal__option--selected'] : ''}`}
                 onClick={() => handleModeSelect('sonkeigo')}
                 type="button"
                 role="tab"
@@ -244,7 +244,7 @@ const MainMenu: React.FC<MainMenuProps> = ({ onStart, onRetry, onRanking }) => {
                 尊敬語
               </button>
               <button 
-                className={`${styles.modeSelect__option} ${mode === 'kenjougo' ? styles['modeSelect__option--selected'] : ''}`}
+                className={`${styles.modal__option} ${mode === 'kenjougo' ? styles['modal__option--selected'] : ''}`}
                 onClick={() => handleModeSelect('kenjougo')}
                 type="button"
                 role="tab"
@@ -253,7 +253,7 @@ const MainMenu: React.FC<MainMenuProps> = ({ onStart, onRetry, onRanking }) => {
                 謙譲語
               </button>
               <button 
-                className={`${styles.modeSelect__option} ${mode === 'business' ? styles['modeSelect__option--selected'] : ''}`}
+                className={`${styles.modal__option} ${mode === 'business' ? styles['modal__option--selected'] : ''}`}
                 onClick={() => handleModeSelect('business')}
                 type="button"
                 role="tab"
@@ -262,12 +262,12 @@ const MainMenu: React.FC<MainMenuProps> = ({ onStart, onRetry, onRanking }) => {
                 ビジネスマナー
               </button>
             </div>
-            <div className={styles.modeSelect__content}>
-              <div className={styles.modeSelect__description}>
+            <div className={styles.modal__main}>
+              <div className={styles.modal__description}>
                 {modeDescriptions[mode]}
               </div>
               <button 
-                className={styles.modeSelect__backButton} 
+                className={styles.modal__close} 
                 onClick={() => setModeSelectOpen(false)}
                 type="button"
                 aria-label="モード選択を閉じる"

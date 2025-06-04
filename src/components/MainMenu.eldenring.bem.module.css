@@ -3,7 +3,7 @@
    完全に添付されたindex.htmlのデザインを再現（BEM対応版）
    ========================================================================== */
 
-/* Googleフォントのインポート（Cinzel） */
+/* Googleフォントのインポート（Cinzel） - index.htmlと完全一致 */
 @import url('https://fonts.googleapis.com/css2?family=Cinzel:wght@700&display=swap');
 
 /* リセット環境に対応するための全明示スタイル */
@@ -50,7 +50,7 @@
   animation: fadeIn 2s ease;
 }
 
-/* タイトルメイン（.title-main相当） */
+/* タイトルメイン（.title-main相当） - index.htmlと完全一致 */
 .mainMenu__title {
   font-size: 3rem;
   background: linear-gradient(to right, #c9a76f, #f8e6b0);
@@ -61,16 +61,18 @@
   text-shadow: 0 0 6px rgba(255, 223, 128, 0.3);
   margin: 0;
   font-family: 'Cinzel', serif;
+  font-weight: 700;
 }
 
-/* タイトルサブ（.title-sub相当） */
+/* タイトルサブ（.title-sub相当） - index.htmlと完全一致 */
 .mainMenu__subtitle {
   font-size: 5rem;
-  color: #b8cfe7;
+  color: var(--color-gaming-text-accent);
   letter-spacing: 0.6rem;
-  text-shadow: 0 0 12px rgba(100, 180, 255, 0.25);
+  text-shadow: 0 0 12px rgba(212, 175, 55, 0.25);
   margin: 12px 0 60px;
   font-family: 'Cinzel', serif;
+  font-weight: 700;
 }
 
 /* ナビゲーションメニュー（.menu相当） */
@@ -82,8 +84,9 @@
   animation: fadeUp 2s ease-in-out;
 }
 
-/* ナビゲーションアイテム（.menu-item相当） */
-.mainMenu__navItem {
+/* ナビゲーションアイテム（.menu-item相当） - index.htmlと完全一致 */
+.mainMenu__navItem,
+.menu__item {
   font-size: 1.4rem;
   color: #ccc;
   position: relative;
@@ -93,6 +96,7 @@
   background: none;
   border: none;
   font-family: 'Cinzel', serif;
+  font-weight: 700;
   text-decoration: none;
   padding: 0;
   margin: 0;
@@ -101,74 +105,70 @@
 
 /* ナビゲーションアイテムのホバー・アクティブ状態 */
 .mainMenu__navItem:hover,
-.mainMenu__navItem:focus {
+.mainMenu__navItem:focus,
+.menu__item:hover,
+.menu__item:focus {
   color: var(--color-gaming-text-accent);
   outline: none;
 }
 
 /* ナビゲーションアイテムのホバー・アクティブ時の装飾線 */
 .mainMenu__navItem:hover::before,
-.mainMenu__navItem:focus::before {
+.mainMenu__navItem:focus::before,
+.menu__item:hover::before,
+.menu__item:focus::before {
   content: '';
   position: absolute;
   top: 50%;
-  left: -60px;  transform: translateY(-50%);
+  left: -60px;
+  transform: translateY(-50%);
   width: 120px;
   height: 1px;
   background: linear-gradient(to right, transparent, var(--color-gaming-text-accent), transparent);
   animation: pulse 2s infinite ease-in-out;
 }
 
-/* 選択モード表示（.selected-mode相当） */
+/* 選択モード表示（.selected-mode相当） - index.htmlと完全一致 */
 .mainMenu__selectedMode {
   margin-top: 2rem;
   font-size: 1rem;
   color: #a99;
   font-style: italic;
   font-family: 'Cinzel', serif;
+  font-weight: 700;
 }
 
-/* ショートカットキー表示（.shortcut-keys相当） */
-.mainMenu__shortcutKeys {
+/* ショートカットキー表示（index.htmlスタイル完全再現） */
+.shortcut {
   position: absolute;
-  bottom: 20px;
+  bottom: 28px;
   left: 50%;
   transform: translateX(-50%);
   display: flex;
   gap: 2rem;
-  font-size: 0.8rem;
-  color: #999;
+  font-size: 0.85rem;
+  color: var(--color-gaming-text-accent);
   letter-spacing: 0.05rem;
-  background: rgba(255, 255, 255, 0.03);
-  border: 1px solid rgba(255, 255, 255, 0.1);
-  border-radius: 6px;
-  padding: 0.3rem 1rem;
+  text-shadow: 0 0 3px #000, 0 0 6px rgba(212, 175, 55, 0.4);
+  font-weight: bold;
   font-family: 'Cinzel', serif;
 }
 
-.mainMenu__shortcutKeys span {
-  background: none;
-  padding: 0 0.3rem;
-  border: none;
-}
-
-/* バージョンとコピーライト */
-.mainMenu__version, 
-.mainMenu__copyright {
+/* フッター（index.htmlスタイル完全再現） */
+.footer {
   position: absolute;
+  bottom: 10px;
+  left: 0;
+  right: 0;
+  width: 100%;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 0 20px;
   font-size: 0.7rem;
   color: #777;
   font-family: 'Cinzel', serif;
-}
-
-.mainMenu__version {
-  bottom: 40px;
-  right: 20px;
-}
-
-.mainMenu__copyright {
-  bottom: 40px;
-  left: 20px;
+  font-weight: 700;
 }
 
 /* エラー表示 */
@@ -189,26 +189,30 @@
 }
 
 /* ==========================================================================
-   モードセレクト（modeselect.htmlと同一デザインを採用）
+   モーダル（index.htmlスタイル完全再現）
    ========================================================================== */
 
-.modeSelect {
+.modal {
   position: fixed;
   inset: 0;
-  display: flex;
+  display: none;
   justify-content: center;
   align-items: center;
   z-index: 20;
 }
 
-.modeSelect__overlay {
+.modal--active {
+  display: flex;
+}
+
+.modal__overlay {
   position: absolute;
   inset: 0;
   background: rgba(5, 10, 20, 0.95);
   backdrop-filter: blur(8px);
 }
 
-.modeSelect__wrapper {
+.modal__content {
   position: relative;
   display: flex;
   width: 80%;
@@ -220,7 +224,7 @@
   z-index: 1;
 }
 
-.modeSelect__sidebar {
+.modal__sidebar {
   width: 240px;
   background: rgba(0, 0, 0, 0.25);
   border-right: 1px solid rgba(255, 255, 255, 0.08);
@@ -230,7 +234,7 @@
   gap: 1rem;
 }
 
-.modeSelect__option {
+.modal__option {
   color: #ccc;
   font-size: 1.1rem;
   padding: 0.75rem 1rem;
@@ -242,28 +246,19 @@
   font-family: 'Cinzel', serif;
 }
 
-.modeSelect__option:hover {
+.modal__option:hover {
   color: #dcefff;
   background: rgba(120,180,255,0.05);
   box-shadow: 0 0 10px rgba(120,180,255,0.2);
 }
 
-.modeSelect__option--selected {
-  border: 1px solid var(--color-gaming-text-accent);
+.modal__option--selected {
+  border: 1px solid #88ccff;
   color: #e0f8ff;
   animation: glow 1.5s infinite alternate;
 }
 
-@keyframes glow {
-  from {
-    box-shadow: 0 0 6px rgba(100,180,255,0.3);
-  }
-  to {
-    box-shadow: 0 0 12px rgba(100,180,255,0.6);
-  }
-}
-
-.modeSelect__content {
+.modal__main {
   flex: 1;
   padding: 2rem;
   display: flex;
@@ -271,17 +266,18 @@
   justify-content: space-between;
 }
 
-.modeSelect__description {
+.modal__description {
   font-size: 1.1rem;
   line-height: 1.7;
-  color: #d5c8a6;  background: linear-gradient(to right, #d5c8a6, #b8cfe7);
+  color: #d5c8a6;
+  background: linear-gradient(to right, #d5c8a6, #b8cfe7);
   background-clip: text;
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
   text-shadow: 0 0 10px rgba(255, 240, 200, 0.1);
 }
 
-.modeSelect__backButton {
+.modal__close {
   align-self: flex-end;
   padding: 0.5rem 1.5rem;
   font-size: 1rem;
@@ -290,9 +286,10 @@
   background: rgba(255,255,255,0.02);
   transition: all 0.3s ease;
   font-family: 'Cinzel', serif;
+  cursor: pointer;
 }
 
-.modeSelect__backButton:hover {
+.modal__close:hover {
   background: rgba(180,220,255,0.03);
   border-color: rgba(180,220,255,0.3);
 }
@@ -314,6 +311,11 @@
 @keyframes fadeUp {
   0% { opacity: 0; transform: translateY(20px); }
   100% { opacity: 1; transform: translateY(0); }
+}
+
+@keyframes glow {
+  from { box-shadow: 0 0 6px rgba(100,180,255,0.3); }
+  to { box-shadow: 0 0 12px rgba(100,180,255,0.6); }
 }
 
 @keyframes modalFade {
