@@ -9,6 +9,7 @@
 
 import type { BasicTypingChar, BasicDisplayInfo } from './BasicTypingChar';
 import type { KanaDisplay, PerWordScoreLog } from '@/types';
+import OptimizedAudioSystem from './OptimizedAudioSystem'; // 🎵 新しい音響システム
 
 export interface BasicTypingState {
   typingChars: BasicTypingChar[];
@@ -37,17 +38,20 @@ export class BasicTypingEngine {
       mistakeCount: 0,
       startTime: 0,
     };
-  }
-  /**
+  }  /**
    * エンジンの初期化
-   * typingmania-ref流: 最小限のセットアップ
+   * typingmania-ref流: 最小限のセットアップ + 音響システム初期化
    */
   initialize(
     container: HTMLElement,
     typingChars: BasicTypingChar[],
     onProgress?: (index: number, display: KanaDisplay) => void,
     onComplete?: (scoreLog: PerWordScoreLog) => void
-  ): void {    const wordText = typingChars.map(c => c.kana).join('');
+  ): void {
+    const wordText = typingChars.map(c => c.kana).join('');
+    
+    // 🎵 音響システムの初期化確認
+    OptimizedAudioSystem.init();
     
     this.container = container;
     this.state.typingChars = typingChars;
@@ -109,23 +113,27 @@ export class BasicTypingEngine {
 
     document.addEventListener('keydown', this.keyHandler);
   }
-
   /**
    * キー入力処理
-   * typingmania-ref流: シンプルな判定ロジック
-   */  private handleKeyInput(key: string): void {
+   * typingmania-ref流: シンプルな判定ロジック + 病みつき音響システム
+   */
+  private handleKeyInput(key: string): void {
     if (this.state.currentIndex >= this.state.typingChars.length) return;
 
     // 初回入力時のタイマー開始
     if (this.state.keyCount === 0) {
       this.state.startTime = performance.now();
-    }    this.state.keyCount++;
+    }
+
+    this.state.keyCount++;
 
     const currentChar = this.state.typingChars[this.state.currentIndex];
     const result = currentChar.accept(key);
 
     if (result >= 0) {
-      // 正解
+      // 🎵 正解音：病みつきクリック音再生
+      OptimizedAudioSystem.playClickSound();
+      
       // まず表示更新と進捗通知（現在の文字の状態で）
       this.updateDisplay();
       this.notifyProgress();
@@ -138,14 +146,18 @@ export class BasicTypingEngine {
         
         // 単語完了チェック
         if (this.state.currentIndex >= this.state.typingChars.length) {
+          // 🎉 単語完了音：満足感のある成功音
+          OptimizedAudioSystem.playSuccessSound();
           this.handleWordComplete();
           return;
         }
         
-        // 新しい文字への表示更新        this.updateDisplay();
+        // 新しい文字への表示更新
+        this.updateDisplay();
       }
     } else {
-      // ミス
+      // 🔕 ミス：優しいエラー音（不快感なし）
+      OptimizedAudioSystem.playErrorSound();
       this.state.mistakeCount++;
     }
   }
