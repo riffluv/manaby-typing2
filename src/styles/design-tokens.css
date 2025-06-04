@@ -38,15 +38,22 @@
   --color-gaming-text-accent: #ffd88a;
   --color-gaming-text-muted: #9ca3af;
   
+  /* Game Specific Colors */
+  --color-game-bg-radial: radial-gradient(circle, #0a0f1b 0%, #000000 100%);
+  --color-game-window-bg: linear-gradient(to bottom, #f6f1e3, #e9dec6);
+  --color-game-text-gradient: linear-gradient(to right, #2b1e12, #3a2c1d);
+  --color-game-typed: #a3d8ff;
+  --color-game-focus: #ffe18d;
+  --color-game-remaining: #9c7e5c;
+  
   /* Semantic Text Colors */
   --color-text-primary: var(--color-gaming-text-primary);
   --color-text-secondary: var(--color-gaming-text-secondary);
   --color-text-accent: var(--color-gaming-text-accent);
   --color-text-muted: var(--color-gaming-text-muted);
   --color-text-inverse: var(--color-neutral-900);
-  
-  /* Background Colors */
-  --color-bg-primary: var(--color-gaming-bg-primary);
+    /* Background Colors */
+  --color-bg-primary: radial-gradient(circle, #0a0f1b 0%, #000000 100%);
   --color-bg-secondary: var(--color-gaming-bg-secondary);
   --color-bg-surface: rgba(255, 255, 255, 0.03);
   --color-bg-overlay: rgba(5, 10, 20, 0.92);
@@ -65,10 +72,9 @@
   
   /* ==========================================================================
      Typography System
-     ========================================================================== */
-  
-  /* Font Families */
+     ========================================================================== */  /* Font Families */
   --font-family-primary: 'Cinzel', serif;
+  --font-family-cinzel: 'Cinzel', serif;
   --font-family-secondary: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
   --font-family-mono: 'JetBrains Mono', 'SF Mono', Monaco, monospace;
   

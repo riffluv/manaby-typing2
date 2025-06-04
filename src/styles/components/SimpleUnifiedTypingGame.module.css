@@ -6,7 +6,6 @@
   flex-direction: column;
   justify-content: center;
   align-items: center;
-  background: var(--bg-primary);
 }
 
 .progressIndicator {
@@ -38,7 +37,6 @@
   align-items: center;
   font-size: var(--font-size-xl);
   color: var(--text-secondary);
-  background: var(--bg-primary);
   font-weight: var(--font-weight-medium);
 }
 

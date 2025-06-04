@@ -98,19 +98,17 @@ const SimpleGameScreen: React.FC<SimpleGameScreenProps> = ({
         {/* 日本語単語表示 */}
         <div className={styles.japaneseText}>
           {currentWord.japanese}
-        </div>
-
-        {/* ローマ字表示エリア（ハイライト機能付き） */}
+        </div>        {/* ローマ字表示エリア（ハイライト機能付き） */}
         <div className={styles.romajiText}>
-          <span className="typed">
+          <span className={styles.typed}>
             {romajiDisplay.accepted}
           </span>
           {romajiDisplay.remaining && (
             <>
-              <span className="active">
+              <span className={styles.active}>
                 {romajiDisplay.remaining[0]}
               </span>
-              <span className="char">
+              <span className={styles.remaining}>
                 {romajiDisplay.remaining.slice(1)}
               </span>
             </>
