@@ -79,12 +79,12 @@ const StandaloneTypingGameScreen: React.FC<StandaloneTypingGameScreenProps> = ({
         </div>
       </div>
     );
-  }
-  if (gameState === 'playing' && currentWord.japanese) {
-    return (
-      <div className={styles.standaloneGame__gameContainer}>
-        <div className={styles.standaloneGame__progressCounter}>{completedCount + 1} / {questionCount}</div>
-        <SimpleGameScreen currentWord={currentWord} onWordComplete={onWordComplete} />
+  }  if (gameState === 'playing' && currentWord.japanese) {
+    return (      <div className={styles.standaloneGame__gameContainer}>
+        <SimpleGameScreen 
+          currentWord={currentWord} 
+          onWordComplete={onWordComplete}
+        />
       </div>
     );
   }

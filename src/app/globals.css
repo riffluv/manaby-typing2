@@ -4,14 +4,37 @@
    ========================================================================== */
 
 /* ==========================================================================
+   Google Fonts Import (Fallback)
+   ========================================================================== */
+
+@import url('https://fonts.googleapis.com/css2?family=Cinzel:wght@700&display=swap');
+
+/* ==========================================================================
+   Game.html exact match styles
+   ========================================================================== */
+
+*, *::before, *::after {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+html, body {
+  width: 100%;
+  height: 100%;
+  background: radial-gradient(circle, #0a0f1b 0%, #000000 100%);
+  font-family: 'Cinzel', serif;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  color: #ccc;
+}
+
+/* ==========================================================================
    Global Layout
    ========================================================================== */
 
 body {
-  font-family: var(--font-family-primary);
-  background: radial-gradient(circle, #0a0f1b 0%, #000000 100%);
-  color: var(--color-text-primary);
-  line-height: var(--line-height-normal);
   overflow: hidden;
   position: fixed;
   width: 100vw;

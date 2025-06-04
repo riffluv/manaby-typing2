@@ -122,10 +122,6 @@ const SimpleUnifiedTypingGame: React.FC<{
   }  if (gameStatus === 'playing' && currentWord.japanese) {
     return (
       <div className={styles.gameContainer}>
-        {/* プログレス表示 */}
-        <div className={styles.progressIndicator}>
-          {completedCount + 1} / {questionLimit}
-        </div>
 
         <SimpleGameScreen
           currentWord={currentWord}

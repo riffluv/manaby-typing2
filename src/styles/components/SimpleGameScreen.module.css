@@ -1,21 +1,52 @@
-/* SimpleGameScreen.module.css - Complete Match with game.html */
+/* SimpleGameScreen.module.css - Exact match with game.html design */
 
 .gameScreen {
   width: 100%;
-  font-family: var(--font-family-cinzel);
+  height: 100vh;
+  background: radial-gradient(circle, #0a0f1b 0%, #000000 100%);
+  font-family: 'Cinzel', serif;
   display: flex;
+  flex-direction: column;
   justify-content: center;
   align-items: center;
   color: #ccc;
+  margin: 0;
   padding: 2rem 0;
+  box-sizing: border-box;
+  gap: 2rem;
+}
+
+.topArea {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 100%;
+  max-width: 720px;
+}
+
+.progressText {
+  font-family: 'Cinzel', serif;
+  font-size: 1.1rem;
+  font-weight: bold;
+  color: #ffe18d;
+  letter-spacing: 0.1rem;
+  text-shadow: 0 0 8px rgba(255, 225, 141, 0.5);
+}
+
+.bottomArea {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 100%;
+  max-width: 720px;
 }
 
 .typingContainer {
   max-width: 720px;
-  width: 720px;
+  width: 90%;
   padding: 2rem;
   background: linear-gradient(to bottom, #f6f1e3, #e9dec6);
-  background-image: url('/textures/old-wall.png');
+  background-image: url('/textures/old-wall.png'), url('https://www.transparenttextures.com/patterns/old-wall.png');
   background-blend-mode: overlay;
   border: 1px solid rgba(0, 0, 0, 0.15);
   border-radius: 14px;
@@ -58,9 +89,13 @@
   color: #9c7e5c;
 }
 
-/* Hide additional elements that don't match the original design */
+/* Show shortcut guide in bottom area */
 .shortcutGuide {
-  display: none;
+  display: block;
+  font-family: 'Cinzel', serif;
+  font-size: 0.9rem;
+  color: #9ca3af;
+  letter-spacing: 0.05rem;
 }
 
 .typingArea {
@@ -69,6 +104,11 @@
 
 /* Responsive Design - Only for mobile devices */
 @media (max-width: 768px) {
+  .gameScreen {
+    padding: 1rem 0;
+    gap: 1.5rem;
+  }
+  
   .typingContainer {
     width: 95%;
     max-width: 95vw;
@@ -83,9 +123,22 @@
   .romajiText {
     font-size: 1.1rem;
   }
+  
+  .progressText {
+    font-size: 1rem;
+  }
+  
+  .shortcutGuide {
+    font-size: 0.8rem;
+  }
 }
 
 @media (max-width: 480px) {
+  .gameScreen {
+    padding: 0.5rem 0;
+    gap: 1rem;
+  }
+  
   .typingContainer {
     width: 95%;
     max-width: 95vw;
@@ -99,6 +152,14 @@
   
   .romajiText {
     font-size: 1rem;
+  }
+  
+  .progressText {
+    font-size: 0.9rem;
+  }
+  
+  .shortcutGuide {
+    font-size: 0.7rem;
   }
 }
 

@@ -1,6 +1,5 @@
 import React from 'react';
 import { TypingWord, PerWordScoreLog } from '@/types';
-import PortalShortcut from './PortalShortcut';
 import { useSimpleTyping } from '@/hooks/useSimpleTyping';
 import { createBasicTypingChars, debugSokuonProcessing } from '@/utils/basicJapaneseUtils';
 import { getRomajiString } from '@/utils/japaneseUtils';
@@ -19,8 +18,8 @@ export type SimpleGameScreenProps = {
  */
 const SimpleGameScreen: React.FC<SimpleGameScreenProps> = ({ 
   currentWord, 
-  onWordComplete 
-}) => {  
+  onWordComplete
+}) => {
   // ひらがなからBasicTypingChar配列を生成
   const typingChars = React.useMemo(() => {
     const chars = currentWord.hiragana ? createBasicTypingChars(currentWord.hiragana) : [];
@@ -94,11 +93,14 @@ const SimpleGameScreen: React.FC<SimpleGameScreenProps> = ({
     }
   }, []);  return (
     <div className={styles.gameScreen}>
+      {/* メインのお題エリア */}
       <div className={styles.typingContainer}>
         {/* 日本語単語表示 */}
         <div className={styles.japaneseText}>
           {currentWord.japanese}
-        </div>        {/* ローマ字表示エリア（ハイライト機能付き） */}
+        </div>
+
+        {/* ローマ字表示エリア（ハイライト機能付き） */}
         <div className={styles.romajiText}>
           <span className={styles.typed}>
             {romajiDisplay.accepted}
@@ -114,21 +116,16 @@ const SimpleGameScreen: React.FC<SimpleGameScreenProps> = ({
             </>
           )}
         </div>
+      </div>
 
-        {/* ショートカット案内 */}
-        <div className={styles.shortcutGuide}>
-          <PortalShortcut shortcuts={[{ key: 'Esc', label: 'メニューに戻る' }]} />
-        </div>
-
-        {/* タイピングエリア - BasicTypingEngineが制御 */}
-        <div 
-          ref={containerRef}
-          className={styles.typingArea}
-          aria-live="polite"
-          aria-label="タイピングエリア"
-        >
-          {/* BasicTypingEngine が動的にコンテンツを挿入 */}
-        </div>
+      {/* タイピングエリア - BasicTypingEngineが制御（非表示） */}
+      <div 
+        ref={containerRef}
+        className={styles.typingArea}
+        aria-live="polite"
+        aria-label="タイピングエリア"
+      >
+        {/* BasicTypingEngine が動的にコンテンツを挿入 */}
       </div>
     </div>
   );
