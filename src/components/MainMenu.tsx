@@ -6,6 +6,7 @@ import styles from './MainMenu.eldenring.bem.module.css';
 import { deleteRankingEntriesByMode } from '@/lib/rankingManaby2';
 import CommonModal from './common/CommonModal';
 import CommonButton from './common/CommonButton';
+import AdminModal from './AdminModal';
 import OptimizedAudioSystem from '@/utils/OptimizedAudioSystem';
 
 interface MainMenuProps {
@@ -31,11 +32,12 @@ const MainMenu: React.FC<MainMenuProps> = ({ onStart, onRetry, onRanking }) => {
   const { resetGame, setGameStatus, setMode, setQuestionCount, mode } = useTypingGameStore();
   const { setLastScore, goToSettings } = useSceneNavigationStore(); // 状態管理ストアの使用
   const questionCount = useQuestionCount();
-    // 状態管理
+  
+  // セキュリティチェック: 開発環境でのみ管理者機能を有効化
+  const isDevelopment = process.env.NODE_ENV === 'development';
+  
+  // 状態管理
   const [adminOpen, setAdminOpen] = useState(false);
-  const [adminInput, setAdminInput] = useState(questionCount);
-  const [adminStatus, setAdminStatus] = useState('');
-  const [adminLoading, setAdminLoading] = useState(false);
   const [modeSelectOpen, setModeSelectOpen] = useState(false);
   const [isStarting, setIsStarting] = useState(false);
   const [error, setError] = useState<string | null>(null);
@@ -102,34 +104,23 @@ const MainMenu: React.FC<MainMenuProps> = ({ onStart, onRetry, onRanking }) => {
           e.preventDefault();
           setModeSelectOpen(false);
         }
-      },
-    },
+      },    },
     {
       key: '@',
       ctrlKey: true,
       handler: (e) => {
+        // 本番環境では管理者パネルを無効化
+        if (!isDevelopment) {
+          console.warn('🚨 Admin panel is disabled in production environment');
+          return;
+        }
         e.preventDefault();
         setAdminOpen((v) => !v);
       },
-      allowInputFocus: true    },
-  ], [handleStart, handleGoRanking, adminOpen, modeSelectOpen]);
-  // ランキングリセット関数
-  const handleResetRanking = async (mode: 'normal' | 'hard') => {
-    setAdminLoading(true);
-    setAdminStatus(`${mode.toUpperCase()}ランキングをリセット中...`);
-    try {
-      const count = await deleteRankingEntriesByMode(mode);
-      setAdminStatus(`${mode.toUpperCase()}ランキングを${count}件リセットしました`);
-    } catch (e) {
-      setAdminStatus(`${mode.toUpperCase()}ランキングリセット失敗`);
-    } finally {
-      setAdminLoading(false);
-    }
-  };  // 管理者モーダルの外側クリックで閉じる
-  const handleAdminOverlayClick = (e: React.MouseEvent<HTMLDivElement>) => {
-    if (e.target === e.currentTarget) {
-      setAdminOpen(false);
-    }  };  return (
+      allowInputFocus: true
+    },], [handleStart, handleGoRanking, adminOpen, modeSelectOpen]);
+
+  return (
     <div className={styles.mainMenu}>
       {/* メインコンテナ */}
       <div className={styles.mainMenu__container}>
@@ -285,43 +276,14 @@ const MainMenu: React.FC<MainMenuProps> = ({ onStart, onRetry, onRanking }) => {
                 戻る
               </button>
             </div>
-          </div>
-        </div>
+          </div>        </div>
+      )}      {/* 管理者モーダル - 開発環境でのみ有効 */}
+      {isDevelopment && (
+        <AdminModal 
+          isOpen={adminOpen} 
+          onClose={() => setAdminOpen(false)} 
+        />
       )}
-
-      {/* 管理者モーダル */}
-      <CommonModal open={adminOpen} onClose={() => setAdminOpen(false)}>
-        <h2>管理者モード</h2>
-        <label>
-          出題数：
-          <input
-            type="number"
-            min={1}
-            max={100}
-            value={adminInput}
-            onChange={e => setAdminInput(Number(e.target.value))}
-            disabled={adminLoading}
-          />
-          <CommonButton
-            onClick={() => { setQuestionCount(adminInput); setAdminStatus(`出題数を${adminInput}問に変更しました`); }}
-            disabled={adminLoading || adminInput < 1}
-            variant="secondary"
-          >反映</CommonButton>
-        </label>
-        <div>
-          <CommonButton
-            onClick={() => handleResetRanking('normal')}
-            disabled={adminLoading}
-            variant="secondary"
-          >NORMALランキングリセット</CommonButton>
-          <CommonButton
-            onClick={() => handleResetRanking('hard')}
-            disabled={adminLoading}
-            variant="secondary"
-          >HARDランキングリセット</CommonButton>
-        </div>
-        <div className={styles.mainMenu__adminStatus}>{adminStatus}</div>
-      </CommonModal>
     </div>
   );
 };

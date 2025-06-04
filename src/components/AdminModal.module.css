@@ -1,0 +1,514 @@
+/* ==========================================================================
+   AdminModal - 管理者パネルモーダル
+   admin.htmlのデザインを完全再現 + Design Tokens準拠
+   ========================================================================== */
+
+/* Cinzelフォントのインポート */
+@import url('https://fonts.googleapis.com/css2?family=Cinzel:wght@400;600;700&display=swap');
+
+/* ==========================================================================
+   メイン管理者モーダル
+   ========================================================================== */
+
+.adminModal {
+  position: fixed;
+  inset: 0;
+  z-index: var(--z-index-modal, 1000);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  animation: adminModalFadeIn 0.3s ease-out;
+}
+
+.adminModal__overlay {
+  position: absolute;
+  inset: 0;
+  background: radial-gradient(circle at center, #0a0f1b 0%, #000 100%);
+  backdrop-filter: blur(8px);
+}
+
+.adminModal__container {
+  position: relative;
+  width: 90%;
+  max-width: 600px;
+  max-height: 90vh;
+  background: radial-gradient(circle at top, #0a0f1b 0%, #000 100%);
+  border: 1px solid var(--color-gaming-accent, #d4af37);
+  border-radius: var(--border-radius-lg, 12px);
+  box-shadow: 
+    0 0 30px rgba(212, 175, 55, 0.3),
+    inset 0 1px 0 rgba(229, 204, 170, 0.1);
+  overflow: hidden;
+  animation: adminModalSlideIn 0.3s ease-out;
+}
+
+/* ==========================================================================
+   ヘッダー
+   ========================================================================== */
+
+.adminModal__header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: var(--spacing-6, 24px) var(--spacing-6, 24px) var(--spacing-4, 16px);
+  border-bottom: 1px solid rgba(212, 175, 55, 0.2);
+  background: linear-gradient(135deg, rgba(212, 175, 55, 0.1) 0%, transparent 100%);
+}
+
+.adminModal__title {
+  font-family: 'Cinzel', serif;
+  font-size: var(--font-size-2xl, 24px);
+  font-weight: 700;
+  color: var(--color-gaming-text-accent, #e5ccaa);
+  text-shadow: 0 0 10px rgba(229, 204, 170, 0.3);
+  letter-spacing: 0.1em;
+  margin: 0;
+}
+
+.adminModal__closeButton {
+  background: none;
+  border: none;
+  color: var(--color-gaming-text-muted, #c8b78d);
+  font-size: var(--font-size-2xl, 24px);
+  font-weight: bold;
+  cursor: pointer;
+  padding: var(--spacing-2, 8px);
+  line-height: 1;
+  transition: all 0.2s ease;
+  border-radius: var(--border-radius-sm, 4px);
+}
+
+.adminModal__closeButton:hover {
+  color: var(--color-gaming-text-accent, #e5ccaa);
+  background: rgba(212, 175, 55, 0.1);
+  transform: scale(1.1);
+}
+
+.adminModal__closeButton:focus {
+  outline: 2px solid var(--color-gaming-accent, #d4af37);
+  outline-offset: 2px;
+}
+
+/* ==========================================================================
+   コンテンツエリア
+   ========================================================================== */
+
+.adminModal__content {
+  padding: var(--spacing-6, 24px);
+  overflow-y: auto;
+  max-height: calc(90vh - 100px);
+}
+
+.adminModal__section {
+  margin-bottom: var(--spacing-8, 32px);
+}
+
+.adminModal__sectionTitle {
+  font-family: 'Cinzel', serif;
+  font-size: var(--font-size-lg, 18px);
+  font-weight: 600;
+  color: var(--color-gaming-text-accent, #e5ccaa);
+  margin: 0 0 var(--spacing-4, 16px) 0;
+  letter-spacing: 0.05em;
+}
+
+/* ==========================================================================
+   問題数設定
+   ========================================================================== */
+
+.adminModal__inputGroup {
+  display: flex;
+  flex-direction: column;
+  gap: var(--spacing-3, 12px);
+}
+
+.adminModal__label {
+  font-family: 'Cinzel', serif;
+  font-size: var(--font-size-base, 16px);
+  color: var(--color-gaming-text-primary, #f0f0f0);
+  font-weight: 500;
+}
+
+.adminModal__inputRow {
+  display: flex;
+  gap: var(--spacing-3, 12px);
+  align-items: center;
+}
+
+.adminModal__input {
+  flex: 1;
+  padding: var(--spacing-3, 12px) var(--spacing-4, 16px);
+  background: rgba(0, 0, 0, 0.4);
+  border: 1px solid rgba(212, 175, 55, 0.3);
+  border-radius: var(--border-radius-md, 8px);
+  color: var(--color-gaming-text-primary, #f0f0f0);
+  font-family: 'Cinzel', serif;
+  font-size: var(--font-size-base, 16px);
+  transition: all 0.2s ease;
+}
+
+.adminModal__input:focus {
+  outline: none;
+  border-color: var(--color-gaming-accent, #d4af37);
+  box-shadow: 0 0 10px rgba(212, 175, 55, 0.3);
+  background: rgba(0, 0, 0, 0.6);
+}
+
+.adminModal__input:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+.adminModal__button {
+  padding: var(--spacing-3, 12px) var(--spacing-6, 24px);
+  background: linear-gradient(135deg, var(--color-gaming-accent, #d4af37) 0%, #c8b78d 100%);
+  border: none;
+  border-radius: var(--border-radius-md, 8px);
+  color: #000;
+  font-family: 'Cinzel', serif;
+  font-size: var(--font-size-base, 16px);
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  min-width: 100px;
+}
+
+.adminModal__button:hover:not(:disabled) {
+  background: linear-gradient(135deg, #e6c563 0%, var(--color-gaming-accent, #d4af37) 100%);
+  transform: translateY(-2px);
+  box-shadow: 0 4px 15px rgba(212, 175, 55, 0.4);
+}
+
+.adminModal__button:active:not(:disabled) {
+  transform: translateY(0);
+}
+
+.adminModal__button:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+  transform: none;
+  box-shadow: none;
+}
+
+/* ==========================================================================
+   デンジャーゾーン
+   ========================================================================== */
+
+.adminModal__dangerZone {
+  padding: var(--spacing-6, 24px);
+  background: linear-gradient(135deg, rgba(220, 38, 38, 0.1) 0%, rgba(185, 28, 28, 0.05) 100%);
+  border: 1px solid rgba(220, 38, 38, 0.3);
+  border-radius: var(--border-radius-lg, 12px);
+  margin-top: var(--spacing-8, 32px);
+}
+
+.adminModal__dangerTitle {
+  font-family: 'Cinzel', serif;
+  font-size: var(--font-size-lg, 18px);
+  font-weight: 700;
+  color: #ef4444;
+  margin: 0 0 var(--spacing-3, 12px) 0;
+  letter-spacing: 0.05em;
+  text-shadow: 0 0 10px rgba(239, 68, 68, 0.3);
+}
+
+.adminModal__dangerDescription {
+  font-family: 'Cinzel', serif;
+  font-size: var(--font-size-sm, 14px);
+  color: var(--color-gaming-text-muted, #c8b78d);
+  margin: 0 0 var(--spacing-6, 24px) 0;
+  line-height: 1.5;
+}
+
+.adminModal__dangerActions {
+  display: flex;
+  flex-direction: column;
+  gap: var(--spacing-3, 12px);
+}
+
+.adminModal__dangerButton {
+  padding: var(--spacing-3, 12px) var(--spacing-6, 24px);
+  background: linear-gradient(135deg, #dc2626 0%, #b91c1c 100%);
+  border: 1px solid rgba(220, 38, 38, 0.5);
+  border-radius: var(--border-radius-md, 8px);
+  color: white;
+  font-family: 'Cinzel', serif;
+  font-size: var(--font-size-base, 16px);
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+}
+
+.adminModal__dangerButton:hover:not(:disabled) {
+  background: linear-gradient(135deg, #ef4444 0%, #dc2626 100%);
+  transform: translateY(-2px);
+  box-shadow: 0 4px 15px rgba(220, 38, 38, 0.4);
+}
+
+.adminModal__dangerButton:active:not(:disabled) {
+  transform: translateY(0);
+}
+
+.adminModal__dangerButton:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+  transform: none;
+  box-shadow: none;
+}
+
+/* ==========================================================================
+   ステータス表示
+   ========================================================================== */
+
+.adminModal__status {
+  margin-top: var(--spacing-6, 24px);
+  padding: var(--spacing-4, 16px);
+  background: linear-gradient(135deg, rgba(34, 197, 94, 0.1) 0%, rgba(21, 128, 61, 0.05) 100%);
+  border: 1px solid rgba(34, 197, 94, 0.3);
+  border-radius: var(--border-radius-md, 8px);
+  font-family: 'Cinzel', serif;
+  font-size: var(--font-size-base, 16px);
+  color: #22c55e;
+  text-align: center;
+  animation: adminStatusFadeIn 0.3s ease-out;
+}
+
+/* ==========================================================================
+   確認モーダル
+   ========================================================================== */
+
+.confirmModal {
+  position: fixed;
+  inset: 0;
+  z-index: calc(var(--z-index-modal, 1000) + 10);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  animation: adminModalFadeIn 0.2s ease-out;
+}
+
+.confirmModal__overlay {
+  position: absolute;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.8);
+  backdrop-filter: blur(4px);
+}
+
+.confirmModal__container {
+  position: relative;
+  width: 90%;
+  max-width: 400px;
+  background: radial-gradient(circle at top, #0a0f1b 0%, #000 100%);
+  border: 1px solid var(--color-gaming-accent, #d4af37);
+  border-radius: var(--border-radius-lg, 12px);
+  padding: var(--spacing-8, 32px);
+  box-shadow: 
+    0 0 30px rgba(212, 175, 55, 0.3),
+    inset 0 1px 0 rgba(229, 204, 170, 0.1);
+  animation: confirmModalSlideIn 0.2s ease-out;
+}
+
+.confirmModal__title {
+  font-family: 'Cinzel', serif;
+  font-size: var(--font-size-xl, 20px);
+  font-weight: 700;
+  color: var(--color-gaming-text-accent, #e5ccaa);
+  text-align: center;
+  margin: 0 0 var(--spacing-6, 24px) 0;
+  letter-spacing: 0.05em;
+}
+
+.confirmModal__message {
+  font-family: 'Cinzel', serif;
+  font-size: var(--font-size-base, 16px);
+  color: var(--color-gaming-text-primary, #f0f0f0);
+  text-align: center;
+  line-height: 1.6;
+  margin: 0 0 var(--spacing-8, 32px) 0;
+}
+
+.confirmModal__message strong {
+  color: #ef4444;
+}
+
+.confirmModal__actions {
+  display: flex;
+  gap: var(--spacing-4, 16px);
+  justify-content: center;
+}
+
+.confirmModal__cancelButton {
+  padding: var(--spacing-3, 12px) var(--spacing-6, 24px);
+  background: rgba(255, 255, 255, 0.1);
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  border-radius: var(--border-radius-md, 8px);
+  color: var(--color-gaming-text-primary, #f0f0f0);
+  font-family: 'Cinzel', serif;
+  font-size: var(--font-size-base, 16px);
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+}
+
+.confirmModal__cancelButton:hover {
+  background: rgba(255, 255, 255, 0.2);
+  border-color: var(--color-gaming-accent, #d4af37);
+}
+
+.confirmModal__confirmButton {
+  padding: var(--spacing-3, 12px) var(--spacing-6, 24px);
+  background: linear-gradient(135deg, #dc2626 0%, #b91c1c 100%);
+  border: 1px solid rgba(220, 38, 38, 0.5);
+  border-radius: var(--border-radius-md, 8px);
+  color: white;
+  font-family: 'Cinzel', serif;
+  font-size: var(--font-size-base, 16px);
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+}
+
+.confirmModal__confirmButton:hover:not(:disabled) {
+  background: linear-gradient(135deg, #ef4444 0%, #dc2626 100%);
+  transform: translateY(-2px);
+  box-shadow: 0 4px 15px rgba(220, 38, 38, 0.4);
+}
+
+.confirmModal__confirmButton:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+  transform: none;
+  box-shadow: none;
+}
+
+/* ==========================================================================
+   アニメーション
+   ========================================================================== */
+
+@keyframes adminModalFadeIn {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+@keyframes adminModalSlideIn {
+  from {
+    opacity: 0;
+    transform: translateY(-20px) scale(0.95);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+}
+
+@keyframes confirmModalSlideIn {
+  from {
+    opacity: 0;
+    transform: translateY(-10px) scale(0.95);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+}
+
+@keyframes adminStatusFadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* ==========================================================================
+   レスポンシブデザイン
+   ========================================================================== */
+
+@media (max-width: 768px) {
+  .adminModal__container {
+    width: 95%;
+    max-height: 95vh;
+    margin: var(--spacing-2, 8px);
+  }
+
+  .adminModal__header {
+    padding: var(--spacing-4, 16px);
+  }
+
+  .adminModal__content {
+    padding: var(--spacing-4, 16px);
+  }
+
+  .adminModal__title {
+    font-size: var(--font-size-xl, 20px);
+  }
+
+  .adminModal__inputRow {
+    flex-direction: column;
+    align-items: stretch;
+  }
+
+  .adminModal__button {
+    width: 100%;
+  }
+
+  .adminModal__dangerActions {
+    gap: var(--spacing-2, 8px);
+  }
+
+  .confirmModal__container {
+    width: 95%;
+    padding: var(--spacing-6, 24px);
+  }
+
+  .confirmModal__actions {
+    flex-direction: column;
+    gap: var(--spacing-3, 12px);
+  }
+
+  .confirmModal__cancelButton,
+  .confirmModal__confirmButton {
+    width: 100%;
+  }
+}
+
+@media (max-width: 480px) {
+  .adminModal__header {
+    padding: var(--spacing-3, 12px);
+  }
+
+  .adminModal__content {
+    padding: var(--spacing-3, 12px);
+  }
+
+  .adminModal__title {
+    font-size: var(--font-size-lg, 18px);
+  }
+
+  .adminModal__sectionTitle {
+    font-size: var(--font-size-base, 16px);
+  }
+
+  .adminModal__dangerZone {
+    padding: var(--spacing-4, 16px);
+  }
+
+  .confirmModal__container {
+    padding: var(--spacing-4, 16px);
+  }
+}
