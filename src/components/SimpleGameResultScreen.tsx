@@ -121,31 +121,32 @@ const SimpleGameResultScreen: React.FC<SimpleGameResultScreenProps> = ({
 
     window.addEventListener('keydown', handleKeyDown);
     return () => window.removeEventListener('keydown', handleKeyDown);
-  }, [handleGoMenu, handleGoRanking, currentScore, isScoreRegistered, modalState.show, handleOpenRankingModal]);
-  return (
+  }, [handleGoMenu, handleGoRanking, currentScore, isScoreRegistered, modalState.show, handleOpenRankingModal]);  return (
     <div className={styles.resultScreen}>
-      <main className={styles.result}>
-        <h1 className={styles.resultTitle}>RESULT</h1>
+      <div className={styles.result}>
+        <div className={styles.resultTitle}>RESULT</div>
 
         {/* スコア表示 */}
         {currentScore ? (
-          <section className={styles.resultStats}>            <div className={styles.resultStat}>
+          <div className={styles.resultStats}>
+            <div className={styles.resultStat}>
               <span className={styles.resultStatLabel}>KPM</span>
-              <span className={styles.resultStatValue}>{Math.floor(currentScore.kpm)}</span>
+              <span className={styles.resultStatValue}>{Math.floor(currentScore.kmp || currentScore.kpm || 0)}</span>
             </div>
             <div className={styles.resultStat}>
-              <span className={styles.resultStatLabel}>精度</span>
-              <span className={styles.resultStatValue}>{Math.floor(currentScore.accuracy)}%</span>
+              <span className={styles.resultStatLabel}>Accuracy</span>
+              <span className={styles.resultStatValue}>{Math.floor(currentScore.accuracy || 0)}%</span>
             </div>
             <div className={styles.resultStat}>
-              <span className={styles.resultStatLabel}>正解</span>
-              <span className={styles.resultStatValue}>{currentScore.correct}</span>
+              <span className={styles.resultStatLabel}>Correct</span>
+              <span className={styles.resultStatValue}>{currentScore.correct || 0}</span>
             </div>
             <div className={styles.resultStat}>
-              <span className={styles.resultStatLabel}>ミス</span>
-              <span className={styles.resultStatValue}>{currentScore.miss}</span>
+              <span className={styles.resultStatLabel}>Misses</span>
+              <span className={styles.resultStatValue}>{currentScore.miss || 0}</span>
             </div>
-          </section>        ) : scoreLog && scoreLog.length > 0 ? (
+          </div>
+        ) : scoreLog && scoreLog.length > 0 ? (
           <div className={styles.scoreCalculating}>
             <div className={styles.message}>
               スコア計算中...
@@ -159,24 +160,30 @@ const SimpleGameResultScreen: React.FC<SimpleGameResultScreenProps> = ({
               </button>
             )}
           </div>
-        ) : null}        <div className={styles.resultButtons}>
+        ) : null}
+
+        <div className={styles.resultButtons}>
           {/* ランキング登録ボタン（スコアがあり、まだ登録していない場合のみ表示） */}
           {currentScore && !isScoreRegistered && (
             <div className={styles.resultButton} onClick={handleOpenRankingModal}>
-              ランキング登録
+              Register
             </div>
           )}
           <div className={styles.resultButton} onClick={handleGoMenu}>
-            メニューに戻る
+            Back to Menu
           </div>
           <div className={styles.resultButton} onClick={handleGoRanking}>
-            ランキング
+            View Ranking
           </div>
         </div>
-      </main>      {/* ランキング登録モーダル */}
+      </div>
+
+      <div className={styles.resultFooter}>&copy;2025 manabytype II</div>
+
+      {/* ランキング登録モーダル */}
       <div className={`${styles.modalOverlay} ${modalState.show ? styles.modalActive : ''}`}>
         <div className={styles.modalContent}>
-          <h2 className={styles.modalTitle}>名前を入力</h2>
+          <div className={styles.modalTitle}>Enter Your Name</div>
           <form onSubmit={handleSubmitRanking}>
             <input
               type="text"
@@ -184,6 +191,7 @@ const SimpleGameResultScreen: React.FC<SimpleGameResultScreenProps> = ({
               value={modalState.name}
               onChange={(e) => dispatch({ type: 'setName', name: e.target.value })}
               placeholder="Your Name"
+              maxLength={12}
               disabled={modalState.registering}
             />
             <div className={styles.modalActions}>
@@ -192,7 +200,7 @@ const SimpleGameResultScreen: React.FC<SimpleGameResultScreenProps> = ({
                 className={styles.modalButton}
                 disabled={modalState.registering || !modalState.name.trim()}
               >
-                {modalState.registering ? '登録中...' : '登録'}
+                {modalState.registering ? '登録中...' : 'Register'}
               </button>
               <button
                 type="button"
@@ -203,7 +211,8 @@ const SimpleGameResultScreen: React.FC<SimpleGameResultScreenProps> = ({
                 キャンセル
               </button>
             </div>
-          </form>{modalState.error && (
+          </form>
+          {modalState.error && (
             <div className={styles.modalError}>
               {modalState.error}
             </div>
