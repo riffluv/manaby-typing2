@@ -1,0 +1,108 @@
+/* ==========================================================================
+   Color Design Tokens - Production CSS Architecture
+   ========================================================================== */
+
+:root {
+  /* ==========================================================================
+     Primary Brand Colors
+     ========================================================================== */
+  --color-brand-primary: #0ea5e9;
+  --color-brand-secondary: #c9a76f;
+  --color-brand-accent: #88ccff;
+  
+  /* ==========================================================================
+     Functional Colors
+     ========================================================================== */
+  --color-success: #22c55e;
+  --color-warning: #f59e0b;
+  --color-error: #ef4444;
+  --color-info: #3b82f6;
+  
+  /* ==========================================================================
+     Neutral Palette
+     ========================================================================== */
+  --color-neutral-50: #f9fafb;
+  --color-neutral-100: #f3f4f6;
+  --color-neutral-200: #e5e7eb;
+  --color-neutral-300: #d1d5db;
+  --color-neutral-400: #9ca3af;
+  --color-neutral-500: #6b7280;
+  --color-neutral-600: #4b5563;
+  --color-neutral-700: #374151;
+  --color-neutral-800: #1f2937;
+  --color-neutral-900: #111827;
+  
+  /* ==========================================================================
+     Gaming Theme Colors
+     ========================================================================== */
+  --color-gaming-bg-primary: #0a0f1b;
+  --color-gaming-bg-secondary: #1a2740;
+  --color-gaming-text-primary: #e0e0e0;
+  --color-gaming-text-secondary: #b8cfe7;
+  --color-gaming-text-accent: #ffd88a;
+  --color-gaming-text-muted: #9ca3af;
+  
+  /* ==========================================================================
+     Game Specific Colors
+     ========================================================================== */
+  --color-game-bg-radial: radial-gradient(circle, #0a0f1b 0%, #000000 100%);
+  --color-game-window-bg: linear-gradient(to bottom, #f6f1e3, #e9dec6);
+  --color-game-text-gradient: linear-gradient(to right, #2b1e12, #3a2c1d);
+  --color-game-typed: #a3d8ff;
+  --color-game-focus: #ffe18d;
+  --color-game-remaining: #9c7e5c;
+  
+  /* ==========================================================================
+     Semantic Text Colors
+     ========================================================================== */
+  --color-text-primary: var(--color-gaming-text-primary);
+  --color-text-secondary: var(--color-gaming-text-secondary);
+  --color-text-accent: var(--color-gaming-text-accent);
+  --color-text-muted: var(--color-gaming-text-muted);
+  --color-text-inverse: var(--color-neutral-900);
+  
+  /* ==========================================================================
+     Background Colors
+     ========================================================================== */
+  --color-bg-primary: var(--color-game-bg-radial);
+  --color-bg-secondary: var(--color-gaming-bg-secondary);
+  --color-bg-surface: rgba(255, 255, 255, 0.03);
+  --color-bg-overlay: rgba(5, 10, 20, 0.92);
+  --color-bg-glass: rgba(255, 255, 255, 0.05);
+  
+  /* ==========================================================================
+     Border Colors
+     ========================================================================== */
+  --color-border-primary: rgba(255, 255, 255, 0.1);
+  --color-border-secondary: rgba(255, 255, 255, 0.05);
+  --color-border-accent: rgba(136, 204, 255, 0.3);
+  --color-border-focus: var(--color-brand-accent);
+  
+  /* ==========================================================================
+     Interactive States
+     ========================================================================== */
+  --color-interactive-hover: rgba(255, 255, 255, 0.1);
+  --color-interactive-active: rgba(255, 255, 255, 0.15);
+  --color-interactive-disabled: rgba(255, 255, 255, 0.3);
+}
+
+/* ==========================================================================
+   Dark Mode Support
+   ========================================================================== */
+@media (prefers-color-scheme: dark) {
+  :root {
+    --color-text-primary: var(--color-gaming-text-primary);
+    --color-bg-primary: var(--color-gaming-bg-primary);
+  }
+}
+
+/* ==========================================================================
+   High Contrast Support
+   ========================================================================== */
+@media (prefers-contrast: high) {
+  :root {
+    --color-border-primary: #ffffff;
+    --color-text-primary: #ffffff;
+    --color-bg-primary: #000000;
+  }
+}

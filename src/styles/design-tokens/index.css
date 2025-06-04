@@ -1,0 +1,28 @@
+/* Design Tokens Entry Point */
+/* This file imports all design token modules for centralized management */
+
+@import './colors.css';
+@import './typography.css';
+@import './spacing.css';
+@import './breakpoints.css';
+@import './animations.css';
+
+/* 
+ * Design Token Usage Guide:
+ * 
+ * In CSS Modules:
+ * .myClass {
+ *   color: var(--color-gaming-text-primary);
+ *   font-size: var(--font-size-game-title);
+ *   padding: var(--spacing-game-md);
+ * }
+ * 
+ * In Global CSS:
+ * Import this file and use the CSS custom properties
+ * 
+ * Architecture Compliance:
+ * - All design tokens are centralized here
+ * - CSS Modules should reference these tokens
+ * - No hardcoded values in component styles
+ * - Consistent naming convention across all tokens
+ */

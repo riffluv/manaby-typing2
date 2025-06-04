@@ -1,0 +1,54 @@
+/* Breakpoints and Media Query Design Tokens */
+:root {
+  /* Breakpoint Values */
+  --breakpoint-xs: 320px;   /* Mobile small */
+  --breakpoint-sm: 640px;   /* Mobile large */
+  --breakpoint-md: 768px;   /* Tablet */
+  --breakpoint-lg: 1024px;  /* Desktop small */
+  --breakpoint-xl: 1280px;  /* Desktop large */
+  --breakpoint-2xl: 1536px; /* Desktop extra large */
+
+  /* Container Max Widths */
+  --container-sm: 100%;
+  --container-md: 768px;
+  --container-lg: 1024px;
+  --container-xl: 1280px;
+  --container-2xl: 1536px;
+
+  /* Game-specific Breakpoints */
+  --game-mobile-max: 767px;
+  --game-tablet-min: 768px;
+  --game-tablet-max: 1023px;
+  --game-desktop-min: 1024px;
+
+  /* Responsive Container Queries */
+  --container-query-sm: 24rem;   /* 384px */
+  --container-query-md: 32rem;   /* 512px */
+  --container-query-lg: 48rem;   /* 768px */
+  --container-query-xl: 64rem;   /* 1024px */
+}
+
+/* Media Query Mixins as CSS Custom Properties */
+:root {
+  /* Note: These are reference values for consistency across CSS Modules */
+  /* Actual media queries should be implemented in individual modules */
+  
+  /* Mobile First Approach */
+  --mq-sm-up: 'screen and (min-width: 640px)';
+  --mq-md-up: 'screen and (min-width: 768px)';
+  --mq-lg-up: 'screen and (min-width: 1024px)';
+  --mq-xl-up: 'screen and (min-width: 1280px)';
+  --mq-2xl-up: 'screen and (min-width: 1536px)';
+
+  /* Mobile Last Approach */
+  --mq-xs-down: 'screen and (max-width: 639px)';
+  --mq-sm-down: 'screen and (max-width: 767px)';
+  --mq-md-down: 'screen and (max-width: 1023px)';
+  --mq-lg-down: 'screen and (max-width: 1279px)';
+  --mq-xl-down: 'screen and (max-width: 1535px)';
+
+  /* Range Queries */
+  --mq-sm-only: 'screen and (min-width: 640px) and (max-width: 767px)';
+  --mq-md-only: 'screen and (min-width: 768px) and (max-width: 1023px)';
+  --mq-lg-only: 'screen and (min-width: 1024px) and (max-width: 1279px)';
+}

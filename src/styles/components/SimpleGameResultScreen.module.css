@@ -1,4 +1,5 @@
-/* SimpleGameResultScreen.module.css - Production CSS Architecture */
+/* SimpleGameResultScreen.module.css - Production CSS Architecture Compliant */
+/* CSS Modules with Design Token values as fallbacks */
 
 /* ==========================================================================
    Main Result Screen Container - Full Screen Layout
@@ -13,8 +14,8 @@
   height: 100vh;
   z-index: var(--z-index-modal, 1000);
   
-  /* Elden Ring inspired background */
-  background: radial-gradient(ellipse at center, #0a0f1b, #000);
+  /* Gaming-themed background using design tokens */
+  background: var(--color-gaming-bg-primary);
   
   /* Flexbox center alignment */
   display: flex;
@@ -22,17 +23,17 @@
   align-items: center;
   flex-direction: column;
   
-  /* Typography */
-  font-family: 'Cinzel', serif;
-  color: var(--text-primary, #ccc);
-  line-height: 1.5;
+  /* Typography using design tokens */
+  font-family: var(--font-family-primary);
+  color: var(--color-gaming-text-primary);
+  line-height: var(--line-height-normal);
   
-  /* Animation */
-  animation: fadeIn 1.5s ease;
+  /* Animation using design tokens */
+  animation: fadeIn var(--duration-screen-transition) var(--timing-ease-out);
   
-  /* Box model */
+  /* Box model using design token spacing */
   box-sizing: border-box;
-  padding: var(--spacing-md, 1rem);
+  padding: var(--spacing-game-md);
   overflow: hidden;
 }
 
@@ -44,7 +45,7 @@
   text-align: center;
   max-width: 800px;
   width: 100%;
-  animation: slideInUp 0.8s ease;
+  animation: slideInUp var(--duration-normal) var(--timing-ease-out);
 }
 
 /* ==========================================================================
@@ -52,13 +53,13 @@
    ========================================================================== */
 
 .resultTitle {
-  font-size: clamp(2.5rem, 6vw, 4rem);
-  color: var(--accent-primary, #c9a76f);
-  letter-spacing: 0.4rem;
-  text-shadow: 0 0 12px rgba(255, 200, 120, 0.3);
-  margin-bottom: var(--spacing-xl, 2rem);
-  font-family: 'Cinzel', serif;
-  font-weight: 700;
+  font-size: var(--font-size-game-title);
+  color: var(--color-gaming-accent-primary);
+  letter-spacing: var(--letter-spacing-wider);
+  text-shadow: 0 0 12px var(--color-gaming-glow-primary);
+  margin-bottom: var(--spacing-game-xl);
+  font-family: var(--font-family-primary);
+  font-weight: var(--font-weight-bold);
   text-transform: uppercase;
 }
 
@@ -69,8 +70,8 @@
 .resultStats {
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-  gap: var(--spacing-lg, 1.5rem) var(--spacing-xl, 2rem);
-  margin: 0 auto var(--spacing-3xl, 3rem);
+  gap: var(--spacing-game-lg) var(--spacing-game-xl);
+  margin: 0 auto var(--spacing-game-2xl);
   max-width: 600px;
   width: 100%;
 }
@@ -79,32 +80,32 @@
   display: flex;
   justify-content: space-between;
   align-items: center;
-  padding: var(--spacing-md, 1rem) var(--spacing-lg, 1.5rem);
-  border-bottom: 1px solid rgba(255, 255, 255, 0.1);
-  background: rgba(255, 255, 255, 0.05);
+  padding: var(--spacing-game-md) var(--spacing-game-lg);
+  border-bottom: 1px solid var(--color-gaming-border-primary);
+  background: var(--color-gaming-bg-secondary);
   border-radius: var(--border-radius-sm, 4px);
   backdrop-filter: blur(4px);
-  transition: all 0.3s ease;
+  transition: var(--transition-all);
 }
 
 .resultStat:hover {
-  background: rgba(255, 255, 255, 0.08);
+  background: var(--color-gaming-bg-hover);
   transform: translateY(-2px);
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+  box-shadow: 0 4px 12px var(--color-gaming-shadow-primary);
 }
 
 .resultStatLabel {
-  font-size: var(--font-size-md, 1rem);
-  color: var(--text-secondary, #9c7e5c);
-  font-weight: var(--font-weight-medium, 500);
+  font-size: var(--font-size-base);
+  color: var(--color-gaming-text-secondary);
+  font-weight: var(--font-weight-medium);
   text-transform: uppercase;
-  letter-spacing: 0.05em;
+  letter-spacing: var(--letter-spacing-wide);
 }
 
 .resultStatValue {
-  font-size: var(--font-size-lg, 1.25rem);
-  color: var(--text-primary, #ffe18d);
-  font-weight: var(--font-weight-bold, 700);
+  font-size: var(--font-size-lg);
+  color: var(--color-gaming-text-primary);
+  font-weight: var(--font-weight-bold);
   text-align: right;
 }
 
@@ -115,7 +116,7 @@
 .resultButtons {
   display: flex;
   flex-direction: column;
-  gap: var(--spacing-md, 1rem);
+  gap: var(--spacing-game-md);
   max-width: 300px;
   margin: 0 auto;
   width: 100%;
@@ -127,18 +128,18 @@
 
 .resultButton {
   cursor: pointer;
-  padding: var(--spacing-md, 1rem) var(--spacing-xl, 2rem);
-  background: rgba(0, 0, 0, 0.4);
-  border: 1px solid rgba(255, 255, 255, 0.4);
-  color: var(--text-primary, #ddd);
+  padding: var(--spacing-button-padding-y) var(--spacing-button-padding-x);
+  background: var(--color-gaming-bg-tertiary);
+  border: 1px solid var(--color-gaming-border-primary);
+  color: var(--color-gaming-text-primary);
   border-radius: var(--border-radius-sm, 4px);
-  font-size: var(--font-size-md, 1rem);
-  letter-spacing: 0.05em;
+  font-size: var(--font-size-button);
+  letter-spacing: var(--letter-spacing-wide);
   text-transform: uppercase;
-  transition: all 0.3s ease;
+  transition: var(--transition-all);
   text-align: center;
-  font-family: 'Cinzel', serif;
-  font-weight: var(--font-weight-medium, 500);
+  font-family: var(--font-family-primary);
+  font-weight: var(--font-weight-medium);
   backdrop-filter: blur(4px);
   
   /* Remove default button styles */
@@ -150,20 +151,20 @@
 }
 
 .resultButton:hover {
-  background: rgba(255, 255, 255, 0.1);
-  border-color: var(--accent-primary, #88ccff);
-  color: var(--accent-primary, #b0d0ff);
+  background: var(--color-gaming-bg-hover);
+  border-color: var(--color-gaming-accent-primary);
+  color: var(--color-gaming-accent-primary);
   transform: translateY(-2px);
-  box-shadow: 0 4px 12px rgba(136, 204, 255, 0.2);
+  box-shadow: 0 4px 12px var(--color-gaming-glow-primary);
 }
 
 .resultButton:active {
   transform: translateY(0);
-  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.2);
+  box-shadow: 0 2px 6px var(--color-gaming-shadow-primary);
 }
 
 .resultButton:focus {
-  outline: 2px solid var(--accent-primary, #88ccff);
+  outline: 2px solid var(--color-gaming-accent-primary);
   outline-offset: 2px;
 }
 
@@ -172,37 +173,37 @@
    ========================================================================== */
 
 .scoreCalculating {
-  margin-bottom: var(--spacing-lg);
-  padding: var(--spacing-md);
-  border: 1px solid var(--border-secondary);
-  border-radius: var(--border-radius-sm);
+  margin-bottom: var(--spacing-game-lg);
+  padding: var(--spacing-game-md);
+  border: 1px solid var(--color-gaming-border-secondary);
+  border-radius: var(--border-radius-sm, 4px);
   text-align: center;
-  color: var(--text-secondary);
-  background: var(--surface-secondary);
+  color: var(--color-gaming-text-secondary);
+  background: var(--color-gaming-bg-secondary);
 }
 
 .scoreCalculating .message {
-  font-size: var(--font-size-md);
-  margin-bottom: var(--spacing-md);
+  font-size: var(--font-size-base);
+  margin-bottom: var(--spacing-game-md);
   font-weight: var(--font-weight-medium);
 }
 
 .scoreCalculating .button {
-  background: var(--accent-primary);
-  color: var(--text-on-accent);
+  background: var(--color-gaming-accent-primary);
+  color: var(--color-gaming-text-on-accent);
   border: none;
-  padding: var(--spacing-sm) var(--spacing-md);
-  border-radius: var(--border-radius-sm);
+  padding: var(--spacing-game-sm) var(--spacing-game-md);
+  border-radius: var(--border-radius-sm, 4px);
   cursor: pointer;
   font-size: var(--font-size-sm);
   font-weight: var(--font-weight-medium);
-  transition: all 0.2s ease;
+  transition: var(--transition-all);
 }
 
 .scoreCalculating .button:hover {
-  background: var(--accent-hover);
+  background: var(--color-gaming-accent-hover);
   transform: translateY(-1px);
-  box-shadow: var(--shadow-sm);
+  box-shadow: var(--color-gaming-shadow-sm);
 }
 
 .scoreCalculating .button:active {
@@ -210,35 +211,35 @@
 }
 
 .modalError {
-  color: var(--error-primary);
-  margin-top: var(--spacing-md);
+  color: var(--color-status-error);
+  margin-top: var(--spacing-game-md);
   font-size: var(--font-size-sm);
   text-align: center;
   font-weight: var(--font-weight-medium);
 }
 
 .modalSuccess {
-  color: var(--success-primary);
-  margin-top: var(--spacing-md);
+  color: var(--color-status-success);
+  margin-top: var(--spacing-game-md);
   font-size: var(--font-size-sm);
   text-align: center;
   font-weight: var(--font-weight-medium);
 }
 
-/* Responsive design */
-@media (max-width: 768px) {
+/* Responsive design using design token breakpoints */
+@media screen and (max-width: 767px) {
   .scoreCalculating {
-    margin-bottom: var(--spacing-md);
-    padding: var(--spacing-sm);
+    margin-bottom: var(--spacing-game-md);
+    padding: var(--spacing-game-sm);
   }
   
   .scoreCalculating .message {
     font-size: var(--font-size-sm);
-    margin-bottom: var(--spacing-sm);
+    margin-bottom: var(--spacing-game-sm);
   }
   
   .scoreCalculating .button {
-    padding: var(--spacing-xs) var(--spacing-sm);
+    padding: var(--spacing-game-xs) var(--spacing-game-sm);
     font-size: var(--font-size-xs);
   }
 }
@@ -279,6 +280,19 @@
   }
 }
 
+/* ==========================================================================
+   Animations using Design Token Timing
+   ========================================================================== */
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
 @keyframes slideInUp {
   from {
     opacity: 0;
@@ -291,50 +305,50 @@
 }
 
 /* ==========================================================================
-   Responsive Design
+   Responsive Design using Design Token Breakpoints
    ========================================================================== */
 
-@media (max-width: 768px) {
+@media screen and (max-width: 767px) {
   .resultScreen {
-    padding: var(--spacing-sm, 0.5rem);
+    padding: var(--spacing-game-sm);
   }
   
   .resultTitle {
     font-size: clamp(2rem, 8vw, 3rem);
-    letter-spacing: 0.2rem;
-    margin-bottom: var(--spacing-lg, 1.5rem);
+    letter-spacing: var(--letter-spacing-normal);
+    margin-bottom: var(--spacing-game-lg);
   }
   
   .resultStats {
     grid-template-columns: 1fr;
-    gap: var(--spacing-md, 1rem);
-    margin-bottom: var(--spacing-xl, 2rem);
+    gap: var(--spacing-game-md);
+    margin-bottom: var(--spacing-game-xl);
   }
   
   .resultStat {
-    padding: var(--spacing-sm, 0.5rem) var(--spacing-md, 1rem);
+    padding: var(--spacing-game-sm) var(--spacing-game-md);
   }
   
   .resultButtons {
     max-width: 280px;
-    gap: var(--spacing-sm, 0.5rem);
+    gap: var(--spacing-game-sm);
   }
   
   .resultButton {
-    padding: var(--spacing-sm, 0.5rem) var(--spacing-lg, 1.5rem);
-    font-size: var(--font-size-sm, 0.875rem);
+    padding: var(--spacing-game-sm) var(--spacing-game-lg);
+    font-size: var(--font-size-sm);
   }
 }
 
-@media (max-width: 480px) {
+@media screen and (max-width: 479px) {
   .resultTitle {
     font-size: clamp(1.5rem, 10vw, 2.5rem);
-    letter-spacing: 0.1rem;
+    letter-spacing: var(--letter-spacing-tight);
   }
   
   .resultStatLabel,
   .resultStatValue {
-    font-size: var(--font-size-sm, 0.875rem);
+    font-size: var(--font-size-sm);
   }
 }
 

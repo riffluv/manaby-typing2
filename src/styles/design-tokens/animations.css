@@ -1,0 +1,46 @@
+/* Animation and Transition Design Tokens */
+:root {
+  /* Timing Functions */
+  --timing-linear: linear;
+  --timing-ease: ease;
+  --timing-ease-in: ease-in;
+  --timing-ease-out: ease-out;
+  --timing-ease-in-out: ease-in-out;
+  
+  /* Custom Timing Functions for Game UI */
+  --timing-bounce: cubic-bezier(0.68, -0.55, 0.265, 1.55);
+  --timing-smooth: cubic-bezier(0.4, 0, 0.2, 1);
+  --timing-sharp: cubic-bezier(0.4, 0, 0.6, 1);
+  --timing-snappy: cubic-bezier(0.25, 0.46, 0.45, 0.94);
+
+  /* Duration Values */
+  --duration-instant: 0ms;
+  --duration-fast: 150ms;
+  --duration-normal: 250ms;
+  --duration-slow: 350ms;
+  --duration-slower: 500ms;
+  --duration-slowest: 750ms;
+
+  /* Game-specific Animation Durations */
+  --duration-button-hover: var(--duration-fast);
+  --duration-modal-enter: var(--duration-normal);
+  --duration-screen-transition: var(--duration-slow);
+  --duration-score-animation: var(--duration-slower);
+
+  /* Common Animation Presets */
+  --animation-fade-in: opacity var(--duration-normal) var(--timing-ease-out);
+  --animation-fade-out: opacity var(--duration-fast) var(--timing-ease-in);
+  --animation-slide-in: transform var(--duration-normal) var(--timing-smooth);
+  --animation-bounce-in: transform var(--duration-slow) var(--timing-bounce);
+  --animation-scale-in: transform var(--duration-normal) var(--timing-smooth);
+
+  /* Transform Values */
+  --transform-scale-sm: scale(0.95);
+  --transform-scale-md: scale(0.9);
+  --transform-scale-lg: scale(1.05);
+  --transform-scale-xl: scale(1.1);
+
+  /* Shadow Transitions */
+  --transition-shadow: box-shadow var(--duration-normal) var(--timing-smooth);
+  --transition-all: all var(--duration-normal) var(--timing-smooth);
+}

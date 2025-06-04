@@ -1,0 +1,42 @@
+/* Spacing Design Tokens */
+:root {
+  /* Base Spacing Scale (8px grid system) */
+  --spacing-0: 0;
+  --spacing-1: 0.25rem;  /* 4px */
+  --spacing-2: 0.5rem;   /* 8px */
+  --spacing-3: 0.75rem;  /* 12px */
+  --spacing-4: 1rem;     /* 16px */
+  --spacing-5: 1.25rem;  /* 20px */
+  --spacing-6: 1.5rem;   /* 24px */
+  --spacing-8: 2rem;     /* 32px */
+  --spacing-10: 2.5rem;  /* 40px */
+  --spacing-12: 3rem;    /* 48px */
+  --spacing-16: 4rem;    /* 64px */
+  --spacing-20: 5rem;    /* 80px */
+  --spacing-24: 6rem;    /* 96px */
+  --spacing-32: 8rem;    /* 128px */
+
+  /* Game UI Specific Spacing */
+  --spacing-game-xs: var(--spacing-2);   /* 8px - minimal spacing */
+  --spacing-game-sm: var(--spacing-4);   /* 16px - small components */
+  --spacing-game-md: var(--spacing-6);   /* 24px - medium components */
+  --spacing-game-lg: var(--spacing-8);   /* 32px - large components */
+  --spacing-game-xl: var(--spacing-12);  /* 48px - section spacing */
+  --spacing-game-2xl: var(--spacing-16); /* 64px - screen spacing */
+
+  /* Container & Layout Spacing */
+  --spacing-container-padding: var(--spacing-4);
+  --spacing-section: var(--spacing-8);
+  --spacing-screen-margin: var(--spacing-6);
+
+  /* Component Specific Spacing */
+  --spacing-button-padding-x: var(--spacing-6);
+  --spacing-button-padding-y: var(--spacing-3);
+  --spacing-card-padding: var(--spacing-6);
+  --spacing-modal-padding: var(--spacing-8);
+
+  /* Responsive Spacing Adjustments */
+  --spacing-responsive-sm: clamp(var(--spacing-4), 2vw, var(--spacing-6));
+  --spacing-responsive-md: clamp(var(--spacing-6), 3vw, var(--spacing-10));
+  --spacing-responsive-lg: clamp(var(--spacing-8), 4vw, var(--spacing-16));
+}

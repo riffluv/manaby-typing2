@@ -4,6 +4,85 @@
    ========================================================================== */
 
 /* ==========================================================================
+   Design Tokens Import - Architecture Compliance
+   ========================================================================== */
+
+/* Note: Design tokens are defined here directly to avoid import issues in CSS Modules */
+
+/* ==========================================================================
+   Design Tokens - Centralized Theme Variables
+   ========================================================================== */
+
+:root {
+  /* Color Tokens - Gaming Theme */
+  --color-gaming-bg-primary: radial-gradient(ellipse at center, #0a0f1b, #000);
+  --color-gaming-bg-secondary: rgba(255, 255, 255, 0.05);
+  --color-gaming-bg-tertiary: rgba(0, 0, 0, 0.4);
+  --color-gaming-bg-hover: rgba(255, 255, 255, 0.08);
+  
+  --color-gaming-text-primary: #e0e0e0;
+  --color-gaming-text-secondary: #9c7e5c;
+  --color-gaming-text-on-accent: #000;
+  
+  --color-gaming-accent-primary: #c9a76f;
+  --color-gaming-accent-hover: #66aadd;
+  --color-gaming-glow-primary: rgba(255, 200, 120, 0.3);
+  
+  --color-gaming-border-primary: rgba(255, 255, 255, 0.1);
+  --color-gaming-border-secondary: rgba(255, 255, 255, 0.2);
+  
+  --color-gaming-shadow-primary: rgba(0, 0, 0, 0.2);
+  --color-gaming-shadow-sm: 0 2px 6px rgba(0, 0, 0, 0.2);
+  
+  --color-status-error: #ff6b6b;
+  --color-status-success: #51cf66;
+  
+  /* Typography Tokens */
+  --font-family-primary: 'Noto Sans JP', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+  --font-weight-normal: 400;
+  --font-weight-medium: 500;
+  --font-weight-bold: 700;
+  
+  --font-size-xs: 0.75rem;
+  --font-size-sm: 0.875rem;
+  --font-size-base: 1rem;
+  --font-size-lg: 1.125rem;
+  --font-size-xl: 1.25rem;
+  --font-size-2xl: 1.5rem;
+  --font-size-game-title: clamp(2.5rem, 6vw, 4rem);
+  --font-size-button: 1rem;
+  
+  --line-height-normal: 1.5;
+  --letter-spacing-tight: -0.025em;
+  --letter-spacing-normal: 0;
+  --letter-spacing-wide: 0.025em;
+  --letter-spacing-wider: 0.4rem;
+  
+  /* Spacing Tokens */
+  --spacing-game-xs: 0.5rem;
+  --spacing-game-sm: 1rem;
+  --spacing-game-md: 1.5rem;
+  --spacing-game-lg: 2rem;
+  --spacing-game-xl: 3rem;
+  --spacing-game-2xl: 4rem;
+  
+  --spacing-button-padding-x: 2rem;
+  --spacing-button-padding-y: 1rem;
+  
+  /* Animation Tokens */
+  --duration-fast: 150ms;
+  --duration-normal: 250ms;
+  --duration-slow: 350ms;
+  --duration-screen-transition: 500ms;
+  
+  --timing-ease-out: ease-out;
+  --timing-ease-in: ease-in;
+  --timing-smooth: cubic-bezier(0.4, 0, 0.2, 1);
+  
+  --transition-all: all 250ms cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+/* ==========================================================================
    Google Fonts Import (Fallback)
    ========================================================================== */
 
