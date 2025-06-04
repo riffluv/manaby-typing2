@@ -11,10 +11,11 @@ export type SimpleGameScreenProps = {
 };
 
 /**
- * typingmania-ref流シンプルGameScreen - BasicTypingChar対応版
+ * 🚀 typingmania-ref流超高速GameScreen - OptimizedTypingEngine対応版
+ * - OptimizedTypingEngineによる直接DOM操作で最高速を実現
  * - BasicTypingChar配列を正しく処理
  * - 複数入力パターン（ji/zi）をサポート
- * - シンプルで高速なレスポンス
+ * - デモページレベルの応答性を実現
  */
 const SimpleGameScreen: React.FC<SimpleGameScreenProps> = ({ 
   currentWord, 
