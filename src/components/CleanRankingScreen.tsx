@@ -138,8 +138,8 @@ const CleanRankingScreen: React.FC<CleanRankingScreenProps> = ({ onGoMenu }) => 
                     <th className={styles.rankingScreen__tableHeader}>正解</th>
                     <th className={styles.rankingScreen__tableHeader}>ミス</th>
                   </tr>
-                </thead>
-                <tbody className={styles.rankingScreen__tableBody}>
+                </thead>                <tbody className={styles.rankingScreen__tableBody}>
+                  {/* 実際のランキングデータ */}
                   {currentPageData.map((entry, index) => (
                     <tr key={index} className={styles.rankingScreen__tableRow}>
                       <td className={styles.rankingScreen__tableCell}>
@@ -162,6 +162,19 @@ const CleanRankingScreen: React.FC<CleanRankingScreenProps> = ({ onGoMenu }) => 
                       </td>
                     </tr>
                   ))}
+                  {/* 6行に満たない場合は空の行を追加して高さを一定に保つ */}
+                  {currentPageData.length < perPage && 
+                    Array.from({ length: perPage - currentPageData.length }, (_, index) => (
+                      <tr key={`empty-${index}`} className={`${styles.rankingScreen__tableRow} ${styles.rankingScreen__emptyRow}`}>
+                        <td className={styles.rankingScreen__tableCell}>&nbsp;</td>
+                        <td className={styles.rankingScreen__tableCell}>&nbsp;</td>
+                        <td className={styles.rankingScreen__tableCell}>&nbsp;</td>
+                        <td className={styles.rankingScreen__tableCell}>&nbsp;</td>
+                        <td className={styles.rankingScreen__tableCell}>&nbsp;</td>
+                        <td className={styles.rankingScreen__tableCell}>&nbsp;</td>
+                      </tr>
+                    ))
+                  }
                 </tbody>
               </table>
               

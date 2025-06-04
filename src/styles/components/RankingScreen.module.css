@@ -77,6 +77,7 @@
   width: 100%;
   border-collapse: collapse;
   margin-bottom: 2rem;
+  min-height: calc(6 * 3.2rem); /* 6行分の最小高度を確保 */
 }
 
 .rankingScreen__table th,
@@ -102,6 +103,16 @@
 
 .rankingScreen__tableRow:hover {
   background: rgba(255, 255, 255, 0.05);
+}
+
+/* 空の行（高さ一貫性のため） */
+.rankingScreen__emptyRow {
+  opacity: 0.3;
+  pointer-events: none;
+}
+
+.rankingScreen__emptyRow:hover {
+  background: transparent;
 }
 
 .rankingScreen__pagination {

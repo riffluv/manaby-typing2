@@ -128,10 +128,9 @@ const SimpleGameResultScreen: React.FC<SimpleGameResultScreenProps> = ({
 
         {/* スコア表示 */}
         {currentScore ? (
-          <div className={styles.resultStats}>
-            <div className={styles.resultStat}>
+          <div className={styles.resultStats}>            <div className={styles.resultStat}>
               <span className={styles.resultStatLabel}>KPM</span>
-              <span className={styles.resultStatValue}>{Math.floor(currentScore.kmp || currentScore.kpm || 0)}</span>
+              <span className={styles.resultStatValue}>{Math.floor(currentScore.kpm || 0)}</span>
             </div>
             <div className={styles.resultStat}>
               <span className={styles.resultStatLabel}>Accuracy</span>
