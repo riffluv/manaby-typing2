@@ -122,30 +122,28 @@ const SimpleGameResultScreen: React.FC<SimpleGameResultScreenProps> = ({
     window.addEventListener('keydown', handleKeyDown);
     return () => window.removeEventListener('keydown', handleKeyDown);
   }, [handleGoMenu, handleGoRanking, currentScore, isScoreRegistered, modalState.show, handleOpenRankingModal]);
-
   return (
-    <div className="result-screen">
-      <main className="result">
-        <h1 className="result__title">RESULT</h1>
+    <div className={styles.resultScreen}>
+      <main className={styles.result}>
+        <h1 className={styles.resultTitle}>RESULT</h1>
 
         {/* スコア表示 */}
         {currentScore ? (
-          <section className="result__stats">
-            <div className="result__stat">
-              <span className="result__stat-label">KPM</span>
-              <span className="result__stat-value">{Math.floor(currentScore.kpm)}</span>
+          <section className={styles.resultStats}>            <div className={styles.resultStat}>
+              <span className={styles.resultStatLabel}>KPM</span>
+              <span className={styles.resultStatValue}>{Math.floor(currentScore.kpm)}</span>
             </div>
-            <div className="result__stat">
-              <span className="result__stat-label">精度</span>
-              <span className="result__stat-value">{Math.floor(currentScore.accuracy)}%</span>
+            <div className={styles.resultStat}>
+              <span className={styles.resultStatLabel}>精度</span>
+              <span className={styles.resultStatValue}>{Math.floor(currentScore.accuracy)}%</span>
             </div>
-            <div className="result__stat">
-              <span className="result__stat-label">正解</span>
-              <span className="result__stat-value">{currentScore.correct}</span>
+            <div className={styles.resultStat}>
+              <span className={styles.resultStatLabel}>正解</span>
+              <span className={styles.resultStatValue}>{currentScore.correct}</span>
             </div>
-            <div className="result__stat">
-              <span className="result__stat-label">ミス</span>
-              <span className="result__stat-value">{currentScore.miss}</span>
+            <div className={styles.resultStat}>
+              <span className={styles.resultStatLabel}>ミス</span>
+              <span className={styles.resultStatValue}>{currentScore.miss}</span>
             </div>
           </section>        ) : scoreLog && scoreLog.length > 0 ? (
           <div className={styles.scoreCalculating}>
@@ -161,55 +159,51 @@ const SimpleGameResultScreen: React.FC<SimpleGameResultScreenProps> = ({
               </button>
             )}
           </div>
-        ) : null}
-
-        <div className="result__buttons">
+        ) : null}        <div className={styles.resultButtons}>
           {/* ランキング登録ボタン（スコアがあり、まだ登録していない場合のみ表示） */}
           {currentScore && !isScoreRegistered && (
-            <div className="result__button" onClick={handleOpenRankingModal}>
+            <div className={styles.resultButton} onClick={handleOpenRankingModal}>
               ランキング登録
             </div>
           )}
-          <div className="result__button" onClick={handleGoMenu}>
+          <div className={styles.resultButton} onClick={handleGoMenu}>
             メニューに戻る
           </div>
-          <div className="result__button" onClick={handleGoRanking}>
+          <div className={styles.resultButton} onClick={handleGoRanking}>
             ランキング
           </div>
         </div>
-      </main>
-
-      {/* ランキング登録モーダル */}
-      <div className={`result__modal ${modalState.show ? 'result__modal--active' : ''}`}>
-        <div className="result__modal-content">
-          <h2 className="result__modal-title">名前を入力</h2>
+      </main>      {/* ランキング登録モーダル */}
+      <div className={`${styles.modalOverlay} ${modalState.show ? styles.modalActive : ''}`}>
+        <div className={styles.modalContent}>
+          <h2 className={styles.modalTitle}>名前を入力</h2>
           <form onSubmit={handleSubmitRanking}>
             <input
               type="text"
-              className="result__modal-input"
+              className={styles.modalInput}
               value={modalState.name}
               onChange={(e) => dispatch({ type: 'setName', name: e.target.value })}
               placeholder="Your Name"
               disabled={modalState.registering}
             />
-            <div className="result__modal-actions">
+            <div className={styles.modalActions}>
               <button
                 type="submit"
-                className="result__modal-button"
+                className={styles.modalButton}
                 disabled={modalState.registering || !modalState.name.trim()}
               >
                 {modalState.registering ? '登録中...' : '登録'}
               </button>
               <button
                 type="button"
-                className="result__modal-button"
+                className={`${styles.modalButton} ${styles.modalButtonSecondary}`}
                 onClick={() => dispatch({ type: 'close' })}
                 disabled={modalState.registering}
               >
                 キャンセル
               </button>
             </div>
-          </form>          {modalState.error && (
+          </form>{modalState.error && (
             <div className={styles.modalError}>
               {modalState.error}
             </div>

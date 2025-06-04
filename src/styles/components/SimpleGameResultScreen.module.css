@@ -1,4 +1,175 @@
-/* SimpleGameResultScreen.module.css */
+/* SimpleGameResultScreen.module.css - Production CSS Architecture */
+
+/* ==========================================================================
+   Main Result Screen Container - Full Screen Layout
+   ========================================================================== */
+
+.resultScreen {
+  /* Full screen positioning */
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  z-index: var(--z-index-modal, 1000);
+  
+  /* Elden Ring inspired background */
+  background: radial-gradient(ellipse at center, #0a0f1b, #000);
+  
+  /* Flexbox center alignment */
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-direction: column;
+  
+  /* Typography */
+  font-family: 'Cinzel', serif;
+  color: var(--text-primary, #ccc);
+  line-height: 1.5;
+  
+  /* Animation */
+  animation: fadeIn 1.5s ease;
+  
+  /* Box model */
+  box-sizing: border-box;
+  padding: var(--spacing-md, 1rem);
+  overflow: hidden;
+}
+
+/* ==========================================================================
+   Main Content Container
+   ========================================================================== */
+
+.result {
+  text-align: center;
+  max-width: 800px;
+  width: 100%;
+  animation: slideInUp 0.8s ease;
+}
+
+/* ==========================================================================
+   Result Title
+   ========================================================================== */
+
+.resultTitle {
+  font-size: clamp(2.5rem, 6vw, 4rem);
+  color: var(--accent-primary, #c9a76f);
+  letter-spacing: 0.4rem;
+  text-shadow: 0 0 12px rgba(255, 200, 120, 0.3);
+  margin-bottom: var(--spacing-xl, 2rem);
+  font-family: 'Cinzel', serif;
+  font-weight: 700;
+  text-transform: uppercase;
+}
+
+/* ==========================================================================
+   Score Statistics Grid
+   ========================================================================== */
+
+.resultStats {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  gap: var(--spacing-lg, 1.5rem) var(--spacing-xl, 2rem);
+  margin: 0 auto var(--spacing-3xl, 3rem);
+  max-width: 600px;
+  width: 100%;
+}
+
+.resultStat {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: var(--spacing-md, 1rem) var(--spacing-lg, 1.5rem);
+  border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+  background: rgba(255, 255, 255, 0.05);
+  border-radius: var(--border-radius-sm, 4px);
+  backdrop-filter: blur(4px);
+  transition: all 0.3s ease;
+}
+
+.resultStat:hover {
+  background: rgba(255, 255, 255, 0.08);
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+}
+
+.resultStatLabel {
+  font-size: var(--font-size-md, 1rem);
+  color: var(--text-secondary, #9c7e5c);
+  font-weight: var(--font-weight-medium, 500);
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+}
+
+.resultStatValue {
+  font-size: var(--font-size-lg, 1.25rem);
+  color: var(--text-primary, #ffe18d);
+  font-weight: var(--font-weight-bold, 700);
+  text-align: right;
+}
+
+/* ==========================================================================
+   Button Container
+   ========================================================================== */
+
+.resultButtons {
+  display: flex;
+  flex-direction: column;
+  gap: var(--spacing-md, 1rem);
+  max-width: 300px;
+  margin: 0 auto;
+  width: 100%;
+}
+
+/* ==========================================================================
+   Result Buttons
+   ========================================================================== */
+
+.resultButton {
+  cursor: pointer;
+  padding: var(--spacing-md, 1rem) var(--spacing-xl, 2rem);
+  background: rgba(0, 0, 0, 0.4);
+  border: 1px solid rgba(255, 255, 255, 0.4);
+  color: var(--text-primary, #ddd);
+  border-radius: var(--border-radius-sm, 4px);
+  font-size: var(--font-size-md, 1rem);
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+  transition: all 0.3s ease;
+  text-align: center;
+  font-family: 'Cinzel', serif;
+  font-weight: var(--font-weight-medium, 500);
+  backdrop-filter: blur(4px);
+  
+  /* Remove default button styles */
+  appearance: none;
+  border-style: solid;
+  text-decoration: none;
+  display: block;
+  user-select: none;
+}
+
+.resultButton:hover {
+  background: rgba(255, 255, 255, 0.1);
+  border-color: var(--accent-primary, #88ccff);
+  color: var(--accent-primary, #b0d0ff);
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(136, 204, 255, 0.2);
+}
+
+.resultButton:active {
+  transform: translateY(0);
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.2);
+}
+
+.resultButton:focus {
+  outline: 2px solid var(--accent-primary, #88ccff);
+  outline-offset: 2px;
+}
+
+/* ==========================================================================
+   Score Calculating State
+   ========================================================================== */
 
 .scoreCalculating {
   margin-bottom: var(--spacing-lg);
@@ -95,6 +266,120 @@
   }
 }
 
+/* ==========================================================================
+   Animations
+   ========================================================================== */
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+@keyframes slideInUp {
+  from {
+    opacity: 0;
+    transform: translateY(30px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* ==========================================================================
+   Responsive Design
+   ========================================================================== */
+
+@media (max-width: 768px) {
+  .resultScreen {
+    padding: var(--spacing-sm, 0.5rem);
+  }
+  
+  .resultTitle {
+    font-size: clamp(2rem, 8vw, 3rem);
+    letter-spacing: 0.2rem;
+    margin-bottom: var(--spacing-lg, 1.5rem);
+  }
+  
+  .resultStats {
+    grid-template-columns: 1fr;
+    gap: var(--spacing-md, 1rem);
+    margin-bottom: var(--spacing-xl, 2rem);
+  }
+  
+  .resultStat {
+    padding: var(--spacing-sm, 0.5rem) var(--spacing-md, 1rem);
+  }
+  
+  .resultButtons {
+    max-width: 280px;
+    gap: var(--spacing-sm, 0.5rem);
+  }
+  
+  .resultButton {
+    padding: var(--spacing-sm, 0.5rem) var(--spacing-lg, 1.5rem);
+    font-size: var(--font-size-sm, 0.875rem);
+  }
+}
+
+@media (max-width: 480px) {
+  .resultTitle {
+    font-size: clamp(1.5rem, 10vw, 2.5rem);
+    letter-spacing: 0.1rem;
+  }
+  
+  .resultStatLabel,
+  .resultStatValue {
+    font-size: var(--font-size-sm, 0.875rem);
+  }
+}
+
+/* ==========================================================================
+   Accessibility & Reduced Motion
+   ========================================================================== */
+
+@media (prefers-contrast: high) {
+  .resultScreen {
+    background: #000;
+  }
+  
+  .resultStat {
+    border-width: 2px;
+    border-color: rgba(255, 255, 255, 0.5);
+  }
+  
+  .resultButton {
+    border-width: 2px;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .resultScreen {
+    animation: none;
+  }
+  
+  .result {
+    animation: none;
+  }
+  
+  .resultStat:hover,
+  .resultButton:hover {
+    transform: none;
+  }
+  
+  .scoreCalculating .button {
+    transition: none;
+  }
+  
+  .scoreCalculating .button:hover {
+    transform: none;
+  }
+}
+
 /* Reduced motion */
 @media (prefers-reduced-motion: reduce) {
   .scoreCalculating .button {
@@ -104,4 +389,121 @@
   .scoreCalculating .button:hover {
     transform: none;
   }
+}
+
+/* ==========================================================================
+   Modal Overlay
+   ========================================================================== */
+
+.modalOverlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  background: rgba(0, 0, 0, 0.8);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: var(--z-index-modal-overlay, 1100);
+  opacity: 0;
+  visibility: hidden;
+  transition: all 0.3s ease;
+  backdrop-filter: blur(4px);
+}
+
+.modalActive {
+  opacity: 1;
+  visibility: visible;
+}
+
+.modalContent {
+  background: var(--surface-primary, #111b2e);
+  padding: var(--spacing-xl, 2rem);
+  border-radius: var(--border-radius-lg, 8px);
+  box-shadow: 0 20px 40px rgba(0, 0, 0, 0.5);
+  max-width: 400px;
+  width: 90%;
+  animation: modalSlideIn 0.4s ease;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+@keyframes modalSlideIn {
+  from {
+    opacity: 0;
+    transform: translateY(-20px) scale(0.95);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+}
+
+.modalTitle {
+  font-size: var(--font-size-xl, 1.5rem);
+  margin-bottom: var(--spacing-lg, 1.5rem);
+  color: var(--text-primary, #fff);
+  text-align: center;
+  font-family: 'Cinzel', serif;
+}
+
+.modalInput {
+  width: 100%;
+  padding: var(--spacing-md, 1rem);
+  margin-bottom: var(--spacing-lg, 1.5rem);
+  background: rgba(255, 255, 255, 0.1);
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  border-radius: var(--border-radius-sm, 4px);
+  color: var(--text-primary, #fff);
+  font-size: var(--font-size-md, 1rem);
+  font-family: inherit;
+  box-sizing: border-box;
+}
+
+.modalInput:focus {
+  outline: none;
+  border-color: var(--accent-primary, #88ccff);
+  box-shadow: 0 0 0 2px rgba(136, 204, 255, 0.2);
+}
+
+.modalActions {
+  display: flex;
+  gap: var(--spacing-md, 1rem);
+  justify-content: center;
+}
+
+.modalButton {
+  padding: var(--spacing-sm, 0.5rem) var(--spacing-lg, 1.5rem);
+  border: 1px solid var(--accent-primary, #88ccff);
+  background: var(--accent-primary, #88ccff);
+  color: var(--text-on-accent, #000);
+  border-radius: var(--border-radius-sm, 4px);
+  cursor: pointer;
+  font-size: var(--font-size-sm, 0.875rem);
+  font-weight: var(--font-weight-medium, 500);
+  transition: all 0.2s ease;
+  font-family: inherit;
+  min-width: 80px;
+}
+
+.modalButton:hover {
+  background: var(--accent-hover, #66aadd);
+  transform: translateY(-1px);
+}
+
+.modalButton:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+  transform: none;
+}
+
+.modalButtonSecondary {
+  background: transparent;
+  color: var(--text-secondary, #ccc);
+  border-color: var(--border-secondary, #666);
+}
+
+.modalButtonSecondary:hover {
+  background: rgba(255, 255, 255, 0.1);
+  color: var(--text-primary, #fff);
 }
