@@ -26,6 +26,10 @@ export class TypingChar {
   public completed: boolean = false;
   public basePoint: number = 0;
   public countedPoint: number = 0;
+  
+  // 分岐状態管理（「ん」文字用）
+  public branchingState: boolean = false;
+  public branchOptions: string[] = [];
 
   constructor(kana: string, patterns: string[]) {
     this.kana = kana;
@@ -55,13 +59,18 @@ export class TypingChar {
       }
     }
   }
-
   /**
    * typingmania-ref流：キー入力処理
    */
   type(char: string): boolean {
     if (this.completed) {
       return false;
+    }
+
+    // 分岐状態の場合は専用の処理
+    if (this.branchingState) {
+      const result = this.typeBranching(char);
+      return result.success;
     }
 
     const lowerChar = char.toLowerCase();
@@ -77,6 +86,15 @@ export class TypingChar {
     }
 
     if (progress) {
+      // 「ん」文字で'n'が入力された場合の特別処理
+      if (this.kana === 'ん' && this.acceptedInput === 'n' && !this.completed) {
+        // 'nn'パターンと子音パターンの分岐を開始
+        const consonants = ['k', 'g', 's', 'z', 't', 'd', 'n', 'h', 'b', 'p', 'm', 'y', 'r', 'w'];
+        this.startBranching(['nn', ...consonants]);
+        this.calculateRemainingText();
+        return true;
+      }
+
       // 完了チェック
       for (const pattern of this.patterns) {
         if (pattern === this.acceptedInput) {
@@ -91,6 +109,77 @@ export class TypingChar {
 
     return progress;
   }
+  /**
+   * etyping-ref風：強制完了メソッド
+   * 「ん」文字を'n'で強制的に完了させるために使用
+   */
+  forceComplete(inputText: string): void {
+    this.acceptedInput = inputText;
+    this.completed = true;
+    this.countedPoint = this.basePoint;
+    this.branchingState = false;
+    this.branchOptions = [];
+    this.calculateRemainingText();
+  }
+
+  /**
+   * 分岐状態を開始（「ん」文字用）
+   * 'n'が入力された後、'nn'または'n+子音'の選択を可能にする
+   */
+  startBranching(options: string[]): void {
+    this.branchingState = true;
+    this.branchOptions = options;
+    console.log(`🌿 分岐状態開始: ${this.kana}, options=[${options.join(', ')}]`);
+  }
+
+  /**
+   * 分岐状態を終了
+   */
+  endBranching(): void {
+    this.branchingState = false;
+    this.branchOptions = [];
+    console.log(`🌿 分岐状態終了: ${this.kana}`);
+  }
+  /**
+   * 分岐状態でのキー処理
+   */
+  typeBranching(char: string, nextChar?: TypingChar): { success: boolean; completeWithSingle?: boolean } {
+    if (!this.branchingState) {
+      return { success: false };
+    }
+
+    const lowerChar = char.toLowerCase();
+    console.log(`🌿 分岐状態でのキー処理: key="${lowerChar}", options=[${this.branchOptions.join(', ')}]`);
+
+    // 'nn'パターンのチェック（同じ文字の繰り返し）
+    if (lowerChar === 'n' && this.branchOptions.includes('nn')) {
+      console.log(`✅ 'nn'パターンで完了`);
+      this.acceptedInput = 'nn';
+      this.completed = true;
+      this.countedPoint = this.basePoint;
+      this.endBranching();
+      this.calculateRemainingText();
+      return { success: true };
+    }
+
+    // 次の文字がある場合、その文字のパターンをチェック
+    if (nextChar) {
+      for (const pattern of nextChar.patterns) {
+        if (pattern.startsWith(lowerChar)) {
+          console.log(`✅ 次の文字のパターンマッチ: "${pattern}" が "${lowerChar}" で始まります`);
+          this.acceptedInput = 'n';
+          this.completed = true;
+          this.countedPoint = this.basePoint;
+          this.endBranching();
+          this.calculateRemainingText();
+          return { success: true, completeWithSingle: true };
+        }
+      }
+    }
+
+    console.log(`❌ 分岐状態で無効なキー: "${lowerChar}"`);
+    return { success: false };
+  }
 
   /**
    * typingmania-ref流：表示情報取得
@@ -103,7 +192,6 @@ export class TypingChar {
       isCompleted: this.completed,
     };
   }
-
   /**
    * typingmania-ref流：リセット機能
    */
@@ -111,6 +199,8 @@ export class TypingChar {
     this.acceptedInput = '';
     this.completed = false;
     this.countedPoint = 0;
+    this.branchingState = false;
+    this.branchOptions = [];
     this.calculateRemainingText();
   }
 

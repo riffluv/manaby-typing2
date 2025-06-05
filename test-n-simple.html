@@ -1,0 +1,159 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>「ん」パターンテスト</title>
+    <style>
+        body {
+            font-family: 'MS Gothic', monospace;
+            padding: 20px;
+            background-color: #f0f0f0;
+        }
+        .container {
+            max-width: 800px;
+            margin: 0 auto;
+            background: white;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+        .test-word {
+            font-size: 24px;
+            margin: 20px 0;
+            padding: 10px;
+            border: 2px solid #ddd;
+            border-radius: 4px;
+        }
+        .current-char {
+            background-color: #ffff99;
+            padding: 2px 4px;
+        }
+        .completed-char {
+            background-color: #90ee90;
+            padding: 2px 4px;
+        }
+        .log {
+            background-color: #f9f9f9;
+            border: 1px solid #ccc;
+            padding: 10px;
+            margin: 10px 0;
+            font-size: 12px;
+            max-height: 300px;
+            overflow-y: auto;
+        }
+        .input-area {
+            margin: 20px 0;
+        }
+        input {
+            font-size: 18px;
+            padding: 8px;
+            width: 300px;
+            border: 2px solid #ddd;
+            border-radius: 4px;
+        }
+        .status {
+            margin: 10px 0;
+            font-weight: bold;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>「ん」パターン切り替えテスト</h1>
+        <p>テスト単語: <strong>プログラミング</strong></p>
+        <p>期待される動作: 「ん」で "n" を入力後、"g" を入力すると「ん」が完成し、「ぐ」に移る</p>
+        
+        <div class="test-word" id="testWord"></div>
+        
+        <div class="input-area">
+            <input type="text" id="inputField" placeholder="ここに入力してください" autocomplete="off">
+        </div>
+        
+        <div class="status" id="status">準備完了</div>
+        
+        <div class="log" id="log"></div>
+        
+        <button onclick="resetTest()">リセット</button>
+    </div>    <script src="latin-table-converter.js"></script>
+    <script src="TypingChar.js"></script>
+    <script src="TypingEngine.js"></script>
+    
+    <script>
+        let typingEngine;
+        let currentInput = '';
+        
+        function log(message) {
+            const logElement = document.getElementById('log');
+            const timestamp = new Date().toLocaleTimeString();
+            logElement.innerHTML += `[${timestamp}] ${message}<br>`;
+            logElement.scrollTop = logElement.scrollHeight;
+        }
+        
+        function updateDisplay() {
+            const testWordElement = document.getElementById('testWord');
+            const chars = typingEngine.getChars();
+            let html = '';
+            
+            for (let i = 0; i < chars.length; i++) {
+                const char = chars[i];
+                if (char.isCompleted()) {
+                    html += `<span class="completed-char">${char.getCharacter()}</span>`;
+                } else if (i === typingEngine.getCurrentIndex()) {
+                    html += `<span class="current-char">${char.getCharacter()}</span>`;
+                } else {
+                    html += char.getCharacter();
+                }
+            }
+            
+            testWordElement.innerHTML = html;
+            
+            // 現在の文字の情報を表示
+            if (typingEngine.getCurrentIndex() < chars.length) {
+                const currentChar = chars[typingEngine.getCurrentIndex()];
+                log(`現在の文字: ${currentChar.getCharacter()}, パターン: ${currentChar.getCurrentPattern()}, 入力済み: "${currentChar.getTyped()}"`);
+            }
+        }
+        
+        function resetTest() {
+            typingEngine = new TypingEngine();
+            typingEngine.setWord('プログラミング');
+            currentInput = '';
+            document.getElementById('inputField').value = '';
+            document.getElementById('status').textContent = '準備完了';
+            document.getElementById('log').innerHTML = '';
+            updateDisplay();
+            log('テスト開始: プログラミング');
+        }
+        
+        document.getElementById('inputField').addEventListener('input', function(e) {
+            const input = e.target.value;
+            const newChar = input.slice(-1);
+            
+            if (newChar && newChar !== currentInput.slice(-1)) {
+                log(`キー入力: "${newChar}"`);
+                
+                const result = typingEngine.processKey(newChar);
+                log(`結果: ${result ? '成功' : '失敗'}`);
+                
+                if (result) {
+                    currentInput = input;
+                    updateDisplay();
+                    
+                    if (typingEngine.isCompleted()) {
+                        document.getElementById('status').textContent = '完成！';
+                        log('単語完成！');
+                    }
+                } else {
+                    // 入力をリセット
+                    e.target.value = currentInput;
+                    log('無効な入力のため入力をリセット');
+                }
+            }
+        });
+        
+        // 初期化
+        resetTest();
+    </script>
+</body>
+</html>

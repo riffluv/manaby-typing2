@@ -110,9 +110,7 @@ export class TypingEngine {
     };
 
     document.addEventListener('keydown', this.keyHandler, { capture: true });
-  }
-
-  /**
+  }  /**
    * typingmania-ref流：キー処理
    */
   private processKey(key: string): void {
@@ -130,6 +128,61 @@ export class TypingEngine {
     const currentChar = this.state.typingChars[this.state.currentIndex];
     if (!currentChar) return;
 
+    console.log(`⌨️ キー入力: "${key}" - 現在の文字: kana="${currentChar.kana}", acceptedInput="${currentChar.acceptedInput}", branchingState=${currentChar.branchingState}`);    // 分岐状態の場合の特別処理
+    if (currentChar.branchingState) {
+      const nextChar = this.state.typingChars[this.state.currentIndex + 1];
+      const result = currentChar.typeBranching(key, nextChar);
+      
+      if (result.success) {
+        OptimizedAudioSystem.playClickSound();
+        
+        // 分岐で'n'パターンが選択された場合（子音が入力された場合）
+        if (result.completeWithSingle) {
+          console.log(`🚀 分岐状態で'n'パターン選択。次の文字に進んで子音を処理します`);
+          this.state.currentIndex++;
+          
+          // 次の文字で子音を処理
+          if (this.state.currentIndex < this.state.typingChars.length) {
+            const nextChar = this.state.typingChars[this.state.currentIndex];
+            const nextResult = nextChar.type(key);
+            console.log(`✨ 次の文字での処理結果: ${nextResult}`);
+            
+            if (nextResult && nextChar.completed) {
+              this.state.currentIndex++;
+              
+              // 単語完了チェック
+              if (this.state.currentIndex >= this.state.typingChars.length) {
+                this.handleWordComplete();
+                return;
+              }
+            }
+          }
+        } else {
+          // 'nn'パターンで完了した場合
+          console.log(`✅ 分岐状態で'nn'パターン完了`);
+          this.state.currentIndex++;
+          
+          // 単語完了チェック
+          if (this.state.currentIndex >= this.state.typingChars.length) {
+            this.handleWordComplete();
+            return;
+          }
+        }
+        
+        this.updateDisplay();
+        this.notifyProgress();
+        return;
+      } else {
+        // 分岐状態で無効なキーが入力された場合
+        this.state.mistakeCount++;
+        OptimizedAudioSystem.playErrorSound();
+        this.updateDisplay();
+        this.notifyProgress();
+        return;
+      }
+    }
+
+    // 通常のタイピング処理
     const isCorrect = currentChar.type(key);
 
     if (isCorrect) {
@@ -151,9 +204,7 @@ export class TypingEngine {
 
     this.updateDisplay();
     this.notifyProgress();
-  }
-
-  /**
+  }  /**
    * typingmania-ref流：表示更新（直接DOM操作）
    */
   private updateDisplay(): void {
