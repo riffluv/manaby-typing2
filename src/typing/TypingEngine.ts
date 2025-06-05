@@ -8,6 +8,7 @@
 import type { TypingChar, DisplayInfo } from './TypingChar';
 import type { KanaDisplay, PerWordScoreLog } from '@/types';
 import OptimizedAudioSystem from '@/utils/OptimizedAudioSystem';
+import { debug } from '../utils/debug';
 
 export interface TypingEngineState {
   typingChars: TypingChar[];
@@ -123,12 +124,12 @@ export class TypingEngine {
       this.state.startTime = Date.now();
     }
 
-    this.state.keyCount++;
-
-    const currentChar = this.state.typingChars[this.state.currentIndex];
+    this.state.keyCount++;    const currentChar = this.state.typingChars[this.state.currentIndex];
     if (!currentChar) return;
 
-    console.log(`⌨️ キー入力: "${key}" - 現在の文字: kana="${currentChar.kana}", acceptedInput="${currentChar.acceptedInput}", branchingState=${currentChar.branchingState}`);    // 分岐状態の場合の特別処理
+    debug.typing.log(`キー入力: "${key}" - 現在の文字: kana="${currentChar.kana}", acceptedInput="${currentChar.acceptedInput}", branchingState=${currentChar.branchingState}`);
+    
+    // 分岐状態の場合の特別処理
     if (currentChar.branchingState) {
       const nextChar = this.state.typingChars[this.state.currentIndex + 1];
       const result = currentChar.typeBranching(key, nextChar);
@@ -138,14 +139,14 @@ export class TypingEngine {
         
         // 分岐で'n'パターンが選択された場合（子音が入力された場合）
         if (result.completeWithSingle) {
-          console.log(`🚀 分岐状態で'n'パターン選択。次の文字に進んで子音を処理します`);
+          debug.typing.branch(`分岐状態で'n'パターン選択。次の文字に進んで子音を処理します`);
           this.state.currentIndex++;
           
           // 次の文字で子音を処理
           if (this.state.currentIndex < this.state.typingChars.length) {
             const nextChar = this.state.typingChars[this.state.currentIndex];
             const nextResult = nextChar.type(key);
-            console.log(`✨ 次の文字での処理結果: ${nextResult}`);
+            debug.typing.pattern(`次の文字での処理結果: ${nextResult}`);
             
             if (nextResult && nextChar.completed) {
               this.state.currentIndex++;
@@ -159,7 +160,7 @@ export class TypingEngine {
           }
         } else {
           // 'nn'パターンで完了した場合
-          console.log(`✅ 分岐状態で'nn'パターン完了`);
+          debug.typing.branch(`分岐状態で'nn'パターン完了`);
           this.state.currentIndex++;
           
           // 単語完了チェック

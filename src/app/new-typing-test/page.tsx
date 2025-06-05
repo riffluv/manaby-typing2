@@ -3,6 +3,7 @@
 import React, { useState } from 'react';
 import NewSimpleGameScreen from '@/components/NewSimpleGameScreen';
 import { TypingWord, PerWordScoreLog } from '@/types';
+import { debug } from '@/utils/debug';
 
 const testWords: Array<{ japanese: string; hiragana: string }> = [
   { japanese: "プログラミング", hiragana: "ぷろぐらみんぐ" },
@@ -29,9 +30,8 @@ export default function NewTypingTestPage() {
     typingChars: [], // 新システムで自動生成される
     displayChars: [],
   };
-
   const handleWordComplete = (scoreLog: PerWordScoreLog) => {
-    console.log('単語完了:', scoreLog);
+    debug.log('単語完了:', scoreLog);
     setCompletedWords(prev => [...prev, scoreLog]);
 
     if (currentWordIndex < testWords.length - 1) {

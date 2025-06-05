@@ -5,6 +5,8 @@
  * シンプルで高性能なタイピング文字実装
  */
 
+import { debug } from '../utils/debug';
+
 export interface DisplayInfo {
   displayText: string;
   acceptedText: string;
@@ -121,7 +123,6 @@ export class TypingChar {
     this.branchOptions = [];
     this.calculateRemainingText();
   }
-
   /**
    * 分岐状態を開始（「ん」文字用）
    * 'n'が入力された後、'nn'または'n+子音'の選択を可能にする
@@ -129,7 +130,7 @@ export class TypingChar {
   startBranching(options: string[]): void {
     this.branchingState = true;
     this.branchOptions = options;
-    console.log(`🌿 分岐状態開始: ${this.kana}, options=[${options.join(', ')}]`);
+    debug.typing.branch(`分岐状態開始: ${this.kana}, options=[${options.join(', ')}]`);
   }
 
   /**
@@ -138,9 +139,8 @@ export class TypingChar {
   endBranching(): void {
     this.branchingState = false;
     this.branchOptions = [];
-    console.log(`🌿 分岐状態終了: ${this.kana}`);
-  }
-  /**
+    debug.typing.branch(`分岐状態終了: ${this.kana}`);
+  }  /**
    * 分岐状態でのキー処理
    */
   typeBranching(char: string, nextChar?: TypingChar): { success: boolean; completeWithSingle?: boolean } {
@@ -149,11 +149,11 @@ export class TypingChar {
     }
 
     const lowerChar = char.toLowerCase();
-    console.log(`🌿 分岐状態でのキー処理: key="${lowerChar}", options=[${this.branchOptions.join(', ')}]`);
+    debug.typing.branch(`分岐状態でのキー処理: key="${lowerChar}", options=[${this.branchOptions.join(', ')}]`);
 
     // 'nn'パターンのチェック（同じ文字の繰り返し）
     if (lowerChar === 'n' && this.branchOptions.includes('nn')) {
-      console.log(`✅ 'nn'パターンで完了`);
+      debug.typing.branch(`'nn'パターンで完了`);
       this.acceptedInput = 'nn';
       this.completed = true;
       this.countedPoint = this.basePoint;
@@ -166,7 +166,7 @@ export class TypingChar {
     if (nextChar) {
       for (const pattern of nextChar.patterns) {
         if (pattern.startsWith(lowerChar)) {
-          console.log(`✅ 次の文字のパターンマッチ: "${pattern}" が "${lowerChar}" で始まります`);
+          debug.typing.branch(`次の文字のパターンマッチ: "${pattern}" が "${lowerChar}" で始まります`);
           this.acceptedInput = 'n';
           this.completed = true;
           this.countedPoint = this.basePoint;
@@ -177,7 +177,7 @@ export class TypingChar {
       }
     }
 
-    console.log(`❌ 分岐状態で無効なキー: "${lowerChar}"`);
+    debug.typing.branch(`分岐状態で無効なキー: "${lowerChar}"`);
     return { success: false };
   }
 
