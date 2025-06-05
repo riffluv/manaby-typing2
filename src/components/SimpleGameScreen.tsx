@@ -1,7 +1,6 @@
 import React from 'react';
 import { TypingWord, PerWordScoreLog } from '@/types';
-import { useSimpleTyping } from '@/hooks/useSimpleTyping';
-import { createBasicTypingChars } from '@/utils/basicJapaneseUtils';
+import { useTyping, JapaneseConverter } from '@/typing';
 import styles from '@/styles/components/SimpleGameScreen.module.css';
 
 export type SimpleGameScreenProps = {
@@ -10,29 +9,27 @@ export type SimpleGameScreenProps = {
 };
 
 /**
- * 🚀 typingmania-ref流超高速GameScreen - リファクタリング完了版
- * - TypingEngineによる直接DOM操作で最高速を実現
+ * 🚀 typingmania-ref流超高速GameScreen - 本番実装版 ✨
+ * - 新しいTypingEngineによる直接DOM操作で最高速を実現
  * - JapaneseConverterによる統合された日本語処理
  * - 複数入力パターン（ji/zi）をサポート
- * - デモページレベルの応答性を実現
+ * - typingmaniaを超えるレスポンス性能
  */
 const SimpleGameScreen: React.FC<SimpleGameScreenProps> = ({ 
   currentWord, 
   onWordComplete
-}) => {  // typingmania-ref流：ひらがなからBasicTypingChar配列を生成
+}) => {  // typingmania-ref流：新しいJapaneseConverterでTypingChar配列を生成
   const typingChars = React.useMemo(() => {
-    return currentWord.hiragana ? createBasicTypingChars(currentWord.hiragana) : [];
+    return currentWord.hiragana ? JapaneseConverter.convertToTypingChars(currentWord.hiragana) : [];
   }, [currentWord.hiragana]);
-
   // typingmania-ref流：ローマ字文字列を生成
   const romajiString = React.useMemo(() => {
     if (!typingChars || typingChars.length === 0) return '';
     
-    // 各BasicTypingCharの最初のパターン（デフォルトパターン）を連結
+    // 各TypingCharの最初のパターン（デフォルトパターン）を連結
     return typingChars.map((char: any) => char.patterns[0] || '').join('');
   }, [typingChars]);
-
-  const { containerRef, currentCharIndex, kanaDisplay, detailedProgress } = useSimpleTyping({
+  const { containerRef, currentCharIndex, kanaDisplay, detailedProgress } = useTyping({
     word: currentWord,
     typingChars,
     onWordComplete,

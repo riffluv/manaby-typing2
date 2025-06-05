@@ -42,7 +42,6 @@ export function useTyping({
   const containerRef = useRef<HTMLDivElement>(null);
   const engineRef = useRef<TypingEngine | null>(null);
   const currentWordRef = useRef<string | undefined>(undefined);
-  const isInitializedRef = useRef<boolean>(false);
   
   // 進行状況の状態
   const [currentCharIndex, setCurrentCharIndex] = useState(0);
@@ -59,9 +58,11 @@ export function useTyping({
    * typingmania-ref流：エンジン初期化
    */
   const initializeEngine = () => {
-    if (!containerRef.current || !typingChars.length) return;
+    if (!containerRef.current || !typingChars.length) {
+      return;
+    }
 
-    // 既存エンジンのクリーンアップ
+    // 前のエンジンがあればクリーンアップ
     if (engineRef.current) {
       engineRef.current.cleanup();
     }
@@ -74,19 +75,16 @@ export function useTyping({
       containerRef.current,
       typingChars,
       (index: number, display: KanaDisplay) => {
-        // typingmania-ref流：進捗コールバック
         setCurrentCharIndex(index);
         setKanaDisplay(display);
         updateDetailedProgress();
       },
       (scoreLog: PerWordScoreLog) => {
-        // typingmania-ref流：完了コールバック
         onWordComplete?.(scoreLog);
       }
     );
 
     updateDetailedProgress();
-    isInitializedRef.current = true;
   };
 
   /**
@@ -105,31 +103,32 @@ export function useTyping({
   const getDetailedProgress = () => {
     return engineRef.current?.getDetailedProgress() || null;
   };
-  // 単語変更時の初期化
+
+  // React Strict Mode対応の初期化Effect
   useEffect(() => {
     const newWordKey = word.hiragana || word.japanese || '';
     
-    if (currentWordRef.current !== newWordKey || !isInitializedRef.current) {
-      currentWordRef.current = newWordKey;
-      initializeEngine();
+    // 初期化条件チェック
+    if (!containerRef.current || !typingChars.length) {
+      return;
     }
-  }, [word, typingChars]);
-
-  // コンテナ準備時の初期化
-  useEffect(() => {
-    if (containerRef.current && typingChars.length > 0 && !isInitializedRef.current) {
-      initializeEngine();
+    
+    // 既に同じ単語で初期化済みかつエンジンが生きている場合はスキップ
+    if (currentWordRef.current === newWordKey && engineRef.current) {
+      return;
     }
-  }, [typingChars]);
-
-  // クリーンアップ
-  useEffect(() => {
+    
+    currentWordRef.current = newWordKey;
+    initializeEngine();
+    
+    // Strict Mode対応：クリーンアップ関数を返す
     return () => {
       if (engineRef.current) {
         engineRef.current.cleanup();
+        engineRef.current = null;
       }
     };
-  }, []);
+  }, [word.hiragana, word.japanese, typingChars]);
 
   return {
     containerRef,

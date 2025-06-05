@@ -34,10 +34,6 @@ export class TypingEngine {
   private onProgress?: (index: number, display: KanaDisplay) => void;
   private onComplete?: (scoreLog: PerWordScoreLog) => void;
   private keyHandler?: (e: KeyboardEvent) => void;
-  
-  // 高速化のためのキャッシュ
-  private romajiCache: string = '';
-  private totalRomajiLength: number = 0;
 
   constructor() {
     this.state = {
@@ -97,21 +93,34 @@ export class TypingEngine {
    * typingmania-ref流：キーリスナーセットアップ
    */
   private setupKeyListener(): void {
+    // ページにフォーカスを設定
+    if (document.body) {
+      document.body.tabIndex = -1;
+      document.body.focus();
+    }
+    
     this.keyHandler = (e: KeyboardEvent) => {
-      if (e.ctrlKey || e.altKey || e.metaKey) return;
-      if (e.key.length !== 1) return;
+      if (e.ctrlKey || e.altKey || e.metaKey || e.key.length !== 1) {
+        return;
+      }
 
       e.preventDefault();
+      e.stopPropagation();
       this.processKey(e.key);
     };
 
-    document.addEventListener('keydown', this.keyHandler);
+    document.addEventListener('keydown', this.keyHandler, { capture: true });
   }
 
   /**
    * typingmania-ref流：キー処理
    */
   private processKey(key: string): void {
+    // 初回キー入力時に音声システムを初期化（ユーザージェスチャー対応）
+    if (this.state.keyCount === 0) {
+      OptimizedAudioSystem.resumeAudioContext();
+    }
+    
     if (this.state.startTime === 0) {
       this.state.startTime = Date.now();
     }
@@ -121,8 +130,9 @@ export class TypingEngine {
     const currentChar = this.state.typingChars[this.state.currentIndex];
     if (!currentChar) return;
 
-    const isCorrect = currentChar.type(key);    if (isCorrect) {
-      // 正解音
+    const isCorrect = currentChar.type(key);
+
+    if (isCorrect) {
       OptimizedAudioSystem.playClickSound();
 
       if (currentChar.completed) {
@@ -133,8 +143,8 @@ export class TypingEngine {
           this.handleWordComplete();
           return;
         }
-      }    } else {
-      // 不正解音
+      }
+    } else {
       this.state.mistakeCount++;
       OptimizedAudioSystem.playErrorSound();
     }
@@ -157,7 +167,7 @@ export class TypingEngine {
     // かな表示更新
     this.displayElements.kanaElement.textContent = displayInfo.displayText;
 
-    // ローマ字表示更新（高速DOM操作）
+    // ローマ字表示更新
     this.updateRomajiDisplay(displayInfo);
 
     // プログレス更新
@@ -183,7 +193,9 @@ export class TypingEngine {
    * typingmania-ref流：進捗通知
    */
   private notifyProgress(): void {
-    if (!this.onProgress) return;    const currentChar = this.state.typingChars[this.state.currentIndex];
+    if (!this.onProgress) return;
+
+    const currentChar = this.state.typingChars[this.state.currentIndex];
     if (!currentChar) return;
 
     const displayInfo = currentChar.getDisplayInfo();
@@ -195,6 +207,7 @@ export class TypingEngine {
 
     this.onProgress(this.state.currentIndex, kanaDisplay);
   }
+
   /**
    * typingmania-ref流：単語完了処理
    */
@@ -217,12 +230,6 @@ export class TypingEngine {
   }
 
   /**
-   * typingmania-ref流：状態取得
-   */
-  getState(): TypingEngineState {
-    return { ...this.state };
-  }
-  /**
    * typingmania-ref流：詳細進捗取得
    */
   getDetailedProgress() {
@@ -234,7 +241,7 @@ export class TypingEngine {
       currentKanaIndex: this.state.currentIndex,
       currentRomajiIndex: currentChar.acceptedInput.length,
       totalKanaCount: this.state.typingChars.length,
-      totalRomajiCount: this.totalRomajiLength,
+      totalRomajiCount: this.state.typingChars.reduce((sum, char) => sum + char.patterns[0].length, 0),
       currentKanaDisplay: {
         acceptedText: displayInfo.acceptedText,
         remainingText: displayInfo.remainingText,
@@ -261,7 +268,7 @@ export class TypingEngine {
    */
   cleanup(): void {
     if (this.keyHandler) {
-      document.removeEventListener('keydown', this.keyHandler);
+      document.removeEventListener('keydown', this.keyHandler, { capture: true } as any);
       this.keyHandler = undefined;
     }
     

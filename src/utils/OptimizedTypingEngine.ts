@@ -57,11 +57,7 @@ export class OptimizedTypingEngine {
     container: HTMLElement,
     typingChars: BasicTypingChar[],
     onProgress?: (index: number, display: KanaDisplay) => void,
-    onComplete?: (scoreLog: PerWordScoreLog) => void
-  ): void {
-    const wordText = typingChars.map(c => c.kana).join('');
-    console.log('🚀 [OptimizedTypingEngine] Initializing ultra-fast engine for word:', wordText);
-    
+    onComplete?: (scoreLog: PerWordScoreLog) => void  ): void {
     // 🎵 音響システムの初期化確認
     OptimizedAudioSystem.init();
     
@@ -312,11 +308,7 @@ export class OptimizedTypingEngine {
 
   /**
    * エンジンのクリーンアップ
-   */
-  destroy(): void {
-    const wordText = this.state.typingChars.map(c => c.kana).join('') || 'unknown';
-    console.log('🧹 [OptimizedTypingEngine] Destroying ultra-fast engine for word:', wordText);
-    
+   */  destroy(): void {
     if (this.keyHandler) {
       document.removeEventListener('keydown', this.keyHandler);
       this.keyHandler = undefined;

@@ -58,14 +58,11 @@ export function useSimpleTyping({
     // 厳密な同一単語チェック - 初期化済みかつ同じ単語なら何もしない
     const isSameWord = currentWordRef.current === word.hiragana;
     const isAlreadyInitialized = isInitializedRef.current && engineRef.current;
-    
-    if (isSameWord && isAlreadyInitialized) {      return;
-    }    console.log('🚀 [useSimpleTyping] Initializing ultra-fast engine:', {
-      previousWord: currentWordRef.current,
-      newWord: word.hiragana,
-      wasInitialized: isInitializedRef.current,
-      hasEngine: !!engineRef.current
-    });    // 既存のエンジンをクリーンアップ（異なる単語または初期化が必要な場合のみ）
+      if (isSameWord && isAlreadyInitialized) {
+      return;
+    }
+
+    // 既存のエンジンをクリーンアップ（異なる単語または初期化が必要な場合のみ）
     if (engineRef.current) {
       engineRef.current.cleanup();
       engineRef.current = null;

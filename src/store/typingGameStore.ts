@@ -1,8 +1,7 @@
 import { create } from 'zustand';
 import { createSelectors } from '@/store/createSelectors';
 import { wordList } from '@/data/wordList';
-import { createBasicTypingChars } from '@/utils/basicJapaneseUtils';
-import { BasicTypingChar } from '@/utils/BasicTypingChar';
+import { JapaneseConverter } from '@/typing';
 import { shallow } from 'zustand/shallow';
 
 /**
@@ -28,7 +27,7 @@ interface TypingGameState {
     japanese: string;
     hiragana: string;
     romaji: string;
-    typingChars: BasicTypingChar[];
+    typingChars: any[]; // 新システム対応：型を一般化
     displayChars: string[];
     explanation?: string | null;  // マナビー解説（将来的に使用）
   };
@@ -54,7 +53,7 @@ const initialCurrentWord = {
   japanese: '',
   hiragana: '',
   romaji: '',
-  typingChars: [] as BasicTypingChar[],
+  typingChars: [] as any[], // 新システム対応
   displayChars: [] as string[],
   explanation: null
 };
@@ -211,15 +210,20 @@ const useTypingGameStoreBase = create<TypingGameState>((set, get) => ({
     const { currentWordIndex } = get();
     const word = currentGameQuestions[currentWordIndex];
     if (!word) return;
-    const typingChars = createBasicTypingChars(word.hiragana);
-    const displayChars = typingChars.map(char => char.getDisplayInfo().displayText);
+    
+    // 🚀 新システム：JapaneseConverterを使用してTypingChar配列を生成
+    const typingChars = JapaneseConverter.convertToTypingChars(word.hiragana);
+    
+    // ローマ字表示用：各文字の最初のパターンを使用
+    const romajiString = typingChars.map((char: any) => char.patterns[0] || '').join('');
+    
     set({
       currentWord: {
         japanese: word.japanese || word.kanji,
         hiragana: word.hiragana,
-        romaji: displayChars.join(''),
+        romaji: romajiString,
         typingChars: typingChars,
-        displayChars: displayChars,
+        displayChars: typingChars.map((char: any) => char.kana), // ひらがな表示用
         explanation: word.explanation || null
       }
     });
