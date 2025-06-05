@@ -1,11 +1,17 @@
-// Typingゲームで使う型定義を集約
+/**
+ * Typing Types - typingmania-ref流の型定義
+ * 
+ * 高速レスポンスを維持しながら段階的リファクタリングをサポート
+ */
+
+// 後方互換性のため、旧BasicTypingCharを保持
 import { BasicTypingChar } from '@/utils/BasicTypingChar';
 
 export type TypingWord = {
   japanese: string;
   hiragana: string;
   romaji: string;
-  typingChars: BasicTypingChar[];
+  typingChars: BasicTypingChar[]; // 現在のシステムを維持
   displayChars: string[];
 };
 
@@ -13,4 +19,13 @@ export type KanaDisplay = {
   acceptedText: string;
   remainingText: string;
   displayText: string;
+};
+
+// 将来のリファクタリングのための準備
+export type NewTypingWord = {
+  japanese: string;
+  hiragana: string;
+  romaji: string;
+  typingChars: any[]; // 新しいTypingCharを使用予定
+  displayChars: string[];
 };
