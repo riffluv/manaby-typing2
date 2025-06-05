@@ -4,14 +4,11 @@
  * 高速レスポンスを維持しながら段階的リファクタリングをサポート
  */
 
-// 後方互換性のため、旧BasicTypingCharを保持
-import { BasicTypingChar } from '@/utils/BasicTypingChar';
-
 export type TypingWord = {
   japanese: string;
   hiragana: string;
   romaji: string;
-  typingChars: BasicTypingChar[]; // 現在のシステムを維持
+  typingChars: any[]; // 新しいTypingCharを使用
   displayChars: string[];
 };
 
