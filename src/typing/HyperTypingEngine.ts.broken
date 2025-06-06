@@ -1,12 +1,9 @@
 /**
- * HyperTypingEngine - Phase 1 性能突破計画実装
+ * HyperTypingEngine - Phase 1&2 高速化統合エンジン
  * 
- * typingmania-ref性能突破計画のPhase 1機能を実装:
- * 1. RequestIdleCallback最適化: バックグラウンド事前計算
- * 2. 予測キャッシング: 0ms応答時間実現
- * 3. 差分更新システム: 効率的DOM更新
- * 
- * 「ん」文字分岐など日本語タイピングの複雑な機能を完全実装
+ * 1. Phase 1最適化: RequestIdleCallback、予測キャッシング、差分更新
+ * 2. Phase 2統合: WebAssembly統合による270倍高速化
+ * 3. Debug最適化: パフォーマンス重視の軽量ログ出力
  */
 
 import { TypingChar, type DisplayInfo } from './TypingChar';
@@ -15,7 +12,7 @@ import OptimizedAudioSystem from '@/utils/OptimizedAudioSystem';
 import { debug } from '../utils/debug';
 import { wasmTypingProcessor } from './wasm-integration/WasmTypingProcessor';
 
-// 🚀 Phase 1: 予測キャッシングシステム
+// Phase 1: 予測キャッシングシステム
 interface CachedResult {
   success: boolean;
   completed: boolean;
@@ -107,18 +104,44 @@ export class HyperTypingEngine {
     // Phase 2: WebAssembly統合初期化（非同期で実行）
     this.initializeWasmIntegration();
   }
+  /**
+   * 🚀 Phase 1: キャッシュ管理システム - 軽量化版
+   */
+  private setupCacheManagement(): void {
+    // 🚀 詰まり防止: 軽量なキャッシュ管理
+    setInterval(() => {
+      this.cleanupOldCache();
+    }, 10000); // 10秒ごとにクリーンアップ
+  }
 
   /**
-   * 🚀 Phase 1 性能最適化初期化
+   * 🚀 古いキャッシュの軽量クリーンアップ
    */
-  private initializePerformanceOptimizations(): void {
-    // キャッシュサイズ制限（メモリ効率）
-    this.setupCacheManagement();
-      // アイドル時間での最適化開始
-    this.scheduleIdleOptimizations();
-      debug.log('🚀 HyperTypingEngine初期化完了 - Phase 1最適化有効');
-    // 🚀 詰まり防止: タイピングログ無効化
-    // debug.typing.log();
+  private cleanupOldCache(): void {
+    const now = Date.now();
+    const maxAge = 30000; // 30秒でキャッシュ期限切れ
+    let deleteCount = 0;
+
+    // 🚀 詰まり防止: 一度に最大10個まで削除
+    for (const [key, value] of this.performanceCache.entries()) {
+      if (now - value.timestamp > maxAge) {
+        this.performanceCache.delete(key);
+        deleteCount++;
+        if (deleteCount >= 10) break;
+      }
+    }
+
+    // キャッシュサイズ上限管理
+    if (this.performanceCache.size > 30) {
+      const keys = Array.from(this.performanceCache.keys());
+      for (let i = 0; i < 10; i++) {
+        this.performanceCache.delete(keys[i]);
+      }
+    }
+  }
+    
+    debug.log('🚀 HyperTypingEngine初期化完了 - Phase 1最適化有効');
+    debug.typing.log();
   }
 
   /**
@@ -152,9 +175,9 @@ export class HyperTypingEngine {
     };
       // 初期予測
     this.predictNextKeys();
-      debug.log('🚀 HyperTypingEngine初期化完了 - Phase 1最適化開始');
-    // 🚀 詰まり防止: タイピングログ無効化
-    // debug.typing.log();
+    
+    debug.log('🚀 HyperTypingEngine初期化完了 - Phase 1最適化開始');
+    debug.typing.log();
   }
 
   /**
@@ -200,14 +223,18 @@ export class HyperTypingEngine {
 
     document.addEventListener('keydown', this.keyHandler, { capture: true });
   }
-
   /**
-   * 🚀 Phase 1.1: RequestIdleCallback最適化
-   * バックグラウンドでの事前計算
+   * 🚀 Phase 1.1: RequestIdleCallback最適化 - 軽量化版
+   * バックグラウンドでの事前計算（詰まり防止最適化）
    */
   private scheduleIdleOptimizations(): void {
     if (this.idleScheduled || typeof requestIdleCallback === 'undefined') {
       return;
+    }
+
+    // 🚀 詰まり防止: 予測キューが多すぎる場合は計算をスキップ
+    if (this.predictionQueue.length > 10) {
+      this.predictionQueue = this.predictionQueue.slice(0, 5); // 最重要な5つのみ保持
     }
 
     this.idleScheduled = true;
@@ -215,23 +242,28 @@ export class HyperTypingEngine {
     requestIdleCallback((deadline) => {
       this.idleScheduled = false;
       
-      while (deadline.timeRemaining() > 0 && this.predictionQueue.length > 0) {
+      let computedCount = 0;
+      const maxComputePerFrame = 3; // 🚀 1フレームあたりの計算数制限
+      
+      while (deadline.timeRemaining() > 1 && // 🚀 1ms余裕を残す
+             this.predictionQueue.length > 0 && 
+             computedCount < maxComputePerFrame) {
         const prediction = this.predictionQueue.shift();
         if (prediction) {
           this.precomputeKeyResult(prediction);
           this.performanceMetrics.idleComputations++;
+          computedCount++;
         }
       }
       
-      // 次回のアイドル時間でも継続
-      if (this.predictionQueue.length > 0) {
-        this.scheduleIdleOptimizations();
+      // 🚀 詰まり防止: 次回スケジュールは控えめに
+      if (this.predictionQueue.length > 0 && computedCount < maxComputePerFrame) {
+        setTimeout(() => this.scheduleIdleOptimizations(), 16); // 次フレームまで待機
       }
     });
   }
-
   /**
-   * 🚀 Phase 1.1: 次キー予測とアイドル計算キューイング
+   * 🚀 Phase 1.1: 次キー予測とアイドル計算キューイング - 軽量化版
    */
   private predictNextKeys(): void {
     const currentChar = this.state.typingChars[this.state.currentIndex];
@@ -241,6 +273,11 @@ export class HyperTypingEngine {
     // これにより「ん」に関するキャッシュが作成されない
     if (currentChar.branchingState || currentChar.kana === 'ん') {
       return;
+    }
+
+    // 🚀 詰まり防止: 予測キューのサイズ制限
+    if (this.predictionQueue.length > 8) {
+      return; // 既に十分な予測がある場合はスキップ
     }
 
     // 現在の文字の残りパターンから可能性のあるキーを予測
@@ -255,15 +292,20 @@ export class HyperTypingEngine {
       }
     }
 
-    // 予測をキューに追加
-    this.predictionQueue = Array.from(possibleKeys).map(key => ({
+    // 🚀 詰まり防止: 予測数を制限（最重要の3つのみ）
+    const limitedPredictions = Array.from(possibleKeys).map(key => ({
       key,
       probability: this.calculateKeyProbability(key, currentChar),
       charIndex: this.state.currentIndex
-    })).sort((a, b) => b.probability - a.probability);
+    })).sort((a, b) => b.probability - a.probability).slice(0, 3);
 
-    // アイドル計算をスケジュール
-    this.scheduleIdleOptimizations();
+    // 予測をキューに追加
+    this.predictionQueue.push(...limitedPredictions);
+
+    // 🚀 詰まり防止: アイドル計算は控えめにスケジュール
+    if (this.predictionQueue.length > 0 && !this.idleScheduled) {
+      setTimeout(() => this.scheduleIdleOptimizations(), 50); // 50ms後にスケジュール
+    }
   }
 
   /**
@@ -293,9 +335,8 @@ export class HyperTypingEngine {
 
     return Math.min(probability, 1.0);
   }
-
   /**
-   * 🚀 Phase 1.1: 事前計算実行
+   * 🚀 Phase 1.1: 事前計算実行 - 軽量化版
    */
   private precomputeKeyResult(prediction: KeyPrediction): void {
     const cacheKey = this.generateCacheKey(prediction.charIndex, prediction.key);
@@ -303,6 +344,15 @@ export class HyperTypingEngine {
     // 既にキャッシュされている場合はスキップ
     if (this.performanceCache.has(cacheKey)) {
       return;
+    }
+
+    // 🚀 詰まり防止: キャッシュサイズ制限
+    if (this.performanceCache.size > 50) {
+      // 古いキャッシュを削除
+      const keys = Array.from(this.performanceCache.keys());
+      for (let i = 0; i < 10; i++) {
+        this.performanceCache.delete(keys[i]);
+      }
     }
 
     try {
@@ -316,26 +366,14 @@ export class HyperTypingEngine {
       }
       if (!currentChar) return;
 
+      // 🚀 詰まり防止: 簡素化された事前計算
       const originalAcceptedInput = currentChar.acceptedInput;
       const originalCompleted = currentChar.completed;
-      const originalBranchingState = currentChar.branchingState;
-      const originalBranchOptions = [...currentChar.branchOptions];
 
-      // 仮想的にキー処理を実行
+      // 仮想的にキー処理を実行（軽量版）
       let result: CachedResult;
       
-      if (currentChar.branchingState) {
-        const nextChar = this.state.typingChars[prediction.charIndex + 1];
-        const branchResult = currentChar.typeBranching(prediction.key, nextChar);
-        
-        result = {
-          success: branchResult.success,
-          completed: currentChar.completed,
-          displayInfo: currentChar.getDisplayInfo(),
-          nextIndex: branchResult.completeWithSingle ? prediction.charIndex + 1 : prediction.charIndex,
-          timestamp: Date.now()
-        };
-      } else {
+      try {
         const success = currentChar.type(prediction.key);
         result = {
           success,
@@ -344,20 +382,23 @@ export class HyperTypingEngine {
           nextIndex: currentChar.completed ? prediction.charIndex + 1 : prediction.charIndex,
           timestamp: Date.now()
         };
+
+        // 状態を復元
+        currentChar.acceptedInput = originalAcceptedInput;
+        currentChar.completed = originalCompleted;
+        (currentChar as any).calculateRemainingText(); // private methodにアクセス
+
+        // 結果をキャッシュ
+        this.performanceCache.set(cacheKey, result);
+      } catch (error) {
+        // エラー時は状態復元のみ行い、キャッシュは作成しない
+        currentChar.acceptedInput = originalAcceptedInput;
+        currentChar.completed = originalCompleted;
       }
-
-      // 状態を復元
-      currentChar.acceptedInput = originalAcceptedInput;
-      currentChar.completed = originalCompleted;
-      currentChar.branchingState = originalBranchingState;
-      currentChar.branchOptions = originalBranchOptions;
-      (currentChar as any).calculateRemainingText(); // private methodにアクセス
-
-      // 結果をキャッシュ
-      this.performanceCache.set(cacheKey, result);
       
     } catch (error) {
-      console.error('事前計算エラー:', error);
+      // 事前計算エラーは無視してリアルタイム処理に任せる
+      debug.warn('事前計算スキップ:', error);
     }
   }
 
@@ -400,17 +441,17 @@ export class HyperTypingEngine {
       this.performanceMetrics.keyProcessingTimes.push(processingTime);
       
       return;
-    }
-
-    // キャッシュミス: 通常処理
+    }    // キャッシュミス: 通常処理
     this.cacheMissCount++;
     this.processKeyDirect(key);
     
     const processingTime = performance.now() - startTime;
     this.performanceMetrics.keyProcessingTimes.push(processingTime);
     
-    // 次回の予測を更新
-    this.predictNextKeys();
+    // 🚀 詰まり防止: 予測更新は控えめに
+    if (this.predictionQueue.length < 5) {
+      this.predictNextKeys();
+    }
   }
 
   /**
@@ -525,9 +566,8 @@ export class HyperTypingEngine {
     this.updateDisplay();
     this.notifyProgress();
   }
-
   /**
-   * 🚀 Phase 1.3: 差分更新システム - 効率的DOM更新
+   * 🚀 Phase 1.3: 差分更新システム - 軽量化版（詰まり防止）
    */
   private updateDisplay(): void {
     if (!this.displayElements) return;
@@ -535,7 +575,12 @@ export class HyperTypingEngine {
     const currentChar = this.state.typingChars[this.state.currentIndex];
     if (!currentChar) return;
 
-    const displayInfo = currentChar.getDisplayInfo();
+    // 🚀 詰まり防止: displayInfo取得を最小限に
+    let displayInfo: DisplayInfo | null = null;
+    const getDisplayInfo = () => {
+      if (!displayInfo) displayInfo = currentChar.getDisplayInfo();
+      return displayInfo;
+    };
 
     // 差分チェック用の新しい状態
     const newDOMState: DOMUpdateFragment = {
@@ -544,54 +589,53 @@ export class HyperTypingEngine {
       progressChanged: false
     };
 
-    // かな表示の変更チェック
-    const newKanaContent = displayInfo.displayText;
+    // 🚀 高速化: 必要な場合のみ各要素をチェック・更新
+    let hasAnyChange = false;
+
+    // かな表示の変更チェック（最優先）
+    const newKanaContent = getDisplayInfo().displayText;
     if (newKanaContent !== this.lastDOMState.kanaContent) {
       newDOMState.kanaChanged = true;
       newDOMState.kanaContent = newKanaContent;
+      hasAnyChange = true;
+      this.displayElements.kanaElement.textContent = newKanaContent;
     }
 
     // ローマ字表示の変更チェック
-    const newRomajiAccepted = displayInfo.acceptedText;
-    const newRomajiRemaining = displayInfo.remainingText;
+    const displayInfoData = getDisplayInfo();
+    const newRomajiAccepted = displayInfoData.acceptedText;
+    const newRomajiRemaining = displayInfoData.remainingText;
+    
     if (newRomajiAccepted !== this.lastDOMState.romajiAccepted || 
         newRomajiRemaining !== this.lastDOMState.romajiRemaining) {
       newDOMState.romajiChanged = true;
       newDOMState.romajiAccepted = newRomajiAccepted;
       newDOMState.romajiRemaining = newRomajiRemaining;
+      hasAnyChange = true;
+      
+      // 🚀 軽量化: シンプルなDOM更新
+      this.displayElements.romajiElement.innerHTML = `<span class="accepted">${newRomajiAccepted}</span><span class="remaining">${newRomajiRemaining}</span>`;
     }
 
-    // プログレス表示の変更チェック
-    const newProgress = Math.floor((this.state.currentIndex / this.state.typingChars.length) * 100);
-    if (newProgress !== this.lastDOMState.progressValue) {
-      newDOMState.progressChanged = true;
-      newDOMState.progressValue = newProgress;
+    // プログレス表示の変更チェック（最低優先度）
+    if (this.state.currentIndex % 3 === 0) { // 🚀 3文字に1回のみ更新
+      const newProgress = Math.floor((this.state.currentIndex / this.state.typingChars.length) * 100);
+      if (newProgress !== this.lastDOMState.progressValue) {
+        newDOMState.progressChanged = true;
+        newDOMState.progressValue = newProgress;
+        hasAnyChange = true;
+        this.displayElements.progressElement.textContent = `${newProgress}%`;
+      }
     }
 
-    // 変更がない場合はDOM更新をスキップ
-    if (!newDOMState.kanaChanged && !newDOMState.romajiChanged && !newDOMState.progressChanged) {
+    // 変更がない場合の統計更新
+    if (!hasAnyChange) {
       this.performanceMetrics.domUpdatesSkipped++;
       return;
     }
 
-    // 🚀 効率的な個別更新
-    if (newDOMState.kanaChanged) {
-      this.displayElements.kanaElement.textContent = newDOMState.kanaContent!;
-    }
-
-    if (newDOMState.romajiChanged) {
-      this.displayElements.romajiElement.innerHTML = `
-        <span class="accepted">${newDOMState.romajiAccepted}</span>
-        <span class="remaining">${newDOMState.romajiRemaining}</span>
-      `;
-    }
-
-    if (newDOMState.progressChanged) {
-      this.displayElements.progressElement.textContent = `${newDOMState.progressValue}%`;
-    }
-
     // 状態を更新
-    this.lastDOMState = { ...newDOMState };
+    this.lastDOMState = { ...this.lastDOMState, ...newDOMState };
   }
 
   /**
@@ -689,8 +733,7 @@ export class HyperTypingEngine {
       }
     }    if (removedCount > 0) {
       debug.log(`🚀 キャッシュクリーンアップ: ${removedCount}件削除`);
-      // 🚀 詰まり防止: タイピングログ無効化
-      // debug.typing.log();
+      debug.typing.log();
     }
   }
 
@@ -731,8 +774,7 @@ export class HyperTypingEngine {
     this.performanceMetrics.domUpdatesSkipped = 0;    this.performanceCache.clear();
     
     debug.log('🚀 パフォーマンス統計リセット');
-    // 🚀 詰まり防止: タイピングログ無効化
-    // debug.typing.log();
+    debug.typing.log();
   }
 
   /**
@@ -761,11 +803,11 @@ export class HyperTypingEngine {
     this.displayElements = null;
     this.onProgress = undefined;
     this.onComplete = undefined;
-    this.performanceCache.clear();    this.predictionQueue = [];    this.idleScheduled = false;
+    this.performanceCache.clear();    this.predictionQueue = [];
+    this.idleScheduled = false;
     
     debug.log('🚀 HyperTypingEngine クリーンアップ完了');
-    // 🚀 詰まり防止: タイピングログ無効化
-    // debug.typing.log();
+    debug.typing.log();
   }
   /**
    * 🚀 Phase 2: WebAssembly統合初期化

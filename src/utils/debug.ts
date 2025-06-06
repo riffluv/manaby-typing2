@@ -5,11 +5,12 @@
 
 // 開発環境でのみデバッグログを出力
 const isDevelopment = process.env.NODE_ENV === 'development';
-const enableTypingDebug = isDevelopment && process.env.NEXT_PUBLIC_ENABLE_TYPING_DEBUG !== 'false';
+// 🚀 詰まり防止: タイピングデバッグを完全無効化 (パフォーマンス最優先)
+const enableTypingDebug = false; // 完全無効化で詰まり解消
 
 export const debug = {
   log: (...args: any[]) => {
-    if (isDevelopment) {
+    if (isDevelopment && Math.random() < 0.1) { // 10%の確率でログ出力
       console.log('[DEBUG]', ...args);
     }
   },
@@ -31,43 +32,57 @@ export const debug = {
       const start = performance.now();
       const result = fn();
       const end = performance.now();
-      console.log(`[PERFORMANCE] ${label}: ${(end - start).toFixed(3)}ms`);
+      // 重要な処理のみログ出力（1ms以上）
+      if (end - start > 1) {
+        console.log(`[PERFORMANCE] ${label}: ${(end - start).toFixed(3)}ms`);
+      }
       return result;
     }
     return fn();
-  },
-  
+  },  
   time: (label: string) => {
-    if (isDevelopment) {
+    // 🚀 詰まり防止: time系ログも制限
+    if (isDevelopment && Math.random() < 0.05) { // 5%の確率
       console.time(`[DEBUG TIME] ${label}`);
     }
   },
-    timeEnd: (label: string) => {
-    if (isDevelopment) {
+  
+  timeEnd: (label: string) => {
+    // 🚀 詰まり防止: timeEnd系ログも制限
+    if (isDevelopment && Math.random() < 0.05) { // 5%の確率
       console.timeEnd(`[DEBUG TIME] ${label}`);
     }
   },
-  // HyperTypingEngine用のタイピングデバッグ機能 (パフォーマンス最優先)
+  
+  // 🚀 HyperTypingEngine用のタイピングデバッグ機能 (完全パフォーマンス最優先)
   typing: {
-    log: () => {
-      // no-op for maximum performance
+    log: (...args: any[]) => {
+      // 🚀 完全no-op - 詰まり防止のため一切のログを出力しない
     },
     
     performance: (label: string, fn: () => any) => {
-      // パフォーマンス最優先: 条件分岐なしで即座に実行
+      // 🚀 完全パフォーマンス最優先: 一切の計測なしで即座に実行
       return fn();
     },
     
-    cache: () => {
-      // no-op for maximum performance
+    cache: (...args: any[]) => {
+      // 🚀 完全no-op - キャッシュログ無効化
     },
     
-    optimization: () => {
-      // no-op for maximum performance  
+    optimization: (...args: any[]) => {
+      // 🚀 完全no-op - 最適化ログ無効化
     },
     
-    branch: () => {
-      // no-op for maximum performance
+    branch: (...args: any[]) => {
+      // 🚀 完全no-op - 分岐ログ無効化（詰まりの最大原因）
+    },
+    
+    idle: (...args: any[]) => {
+      // 🚀 完全no-op - アイドル処理ログ無効化
+    },
+    
+    prediction: (...args: any[]) => {
+      // 🚀 完全no-op - 予測処理ログ無効化
     }
   }
 };

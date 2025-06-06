@@ -23,22 +23,17 @@ export type SimpleGameScreenProps = {
 const SimpleGameScreen: React.FC<SimpleGameScreenProps> = ({ 
   currentWord, 
   onWordComplete
-}) => {
-  // Phase 2: WebAssembly高速処理システム初期化
+}) => {  // Phase 2: WebAssembly高速処理システム初期化
   const [wasmStatus, setWasmStatus] = React.useState<{ isWasmAvailable: boolean; mode: string } | null>(null);
-  const [wasmPerformanceLog, setWasmPerformanceLog] = React.useState<string[]>([]);
 
   // WebAssembly初期化（コンポーネント開始時に一度だけ実行）
-  React.useEffect(() => {
-    const initializeWasm = async () => {
+  React.useEffect(() => {    const initializeWasm = async () => {
       try {
         await wasmTypingProcessor.waitForInitialization();
         const status = wasmTypingProcessor.getStatus();
         setWasmStatus(status);
-        setWasmPerformanceLog(prev => [...prev, `✅ WebAssembly初期化完了 - ${status.mode}`]);
       } catch (error) {
         console.warn('WebAssembly初期化エラー:', error);
-        setWasmPerformanceLog(prev => [...prev, `⚠️ WebAssemblyフォールバック - TypeScript版使用`]);
         setWasmStatus({ isWasmAvailable: false, mode: 'TypeScriptフォールバック' });
       }
     };
@@ -47,12 +42,11 @@ const SimpleGameScreen: React.FC<SimpleGameScreenProps> = ({
   }, []);  // typingmania-ref流：WebAssembly高速TypingChar生成 + TypeScriptフォールバック
   const typingChars = React.useMemo(() => {
     if (!currentWord.hiragana) return [];
-    
-    // Phase 2: WebAssembly高速処理を優先
+      // Phase 2: WebAssembly高速処理を優先
     if (wasmStatus?.isWasmAvailable) {
       // WebAssembly高速モードではバックグラウンドで処理開始
       wasmTypingProcessor.convertToRomaji(currentWord.hiragana).then(wasmChars => {
-        setWasmPerformanceLog(prev => [...prev, `🚀 WASM高速変換完了: ${currentWord.hiragana} → ${wasmChars.length}文字`]);
+        // パフォーマンスログを削除（UI表示を整理）
       }).catch(error => {
         console.warn('WASM処理エラー - TypeScriptフォールバック:', error);
       });
@@ -98,18 +92,8 @@ const SimpleGameScreen: React.FC<SimpleGameScreenProps> = ({
       accepted: romajiString.slice(0, totalAcceptedLength),
       remaining: romajiString.slice(totalAcceptedLength)
     };  }, [romajiString, detailedProgress?.currentKanaIndex, detailedProgress?.currentKanaDisplay?.acceptedText, typingChars]);
-
   return (
     <div className={styles.gameScreen}>
-      {/* Phase 2: WebAssemblyステータス表示 */}
-      {wasmStatus && (
-        <div className={styles.topArea}>
-          <div className={styles.progressText}>
-            🚀 Phase 2: {wasmStatus.mode} {wasmStatus.isWasmAvailable ? '⚡' : '🔄'}
-          </div>
-        </div>
-      )}
-
       {/* メインのお題エリア */}
       <div className={styles.typingContainer}>
         {/* 日本語単語表示 */}
@@ -133,8 +117,7 @@ const SimpleGameScreen: React.FC<SimpleGameScreenProps> = ({
             </>
           )}
         </div>
-      </div>      {/* タイピングエリア - HyperTypingEngineが制御（非表示） */}
-      <div 
+      </div>      {/* タイピングエリア - HyperTypingEngineが制御（非表示） */}      <div 
         ref={containerRef}
         className={styles.typingArea}
         aria-live="polite"
@@ -142,18 +125,6 @@ const SimpleGameScreen: React.FC<SimpleGameScreenProps> = ({
       >
         {/* HyperTypingEngine が動的にコンテンツを挿入 */}
       </div>
-
-      {/* Phase 2 開発用: WebAssemblyパフォーマンスログ */}
-      {process.env.NODE_ENV === 'development' && wasmPerformanceLog.length > 0 && (
-        <div className={styles.debugInfo}>
-          <h4>🚀 Phase 2 WebAssembly Performance Log:</h4>
-          {wasmPerformanceLog.slice(-5).map((log, index) => (
-            <div key={index} style={{ fontSize: '0.8rem', margin: '2px 0' }}>
-              {log}
-            </div>
-          ))}
-        </div>
-      )}
     </div>
   );
 };

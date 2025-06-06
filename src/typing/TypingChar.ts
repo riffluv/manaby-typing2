@@ -127,10 +127,9 @@ export class TypingChar {
    * 分岐状態を開始（「ん」文字用）
    * 'n'が入力された後、'nn'または'n+子音'の選択を可能にする
    */  startBranching(options: string[]): void {
-    this.branchingState = true;
-    this.branchOptions = options;
+    this.branchingState = true;    this.branchOptions = options;
     debug.log(`分岐状態開始: ${this.kana}, options=[${options.join(', ')}]`);
-    debug.typing.branch();
+    // 🚀 詰まり防止: 分岐ログ完全無効化
   }
 
   /**
@@ -139,21 +138,20 @@ export class TypingChar {
     this.branchingState = false;
     this.branchOptions = [];
     debug.log(`分岐状態終了: ${this.kana}`);
-    debug.typing.branch();
+    // 🚀 詰まり防止: 分岐ログ完全無効化
   }/**
    * 分岐状態でのキー処理
    */
   typeBranching(char: string, nextChar?: TypingChar): { success: boolean; completeWithSingle?: boolean } {
     if (!this.branchingState) {
-      return { success: false };
-    }    const lowerChar = char.toLowerCase();
+      return { success: false };    }    const lowerChar = char.toLowerCase();
     debug.log(`分岐状態でのキー処理: key="${lowerChar}", options=[${this.branchOptions.join(', ')}]`);
-    debug.typing.branch();
+    // 🚀 詰まり防止: 分岐ログ完全無効化
 
     // 'nn'パターンのチェック（同じ文字の繰り返し）
     if (lowerChar === 'n' && this.branchOptions.includes('nn')) {
       debug.log(`'nn'パターンで完了`);
-      debug.typing.branch();
+      // 🚀 詰まり防止: 分岐ログ完全無効化
       this.acceptedInput = 'nn';
       this.completed = true;
       this.countedPoint = this.basePoint;
@@ -166,18 +164,16 @@ export class TypingChar {
     if (nextChar) {
       for (const pattern of nextChar.patterns) {        if (pattern.startsWith(lowerChar)) {
           debug.log(`次の文字のパターンマッチ: "${pattern}" が "${lowerChar}" で始まります`);
-          debug.typing.branch();
+          // 🚀 詰まり防止: 分岐ログ完全無効化
           this.acceptedInput = 'n';
           this.completed = true;
           this.countedPoint = this.basePoint;
           this.endBranching();
           this.calculateRemainingText();
           return { success: true, completeWithSingle: true };
-        }      }
-    }
-
-    debug.log(`分岐状態で無効なキー: "${lowerChar}"`);
-    debug.typing.branch();
+        }}
+    }    debug.log(`分岐状態で無効なキー: "${lowerChar}"`);
+    // 🚀 詰まり防止: 分岐ログ完全無効化
     return { success: false };
   }
 

@@ -22,19 +22,17 @@ export default function Phase2FinalVerificationPage() {
   const runFinalVerification = async () => {
     try {
       setVerificationStatus('running');
-      addLog('🚀 Phase 2 WebAssembly最終検証開始...');
-
-      const results = {
+      addLog('🚀 Phase 2 WebAssembly最終検証開始...');      const results = {
         timestamp: new Date().toISOString(),
         browserInfo: {
           userAgent: navigator.userAgent,
           webAssemblySupport: typeof WebAssembly !== 'undefined',
           performanceSupport: typeof performance !== 'undefined'
         },
-        wasmFileStatus: null,
-        loadingResults: null,
-        performanceResults: null,
-        speedupFactor: null,
+        wasmFileStatus: null as any,
+        loadingResults: null as any,
+        performanceResults: null as any,
+        speedupFactor: null as any,
         errors: [] as string[]
       };
 
