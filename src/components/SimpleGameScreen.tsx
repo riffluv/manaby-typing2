@@ -1,6 +1,6 @@
 import React from 'react';
 import { TypingWord, PerWordScoreLog } from '@/types';
-import { useTyping, JapaneseConverter } from '@/typing';
+import { useHyperTyping, JapaneseConverter } from '@/typing';
 import styles from '@/styles/components/SimpleGameScreen.module.css';
 
 export type SimpleGameScreenProps = {
@@ -9,11 +9,12 @@ export type SimpleGameScreenProps = {
 };
 
 /**
- * 🚀 typingmania-ref流超高速GameScreen - 本番実装版 ✨
- * - 新しいTypingEngineによる直接DOM操作で最高速を実現
- * - JapaneseConverterによる統合された日本語処理
- * - 複数入力パターン（ji/zi）をサポート
- * - typingmaniaを超えるレスポンス性能
+ * 🚀 typingmania-ref流超高速GameScreen - Phase 1最適化版 ✨
+ * - HyperTypingEngineによる次世代パフォーマンス最適化
+ * - RequestIdleCallback最適化によるバックグラウンド事前計算
+ * - 予測キャッシュシステムによる0ms応答入力システム
+ * - 差分更新システムによる効率的DOM更新
+ * - 完全な「ん」文字分岐機能の保持
  */
 const SimpleGameScreen: React.FC<SimpleGameScreenProps> = ({ 
   currentWord, 
@@ -29,7 +30,7 @@ const SimpleGameScreen: React.FC<SimpleGameScreenProps> = ({
     // 各TypingCharの最初のパターン（デフォルトパターン）を連結
     return typingChars.map((char: any) => char.patterns[0] || '').join('');
   }, [typingChars]);
-  const { containerRef, currentCharIndex, kanaDisplay, detailedProgress } = useTyping({
+  const { containerRef, currentCharIndex, kanaDisplay, detailedProgress, getPerformanceStats } = useHyperTyping({
     word: currentWord,
     typingChars,
     onWordComplete,
@@ -84,15 +85,34 @@ const SimpleGameScreen: React.FC<SimpleGameScreenProps> = ({
             </>
           )}
         </div>
-      </div>      {/* タイピングエリア - TypingEngineが制御（非表示） */}
+      </div>      {/* タイピングエリア - HyperTypingEngineが制御（非表示） */}
       <div 
         ref={containerRef}
         className={styles.typingArea}
         aria-live="polite"
         aria-label="タイピングエリア"
       >
-        {/* TypingEngine が動的にコンテンツを挿入 */}
+        {/* HyperTypingEngine が動的にコンテンツを挿入 */}
       </div>
+
+      {/* Phase 1 パフォーマンス統計表示（開発時のみ） */}
+      {process.env.NODE_ENV === 'development' && getPerformanceStats && (
+        <div className={styles.performanceStats}>          <h4>⚡ Phase 1 最適化統計</h4>
+          {(() => {
+            const stats = getPerformanceStats();
+            return (
+              <div className={styles.statsGrid}>
+                <div><strong>キャッシュヒット率:</strong> {(stats.cacheHitRate || 0).toFixed(1)}%</div>
+                <div><strong>平均処理時間:</strong> {(stats.averageProcessingTime || 0).toFixed(2)}ms</div>
+                <div><strong>アイドル計算数:</strong> {stats.idleComputations || 0}</div>
+                <div><strong>DOM更新スキップ:</strong> {stats.domUpdatesSkipped || 0}</div>
+                <div><strong>予測キャッシュサイズ:</strong> {stats.cacheSize || 0}</div>
+                <div><strong>最適化効果:</strong> {(stats.cacheHitRate || 0) > 80 ? '🟢 優秀' : (stats.cacheHitRate || 0) > 50 ? '🟡 良好' : '🔴 要改善'}</div>
+              </div>
+            );
+          })()}
+        </div>
+      )}
     </div>
   );
 };
