@@ -23,38 +23,14 @@ export type SimpleGameScreenProps = {
 const SimpleGameScreen: React.FC<SimpleGameScreenProps> = ({ 
   currentWord, 
   onWordComplete
-}) => {  // Phase 2: WebAssembly高速処理システム初期化
-  const [wasmStatus, setWasmStatus] = React.useState<{ isWasmAvailable: boolean; mode: string } | null>(null);
-
-  // WebAssembly初期化（コンポーネント開始時に一度だけ実行）
-  React.useEffect(() => {    const initializeWasm = async () => {
-      try {
-        await wasmTypingProcessor.waitForInitialization();
-        const status = wasmTypingProcessor.getStatus();
-        setWasmStatus(status);
-      } catch (error) {
-        console.warn('WebAssembly初期化エラー:', error);
-        setWasmStatus({ isWasmAvailable: false, mode: 'TypeScriptフォールバック' });
-      }
-    };
-    
-    initializeWasm();
-  }, []);  // typingmania-ref流：WebAssembly高速TypingChar生成 + TypeScriptフォールバック
+}) => {
+  // 軽量化：シンプルなTypingChar生成（非同期処理を削除して入力遅延を防止）
   const typingChars = React.useMemo(() => {
     if (!currentWord.hiragana) return [];
-      // Phase 2: WebAssembly高速処理を優先
-    if (wasmStatus?.isWasmAvailable) {
-      // WebAssembly高速モードではバックグラウンドで処理開始
-      wasmTypingProcessor.convertToRomaji(currentWord.hiragana).then(wasmChars => {
-        // パフォーマンスログを削除（UI表示を整理）
-      }).catch(error => {
-        console.warn('WASM処理エラー - TypeScriptフォールバック:', error);
-      });
-    }
     
-    // 同期的なTypeScript版（フォールバック及び初期表示用）
+    // 同期的なTypeScript版のみ使用（WebAssemblyの非同期処理を削除）
     return JapaneseConverter.convertToTypingChars(currentWord.hiragana);
-  }, [currentWord.hiragana, wasmStatus?.isWasmAvailable]);
+  }, [currentWord.hiragana]);
   // typingmania-ref流：ローマ字文字列を生成
   const romajiString = React.useMemo(() => {
     if (!typingChars || typingChars.length === 0) return '';

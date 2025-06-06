@@ -94,8 +94,7 @@ export class HyperTypingEngine {
     domUpdatesSkipped: 0,
     wasmProcessingTimes: [] as number[], // Phase 2: WASM性能計測
     wasmHitRate: 0 // Phase 2: WASM利用率
-  };
-  constructor() {
+  };  constructor() {
     this.state = {
       typingChars: [],
       currentIndex: 0,
@@ -103,9 +102,10 @@ export class HyperTypingEngine {
       mistakeCount: 0,
       startTime: 0,
     };
-    this.initializePerformanceOptimizations();
-    // Phase 2: WebAssembly統合初期化（非同期で実行）
-    this.initializeWasmIntegration();
+    // 軽量化：重い最適化処理を無効化して入力遅延を防止
+    // this.initializePerformanceOptimizations();
+    // Phase 2: WebAssembly統合初期化を無効化（入力遅延防止）
+    // this.initializeWasmIntegration();
   }
 
   /**
@@ -137,24 +137,12 @@ export class HyperTypingEngine {
     this.state.mistakeCount = 0;
     this.state.startTime = 0;
     this.onProgress = onProgress;
-    this.onComplete = onComplete;
-
-    this.setupDOM();
+    this.onComplete = onComplete;    this.setupDOM();
     this.updateDisplay();
     this.setupKeyListener();
 
-    // Phase 1 最適化の初期化
-    this.resetPerformanceStats();
-    this.lastDOMState = {
-      kanaChanged: false,
-      romajiChanged: false,
-      progressChanged: false
-    };
-      // 初期予測
-    this.predictNextKeys();
-      debug.log('🚀 HyperTypingEngine初期化完了 - Phase 1最適化開始');
-    // 🚀 詰まり防止: タイピングログ無効化
-    // debug.typing.log();
+    // 軽量化：重い最適化処理を削除
+    debug.log('🚀 HyperTypingEngine初期化完了 - 軽量モード');
   }
 
   /**
@@ -363,10 +351,7 @@ export class HyperTypingEngine {
 
   /**
    * 🚀 Phase 1.2: 予測キャッシング - 0ms応答実現
-   */
-  private processKey(key: string): void {
-    const startTime = performance.now();
-
+   */  private processKey(key: string): void {
     // 初回キー入力時に音声システムを初期化（ユーザージェスチャー対応）
     if (this.state.keyCount === 0) {
       OptimizedAudioSystem.resumeAudioContext();
@@ -378,39 +363,8 @@ export class HyperTypingEngine {
 
     this.state.keyCount++;
 
-    // キャッシュキー生成
-    const cacheKey = this.generateCacheKey(this.state.currentIndex, key);
-    const cachedResult = this.performanceCache.get(cacheKey);
-
-    // ⚠️ 「ん」の分岐状態や「ん」文字の場合はキャッシュを完全にバイパス
-    const currentChar = this.state.typingChars[this.state.currentIndex];
-    const shouldBypassCache = currentChar?.branchingState || currentChar?.kana === 'ん';
-
-    if (shouldBypassCache) {
-      // キャッシュから削除して確実にバイパス
-      this.performanceCache.delete(cacheKey);
-    }
-
-    if (cachedResult && this.isCacheValid(cachedResult) && !shouldBypassCache) {
-      // 🚀 0ms応答: キャッシュヒット
-      this.applyCachedResult(cachedResult, key);
-      this.cacheHitCount++;
-      
-      const processingTime = performance.now() - startTime;
-      this.performanceMetrics.keyProcessingTimes.push(processingTime);
-      
-      return;
-    }
-
-    // キャッシュミス: 通常処理
-    this.cacheMissCount++;
+    // 軽量化：直接処理のみ（キャッシュ処理を削除）
     this.processKeyDirect(key);
-    
-    const processingTime = performance.now() - startTime;
-    this.performanceMetrics.keyProcessingTimes.push(processingTime);
-    
-    // 次回の予測を更新
-    this.predictNextKeys();
   }
 
   /**
@@ -525,9 +479,8 @@ export class HyperTypingEngine {
     this.updateDisplay();
     this.notifyProgress();
   }
-
   /**
-   * 🚀 Phase 1.3: 差分更新システム - 効率的DOM更新
+   * 軽量化：シンプルなDOM更新（差分チェックを削除）
    */
   private updateDisplay(): void {
     if (!this.displayElements) return;
@@ -537,61 +490,16 @@ export class HyperTypingEngine {
 
     const displayInfo = currentChar.getDisplayInfo();
 
-    // 差分チェック用の新しい状態
-    const newDOMState: DOMUpdateFragment = {
-      kanaChanged: false,
-      romajiChanged: false,
-      progressChanged: false
-    };
+    // 軽量化：差分チェックを削除して直接更新
+    this.displayElements.kanaElement.textContent = displayInfo.displayText;
+    
+    this.displayElements.romajiElement.innerHTML = `
+      <span class="accepted">${displayInfo.acceptedText}</span>
+      <span class="remaining">${displayInfo.remainingText}</span>
+    `;
 
-    // かな表示の変更チェック
-    const newKanaContent = displayInfo.displayText;
-    if (newKanaContent !== this.lastDOMState.kanaContent) {
-      newDOMState.kanaChanged = true;
-      newDOMState.kanaContent = newKanaContent;
-    }
-
-    // ローマ字表示の変更チェック
-    const newRomajiAccepted = displayInfo.acceptedText;
-    const newRomajiRemaining = displayInfo.remainingText;
-    if (newRomajiAccepted !== this.lastDOMState.romajiAccepted || 
-        newRomajiRemaining !== this.lastDOMState.romajiRemaining) {
-      newDOMState.romajiChanged = true;
-      newDOMState.romajiAccepted = newRomajiAccepted;
-      newDOMState.romajiRemaining = newRomajiRemaining;
-    }
-
-    // プログレス表示の変更チェック
-    const newProgress = Math.floor((this.state.currentIndex / this.state.typingChars.length) * 100);
-    if (newProgress !== this.lastDOMState.progressValue) {
-      newDOMState.progressChanged = true;
-      newDOMState.progressValue = newProgress;
-    }
-
-    // 変更がない場合はDOM更新をスキップ
-    if (!newDOMState.kanaChanged && !newDOMState.romajiChanged && !newDOMState.progressChanged) {
-      this.performanceMetrics.domUpdatesSkipped++;
-      return;
-    }
-
-    // 🚀 効率的な個別更新
-    if (newDOMState.kanaChanged) {
-      this.displayElements.kanaElement.textContent = newDOMState.kanaContent!;
-    }
-
-    if (newDOMState.romajiChanged) {
-      this.displayElements.romajiElement.innerHTML = `
-        <span class="accepted">${newDOMState.romajiAccepted}</span>
-        <span class="remaining">${newDOMState.romajiRemaining}</span>
-      `;
-    }
-
-    if (newDOMState.progressChanged) {
-      this.displayElements.progressElement.textContent = `${newDOMState.progressValue}%`;
-    }
-
-    // 状態を更新
-    this.lastDOMState = { ...newDOMState };
+    const progress = Math.floor((this.state.currentIndex / this.state.typingChars.length) * 100);
+    this.displayElements.progressElement.textContent = `${progress}%`;
   }
 
   /**
