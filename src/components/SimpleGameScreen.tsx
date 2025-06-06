@@ -30,7 +30,7 @@ const SimpleGameScreen: React.FC<SimpleGameScreenProps> = ({
     // 各TypingCharの最初のパターン（デフォルトパターン）を連結
     return typingChars.map((char: any) => char.patterns[0] || '').join('');
   }, [typingChars]);
-  const { containerRef, currentCharIndex, kanaDisplay, detailedProgress, getPerformanceStats } = useHyperTyping({
+  const { containerRef, currentCharIndex, kanaDisplay, detailedProgress } = useHyperTyping({
     word: currentWord,
     typingChars,
     onWordComplete,
@@ -92,27 +92,7 @@ const SimpleGameScreen: React.FC<SimpleGameScreenProps> = ({
         aria-live="polite"
         aria-label="タイピングエリア"
       >
-        {/* HyperTypingEngine が動的にコンテンツを挿入 */}
-      </div>
-
-      {/* Phase 1 パフォーマンス統計表示（開発時のみ） */}
-      {process.env.NODE_ENV === 'development' && getPerformanceStats && (
-        <div className={styles.performanceStats}>          <h4>⚡ Phase 1 最適化統計</h4>
-          {(() => {
-            const stats = getPerformanceStats();
-            return (
-              <div className={styles.statsGrid}>
-                <div><strong>キャッシュヒット率:</strong> {(stats.cacheHitRate || 0).toFixed(1)}%</div>
-                <div><strong>平均処理時間:</strong> {(stats.averageProcessingTime || 0).toFixed(2)}ms</div>
-                <div><strong>アイドル計算数:</strong> {stats.idleComputations || 0}</div>
-                <div><strong>DOM更新スキップ:</strong> {stats.domUpdatesSkipped || 0}</div>
-                <div><strong>予測キャッシュサイズ:</strong> {stats.cacheSize || 0}</div>
-                <div><strong>最適化効果:</strong> {(stats.cacheHitRate || 0) > 80 ? '🟢 優秀' : (stats.cacheHitRate || 0) > 50 ? '🟡 良好' : '🔴 要改善'}</div>
-              </div>
-            );
-          })()}
-        </div>
-      )}
+        {/* HyperTypingEngine が動的にコンテンツを挿入 */}      </div>
     </div>
   );
 };

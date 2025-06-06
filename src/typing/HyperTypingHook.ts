@@ -29,10 +29,8 @@ export interface HyperTypingHookReturn {
       acceptedText: string;
       remainingText: string;
       displayText: string;
-    };
-  } | null;
+    };  } | null;
   getDetailedProgress: () => any;
-  getPerformanceStats: () => any; // 🚀 Phase 1: 性能統計取得
 }
 
 /**
@@ -109,28 +107,11 @@ export function useHyperTyping({
     const progress = engineRef.current.getDetailedProgress();
     setDetailedProgress(progress);
   };
-
   /**
    * 詳細進捗取得
    */
   const getDetailedProgress = () => {
     return engineRef.current?.getDetailedProgress() || null;
-  };
-  /**
-   * 🚀 Phase 1: 性能統計取得
-   * キャッシュヒット率、処理時間、アイドル計算回数など
-   */  const getPerformanceStats = () => {
-    if (!engineRef.current) {
-      // エンジンが初期化されていない場合はデフォルト値を返す
-      return {
-        cacheHitRate: 0,
-        averageProcessingTime: 0,
-        idleComputations: 0,
-        domUpdatesSkipped: 0,
-        cacheSize: 0
-      };
-    }
-    return engineRef.current.getPerformanceStats();
   };
 
   // React Strict Mode対応の初期化Effect
@@ -158,14 +139,12 @@ export function useHyperTyping({
       }
     };
   }, [word.hiragana, word.japanese, typingChars]);
-
   return {
     containerRef,
     currentCharIndex,
     kanaDisplay,
     detailedProgress,
     getDetailedProgress,
-    getPerformanceStats, // 🚀 Phase 1: 性能統計
   };
 }
 
