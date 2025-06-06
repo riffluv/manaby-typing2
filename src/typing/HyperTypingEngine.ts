@@ -6,10 +6,9 @@
  * 2. 予測キャッシング: 0ms応答時間実現
  * 3. 差分更新システム: 効率的DOM更新
  * 
- * 既存のTypingEngineをコンポジションで活用し、「ん」文字分岐など既存機能を完全保持
+ * 「ん」文字分岐など日本語タイピングの複雑な機能を完全実装
  */
 
-import { TypingEngine } from './TypingEngine';
 import type { TypingChar, DisplayInfo } from './TypingChar';
 import type { KanaDisplay, PerWordScoreLog } from '@/types';
 import OptimizedAudioSystem from '@/utils/OptimizedAudioSystem';
