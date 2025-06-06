@@ -1,9 +1,11 @@
 'use client';
 
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import NewSimpleGameScreen from '@/components/NewSimpleGameScreen';
 import { TypingWord, PerWordScoreLog } from '@/types';
 import { debug } from '@/utils/debug';
+
+// Phase 1完了により、テストツールは削除済み
 
 const testWords: Array<{ japanese: string; hiragana: string }> = [
   { japanese: "プログラミング", hiragana: "ぷろぐらみんぐ" },

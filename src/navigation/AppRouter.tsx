@@ -5,6 +5,8 @@ import CleanRankingScreen from '@/components/CleanRankingScreen';
 import SettingsScreen from '@/components/SettingsScreen';
 import { useSceneNavigationStore } from '@/store/sceneNavigationStore';
 
+// Phase 1完了により、パフォーマンス比較ツールは削除済み
+
 /**
  * シンプルなSPA画面遷移ルーター
  */

@@ -1,6 +1,6 @@
 import React from 'react';
 import { TypingWord, PerWordScoreLog } from '@/types';
-import { useTyping, JapaneseConverter } from '@/typing';
+import { useHyperTyping, JapaneseConverter } from '@/typing';
 import styles from '@/styles/components/SimpleGameScreen.module.css';
 
 export type NewSimpleGameScreenProps = {
@@ -31,8 +31,7 @@ const NewSimpleGameScreen: React.FC<NewSimpleGameScreenProps> = ({
     // 各TypingCharの最初のパターン（デフォルトパターン）を連結
     return typingChars.map((char: any) => char.patterns[0] || '').join('');
   }, [typingChars]);
-
-  const { containerRef, currentCharIndex, kanaDisplay, detailedProgress } = useTyping({
+  const { containerRef, currentCharIndex, kanaDisplay, detailedProgress } = useHyperTyping({
     word: currentWord,
     typingChars,
     onWordComplete,
