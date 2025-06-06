@@ -5,6 +5,7 @@
 
 // 開発環境でのみデバッグログを出力
 const isDevelopment = process.env.NODE_ENV === 'development';
+const enableTypingDebug = isDevelopment && process.env.NEXT_PUBLIC_ENABLE_TYPING_DEBUG !== 'false';
 
 export const debug = {
   log: (...args: any[]) => {
@@ -46,41 +47,27 @@ export const debug = {
       console.timeEnd(`[DEBUG TIME] ${label}`);
     }
   },
-
-  // HyperTypingEngine用のタイピングデバッグ機能
+  // HyperTypingEngine用のタイピングデバッグ機能 (パフォーマンス最優先)
   typing: {
-    log: (...args: any[]) => {
-      if (isDevelopment) {
-        console.log('[TYPING DEBUG]', ...args);
-      }
+    log: () => {
+      // no-op for maximum performance
     },
     
     performance: (label: string, fn: () => any) => {
-      if (isDevelopment) {
-        const start = performance.now();
-        const result = fn();
-        const end = performance.now();
-        console.log(`[TYPING PERFORMANCE] ${label}: ${(end - start).toFixed(3)}ms`);
-        return result;
-      }
+      // パフォーマンス最優先: 条件分岐なしで即座に実行
       return fn();
     },
     
-    cache: (...args: any[]) => {
-      if (isDevelopment) {
-        console.log('[TYPING CACHE]', ...args);
-      }
-    },
-      optimization: (...args: any[]) => {
-      if (isDevelopment) {
-        console.log('[TYPING OPTIMIZATION]', ...args);
-      }
+    cache: () => {
+      // no-op for maximum performance
     },
     
-    branch: (...args: any[]) => {
-      if (isDevelopment) {
-        console.log('[TYPING BRANCH]', ...args);
-      }
+    optimization: () => {
+      // no-op for maximum performance  
+    },
+    
+    branch: () => {
+      // no-op for maximum performance
     }
   }
 };
