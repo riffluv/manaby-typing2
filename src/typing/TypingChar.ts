@@ -126,34 +126,34 @@ export class TypingChar {
   /**
    * 分岐状態を開始（「ん」文字用）
    * 'n'が入力された後、'nn'または'n+子音'の選択を可能にする
-   */
-  startBranching(options: string[]): void {
+   */  startBranching(options: string[]): void {
     this.branchingState = true;
     this.branchOptions = options;
-    debug.typing.branch(`分岐状態開始: ${this.kana}, options=[${options.join(', ')}]`);
+    debug.log(`分岐状態開始: ${this.kana}, options=[${options.join(', ')}]`);
+    debug.typing.branch();
   }
 
   /**
    * 分岐状態を終了
-   */
-  endBranching(): void {
+   */  endBranching(): void {
     this.branchingState = false;
     this.branchOptions = [];
-    debug.typing.branch(`分岐状態終了: ${this.kana}`);
-  }  /**
+    debug.log(`分岐状態終了: ${this.kana}`);
+    debug.typing.branch();
+  }/**
    * 分岐状態でのキー処理
    */
   typeBranching(char: string, nextChar?: TypingChar): { success: boolean; completeWithSingle?: boolean } {
     if (!this.branchingState) {
       return { success: false };
-    }
-
-    const lowerChar = char.toLowerCase();
-    debug.typing.branch(`分岐状態でのキー処理: key="${lowerChar}", options=[${this.branchOptions.join(', ')}]`);
+    }    const lowerChar = char.toLowerCase();
+    debug.log(`分岐状態でのキー処理: key="${lowerChar}", options=[${this.branchOptions.join(', ')}]`);
+    debug.typing.branch();
 
     // 'nn'パターンのチェック（同じ文字の繰り返し）
     if (lowerChar === 'n' && this.branchOptions.includes('nn')) {
-      debug.typing.branch(`'nn'パターンで完了`);
+      debug.log(`'nn'パターンで完了`);
+      debug.typing.branch();
       this.acceptedInput = 'nn';
       this.completed = true;
       this.countedPoint = this.basePoint;
@@ -164,20 +164,20 @@ export class TypingChar {
 
     // 次の文字がある場合、その文字のパターンをチェック
     if (nextChar) {
-      for (const pattern of nextChar.patterns) {
-        if (pattern.startsWith(lowerChar)) {
-          debug.typing.branch(`次の文字のパターンマッチ: "${pattern}" が "${lowerChar}" で始まります`);
+      for (const pattern of nextChar.patterns) {        if (pattern.startsWith(lowerChar)) {
+          debug.log(`次の文字のパターンマッチ: "${pattern}" が "${lowerChar}" で始まります`);
+          debug.typing.branch();
           this.acceptedInput = 'n';
           this.completed = true;
           this.countedPoint = this.basePoint;
           this.endBranching();
           this.calculateRemainingText();
           return { success: true, completeWithSingle: true };
-        }
-      }
+        }      }
     }
 
-    debug.typing.branch(`分岐状態で無効なキー: "${lowerChar}"`);
+    debug.log(`分岐状態で無効なキー: "${lowerChar}"`);
+    debug.typing.branch();
     return { success: false };
   }
 
