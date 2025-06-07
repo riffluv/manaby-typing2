@@ -28,9 +28,8 @@ export class PerformanceProfiler {
     }
     
     this.measurements.get(label)!.push(duration);
-    
-    // 即座にコンソール出力（遅延特定用）
-    if (duration > 5) { // 5ms以上の処理は警告
+      // 即座にコンソール出力（遅延特定用・厳しい基準）
+    if (duration > 3) { // 3ms以上の処理は警告（sub-5ms目標のため）
       console.warn(`⚠️ 遅延検出: ${label} = ${duration.toFixed(2)}ms`);
     }
     

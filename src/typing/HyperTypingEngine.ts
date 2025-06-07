@@ -349,16 +349,12 @@ export class HyperTypingEngine {
       console.error('事前計算エラー:', error);
     }
   }  /**
-   * 🚀 Phase 1.2: 予測キャッシング - 0ms応答実現
+   * 🚀 Phase 1.2: 予測キャッシング - 0ms応答実現（完全最適化版）
    */
   private processKey(key: string): void {
-    const startTime = PerformanceProfiler.start('hyper_typing_process_key');
-    
     // 初回キー入力時に音声システムを初期化（ユーザージェスチャー対応）
     if (this.state.keyCount === 0) {
-      PerformanceProfiler.measure('audioContext_resume', () => {
-        OptimizedAudioSystem.resumeAudioContext();
-      });
+      OptimizedAudioSystem.resumeAudioContext();
     }
     
     if (this.state.startTime === 0) {
@@ -367,11 +363,89 @@ export class HyperTypingEngine {
 
     this.state.keyCount++;
 
-    // 軽量化：直接処理のみ（キャッシュ処理を削除）
-    this.processKeyDirect(key);
-    
-    PerformanceProfiler.end('hyper_typing_process_key', startTime);
+    // 超軽量化：直接処理のみ（全ての測定オーバーヘッドを削除）
+    this.processKeyDirectOptimized(key);
   }
+  
+  /**
+   * 超高速キー処理（パフォーマンス測定オーバーヘッドを削除）
+   */
+  private processKeyDirectOptimized(key: string): void {
+    const currentChar = this.state.typingChars[this.state.currentIndex];
+    if (!currentChar) return;
+
+    // 「ん」の分岐状態処理
+    if (currentChar.branchingState) {
+      const nextChar = this.state.typingChars[this.state.currentIndex + 1];
+      const result = currentChar.typeBranching(key, nextChar);
+      
+      if (result.success) {
+        OptimizedAudioSystem.playClickSound();
+        
+        if (result.completeWithSingle) {
+          // 'n'パターン選択の場合 - 次の文字に進んで子音処理
+          this.state.currentIndex++;
+          
+          if (nextChar) {
+            // 次の文字への子音継続処理
+            const nextResult = nextChar.type(key);
+            if (nextResult && nextChar.completed) {
+              this.state.currentIndex++;
+              
+              // 単語完了チェック
+              if (this.state.currentIndex >= this.state.typingChars.length) {
+                this.handleWordComplete();
+                return;
+              }
+            }
+          }
+        } else {
+          // 'nn'パターンで完了した場合
+          this.state.currentIndex++;
+          
+          // 単語完了チェック
+          if (this.state.currentIndex >= this.state.typingChars.length) {
+            this.handleWordComplete();
+            return;
+          }        }
+        
+        this.updateDisplay();
+        this.notifyProgress();
+        return;
+      } else {
+        // 分岐状態で無効なキーが入力された場合
+        this.state.mistakeCount++;
+        OptimizedAudioSystem.playErrorSound();
+        this.updateDisplay();
+        this.notifyProgress();
+        return;
+      }
+    }
+
+    // 通常のタイピング処理
+    const isCorrect = currentChar.type(key);
+
+    if (isCorrect) {
+      OptimizedAudioSystem.playClickSound();
+
+      if (currentChar.completed) {
+        this.state.currentIndex++;
+        
+        // 単語完了チェック
+        if (this.state.currentIndex >= this.state.typingChars.length) {
+          this.handleWordComplete();
+          return;
+        }
+      }
+    } else {
+      this.state.mistakeCount++;
+      OptimizedAudioSystem.playErrorSound();
+    }
+
+    this.updateDisplay();
+    this.notifyProgress();
+  }
+
   /**
    * 通常のキー処理（既存ロジックをラップ）
    */
@@ -509,61 +583,34 @@ export class HyperTypingEngine {
     this.updateDisplay();
     this.notifyProgress();
   }  /**
-   * 軽量化：シンプルなDOM更新（差分チェックを削除）
+   * 超軽量DOM更新（パフォーマンス測定オーバーヘッドを完全削除）
    */
   private updateDisplay(): void {
-    const startTime = PerformanceProfiler.start('updateDisplay');
-    
-    if (!this.displayElements) {
-      PerformanceProfiler.end('updateDisplay', startTime);
-      return;
-    }
+    if (!this.displayElements) return;
 
     const currentChar = this.state.typingChars[this.state.currentIndex];
-    if (!currentChar) {
-      PerformanceProfiler.end('updateDisplay', startTime);
-      return;
-    }
+    if (!currentChar) return;
 
-    const displayInfoStartTime = PerformanceProfiler.start('getDisplayInfo');
     const displayInfo = currentChar.getDisplayInfo();
-    PerformanceProfiler.end('getDisplayInfo', displayInfoStartTime);
 
-    // 軽量化：差分チェックを削除して直接更新
-    PerformanceProfiler.measure('dom_kana_update', () => {
-      this.displayElements!.kanaElement.textContent = displayInfo.displayText;
-    });
+    // 直接DOM更新（測定オーバーヘッドなし）
+    this.displayElements.kanaElement.textContent = displayInfo.displayText;
     
-    PerformanceProfiler.measure('dom_romaji_update', () => {
-      this.displayElements!.romajiElement.innerHTML = `
-        <span class="accepted">${displayInfo.acceptedText}</span>
-        <span class="remaining">${displayInfo.remainingText}</span>
-      `;
-    });
+    this.displayElements.romajiElement.innerHTML = `
+      <span class="accepted">${displayInfo.acceptedText}</span>
+      <span class="remaining">${displayInfo.remainingText}</span>
+    `;
 
-    PerformanceProfiler.measure('dom_progress_update', () => {
-      const progress = Math.floor((this.state.currentIndex / this.state.typingChars.length) * 100);
-      this.displayElements!.progressElement.textContent = `${progress}%`;
-    });
-    
-    PerformanceProfiler.end('updateDisplay', startTime);
-  }
-  /**
-   * 進捗通知
+    const progress = Math.floor((this.state.currentIndex / this.state.typingChars.length) * 100);
+    this.displayElements.progressElement.textContent = `${progress}%`;
+  }  /**
+   * 超軽量進捗通知（パフォーマンス測定オーバーヘッドを完全削除）
    */
   private notifyProgress(): void {
-    const startTime = PerformanceProfiler.start('notifyProgress');
-    
-    if (!this.onProgress) {
-      PerformanceProfiler.end('notifyProgress', startTime);
-      return;
-    }
+    if (!this.onProgress) return;
 
     const currentChar = this.state.typingChars[this.state.currentIndex];
-    if (!currentChar) {
-      PerformanceProfiler.end('notifyProgress', startTime);
-      return;
-    }
+    if (!currentChar) return;
 
     const displayInfo = currentChar.getDisplayInfo();
     const kanaDisplay: KanaDisplay = {
@@ -572,11 +619,8 @@ export class HyperTypingEngine {
       displayText: displayInfo.displayText,
     };
 
-    PerformanceProfiler.measure('progress_callback', () => {
-      this.onProgress!(this.state.currentIndex, kanaDisplay);
-    });
-    
-    PerformanceProfiler.end('notifyProgress', startTime);
+    // 直接コールバック実行（測定オーバーヘッドなし）
+    this.onProgress(this.state.currentIndex, kanaDisplay);
   }
 
   /**

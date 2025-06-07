@@ -1,7 +1,10 @@
+import { PerformanceProfiler } from './PerformanceProfiler';
+
 /**
  * BGM専用MP3プレイヤーシステム
  * 打撃音WebAudioシステムとは完全分離
  * SPA全体でBGMが途切れない設計
+ * パフォーマンス影響調査機能付き
  */
 
 export type BGMMode = 'lobby' | 'game' | 'result' | 'settings' | 'ranking' | 'silent';
@@ -29,6 +32,7 @@ class BGMPlayer {
   private isInitialized = false;
   private fadeInterval: NodeJS.Timeout | null = null;
   private globalVolume = 0.5; // マスター音量
+  private performanceDebugMode = false; // パフォーマンス調査モード
 
   constructor() {
     this.initialize();
@@ -40,34 +44,69 @@ class BGMPlayer {
   }
 
   /**
-   * BGMモード切り替え（フェード付き）
-   */  async switchMode(mode: BGMMode): Promise<void> {
-    if (this.currentMode === mode) return;
-    
-    const track = BGM_TRACKS[mode];
-    
-    // 無音モードまたはトラック未設定の場合
-    if (!track) {
-      await this.stop();
-      this.currentMode = mode;
-      return;
+   * 🔍 パフォーマンス調査: BGM処理無効化
+   */
+  setPerformanceDebugMode(enabled: boolean): void {
+    this.performanceDebugMode = enabled;
+    if (enabled) {
+      console.log('[BGMPlayer] 🔍 パフォーマンス調査モード: BGM処理を無効化');
+      this.stop(); // 既存のBGMを停止
     }
-
-    // 現在の音楽をフェードアウト
-    if (this.currentAudio && !this.currentAudio.paused) {
-      await this.fadeOut();
-    }
-
-    // 新しい音楽を開始
-    await this.playTrack(track);
-    this.currentMode = mode;
   }
 
   /**
-   * 指定トラックを再生
+   * BGMモード切り替え（フェード付き） - パフォーマンス計測版
+   */
+  async switchMode(mode: BGMMode): Promise<void> {
+    const startTime = PerformanceProfiler.start('bgm_mode_switch');
+    
+    try {
+      // パフォーマンス調査モードの場合は何もしない
+      if (this.performanceDebugMode) {
+        PerformanceProfiler.end('bgm_mode_switch', startTime);
+        return;
+      }
+
+      if (this.currentMode === mode) {
+        PerformanceProfiler.end('bgm_mode_switch', startTime);
+        return;
+      }
+      
+      const track = BGM_TRACKS[mode];
+      
+      // 無音モードまたはトラック未設定の場合
+      if (!track) {
+        await this.stop();
+        this.currentMode = mode;
+        PerformanceProfiler.end('bgm_mode_switch', startTime);
+        return;
+      }
+
+      // 現在の音楽をフェードアウト
+      if (this.currentAudio && !this.currentAudio.paused) {
+        await this.fadeOut();
+      }
+
+      // 新しい音楽を開始
+      await this.playTrack(track);
+      this.currentMode = mode;
+    } finally {
+      PerformanceProfiler.end('bgm_mode_switch', startTime);
+    }
+  }
+  /**
+   * 指定トラックを再生 - パフォーマンス計測版
    */
   private async playTrack(track: BGMTrack): Promise<void> {
+    const startTime = PerformanceProfiler.start('bgm_track_play');
+    
     try {
+      // パフォーマンス調査モードの場合は何もしない
+      if (this.performanceDebugMode) {
+        PerformanceProfiler.end('bgm_track_play', startTime);
+        return;
+      }
+
       // 新しいAudioオブジェクト作成
       this.currentAudio = new Audio(`/sounds/bgm/${track.filename}`);
       this.currentAudio.loop = track.loop;
@@ -84,11 +123,13 @@ class BGMPlayer {
 
       // 再生開始
       await this.currentAudio.play();
-        // フェードイン
+      // フェードイン
       await this.fadeIn(track.volume * this.globalVolume);
       
     } catch (error) {
       console.warn(`[BGMPlayer] ⚠️ BGM再生エラー: ${track.filename}`, error);
+    } finally {
+      PerformanceProfiler.end('bgm_track_play', startTime);
     }
   }
 
@@ -171,16 +212,16 @@ class BGMPlayer {
       }
     }
   }
-
   /**
-   * 現在の状態取得
+   * 現在の状態取得 - パフォーマンス情報付き
    */
   getStatus() {
     return {
       currentMode: this.currentMode,
       isPlaying: this.currentAudio && !this.currentAudio.paused,
       volume: this.globalVolume,
-      trackConfigured: !!BGM_TRACKS[this.currentMode]
+      trackConfigured: !!BGM_TRACKS[this.currentMode],
+      performanceDebugMode: this.performanceDebugMode
     };
   }
 
