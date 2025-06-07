@@ -14,6 +14,7 @@ import type { KanaDisplay, PerWordScoreLog } from '@/types';
 import OptimizedAudioSystem from '@/utils/OptimizedAudioSystem';
 import { debug } from '../utils/debug';
 import { wasmTypingProcessor } from './wasm-integration/WasmTypingProcessor';
+import { PerformanceProfiler } from '@/utils/PerformanceProfiler';
 
 // 🚀 Phase 1: 予測キャッシングシステム
 interface CachedResult {
@@ -347,14 +348,17 @@ export class HyperTypingEngine {
     } catch (error) {
       console.error('事前計算エラー:', error);
     }
-  }
-
-  /**
+  }  /**
    * 🚀 Phase 1.2: 予測キャッシング - 0ms応答実現
-   */  private processKey(key: string): void {
+   */
+  private processKey(key: string): void {
+    const startTime = PerformanceProfiler.start('hyper_typing_process_key');
+    
     // 初回キー入力時に音声システムを初期化（ユーザージェスチャー対応）
     if (this.state.keyCount === 0) {
-      OptimizedAudioSystem.resumeAudioContext();
+      PerformanceProfiler.measure('audioContext_resume', () => {
+        OptimizedAudioSystem.resumeAudioContext();
+      });
     }
     
     if (this.state.startTime === 0) {
@@ -365,22 +369,34 @@ export class HyperTypingEngine {
 
     // 軽量化：直接処理のみ（キャッシュ処理を削除）
     this.processKeyDirect(key);
+    
+    PerformanceProfiler.end('hyper_typing_process_key', startTime);
   }
-
   /**
    * 通常のキー処理（既存ロジックをラップ）
    */
   private processKeyDirect(key: string): void {
+    const startTime = PerformanceProfiler.start('processKeyDirect');
+    
     const currentChar = this.state.typingChars[this.state.currentIndex];
-    if (!currentChar) return;
+    if (!currentChar) {
+      PerformanceProfiler.end('processKeyDirect', startTime);
+      return;
+    }
 
     // 「ん」の分岐状態処理
     if (currentChar.branchingState) {
+      const branchStartTime = PerformanceProfiler.start('branching_processing');
+      
       const nextChar = this.state.typingChars[this.state.currentIndex + 1];
       const result = currentChar.typeBranching(key, nextChar);
       
+      PerformanceProfiler.end('branching_processing', branchStartTime);
+      
       if (result.success) {
-        OptimizedAudioSystem.playClickSound();
+        PerformanceProfiler.measure('audio_success', () => {
+          OptimizedAudioSystem.playClickSound();
+        });
           if (result.completeWithSingle) {
           // 'n'パターン選択の場合 - 次の文字に進んで子音処理
           this.state.currentIndex++;
@@ -395,6 +411,7 @@ export class HyperTypingEngine {
                 // 単語完了チェック
                 if (this.state.currentIndex >= this.state.typingChars.length) {
                   this.handleWordComplete();
+                  PerformanceProfiler.end('processKeyDirect', startTime);
                   return;
                 }
               }
@@ -407,28 +424,37 @@ export class HyperTypingEngine {
           // 単語完了チェック
           if (this.state.currentIndex >= this.state.typingChars.length) {
             this.handleWordComplete();
+            PerformanceProfiler.end('processKeyDirect', startTime);
             return;
           }
         }
         
         this.updateDisplay();
         this.notifyProgress();
+        PerformanceProfiler.end('processKeyDirect', startTime);
         return;
       } else {
         // 分岐状態で無効なキーが入力された場合
         this.state.mistakeCount++;
-        OptimizedAudioSystem.playErrorSound();
+        PerformanceProfiler.measure('audio_error', () => {
+          OptimizedAudioSystem.playErrorSound();
+        });
         this.updateDisplay();
         this.notifyProgress();
+        PerformanceProfiler.end('processKeyDirect', startTime);
         return;
       }
     }
 
     // 通常のタイピング処理
+    const typingStartTime = PerformanceProfiler.start('character_typing');
     const isCorrect = currentChar.type(key);
+    PerformanceProfiler.end('character_typing', typingStartTime);
 
     if (isCorrect) {
-      OptimizedAudioSystem.playClickSound();
+      PerformanceProfiler.measure('audio_success', () => {
+        OptimizedAudioSystem.playClickSound();
+      });
 
       if (currentChar.completed) {
         this.state.currentIndex++;
@@ -436,16 +462,20 @@ export class HyperTypingEngine {
         // 単語完了チェック
         if (this.state.currentIndex >= this.state.typingChars.length) {
           this.handleWordComplete();
+          PerformanceProfiler.end('processKeyDirect', startTime);
           return;
         }
       }
     } else {
       this.state.mistakeCount++;
-      OptimizedAudioSystem.playErrorSound();
+      PerformanceProfiler.measure('audio_error', () => {
+        OptimizedAudioSystem.playErrorSound();
+      });
     }
 
     this.updateDisplay();
     this.notifyProgress();
+    PerformanceProfiler.end('processKeyDirect', startTime);
   }
 
   /**
@@ -478,38 +508,62 @@ export class HyperTypingEngine {
 
     this.updateDisplay();
     this.notifyProgress();
-  }
-  /**
+  }  /**
    * 軽量化：シンプルなDOM更新（差分チェックを削除）
    */
   private updateDisplay(): void {
-    if (!this.displayElements) return;
+    const startTime = PerformanceProfiler.start('updateDisplay');
+    
+    if (!this.displayElements) {
+      PerformanceProfiler.end('updateDisplay', startTime);
+      return;
+    }
 
     const currentChar = this.state.typingChars[this.state.currentIndex];
-    if (!currentChar) return;
+    if (!currentChar) {
+      PerformanceProfiler.end('updateDisplay', startTime);
+      return;
+    }
 
+    const displayInfoStartTime = PerformanceProfiler.start('getDisplayInfo');
     const displayInfo = currentChar.getDisplayInfo();
+    PerformanceProfiler.end('getDisplayInfo', displayInfoStartTime);
 
     // 軽量化：差分チェックを削除して直接更新
-    this.displayElements.kanaElement.textContent = displayInfo.displayText;
+    PerformanceProfiler.measure('dom_kana_update', () => {
+      this.displayElements!.kanaElement.textContent = displayInfo.displayText;
+    });
     
-    this.displayElements.romajiElement.innerHTML = `
-      <span class="accepted">${displayInfo.acceptedText}</span>
-      <span class="remaining">${displayInfo.remainingText}</span>
-    `;
+    PerformanceProfiler.measure('dom_romaji_update', () => {
+      this.displayElements!.romajiElement.innerHTML = `
+        <span class="accepted">${displayInfo.acceptedText}</span>
+        <span class="remaining">${displayInfo.remainingText}</span>
+      `;
+    });
 
-    const progress = Math.floor((this.state.currentIndex / this.state.typingChars.length) * 100);
-    this.displayElements.progressElement.textContent = `${progress}%`;
+    PerformanceProfiler.measure('dom_progress_update', () => {
+      const progress = Math.floor((this.state.currentIndex / this.state.typingChars.length) * 100);
+      this.displayElements!.progressElement.textContent = `${progress}%`;
+    });
+    
+    PerformanceProfiler.end('updateDisplay', startTime);
   }
-
   /**
    * 進捗通知
    */
   private notifyProgress(): void {
-    if (!this.onProgress) return;
+    const startTime = PerformanceProfiler.start('notifyProgress');
+    
+    if (!this.onProgress) {
+      PerformanceProfiler.end('notifyProgress', startTime);
+      return;
+    }
 
     const currentChar = this.state.typingChars[this.state.currentIndex];
-    if (!currentChar) return;
+    if (!currentChar) {
+      PerformanceProfiler.end('notifyProgress', startTime);
+      return;
+    }
 
     const displayInfo = currentChar.getDisplayInfo();
     const kanaDisplay: KanaDisplay = {
@@ -518,7 +572,11 @@ export class HyperTypingEngine {
       displayText: displayInfo.displayText,
     };
 
-    this.onProgress(this.state.currentIndex, kanaDisplay);
+    PerformanceProfiler.measure('progress_callback', () => {
+      this.onProgress!(this.state.currentIndex, kanaDisplay);
+    });
+    
+    PerformanceProfiler.end('notifyProgress', startTime);
   }
 
   /**

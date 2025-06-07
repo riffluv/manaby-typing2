@@ -3,6 +3,7 @@ import { useRouter } from 'next/navigation';
 import { useGameStatus, useTypingGameStore, useCurrentWord } from '@/store/typingGameStore';
 import { TypingWord, PerWordScoreLog, GameScoreLog } from '@/types';
 import { useScoreCalculation } from '@/hooks/useScoreCalculation';
+import { PerformanceProfiler } from '@/utils/PerformanceProfiler';
 import SimpleGameScreen from './SimpleGameScreen';
 import SimpleGameResultScreen from './SimpleGameResultScreen';
 import styles from '@/styles/components/SimpleUnifiedTypingGame.module.css';
@@ -89,10 +90,21 @@ const SimpleUnifiedTypingGame: React.FC<{
       // 次の単語に進む
       advanceToNextWord();
     }
-  };
-  // Escキーでメニューに戻る（ゲーム中のみ）
+  };  // Escキーでメニューに戻る（ゲーム中のみ）+ 包括的遅延計測
   useEffect(() => {
     const handleKeyDown = (e: KeyboardEvent) => {
+      // ⚡ エンドツーエンド遅延計測開始（統一ラベルで正確な統計収集）
+      if (e.key.length === 1 && gameStatus === 'playing') {
+        const startTime = PerformanceProfiler.start('end_to_end_input_delay');
+        
+        // 次のフレームで画面更新完了を確認
+        requestAnimationFrame(() => {
+          requestAnimationFrame(() => {
+            PerformanceProfiler.end('end_to_end_input_delay', startTime);
+          });
+        });
+      }
+      
       // ゲーム中のEscキーのみハンドル（タイピング入力との競合を避ける）
       if (e.key === 'Escape' && gameStatus === 'playing') {
         // タイピングエンジンがキャプチャモードなので、通常のイベントとして処理
@@ -104,9 +116,9 @@ const SimpleUnifiedTypingGame: React.FC<{
       }
     };
 
-    // captureフェーズではなく通常のイベントとして登録
-    window.addEventListener('keydown', handleKeyDown);
-    return () => window.removeEventListener('keydown', handleKeyDown);
+    // 🔍 高優先度：captureフェーズで早期測定開始
+    window.addEventListener('keydown', handleKeyDown, { capture: true, passive: false });
+    return () => window.removeEventListener('keydown', handleKeyDown, true);
   }, [gameStatus, onGoMenu, router]);
   // ゲーム状態に応じたレンダリング
   if (gameStatus === 'finished') {
