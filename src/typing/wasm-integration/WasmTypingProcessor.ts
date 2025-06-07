@@ -51,39 +51,40 @@ export class WasmTypingProcessor {
   }
   /**
    * WebAssemblyモジュールの初期化
-   */
-  private async initializeWasm(): Promise<void> {
+   */  private async initializeWasm(): Promise<void> {
     try {
-      console.log('🚀 WebAssembly初期化開始...');
+      // 軽量ログ：重要な情報のみ
       
       // サーバーサイドでは初期化をスキップ
       if (typeof window === 'undefined') {
-        console.log('🔧 サーバーサイド環境 - WebAssemblyをスキップ');
         return;
       }
 
       const wasmModule = await this.wasmLoader.loadWasmModule();
       
       if (wasmModule && wasmModule.WasmTypingCore) {
-        console.log('🎯 WasmTypingCoreインスタンス作成中...');
         this.wasmCore = this.wasmLoader.createWasmTypingCore();
         this.isWasmAvailable = true;
         
-        console.log('✅ WebAssembly初期化完了 - 高速モード有効');
-        
+        // 初期化テストを簡素化
         if (this.wasmCore) {
-          const testResult = this.wasmCore.convert_to_romaji('あ');
-          console.log('🧪 WebAssembly初期化テスト成功:', testResult);
-        }
+          try {
+            this.wasmCore.convert_to_romaji('あ');
+            console.log('✅ WebAssembly高速モード有効');
+          } catch (testError) {
+            console.warn('⚠️ WebAssembly初期化テスト失敗 - フォールバック使用');
+            this.isWasmAvailable = false;
+          }        }
         
         return;
       }
       
-      throw new Error('WebAssemblyモジュールの読み込みに失敗しました');
+      // WebAssemblyモジュール読み込み失敗時は静かにフォールバック
+      this.isWasmAvailable = false;
       
     } catch (error) {
-      console.warn('⚠️ WebAssembly初期化失敗 - TypeScriptフォールバックに切り替え');
-      console.error('Error details:', error);
+      // ログを最小限に
+      console.warn('⚠️ WebAssembly初期化失敗 - TypeScriptフォールバック使用');
       this.isWasmAvailable = false;
       this.wasmCore = null;
     }
@@ -176,7 +177,6 @@ export class WasmTypingProcessor {
       return this.fallbackGetNPatterns(nextChar);
     }
   }
-
   /**
    * バッチ変換（高速化）
    */
@@ -194,6 +194,28 @@ export class WasmTypingProcessor {
     } else {
       return Promise.all(hiraganaList.map(h => this.fallbackConvertToRomaji(h)));
     }
+  }
+
+  /**
+   * ひらがなをローマ字に変換（シンプル版）
+   */
+  async convertHiraganaToRomaji(hiragana: string): Promise<string> {
+    await this.waitForInitialization();
+
+    if (this.isWasmAvailable && this.wasmCore) {
+      try {
+        const results = this.wasmCore.convert_to_romaji(hiragana);
+        if (results && results.length > 0) {
+          // 最初の代替案を返す
+          return results[0].alternatives[0] || hiragana;
+        }
+      } catch (error) {
+        console.warn('WASM変換エラー - フォールバック使用:', error);
+      }
+    }
+    
+    // フォールバック: 基本的な変換
+    return this.fallbackHiraganaToRomaji(hiragana);
   }
 
   /**
@@ -229,13 +251,44 @@ export class WasmTypingProcessor {
     }
     return result;
   }
-
   /**
    * TypeScriptフォールバック: 文字マッチング
    */
   private fallbackMatchCharacter(inputChar: string, alternatives: string[]): boolean {
     return alternatives.includes(inputChar);
-  }  /**
+  }
+
+  /**
+   * TypeScriptフォールバック: ひらがなをローマ字に変換
+   */
+  private fallbackHiraganaToRomaji(hiragana: string): string {
+    const conversions: { [key: string]: string } = {
+      'あ': 'a', 'い': 'i', 'う': 'u', 'え': 'e', 'お': 'o',
+      'か': 'ka', 'き': 'ki', 'く': 'ku', 'け': 'ke', 'こ': 'ko',
+      'が': 'ga', 'ぎ': 'gi', 'ぐ': 'gu', 'げ': 'ge', 'ご': 'go',
+      'さ': 'sa', 'し': 'si', 'す': 'su', 'せ': 'se', 'そ': 'so',
+      'ざ': 'za', 'じ': 'zi', 'ず': 'zu', 'ぜ': 'ze', 'ぞ': 'zo',
+      'た': 'ta', 'ち': 'ti', 'つ': 'tu', 'て': 'te', 'と': 'to',
+      'だ': 'da', 'ぢ': 'di', 'づ': 'du', 'で': 'de', 'ど': 'do',
+      'な': 'na', 'に': 'ni', 'ぬ': 'nu', 'ね': 'ne', 'の': 'no',
+      'は': 'ha', 'ひ': 'hi', 'ふ': 'hu', 'へ': 'he', 'ほ': 'ho',
+      'ば': 'ba', 'び': 'bi', 'ぶ': 'bu', 'べ': 'be', 'ぼ': 'bo',
+      'ぱ': 'pa', 'ぴ': 'pi', 'ぷ': 'pu', 'ぺ': 'pe', 'ぽ': 'po',
+      'ま': 'ma', 'み': 'mi', 'む': 'mu', 'め': 'me', 'も': 'mo',
+      'や': 'ya', 'ゆ': 'yu', 'よ': 'yo',
+      'ら': 'ra', 'り': 'ri', 'る': 'ru', 'れ': 're', 'ろ': 'ro',
+      'わ': 'wa', 'ゐ': 'wi', 'ゑ': 'we', 'を': 'wo',
+      'ん': 'n'
+    };
+
+    // 完全一致を最初にチェック
+    if (conversions[hiragana]) {
+      return conversions[hiragana];
+    }
+
+    // 文字単位での変換
+    return Array.from(hiragana).map(char => conversions[char] || char).join('');
+  }/**
    * パフォーマンス統計の取得
    */
   getPerformanceStats() {
