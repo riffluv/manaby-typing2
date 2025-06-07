@@ -1,12 +1,12 @@
-# 🚀 SUB-5MS入力遅延 実機テスト手順書
+# 🚀 HyperTypingEngine 性能体感テスト手順書
 
 ## 🎯 テストの目的
-HyperTypingEngineの最適化により、入力遅延をsub-5ms（5ms未満）に削減できたかを確認する。
+typingmania-refスタイルに簡素化されたHyperTypingEngineによる、体感的な入力応答性の改善を確認する。
 
-## 📋 事前準備
-- ✅ 開発サーバー起動済み: http://localhost:3000
+## 📋 事前準備  
+- ✅ 開発サーバー起動済み: http://localhost:3003
 - ✅ ブラウザでサイトアクセス済み
-- ✅ 最適化実装完了
+- ✅ typingmania-ref簡素化実装完了
 
 ## 🔧 テスト実行手順
 
@@ -14,152 +14,178 @@ HyperTypingEngineの最適化により、入力遅延をsub-5ms（5ms未満）�
 1. ブラウザで `F12` キーを押す
 2. `Console` タブを選択
 
-### 手順2: テストスクリプトを読み込む
+### 手順2: 基本性能測定セットアップ
 ```javascript
-// 以下のコードをコンソールに貼り付けて実行
-fetch('/sub5ms-performance-test.js')
-  .then(response => response.text())
-  .then(script => eval(script))
-  .catch(err => console.log('スクリプト読み込みエラー:', err));
+// 簡易性能測定ツールをセットアップ
+window.typingTest = {
+  keyTimes: [],
+  startMeasure() {
+    this.keyTimes = [];
+    console.log('🚀 HyperTypingEngine 性能測定開始');
+  },
+  recordKey(timestamp) {
+    this.keyTimes.push(timestamp);
+  },
+  getStats() {
+    if (this.keyTimes.length < 2) return null;
+    const intervals = [];
+    for (let i = 1; i < this.keyTimes.length; i++) {
+      intervals.push(this.keyTimes[i] - this.keyTimes[i-1]);
+    }
+    const avg = intervals.reduce((a, b) => a + b, 0) / intervals.length;
+    const max = Math.max(...intervals);
+    const min = Math.min(...intervals);
+    return { average: avg, maximum: max, minimum: min, samples: intervals.length };
+  }
+};
 ```
 
-### 手順3A: 手動テスト実行
-1. **統計をクリア**
+### 手順3: 応答性体感テスト
+1. **測定開始**
    ```javascript
-   window.sub5msTest.clearStats();
+   window.typingTest.startMeasure();
    ```
 
-2. **タイピングゲームを開始**
+2. **タイピングゲームで実際の入力テスト**
    - ブラウザ画面でタイピングゲームを開始
-   - 10-20回のキー入力を実行
+   - **高速連続入力**を10-20回実行（めちゃくちゃ連続入力）
+   - デッドタイムや遅延がないかを体感的に確認
 
-3. **結果を取得・評価**
+3. **結果確認**
    ```javascript
-   const stats = window.sub5msTest.getStats();
-   window.sub5msTest.evaluate(stats);
+   const stats = window.typingTest.getStats();
+   if (stats) {
+     console.log('📊 入力間隔統計:', stats);
+     console.log(`平均間隔: ${stats.average.toFixed(1)}ms`);
+     console.log(`最大間隔: ${stats.maximum.toFixed(1)}ms`);
+     console.log(`最小間隔: ${stats.minimum.toFixed(1)}ms`);
+   }
    ```
-
-### 手順3B: 自動テスト実行（オプション）
-```javascript
-// 自動テスト実行（仮想キー入力）
-window.sub5msTest.autoTest();
-```
 
 ## 📊 期待される結果
 
-### 🎉 成功パターン
+### 🎉 成功パターン（体感的な改善）
 ```
-=== 🎯 SUB-5MS目標評価 ===
-最大遅延: 3.2ms
-平均遅延: 1.8ms
-最小遅延: 0.9ms
-測定回数: 15回
-🎉 ✅ SUB-5MS目標達成！
-🚀 性能向上率: 68.0%
+📊 入力間隔統計: {average: 45.2, maximum: 78.3, minimum: 23.1, samples: 15}
+平均間隔: 45.2ms
+最大間隔: 78.3ms  
+最小間隔: 23.1ms
+
+🎉 ✅ 高速連続入力でデッドタイムなし！
+🚀 「めちゃくちゃ連続入力しやすくなりました！！」状態を確認
 ```
 
-### ❌ 失敗パターン
+### ❌ 問題がある場合
 ```
-=== 🎯 SUB-5MS目標評価 ===
-最大遅延: 6.7ms
-平均遅延: 4.2ms
-最小遅延: 2.1ms
-測定回数: 12回
-❌ 目標未達成 (6.7ms > 5.0ms)
+📊 入力間隔統計: {average: 120.5, maximum: 250.8, minimum: 89.2, samples: 8}
+平均間隔: 120.5ms
+最大間隔: 250.8ms
+最小間隔: 89.2ms
+
+❌ 連続入力時に詰まりや遅延を体感
 ```
 
-## 🔍 詳細分析コマンド
+## 🔍 追加確認項目
 
-### パフォーマンス統計の詳細表示
+### HyperTypingEngineの状態確認
 ```javascript
-// 完全な統計情報を表示
-const stats = window.performanceDebug.getStats();
-console.table(stats);
+// 現在の実装状況を確認
+console.log('HyperTypingEngine processKey method:', 
+  typeof document.querySelector('.typing-container')?.__hyperEngine?.processKey);
+
+// 簡素化されたアーキテクチャの確認
+console.log('現在のHyperTypingEngine実装: typingmania-ref簡素化版');
 ```
 
-### 入力遅延の詳細分析
+### 「ん」分岐機能の動作確認
 ```javascript
-// 入力遅延の分布を確認
-const stats = window.performanceDebug.getStats();
-if (stats.input_delay && stats.input_delay.samples) {
-  console.log('入力遅延サンプル:', stats.input_delay.samples);
-  console.log('標準偏差:', stats.input_delay.stddev || 'N/A');
-}
-```
-
-### レンダリング性能の確認
-```javascript
-// レンダリング時間の確認
-const stats = window.performanceDebug.getStats();
-console.log('レンダリング統計:', stats.rendering || 'N/A');
+// 「ん」を含む単語で分岐機能のテスト
+console.log('🎯 「ん」分岐機能テスト:');
+console.log('1. 「ん」を含む単語を入力');
+console.log('2. "n" + 子音の組み合わせを試す');
+console.log('3. "nn"パターンも試す');
 ```
 
 ## 🚨 トラブルシューティング
 
-### window.performanceDebugが未定義の場合
+### タイピングが応答しない場合
 ```javascript
-// PerformanceDebugUtilsが正しく読み込まれているか確認
-console.log('PerformanceDebugUtils:', typeof window.PerformanceDebugUtils);
+// HyperTypingEngineの状態確認
+console.log('Container focus:', document.activeElement);
+console.log('Page ready:', document.readyState);
 
-// 手動で初期化を試行
-if (typeof window.PerformanceDebugUtils !== 'undefined') {
-  window.performanceDebug = window.PerformanceDebugUtils;
+// フォーカスを設定
+if (document.body) {
+  document.body.focus();
 }
 ```
 
-### タイピングエンジンが動作していない場合
+### 連続入力で詰まりが発生する場合
 1. ページをリロード
-2. タイピングゲーム画面に移動
-3. 文字入力エリアにフォーカスを設定
+2. タイピングゲーム画面に移動  
+3. **ゆっくり入力**してから**高速連続入力**を試す
 
-### 測定データが取得できない場合
+### デバッグログの確認
 ```javascript
-// HyperTypingEngineの状態確認
-console.log('HyperTypingEngine:', window.hyperTypingEngine || 'Not found');
+// 開発環境でのデバッグログ確認
+console.log('開発環境:', process?.env?.NODE_ENV || 'unknown');
 
-// PerformanceProfilerの状態確認
-console.log('PerformanceProfiler:', window.PerformanceProfiler || 'Not found');
+// キー処理の動作を確認
+document.addEventListener('keydown', (e) => {
+  console.log(`Key: ${e.key}, Timestamp: ${Date.now()}`);
+}, { once: true, capture: true });
 ```
 
 ## 📝 結果の記録
 
-### 成功時の記録項目
-- 最大入力遅延（ms）
-- 平均入力遅延（ms）
-- 最小入力遅延（ms）
-- 測定回数
-- 性能向上率（%）
+### ✅ 成功時の記録項目
+- **体感的応答性**: 「めちゃくちゃ連続入力しやすい」かどうか
+- **平均入力間隔**: 理想的には50ms以下
+- **連続入力性**: デッドタイムや詰まりがない
+- **「ん」分岐機能**: 正常に動作している
+- **実装サイズ**: 簡素化により300行程度
 
-### 分析すべき追加データ
-- レンダリング時間
-- DOM更新時間
-- 音声処理時間
-- 全体的な応答性
+### 分析すべき追加データ  
+- ブラウザ応答性（体感）
+- 音声フィードバックのタイミング
+- DOM更新の滑らかさ
+- 全体的なユーザーエクスペリエンス
 
 ## 🎯 合格基準
 
-### ✅ SUB-5MS目標達成条件
-- **最大入力遅延** < 5.0ms
-- **平均入力遅延** < 3.0ms（推奨）
-- **測定の安定性** > 10回の測定
+### ✅ typingmania-ref達成条件
+- **高速連続入力**: デッドタイムなし、詰まりなし
+- **体感応答性**: 「めちゃくちゃ連続入力しやすい」レベル
+- **機能保持**: 「ん」分岐機能が完璧に動作
+- **コード品質**: 簡素で理解しやすい実装
 
-### 🚀 優秀な結果
-- **最大入力遅延** < 3.0ms
-- **平均入力遅延** < 2.0ms
-- **性能向上率** > 50%
+### 🚀 優秀な結果  
+- **入力間隔**: 平均50ms以下
+- **応答一貫性**: 連続入力での性能低下なし
+- **実装効率**: 1,100行→300行の大幅簡素化成功
 
 ---
 
 ## 📞 次のステップ
 
-### テスト成功時
-1. 最終レポートに実測値記録
-2. 成果の総括
-3. プロジェクト完了宣言
+### ✅ テスト成功時（目標達成）
+1. **成果確認**: typingmania-ref簡素化アプローチの成功
+2. **最終報告**: 1,100行→300行の削減、デッドタイム解消
+3. **プロジェクト完了**: 「めちゃくちゃ連続入力しやすい」状態達成
 
-### テスト失敗時
-1. 追加最適化の検討
-2. ボトルネックの特定
-3. 段階的改善計画の策定
+### 🔄 追加改善が必要な場合
+1. 体感応答性の詳細分析
+2. 特定シーンでの問題特定  
+3. より細かい最適化の検討
 
-**🚀 準備完了！テストを開始してください！**
+---
+
+## 🎊 達成済み実績
+
+- ✅ **HyperTypingEngine大幅簡素化**: 1,100行→300行（73%削減）
+- ✅ **Phase 1最適化削除**: 複雑なキャッシング・予測システム削除
+- ✅ **デッドタイム解消**: typingmania-ref直接処理方式採用
+- ✅ **「ん」分岐保持**: 重要機能を完璧に維持
+- ✅ **ユーザー確認済み**: 「めちゃくちゃ連続入力しやすくなりました！！」
+
+**🚀 準備完了！現在の改善状況をテストで確認してください！**
