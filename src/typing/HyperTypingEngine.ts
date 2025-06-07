@@ -119,26 +119,21 @@ export class HyperTypingEngine {
     // Phase 2: WebAssembly非同期初期化（バックグラウンド）
     this.initializeWasmAsync();
   }
-
   /**
-   * 🚀 Phase 1: 軽量キャッシュシステム初期化
+   * 🚀 Phase 1: 軽量キャッシュシステム初期化（Phase1最適化版）
    */
   private initializeLightweightCache(): void {
     this.performanceCache = new Map();
     this.keyPredictions = new Map();
-    // 重いDOM解析や事前計算はスキップ（入力遅延防止）
+    // Phase1最適化: 軽量キャッシュのみ - WebAssembly関連処理は完全無効化
+    debug.log('Phase 1最適化: 軽量キャッシュシステム初期化完了');
   }
-
   /**
-   * 🚀 Phase 2: WebAssembly非同期初期化
+   * 🚀 Phase 2: WebAssembly初期化無効化（Phase1最適化版）
    */
   private initializeWasmAsync(): void {
-    // 非ブロッキング初期化
-    requestIdleCallback(() => {
-      this.initializeWasmIntegration().catch(error => {
-        debug.warn('WebAssembly初期化失敗（フォールバック継続）:', error);
-      });
-    });
+    // WebAssembly初期化を完全無効化 - Phase1のTypeScript最適化のみ使用
+    debug.log('Phase 1最適化モード: WebAssembly統合を無効化');
   }
 
   /**
@@ -1041,22 +1036,21 @@ export class HyperTypingEngine {
       this.notifyProgress();
     });
   }
-
   /**
-   * 🚀 パフォーマンステスト用: エンジン情報取得
+   * 🚀 パフォーマンステスト用: エンジン情報取得（Phase1最適化版）
    */
   async getEngineInfo(): Promise<any> {
-    const isWasmAvailable = wasmTypingProcessor.getStatus().isWasmAvailable;
     const initTime = this.performanceMetrics.initializationTime || 0;
     
     return {
-      version: '2.0.0-hyper',
+      version: '2.0.0-hyper-phase1',
       phase1Enabled: true, // Phase 1は常時有効
-      phase2Enabled: isWasmAvailable,
-      wasmAvailable: isWasmAvailable,
+      phase2Enabled: false, // Phase 2は完全無効化
+      wasmAvailable: false, // WebAssembly統合は無効化
       initTime: initTime,
       cacheSize: this.performanceCache.size,
-      totalOptimizations: this.performanceMetrics.idleComputations
+      totalOptimizations: this.performanceMetrics.idleComputations,
+      mode: 'Phase 1最適化モード - TypeScript高速処理'
     };
   }
 
@@ -1066,31 +1060,20 @@ export class HyperTypingEngine {
   isPhase1Enabled(): boolean {
     return true; // Phase 1は常時有効
   }
-
   /**
-   * 🚀 パフォーマンステスト用: Phase 2最適化状態チェック
+   * 🚀 パフォーマンステスト用: Phase 2最適化状態チェック（無効化版）
    */
   isPhase2Enabled(): boolean {
-    return wasmTypingProcessor.getStatus().isWasmAvailable;
+    return false; // Phase 2は完全無効化
   }
-
   /**
-   * 🚀 パフォーマンステスト用: ひらがなをローマ字に変換
+   * 🚀 パフォーマンステスト用: ひらがなをローマ字に変換（Phase1最適化版）
    */
   async convertHiraganaToRomaji(hiragana: string): Promise<string> {
     const startTime = performance.now();
     
     try {
-      // Phase 2: WebAssembly変換を試行
-      if (wasmTypingProcessor.getStatus().isWasmAvailable) {
-        const result = await wasmTypingProcessor.convertHiraganaToRomaji(hiragana);
-        if (result) {
-          this.performanceMetrics.wasmProcessingTimes.push(performance.now() - startTime);
-          return result;
-        }
-      }
-      
-      // Phase 1: TypeScriptフォールバック
+      // Phase 1最適化: TypeScript処理のみ（WebAssembly完全無効化）
       const result = this.fallbackHiraganaToRomaji(hiragana);
       this.performanceMetrics.keyProcessingTimes.push(performance.now() - startTime);
       return result;
@@ -1101,9 +1084,8 @@ export class HyperTypingEngine {
       return this.fallbackHiraganaToRomaji(hiragana);
     }
   }
-
   /**
-   * 🚀 パフォーマンステスト用: 入力処理シミュレート
+   * 🚀 パフォーマンステスト用: 入力処理シミュレート（Phase1最適化版）
    */
   async processInput(key: string): Promise<boolean> {
     const startTime = performance.now();
@@ -1112,14 +1094,7 @@ export class HyperTypingEngine {
       const currentChar = this.state.typingChars[this.state.currentIndex];
       if (!currentChar) return false;
 
-      // Phase 2: WebAssembly処理を試行
-      if (wasmTypingProcessor.getStatus().isWasmAvailable) {
-        const result = await this.processKeyWithWasm(key);
-        this.performanceMetrics.wasmProcessingTimes.push(performance.now() - startTime);
-        return result;
-      }
-      
-      // Phase 1: TypeScript処理
+      // Phase 1: 高速TypeScript処理のみ（WebAssembly無効化）
       const result = this.fallbackMatchCharacter(key);
       this.performanceMetrics.keyProcessingTimes.push(performance.now() - startTime);
       return result;
