@@ -13,7 +13,6 @@ import { TypingChar, type DisplayInfo } from './TypingChar';
 import type { KanaDisplay, PerWordScoreLog } from '@/types';
 import OptimizedAudioSystem from '@/utils/OptimizedAudioSystem';
 import { debug } from '../utils/debug';
-import { wasmTypingProcessor } from './wasm-integration/WasmTypingProcessor';
 import { PerformanceProfiler } from '@/utils/PerformanceProfiler';
 
 // 🚀 Phase 1: 予測キャッシングシステム
@@ -806,53 +805,16 @@ export class HyperTypingEngine {
     // debug.typing.log();
   }  /**
    * 🚀 Phase 2: WebAssembly統合初期化（軽量版）
-   */
-  private async initializeWasmIntegration(): Promise<void> {
-    try {
-      // 軽量初期化：ログ出力を最小限に
-      await wasmTypingProcessor.waitForInitialization();
-      
-      const status = wasmTypingProcessor.getStatus();
-      if (status.isWasmAvailable) {
-        this.performanceMetrics.wasmHitRate = 1;
-        debug.log('🚀 Phase 2: WebAssembly高速モード有効');
-      } else {
-        this.performanceMetrics.wasmHitRate = 0;
-        debug.log('📝 Phase 2: TypeScriptフォールバックモード');
-      }
-      
-    } catch (error) {
-      this.performanceMetrics.wasmHitRate = 0;
-      // エラーログも最小限に
-      debug.warn('⚠️ Phase 2: WebAssembly初期化失敗 - フォールバック継続');
-    }
+   */  private async initializeWasmIntegration(): Promise<void> {
+    // Phase 2 WebAssembly統合を完全無効化
+    this.performanceMetrics.wasmHitRate = 0;
+    debug.log('📝 Phase 1最適化モード: WebAssembly統合を無効化');
   }
   /**
    * 🚀 Phase 2: WebAssembly高速文字マッチング処理
-   */
-  private async processKeyWithWasm(key: string): Promise<boolean> {
-    const startTime = performance.now();
-    
-    try {
-      const currentChar = this.state.typingChars[this.state.currentIndex];
-      if (!currentChar) return false;
-
-      // WebAssemblyで高速文字マッチング判定
-      const isMatch = await wasmTypingProcessor.matchCharacter(
-        key, 
-        currentChar.patterns
-      );
-
-      // Phase 2 性能計測
-      const processingTime = performance.now() - startTime;
-      this.performanceMetrics.wasmProcessingTimes.push(processingTime);
-
-      return isMatch;
-    } catch (error) {
-      debug.warn('WASM文字マッチングエラー - フォールバック使用:', error);
-      // フォールバック: 既存のTypeScript処理
-      return this.fallbackMatchCharacter(key);
-    }
+   */  private async processKeyWithWasm(key: string): Promise<boolean> {
+    // WebAssembly処理を無効化 - TypeScriptフォールバックを使用
+    return this.fallbackMatchCharacter(key);
   }
 
   /**
@@ -864,61 +826,34 @@ export class HyperTypingEngine {
     
     return currentChar.patterns.some((alt: string) => alt.startsWith(key));
   }
-
   /**
-   * 🚀 Phase 2: WebAssembly性能レポート生成
+   * 🚀 Phase 2: WebAssembly性能レポート生成（無効化版）
    */
   getWasmPerformanceReport(): any {
-    const status = wasmTypingProcessor.getStatus();
-    const wasmAvgTime = this.performanceMetrics.wasmProcessingTimes.length > 0
-      ? this.performanceMetrics.wasmProcessingTimes.reduce((a, b) => a + b, 0) / this.performanceMetrics.wasmProcessingTimes.length
-      : 0;
-
+    const wasmAvgTime = 0; // WebAssembly無効化
     const tsAvgTime = this.performanceMetrics.keyProcessingTimes.length > 0
       ? this.performanceMetrics.keyProcessingTimes.reduce((a, b) => a + b, 0) / this.performanceMetrics.keyProcessingTimes.length
       : 0;
 
-    const speedupRatio = tsAvgTime > 0 && wasmAvgTime > 0 ? tsAvgTime / wasmAvgTime : 1;
-
     return {
-      phase2Status: status,
+      phase2Status: { isWasmAvailable: false, isInitialized: false },
       performance: {
         wasmAvgProcessingTime: `${wasmAvgTime.toFixed(4)}ms`,
         typescriptAvgProcessingTime: `${tsAvgTime.toFixed(4)}ms`,
-        speedupRatio: `${speedupRatio.toFixed(1)}x`,
-        wasmProcessingCount: this.performanceMetrics.wasmProcessingTimes.length,
+        speedupRatio: '1.0x',
+        wasmProcessingCount: 0,
         totalKeyProcessingCount: this.performanceMetrics.keyProcessingTimes.length,
-        wasmUtilizationRate: `${(this.performanceMetrics.wasmHitRate * 100).toFixed(1)}%`
+        wasmUtilizationRate: '0.0%'
       },
-      summary: status.isWasmAvailable 
-        ? `🚀 WebAssembly高速化有効 - ${speedupRatio.toFixed(1)}倍高速`
-        : '⚠️ TypeScriptフォールバック実行中'
+      summary: '⚠️ Phase 1最適化モード - WebAssembly無効化'
     };
   }
-
   /**
-   * 🚀 Phase 2: WebAssembly高速バッチ変換処理
+   * 🚀 Phase 2: WebAssembly高速バッチ変換処理（無効化版）
    */
   private async processWithWasmBatch(textArray: string[]): Promise<TypingChar[][]> {
-    const startTime = performance.now();
-    
-    try {
-      // WebAssemblyで高速バッチ処理
-      const results = await wasmTypingProcessor.batchConvert(textArray);
-      
-      // Phase 2 性能計測
-      const processingTime = performance.now() - startTime;
-      this.performanceMetrics.wasmProcessingTimes.push(processingTime);
-      this.performanceMetrics.wasmHitRate = Math.min(this.performanceMetrics.wasmHitRate + 0.1, 1);
-      
-      debug.log(`🚀 WebAssemblyバッチ処理完了: ${textArray.length}件 ${processingTime.toFixed(3)}ms`);
-      return results;
-      
-    } catch (error) {
-      debug.warn('WASMバッチ処理エラー - フォールバック使用:', error);
-      // フォールバック: 既存のTypeScript処理
-      return textArray.map(text => this.fallbackConvertText(text));
-    }
+    // WebAssembly処理を無効化 - TypeScriptフォールバックを直接使用
+    return textArray.map(text => this.fallbackConvertText(text));
   }
 
   /**

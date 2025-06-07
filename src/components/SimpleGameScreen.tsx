@@ -1,7 +1,6 @@
 import React from 'react';
 import { TypingWord, PerWordScoreLog } from '@/types';
 import { useHyperTyping, JapaneseConverter } from '@/typing';
-import { wasmTypingProcessor } from '@/typing/wasm-integration/WasmTypingProcessor';
 import { PerformanceProfiler } from '@/utils/PerformanceProfiler';
 import styles from '@/styles/components/SimpleGameScreen.module.css';
 
