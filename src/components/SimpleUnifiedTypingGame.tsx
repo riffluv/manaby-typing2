@@ -3,7 +3,7 @@ import { useRouter } from 'next/navigation';
 import { useGameStatus, useTypingGameStore, useCurrentWord } from '@/store/typingGameStore';
 import { TypingWord, PerWordScoreLog, GameScoreLog } from '@/types';
 import { useScoreCalculation } from '@/hooks/useScoreCalculation';
-import { PerformanceProfiler } from '@/utils/PerformanceProfiler';
+// import { PerformanceProfiler } from '@/utils/PerformanceProfiler'; // sub-5ms optimization: 測定オーバーヘッド除去
 import SimpleGameScreen from './SimpleGameScreen';
 import SimpleGameResultScreen from './SimpleGameResultScreen';
 import styles from '@/styles/components/SimpleUnifiedTypingGame.module.css';
@@ -90,16 +90,11 @@ const SimpleUnifiedTypingGame: React.FC<{
       // 次の単語に進む
       advanceToNextWord();
     }
-  };  // Escキーでメニューに戻る（ゲーム中のみ）+ 包括的遅延計測
+  };  // Escキーでメニューに戻る（ゲーム中のみ）
   useEffect(() => {
     const handleKeyDown = (e: KeyboardEvent) => {
-      // ⚡ エンドツーエンド遅延計測（連続入力最適化のためrequestAnimationFrame除去）
-      if (e.key.length === 1 && gameStatus === 'playing') {
-        const startTime = PerformanceProfiler.start('end_to_end_input_delay');
-        
-        // 即座に測定終了（フレーム待機なしで連続入力遅延を解決）
-        PerformanceProfiler.end('end_to_end_input_delay', startTime);
-      }
+      // ⚡ PerformanceProfiler測定を完全除去（sub-5ms最適化）
+      // 連続入力遅延の原因となるrequestAnimationFrameと測定オーバーヘッドを除去
       
       // ゲーム中のEscキーのみハンドル（タイピング入力との競合を避ける）
       if (e.key === 'Escape' && gameStatus === 'playing') {

@@ -47,9 +47,8 @@ class BGMPlayer {
    * 🔍 パフォーマンス調査: BGM処理無効化
    */
   setPerformanceDebugMode(enabled: boolean): void {
-    this.performanceDebugMode = enabled;
-    if (enabled) {
-      console.log('[BGMPlayer] 🔍 パフォーマンス調査モード: BGM処理を無効化');
+    this.performanceDebugMode = enabled;    if (enabled) {
+      // console.log('[BGMPlayer] 🔍 パフォーマンス調査モード: BGM処理を無効化'); // sub-5ms optimization
       this.stop(); // 既存のBGMを停止
     }
   }

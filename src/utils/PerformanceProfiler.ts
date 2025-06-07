@@ -22,14 +22,13 @@ export class PerformanceProfiler {
     if (!this.isEnabled) return 0;
     
     const duration = performance.now() - startTime;
-    
-    if (!this.measurements.has(label)) {
+      if (!this.measurements.has(label)) {
       this.measurements.set(label, []);
     }
       this.measurements.get(label)!.push(duration);
       // 即座にコンソール出力（遅延特定用）
     if (duration > 5) { // 5ms以上の処理は警告（sub-5ms目標達成後の閾値）
-      console.warn(`⚠️ 遅延検出: ${label} = ${duration.toFixed(2)}ms`);
+      // console.warn(`⚠️ 遅延検出: ${label} = ${duration.toFixed(2)}ms`); // sub-5ms optimization: 警告出力除去
     }
     
     return duration;

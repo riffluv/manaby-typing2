@@ -11,19 +11,19 @@ const enableTypingDebug = false; // 完全無効化で詰まり解消
 export const debug = {
   log: (...args: any[]) => {
     if (isDevelopment && Math.random() < 0.1) { // 10%の確率でログ出力
-      console.log('[DEBUG]', ...args);
+      // console.log('[DEBUG]', ...args); // sub-5ms optimization: デバッグログ除去
     }
   },
   
   warn: (...args: any[]) => {
     if (isDevelopment) {
-      console.warn('[DEBUG WARN]', ...args);
+      // console.warn('[DEBUG WARN]', ...args); // sub-5ms optimization: デバッグログ除去
     }
   },
   
   error: (...args: any[]) => {
     if (isDevelopment) {
-      console.error('[DEBUG ERROR]', ...args);
+      // console.error('[DEBUG ERROR]', ...args); // sub-5ms optimization: デバッグログ除去
     }
   },
   
@@ -34,7 +34,7 @@ export const debug = {
       const end = performance.now();
       // 重要な処理のみログ出力（1ms以上）
       if (end - start > 1) {
-        console.log(`[PERFORMANCE] ${label}: ${(end - start).toFixed(3)}ms`);
+        // console.log(`[PERFORMANCE] ${label}: ${(end - start).toFixed(3)}ms`); // sub-5ms optimization: パフォーマンスログ除去
       }
       return result;
     }
