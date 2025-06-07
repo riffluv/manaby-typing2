@@ -66,13 +66,14 @@ export class HyperTypingEngine {
     this.state.mistakeCount = 0;
     this.state.startTime = 0;
     this.onProgress = onProgress;
-    this.onComplete = onComplete;
-
-    this.setupDOM();
+    this.onComplete = onComplete;    this.setupDOM();
     this.updateDisplay();
     this.setupKeyListener();
 
-    debug.log('🚀 HyperTypingEngine初期化完了 - シンプルモード');
+    // 初期化完了（本番環境ではログ削除推奨）
+    if (process.env.NODE_ENV === 'development') {
+      debug.log('🚀 HyperTypingEngine初期化完了 - シンプルモード');
+    }
   }
 
   /**
@@ -330,12 +331,13 @@ export class HyperTypingEngine {
     this.onProgress = undefined;
     this.onComplete = undefined;
   }
-
   /**
    * クリーンアップ（互換性のため）
    */
   cleanup(): void {
     this.destroy();
-    debug.log('🚀 HyperTypingEngine クリーンアップ完了');
+    if (process.env.NODE_ENV === 'development') {
+      debug.log('🚀 HyperTypingEngine クリーンアップ完了');
+    }
   }
 }

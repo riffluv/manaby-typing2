@@ -1,13 +1,12 @@
 /**
- * HyperTypingHook - Phase 1 性能突破 React統合フック
+ * HyperTypingHook - typingmania-ref スタイル React統合フック
  * 
  * 🚀 HyperTypingEngineをReactで使用するためのカスタムフック
- * 従来のuseTypingとの互換性を保ちながら性能向上機能を提供
+ * 従来のuseTypingとの互換性を保ちながらシンプルで高速な実装を提供
  */
 
 import { useRef, useState, useEffect } from 'react';
 import { HyperTypingEngine } from './HyperTypingEngine';
-import { PerformanceProfiler } from '@/utils/PerformanceProfiler';
 import type { TypingChar } from './TypingChar';
 import type { KanaDisplay, PerWordScoreLog, TypingWord } from '@/types';
 
@@ -37,11 +36,11 @@ export interface HyperTypingHookReturn {
 /**
  * 🚀 HyperTypingEngine React統合フック
  * 
- * Phase 1最適化機能:
- * - RequestIdleCallback背景計算
- * - 予測キャッシング 0ms応答
- * - 差分DOM更新システム
- * - 性能メトリクス取得
+ * typingmania-ref スタイルの特徴:
+ * - シンプルで直接的なキー処理
+ * - デッドタイム解消
+ * - 軽量DOM更新
+ * - 高速連続入力対応
  */
 export function useHyperTyping({
   word,
@@ -63,53 +62,38 @@ export function useHyperTyping({
       remainingText: string;
       displayText: string;
     };
-  } | null>(null);
-  /**
+  } | null>(null);  /**
    * 🚀 HyperTypingEngine 初期化
    * 従来のTypingEngineと同じ I/F を維持
    */
   const initializeEngine = () => {
-    const startTime = PerformanceProfiler.start('react_engine_initialization');
-    
     if (!containerRef.current || !typingChars.length) {
-      PerformanceProfiler.end('react_engine_initialization', startTime);
       return;
     }
 
     // 前のエンジンがあればクリーンアップ
     if (engineRef.current) {
-      PerformanceProfiler.measure('react_engine_cleanup', () => {
-        engineRef.current!.cleanup();
-      });
+      engineRef.current.cleanup();
     }
 
     // 🚀 新しいHyperTypingEngineを作成
-    const engineCreationStart = PerformanceProfiler.start('react_engine_creation');
     engineRef.current = new HyperTypingEngine();
-    PerformanceProfiler.end('react_engine_creation', engineCreationStart);
     
     // エンジン初期化（従来と同じインターフェース）
-    PerformanceProfiler.measure('react_engine_setup', () => {
-      engineRef.current!.initialize(
-        containerRef.current!,
-        typingChars,
-        (index: number, display: KanaDisplay) => {
-          PerformanceProfiler.measure('react_state_update_progress', () => {
-            setCurrentCharIndex(index);
-            setKanaDisplay(display);
-            updateDetailedProgress();
-          });
-        },
-        (scoreLog: PerWordScoreLog) => {
-          PerformanceProfiler.measure('react_state_update_complete', () => {
-            onWordComplete?.(scoreLog);
-          });
-        }
-      );
-    });
+    engineRef.current.initialize(
+      containerRef.current,
+      typingChars,
+      (index: number, display: KanaDisplay) => {
+        setCurrentCharIndex(index);
+        setKanaDisplay(display);
+        updateDetailedProgress();
+      },
+      (scoreLog: PerWordScoreLog) => {
+        onWordComplete?.(scoreLog);
+      }
+    );
 
     updateDetailedProgress();
-    PerformanceProfiler.end('react_engine_initialization', startTime);
   };
 
   /**

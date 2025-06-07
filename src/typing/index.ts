@@ -1,17 +1,15 @@
 /**
- * Typing Module - 🚀 HyperTypingEngine Phase 1 Performance System
+ * Typing Module - 🚀 HyperTypingEngine typingmania-ref Style System
  * 
- * typingmania-ref性能突破計画による次世代タイピングシステム
- * - RequestIdleCallback最適化
- * - 予測キャッシングシステム  
- * - 差分更新システム
+ * シンプルで高速なタイピングエンジンシステム
+ * デッドタイム解消と連続入力最適化を実現
  */
 
 // Core Classes
 export { TypingChar } from './TypingChar';
 export { JapaneseConverter } from './JapaneseConverter';
 
-// 🚀 Phase 1: HyperTypingEngine - 性能突破版
+// 🚀 HyperTypingEngine - typingmania-ref スタイル
 export { HyperTypingEngine } from './HyperTypingEngine';
 
 // React Integration  
@@ -21,7 +19,7 @@ export { useHyperTyping } from './HyperTypingHook';
 export type { DisplayInfo } from './TypingChar';
 export type { RomajiData } from './JapaneseConverter';
 
-// 🚀 Phase 1: HyperTypingHook Types
+// 🚀 HyperTypingHook Types
 export type { HyperTypingHookProps, HyperTypingHookReturn } from './HyperTypingHook';
 
 // Utilities

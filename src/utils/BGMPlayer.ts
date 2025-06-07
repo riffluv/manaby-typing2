@@ -1,5 +1,3 @@
-import { PerformanceProfiler } from './PerformanceProfiler';
-
 /**
  * BGM専用MP3プレイヤーシステム
  * 打撃音WebAudioシステムとは完全分離
@@ -52,57 +50,43 @@ class BGMPlayer {
       this.stop(); // 既存のBGMを停止
     }
   }
-
   /**
-   * BGMモード切り替え（フェード付き） - パフォーマンス計測版
+   * BGMモード切り替え（フェード付き） - シンプル版
    */
   async switchMode(mode: BGMMode): Promise<void> {
-    const startTime = PerformanceProfiler.start('bgm_mode_switch');
-    
-    try {
-      // パフォーマンス調査モードの場合は何もしない
-      if (this.performanceDebugMode) {
-        PerformanceProfiler.end('bgm_mode_switch', startTime);
-        return;
-      }
-
-      if (this.currentMode === mode) {
-        PerformanceProfiler.end('bgm_mode_switch', startTime);
-        return;
-      }
-      
-      const track = BGM_TRACKS[mode];
-      
-      // 無音モードまたはトラック未設定の場合
-      if (!track) {
-        await this.stop();
-        this.currentMode = mode;
-        PerformanceProfiler.end('bgm_mode_switch', startTime);
-        return;
-      }
-
-      // 現在の音楽をフェードアウト
-      if (this.currentAudio && !this.currentAudio.paused) {
-        await this.fadeOut();
-      }
-
-      // 新しい音楽を開始
-      await this.playTrack(track);
-      this.currentMode = mode;
-    } finally {
-      PerformanceProfiler.end('bgm_mode_switch', startTime);
+    // パフォーマンス調査モードの場合は何もしない
+    if (this.performanceDebugMode) {
+      return;
     }
-  }
-  /**
-   * 指定トラックを再生 - パフォーマンス計測版
+
+    if (this.currentMode === mode) {
+      return;
+    }
+    
+    const track = BGM_TRACKS[mode];
+    
+    // 無音モードまたはトラック未設定の場合
+    if (!track) {
+      await this.stop();
+      this.currentMode = mode;
+      return;
+    }
+
+    // 現在の音楽をフェードアウト
+    if (this.currentAudio && !this.currentAudio.paused) {
+      await this.fadeOut();
+    }
+
+    // 新しい音楽を開始
+    await this.playTrack(track);
+    this.currentMode = mode;
+  }  /**
+   * 指定トラックを再生 - シンプル版
    */
   private async playTrack(track: BGMTrack): Promise<void> {
-    const startTime = PerformanceProfiler.start('bgm_track_play');
-    
     try {
       // パフォーマンス調査モードの場合は何もしない
       if (this.performanceDebugMode) {
-        PerformanceProfiler.end('bgm_track_play', startTime);
         return;
       }
 
@@ -127,8 +111,6 @@ class BGMPlayer {
       
     } catch (error) {
       console.warn(`[BGMPlayer] ⚠️ BGM再生エラー: ${track.filename}`, error);
-    } finally {
-      PerformanceProfiler.end('bgm_track_play', startTime);
     }
   }
 
