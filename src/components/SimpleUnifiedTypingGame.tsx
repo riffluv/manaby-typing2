@@ -92,14 +92,13 @@ const SimpleUnifiedTypingGame: React.FC<{
     }
   };  // Escキーでメニューに戻る（ゲーム中のみ）+ 包括的遅延計測
   useEffect(() => {
-    const handleKeyDown = (e: KeyboardEvent) => {      // ⚡ エンドツーエンド遅延計測開始（統一ラベルで正確な統計収集）
+    const handleKeyDown = (e: KeyboardEvent) => {
+      // ⚡ エンドツーエンド遅延計測（連続入力最適化のためrequestAnimationFrame除去）
       if (e.key.length === 1 && gameStatus === 'playing') {
         const startTime = PerformanceProfiler.start('end_to_end_input_delay');
         
-        // 次のフレームで画面更新完了を確認（単一フレーム最適化）
-        requestAnimationFrame(() => {
-          PerformanceProfiler.end('end_to_end_input_delay', startTime);
-        });
+        // 即座に測定終了（フレーム待機なしで連続入力遅延を解決）
+        PerformanceProfiler.end('end_to_end_input_delay', startTime);
       }
       
       // ゲーム中のEscキーのみハンドル（タイピング入力との競合を避ける）

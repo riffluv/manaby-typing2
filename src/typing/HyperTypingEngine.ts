@@ -166,7 +166,6 @@ export class HyperTypingEngine {
       progressElement: this.container.querySelector('.progress-display') as HTMLElement,
     };
   }
-
   /**
    * キーリスナーセットアップ
    */
@@ -184,7 +183,9 @@ export class HyperTypingEngine {
 
       e.preventDefault();
       e.stopPropagation();
-      this.processKey(e.key);
+      
+      // 🚀 非同期キー処理で連続入力遅延を解決
+      this.processKeyAsync(e.key);
     };
 
     document.addEventListener('keydown', this.keyHandler, { capture: true });
@@ -908,6 +909,102 @@ export class HyperTypingEngine {
         case 'は': return new TypingChar('は', ['ha']);
         default: return new TypingChar(char, [char]);
       }
+    });
+  }
+
+  /**
+   * 🚀 非同期キー処理 - 連続入力遅延完全解決
+   */
+  private processKeyAsync(key: string): void {
+    // 初回キー入力時に音声システムを初期化（ユーザージェスチャー対応）
+    if (this.state.keyCount === 0) {
+      OptimizedAudioSystem.resumeAudioContext();
+    }
+    
+    if (this.state.startTime === 0) {
+      this.state.startTime = Date.now();
+    }
+
+    this.state.keyCount++;
+    
+    // 即座にキー処理を実行（ブロッキングなし）
+    const currentChar = this.state.typingChars[this.state.currentIndex];
+    if (!currentChar) return;
+
+    // 「ん」の分岐状態処理
+    if (currentChar.branchingState) {
+      const nextChar = this.state.typingChars[this.state.currentIndex + 1];
+      const result = currentChar.typeBranching(key, nextChar);
+      
+      if (result.success) {
+        // 音声とDOM更新を非同期で実行
+        this.scheduleAsyncUpdates(true);
+        
+        if (result.completeWithSingle) {
+          this.state.currentIndex++;
+          
+          if (nextChar) {
+            const nextResult = nextChar.type(key);
+            if (nextResult && nextChar.completed) {
+              this.state.currentIndex++;
+              
+              if (this.state.currentIndex >= this.state.typingChars.length) {
+                this.handleWordComplete();
+                return;
+              }
+            }
+          }
+        } else {
+          this.state.currentIndex++;
+          
+          if (this.state.currentIndex >= this.state.typingChars.length) {
+            this.handleWordComplete();
+            return;
+          }
+        }
+      } else {
+        this.state.mistakeCount++;
+        this.scheduleAsyncUpdates(false);
+      }
+      return;
+    }
+
+    // 通常のタイピング処理
+    const isCorrect = currentChar.type(key);
+
+    if (isCorrect) {
+      // 音声とDOM更新を非同期で実行
+      this.scheduleAsyncUpdates(true);
+
+      if (currentChar.completed) {
+        this.state.currentIndex++;
+        
+        if (this.state.currentIndex >= this.state.typingChars.length) {
+          this.handleWordComplete();
+          return;
+        }
+      }
+    } else {
+      this.state.mistakeCount++;
+      this.scheduleAsyncUpdates(false);
+    }
+  }
+
+  /**
+   * 🚀 非同期更新スケジューラー - DOM更新と音声を非ブロッキングで実行
+   */
+  private scheduleAsyncUpdates(isCorrect: boolean): void {
+    // 音声を即座に非同期で再生
+    if (isCorrect) {
+      setTimeout(() => OptimizedAudioSystem.playClickSound(), 0);
+    } else {
+      setTimeout(() => OptimizedAudioSystem.playErrorSound(), 0);
+    }
+    
+    // DOM更新とReact状態更新を次のマイクロタスクで実行
+    Promise.resolve().then(() => {
+      this.updateDisplay();
+      this.notifyProgress();
     });
   }
 }

@@ -27,14 +27,13 @@ class OptimizedAudioSystem {
   static init(): void {
     if (this.ctx) return;
     
-    try {
-      // @ts-ignore - webkitAudioContext for Safari compatibility
+    try {      // @ts-ignore - webkitAudioContext for Safari compatibility
       this.ctx = new (window.AudioContext || window.webkitAudioContext)();
       
-      // 🚀 AudioContext即座Resume（遅延除去）
-      if (this.ctx.state === 'suspended') {
-        this.ctx.resume();
-      }
+      // 🚀 ユーザージェスチャー後のみAudioContextをResume（警告回避）
+      // if (this.ctx.state === 'suspended') {
+      //   this.ctx.resume();
+      // }
       
       this.generateAudioBuffers();
       this.isReady = true;
