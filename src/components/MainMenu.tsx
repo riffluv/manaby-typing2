@@ -17,7 +17,7 @@ interface MainMenuProps {
 
 // モード説明文オブジェクト
 const modeDescriptions: Record<string, string> = {
-  'normal': '一般的な入力練習モードです。基本的な言葉遣いを扱います。',
+  'normal': '開発者が適当に考えたお題です。コロコロ変わります！',
   'hard': '難易度の高い入力練習モードです。さらに高度な言葉を扱います。',
   'sonkeigo': '敬語の中でも「相手を高める」言葉遣いを学びます。',
   'kenjougo': '自分を下げて丁寧さを表現する「謙譲語」を練習します。',
