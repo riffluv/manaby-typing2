@@ -1,8 +1,8 @@
-import React from 'react';
+import React, { Suspense } from 'react';
 import MainMenu from '@/components/MainMenu';
-import SimpleUnifiedTypingGame from '@/components/SimpleUnifiedTypingGame';
-import CleanRankingScreen from '@/components/CleanRankingScreen';
-import SettingsScreen from '@/components/SettingsScreen';
+import LazyGameScreen from '@/components/lazy/LazyGameScreen';
+import LazyRankingScreen from '@/components/lazy/LazyRankingScreen';
+import LazySettingsScreen from '@/components/lazy/LazySettingsScreen';
 import { useSceneNavigationStore } from '@/store/sceneNavigationStore';
 
 // Phase 1完了により、パフォーマンス比較ツールは削除済み
@@ -27,13 +27,26 @@ const AppRouter: React.FC = React.memo(() => {
         <MainMenu onStart={goToGame} onRanking={goToRanking} onRetry={goToGame} />
       )}
       {currentScene === 'ranking' && (
-        <CleanRankingScreen onGoMenu={goToMenu} />
+        <LazyRankingScreen onGoMenu={goToMenu} />
       )}
       {currentScene === 'settings' && (
-        <SettingsScreen />
+        <LazySettingsScreen />
       )}
       {currentScene === 'game' && (
-        <SimpleUnifiedTypingGame onGoMenu={goToMenu} onGoRanking={goToRanking} />
+        <Suspense fallback={
+          <div style={{ 
+            minHeight: '100vh',
+            display: 'flex',
+            justifyContent: 'center',
+            alignItems: 'center',
+            fontSize: '1.2rem',
+            color: '#ccc'
+          }}>
+            ゲームロード中...
+          </div>
+        }>
+          <LazyGameScreen onGoMenu={goToMenu} onGoRanking={goToRanking} />
+        </Suspense>
       )}
     </div>
   );

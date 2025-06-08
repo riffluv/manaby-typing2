@@ -1,0 +1,97 @@
+{
+  "timestamp": "2025-06-08T04:44:35.253Z",
+  "buildSize": {
+    "static": 1486639,
+    "server": 1447004,
+    "total": 2933643
+  },
+  "importAnalysis": {
+    "totalImports": 69,
+    "totalExports": 106,
+    "externalModules": [
+      "next",
+      "next/font/google",
+      "@/components/AppLayout",
+      "@/components/AudioSystemInitializer",
+      "@/components/BGMInitializer",
+      "@/typing/UltraOptimizedJapaneseProcessor",
+      "react",
+      "@/navigation/AppRouter",
+      "@/components/SystemSettingsScreen",
+      "@/store/optimizedSelectors",
+      "@/store/typingGameStore",
+      "@/lib/rankingManaby2",
+      "@/utils/adminSecurity",
+      "@/utils/OptimizedAudioSystem",
+      "@/hooks/useBGMControl",
+      "@/hooks/useGlobalShortcuts",
+      "@/styles/components/RankingScreen.module.css",
+      "@/styles/components/ScreenLayout.module.css",
+      "framer-motion",
+      "next/dynamic",
+      "@/store/sceneNavigationStore",
+      "@/types",
+      "@/typing",
+      "@/styles/components/SimpleGameScreen.module.css",
+      "@/store/useSettingsStore",
+      "@/hooks/useRankingModal",
+      "@/styles/components/SimpleGameResultScreen.module.css",
+      "next/navigation",
+      "@/hooks/useScoreCalculation",
+      "@/utils/PerformanceProfiler",
+      "@/styles/components/SimpleUnifiedTypingGame.optimized.module.css",
+      "@/components/ui/Toggle",
+      "@/components/ui/Slider",
+      "@/store/bgmStore",
+      "@/utils/BGMPlayer",
+      "firebase/app",
+      "firebase/firestore",
+      "clsx",
+      "tailwind-merge",
+      "@/components/MainMenu",
+      "@/components/lazy/LazyGameScreen",
+      "@/components/lazy/LazyRankingScreen",
+      "@/components/lazy/LazySettingsScreen",
+      "zustand",
+      "@/store/createSelectors",
+      "@/types/score",
+      "@/core/transition/TransitionManager",
+      "zustand/middleware",
+      "@/data/wordList",
+      "zustand/shallow",
+      "../utils/debug"
+    ],
+    "internalModules": [
+      "./AdminModal.module.css",
+      "./CommonModal.bem.module.css",
+      "./ScreenWrapper.bem.module.css",
+      "./MainMenu.eldenring.bem.module.css",
+      "./common/CommonModal",
+      "./common/CommonButton",
+      "./AdminModal",
+      "./SettingsScreen.module.css",
+      "./RankingModal",
+      "./SimpleGameScreen",
+      "./SimpleGameResultScreen",
+      "./TransitionManager",
+      "./firebase",
+      "./typingGameStore",
+      "./TypingChar",
+      "./UltraOptimizedJapaneseProcessor",
+      "./HyperTypingEngine",
+      "./OptimizedAudioSystem"
+    ]
+  },
+  "recommendations": {
+    "lowRisk": [
+      "tree-shaking"
+    ],
+    "mediumRisk": [
+      "code-splitting",
+      "service-worker"
+    ],
+    "highRisk": [
+      "web-workers"
+    ]
+  }
+}

@@ -461,25 +461,6 @@ export class UltraOptimizedJapaneseProcessor {
       memoryEfficiency: Math.round((this.performanceStats.cacheHits / Math.max(this.performanceStats.totalRequests, 1)) * 100)
     });
   }
-    /**
-   * パフォーマンス統計リセット
-   */
-  static resetPerformanceStats(): void {
-    this.performanceStats = {
-      cacheHits: 0,
-      totalRequests: 0,
-      averageProcessingTime: 0,
-      memoryUsage: 0
-    };
-  }
-    /**
-   * WeakMapキャッシュクリア（メモリ最適化）
-   */
-  static clearCache(): void {
-    // WeakMapは直接クリアできないため、新しいインスタンスを作成
-    // ガベージコレクションによって自動的にクリアされる
-    // Removed console.log for production optimization
-  }
 }
 
 // 型安全性の強化（2025年TypeScript最新機能活用）

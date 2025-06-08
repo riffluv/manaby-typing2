@@ -36,9 +36,6 @@ export const viewport: Viewport = {
 
 // 🚀 最新最適化技術による超高速キャッシュの事前生成
 if (typeof window !== 'undefined') {
-  // アプリ起動時にUltraOptimizedキャッシュを事前生成
-  UltraOptimizedJapaneseProcessor.clearCache();
-  
   // よく使用される日本語文字列でキャッシュを事前生成
   const commonWords = [
     'こんにちは', 'プログラミング', 'コンピューター', 'インターネット',

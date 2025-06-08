@@ -57,21 +57,6 @@ export class TransitionEffects {
     return direction === 'enter' ? 'simple-fade-enter' : 'simple-fade-exit';
   }
 
-  /**
-   * 要素から既存のエフェクトをすべて削除
-   */
-  static clearEffects(element: HTMLElement | null): void {
-    if (!element) return;
-
-    const animationClasses = [
-      'simple-fade-enter', 'simple-fade-exit',
-      'simple-slide-enter', 'simple-slide-exit'
-    ];
-
-    animationClasses.forEach(cls => {
-      element.classList.remove(cls);
-    });
-  }
 }
 
 export default TransitionEffects;
