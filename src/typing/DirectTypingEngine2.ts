@@ -25,17 +25,17 @@ class KanaChar {
   public el: HTMLSpanElement;
   private isCompleted: boolean = false;
   private isActive: boolean = false;
-
   constructor(char: string) {
     this.el = document.createElement('span');
     this.el.textContent = char;
     this.el.style.fontFamily = '"ヒラギノ角ゴ Pro", "Hiragino Kaku Gothic Pro", "メイリオ", Meiryo, sans-serif';
-    this.el.style.fontSize = '2.2rem';
+    this.el.style.fontSize = '1.3rem';
     this.el.style.fontWeight = 'bold';
     this.el.style.transition = 'all 0.15s ease';
     this.el.style.padding = '2px 4px';
     this.el.style.borderRadius = '3px';
     this.el.style.marginRight = '1px';
+    this.el.style.letterSpacing = '0.04rem';
     this.setInactive();
   }
 
@@ -72,17 +72,17 @@ class RomajiChar {
   public el: HTMLSpanElement;
   private isCompleted: boolean = false;
   private isActive: boolean = false;
-
   constructor(char: string) {
     this.el = document.createElement('span');
     this.el.textContent = char;
     this.el.style.fontFamily = "'Courier New', 'Consolas', monospace";
-    this.el.style.fontSize = '1.8rem';
+    this.el.style.fontSize = '1.2rem';
     this.el.style.fontWeight = 'bold';
     this.el.style.transition = 'all 0.15s ease';
     this.el.style.padding = '2px 4px';
     this.el.style.borderRadius = '3px';
     this.el.style.marginRight = '1px';
+    this.el.style.letterSpacing = '0.04rem';
     this.setInactive();
   }
 
@@ -222,9 +222,7 @@ export class DirectTypingEngine2 {
     this.container.style.minHeight = '120px';
     this.container.style.display = 'flex';
     this.container.style.flexDirection = 'column';
-    this.container.style.gap = '20px';
-
-    // かな表示の条件付きスタイル
+    this.container.style.gap = '20px';    // かな表示の条件付きスタイル
     const kanaDisplayHTML = this.config.showKanaDisplay ? `
       <div class="direct-typing-kana-container" style="
         display: flex;
@@ -235,15 +233,13 @@ export class DirectTypingEngine2 {
         border-radius: 8px;
         padding: 15px;
         font-family: ${this.config.fontFamily};
-        font-size: 2.0rem;
+        font-size: 1.3rem;
         font-weight: bold;
-        color: #ffffff;
+        color: #d6cbb2;
         text-shadow: 0 0 2px rgba(0,0,0,0.8);
-        letter-spacing: 0.05rem;
+        letter-spacing: 0.04rem;
       "></div>
-    ` : '';
-
-    this.container.innerHTML = `
+    ` : '';    this.container.innerHTML = `
       <div class="direct-typing-original-text" style="
         display: flex;
         align-items: center;
@@ -253,11 +249,13 @@ export class DirectTypingEngine2 {
         border-radius: 8px;
         padding: 15px;
         font-family: ${this.config.fontFamily};
-        font-size: 2.2rem;
+        font-size: 1.4rem;
         font-weight: bold;
-        color: #ffffff;
-        text-shadow: 0 0 2px rgba(0,0,0,0.8);
-        letter-spacing: 0.05rem;
+        background: linear-gradient(to right, #c9a76f, #f8e6b0);
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+        text-shadow: 0 0 6px rgba(255, 223, 128, 0.2);
+        letter-spacing: 0.04rem;
       "></div>
       ${kanaDisplayHTML}
       <div class="direct-typing-romaji-container" style="
@@ -271,7 +269,7 @@ export class DirectTypingEngine2 {
         flex-wrap: wrap;
         gap: 2px;
       "></div>
-    `;    // 原文表示
+    `;// 原文表示
     this.originalTextDisplay = this.container.querySelector('.direct-typing-original-text') as HTMLElement;
     this.originalTextDisplay.textContent = this.originalText;
 
