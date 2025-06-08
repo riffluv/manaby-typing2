@@ -12,6 +12,7 @@ export interface SettingsState {
   
   // 表示設定
   showKeyboard: boolean;
+  showKanaDisplay: boolean;
   
   // アクション
   setBgmEnabled: (enabled: boolean) => void;
@@ -21,6 +22,7 @@ export interface SettingsState {
   setHitSoundEnabled: (enabled: boolean) => void;
   setHitSoundVolume: (volume: number) => void;
   setShowKeyboard: (show: boolean) => void;
+  setShowKanaDisplay: (show: boolean) => void;
   resetToDefaults: () => void;
 }
 
@@ -32,20 +34,21 @@ const defaultSettings = {
   hitSoundEnabled: true,
   hitSoundVolume: 6,
   showKeyboard: true,
+  showKanaDisplay: false,
 };
 
 export const useSettingsStore = create<SettingsState>()(
   persist(
     (set) => ({
       ...defaultSettings,
-      
-      setBgmEnabled: (enabled) => set({ bgmEnabled: enabled }),
+        setBgmEnabled: (enabled) => set({ bgmEnabled: enabled }),
       setBgmVolume: (volume) => set({ bgmVolume: volume }),
       setSoundEffectsEnabled: (enabled) => set({ soundEffectsEnabled: enabled }),
       setSoundEffectsVolume: (volume) => set({ soundEffectsVolume: volume }),
       setHitSoundEnabled: (enabled) => set({ hitSoundEnabled: enabled }),
       setHitSoundVolume: (volume) => set({ hitSoundVolume: volume }),
       setShowKeyboard: (show) => set({ showKeyboard: show }),
+      setShowKanaDisplay: (show) => set({ showKanaDisplay: show }),
       resetToDefaults: () => set(defaultSettings),
     }),
     {

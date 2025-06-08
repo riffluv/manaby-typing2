@@ -5,7 +5,6 @@ import styles from './SettingsScreen.module.css';
 
 const SettingsScreen: React.FC = React.memo(() => {
   const { goBack, goToMenu } = useSceneNavigationStore();
-
   // 音響・表示設定ストア
   const {
     bgmEnabled,
@@ -15,12 +14,14 @@ const SettingsScreen: React.FC = React.memo(() => {
     hitSoundEnabled,
     hitSoundVolume,
     showKeyboard,
+    showKanaDisplay,
     setBgmEnabled,
     setBgmVolume,
     setSoundEffectsEnabled,
     setSoundEffectsVolume,
     setHitSoundEnabled,
     setHitSoundVolume,    setShowKeyboard,
+    setShowKanaDisplay,
   } = useSettingsStore();
 
   // 設定変更ハンドラーをメモ化
@@ -32,11 +33,12 @@ const SettingsScreen: React.FC = React.memo(() => {
   const handleSoundEffectsVolumeChange = useCallback((e: React.ChangeEvent<HTMLInputElement>) => 
     setSoundEffectsVolume(Number(e.target.value)), [setSoundEffectsVolume]);
   const handleHitSoundToggle = useCallback(() => 
-    setHitSoundEnabled(!hitSoundEnabled), [hitSoundEnabled, setHitSoundEnabled]);
-  const handleHitSoundVolumeChange = useCallback((e: React.ChangeEvent<HTMLInputElement>) => 
+    setHitSoundEnabled(!hitSoundEnabled), [hitSoundEnabled, setHitSoundEnabled]);  const handleHitSoundVolumeChange = useCallback((e: React.ChangeEvent<HTMLInputElement>) => 
     setHitSoundVolume(Number(e.target.value)), [setHitSoundVolume]);
   const handleKeyboardToggle = useCallback(() => 
     setShowKeyboard(!showKeyboard), [showKeyboard, setShowKeyboard]);
+  const handleKanaDisplayToggle = useCallback(() => 
+    setShowKanaDisplay(!showKanaDisplay), [showKanaDisplay, setShowKanaDisplay]);
 
   return (
     <div className={styles.settings}>
@@ -101,14 +103,24 @@ const SettingsScreen: React.FC = React.memo(() => {
               />
             </div>
           </div>
-        </div>
-
-        <div className={styles.settings__item}>
+        </div>        <div className={styles.settings__item}>
           <div className={styles.settings__row}>
             <span className={styles.settings__label}>Show Keyboard</span>
             <div className={styles.settings__controls}>              <div
                 className={`${styles.settings__toggle} ${showKeyboard ? styles['settings__toggle--on'] : ''}`}
                 onClick={handleKeyboardToggle}
+              ></div>
+            </div>
+          </div>
+        </div>
+
+        <div className={styles.settings__item}>
+          <div className={styles.settings__row}>
+            <span className={styles.settings__label}>Kana Display</span>
+            <div className={styles.settings__controls}>
+              <div
+                className={`${styles.settings__toggle} ${showKanaDisplay ? styles['settings__toggle--on'] : ''}`}
+                onClick={handleKanaDisplayToggle}
               ></div>
             </div>
           </div>

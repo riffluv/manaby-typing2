@@ -2,6 +2,7 @@ import { useRef, useEffect, useCallback } from 'react';
 import { DirectTypingEngine2 } from './DirectTypingEngine2';
 import { TypingChar } from './TypingChar';
 import { TypingWord, PerWordScoreLog } from '@/types';
+import { useSettingsStore } from '@/store/useSettingsStore';
 
 export interface DirectTypingHook2Config {
   fontFamily?: string;
@@ -29,6 +30,7 @@ export function useDirectTyping2({
 }: UseDirectTyping2Props) {
   const containerRef = useRef<HTMLDivElement>(null);
   const engineRef = useRef<DirectTypingEngine2 | null>(null);
+  const { showKanaDisplay } = useSettingsStore();
 
   // エンジン初期化
   useEffect(() => {
@@ -45,6 +47,7 @@ export function useDirectTyping2({
       fontSize: config.fontSize || '2rem',
       fontWeight: config.fontWeight || 'bold',
       backgroundColor: config.backgroundColor || 'transparent',
+      showKanaDisplay: showKanaDisplay,
     });
 
     // 原文を設定（漢字入りのテキスト）
@@ -58,15 +61,13 @@ export function useDirectTyping2({
       onWordComplete
     );
 
-    engineRef.current = engine;
-
-    return () => {
+    engineRef.current = engine;    return () => {
       if (engineRef.current) {
         engineRef.current.destroy();
         engineRef.current = null;
       }
     };
-  }, [word, typingChars, onWordComplete, config]);
+  }, [word, typingChars, onWordComplete, config, showKanaDisplay]);
 
   // リセット関数
   const reset = useCallback(() => {

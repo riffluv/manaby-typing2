@@ -7,8 +7,7 @@ import { Slider } from '@/components/ui/Slider';
 
 export default function SystemSettingsScreen() {
   const router = useRouter();
-  
-  const {
+    const {
     bgmEnabled,
     bgmVolume,
     soundEffectsEnabled,
@@ -16,6 +15,7 @@ export default function SystemSettingsScreen() {
     hitSoundEnabled,
     hitSoundVolume,
     showKeyboard,
+    showKanaDisplay,
     setBgmEnabled,
     setBgmVolume,
     setSoundEffectsEnabled,
@@ -23,6 +23,7 @@ export default function SystemSettingsScreen() {
     setHitSoundEnabled,
     setHitSoundVolume,
     setShowKeyboard,
+    setShowKanaDisplay,
   } = useSettingsStore();
 
   const handleBack = () => {
@@ -96,9 +97,7 @@ export default function SystemSettingsScreen() {
               />
             </div>
           </div>
-        </div>
-
-        {/* Show Keyboard設定 */}
+        </div>        {/* Show Keyboard設定 */}
         <div className="system-item">
           <div className="system-row">
             <span className="system-label">Show Keyboard</span>
@@ -106,6 +105,19 @@ export default function SystemSettingsScreen() {
               <Toggle
                 checked={showKeyboard}
                 onChange={setShowKeyboard}
+              />
+            </div>
+          </div>
+        </div>
+
+        {/* Kana Display設定 */}
+        <div className="system-item">
+          <div className="system-row">
+            <span className="system-label">Kana Display</span>
+            <div className="system-controls">
+              <Toggle
+                checked={showKanaDisplay}
+                onChange={setShowKanaDisplay}
               />
             </div>
           </div>

@@ -12,6 +12,53 @@ import OptimizedAudioSystem from '@/utils/OptimizedAudioSystem';
 import { debug } from '../utils/debug';
 
 /**
+ * ひらがな文字クラス - 個別span要素
+ */
+class KanaChar {
+  public el: HTMLSpanElement;
+  private isCompleted: boolean = false;
+  private isActive: boolean = false;
+
+  constructor(char: string) {
+    this.el = document.createElement('span');
+    this.el.textContent = char;
+    this.el.style.fontFamily = '"ヒラギノ角ゴ Pro", "Hiragino Kaku Gothic Pro", "メイリオ", Meiryo, sans-serif';
+    this.el.style.fontSize = '2.2rem';
+    this.el.style.fontWeight = 'bold';
+    this.el.style.transition = 'all 0.15s ease';
+    this.el.style.padding = '2px 4px';
+    this.el.style.borderRadius = '3px';
+    this.el.style.marginRight = '1px';
+    this.setInactive();
+  }
+
+  setActive(): void {
+    this.isActive = true;
+    this.el.style.color = '#fff';
+    this.el.style.background = 'rgba(255, 245, 170, 0.2)';
+    this.el.style.textShadow = '0 0 8px rgba(255, 245, 170, 0.8), 0 0 1px #fff';
+    this.el.style.transform = 'scale(1.1)';
+  }
+
+  setCompleted(): void {
+    this.isCompleted = true;
+    this.isActive = false;
+    this.el.style.color = '#87ceeb';
+    this.el.style.background = 'rgba(135, 206, 235, 0.1)';
+    this.el.style.textShadow = '0 0 6px rgba(135, 206, 235, 0.6)';
+    this.el.style.transform = 'scale(1)';
+  }
+
+  setInactive(): void {
+    this.isActive = false;
+    this.el.style.color = '#999';
+    this.el.style.background = 'transparent';
+    this.el.style.textShadow = '0 0 1px rgba(0,0,0,0.5)';
+    this.el.style.transform = 'scale(1)';
+  }
+}
+
+/**
  * ローマ字文字クラス - 個別span要素
  */
 class RomajiChar {
@@ -66,6 +113,7 @@ interface DirectTypingConfig {
   fontSize: string;
   fontWeight: string;
   backgroundColor: string;
+  showKanaDisplay: boolean;
 }
 
 /**
@@ -87,6 +135,8 @@ export class DirectTypingEngine2 {
   private state: DirectEngineState;
   private container: HTMLElement | null = null;
   private originalTextDisplay: HTMLElement | null = null;
+  private kanaDisplay: HTMLElement | null = null;
+  private kanaChars: KanaChar[] = [];
   private romajiChars: RomajiChar[] = [];
   private romajiContainer: HTMLElement | null = null;
   private onProgress?: (index: number, display: KanaDisplay) => void;
@@ -98,7 +148,8 @@ export class DirectTypingEngine2 {
     fontFamily: '"ヒラギノ角ゴ Pro", "Hiragino Kaku Gothic Pro", "メイリオ", Meiryo, sans-serif',
     fontSize: '2.5rem',
     fontWeight: 'bold',
-    backgroundColor: 'transparent'
+    backgroundColor: 'transparent',
+    showKanaDisplay: false
   };
   constructor(customConfig?: Partial<DirectTypingConfig>) {
     this.state = {
@@ -146,7 +197,6 @@ export class DirectTypingEngine2 {
       originalText: this.originalText
     });
   }
-
   /**
    * DOM構築
    */
@@ -160,6 +210,25 @@ export class DirectTypingEngine2 {
     this.container.style.display = 'flex';
     this.container.style.flexDirection = 'column';
     this.container.style.gap = '20px';
+
+    // かな表示の条件付きスタイル
+    const kanaDisplayHTML = this.config.showKanaDisplay ? `
+      <div class="direct-typing-kana-container" style="
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        min-height: 60px;
+        background: rgba(0,0,0,0.08);
+        border-radius: 8px;
+        padding: 15px;
+        font-family: ${this.config.fontFamily};
+        font-size: 2.0rem;
+        font-weight: bold;
+        color: #ffffff;
+        text-shadow: 0 0 2px rgba(0,0,0,0.8);
+        letter-spacing: 0.05rem;
+      "></div>
+    ` : '';
 
     this.container.innerHTML = `
       <div class="direct-typing-original-text" style="
@@ -177,6 +246,7 @@ export class DirectTypingEngine2 {
         text-shadow: 0 0 2px rgba(0,0,0,0.8);
         letter-spacing: 0.05rem;
       "></div>
+      ${kanaDisplayHTML}
       <div class="direct-typing-romaji-container" style="
         display: flex;
         align-items: center;
@@ -192,11 +262,32 @@ export class DirectTypingEngine2 {
 
     // 原文表示
     this.originalTextDisplay = this.container.querySelector('.direct-typing-original-text') as HTMLElement;
-    this.originalTextDisplay.textContent = this.originalText;
+    this.originalTextDisplay.textContent = this.originalText;    // かな表示（設定で有効な場合のみ）
+    if (this.config.showKanaDisplay) {
+      this.kanaDisplay = this.container.querySelector('.direct-typing-kana-container') as HTMLElement;
+      this.createKanaChars();
+    }
 
     // ローマ字表示エリア
     this.romajiContainer = this.container.querySelector('.direct-typing-romaji-container') as HTMLElement;
     this.createRomajiChars();
+  }  /**
+   * ひらがな文字要素作成
+   */
+  private createKanaChars(): void {
+    if (!this.kanaDisplay) return;
+
+    this.kanaChars = [];
+    this.kanaDisplay.innerHTML = '';
+
+    // 全ひらがな文字列を構築
+    const fullKana = this.state.typingChars.map(char => char.kana).join('');
+    
+    for (let i = 0; i < fullKana.length; i++) {
+      const kanaChar = new KanaChar(fullKana[i]);
+      this.kanaChars.push(kanaChar);
+      this.kanaDisplay.appendChild(kanaChar.el);
+    }
   }
 
   /**
@@ -316,8 +407,7 @@ export class DirectTypingEngine2 {
 
     this.updateDisplay();
     this.notifyProgress();
-  }
-  /**
+  }  /**
    * 表示更新
    */
   private updateDisplay(): void {
@@ -335,6 +425,56 @@ export class DirectTypingEngine2 {
         romajiChar.setActive();
       } else {
         romajiChar.setInactive();
+      }
+    });
+
+    // かな文字フォーカス更新（設定で有効な場合のみ）
+    if (this.config.showKanaDisplay && this.kanaChars.length > 0) {
+      this.updateKanaCharFocus();
+    }
+  }  /**
+   * かな文字フォーカス更新
+   */
+  private updateKanaCharFocus(): void {
+    // 現在完了したひらがな文字数を計算
+    let completedKanaCount = 0;
+    
+    for (let i = 0; i < this.state.currentIndex && i < this.state.typingChars.length; i++) {
+      const char = this.state.typingChars[i];
+      completedKanaCount += char.kana.length;
+    }
+    
+    // 現在のTypingCharでの進捗を計算
+    const currentChar = this.state.typingChars[this.state.currentIndex];
+    let currentActiveKanaIndex = -1; // -1は何もアクティブでない状態
+    
+    if (currentChar && currentChar.acceptedInput.length > 0) {
+      // ローマ字の進捗に基づいて現在アクティブなひらがな文字のインデックスを決定
+      const totalPatternLength = currentChar.patterns[0].length;
+      const progressRatio = currentChar.acceptedInput.length / totalPatternLength;
+      
+      // 長音や複合文字の場合は複数のひらがな文字があるため、進捗に応じて適切にアクティブにする
+      const kanaLength = currentChar.kana.length;
+      if (kanaLength > 1) {
+        // 複数文字の場合は進捗に応じて段階的にアクティブにする
+        const activeKanaSubIndex = Math.floor(progressRatio * kanaLength);
+        currentActiveKanaIndex = completedKanaCount + Math.min(activeKanaSubIndex, kanaLength - 1);
+      } else {
+        // 単一文字の場合は10%進捗でアクティブにする
+        if (progressRatio > 0.1) {
+          currentActiveKanaIndex = completedKanaCount;
+        }
+      }
+    }
+    
+    // 各ひらがな文字の状態を更新
+    this.kanaChars.forEach((kanaChar, index) => {
+      if (index < completedKanaCount) {
+        kanaChar.setCompleted();
+      } else if (index === currentActiveKanaIndex) {
+        kanaChar.setActive();
+      } else {
+        kanaChar.setInactive();
       }
     });
   }
@@ -378,8 +518,7 @@ export class DirectTypingEngine2 {
 
     this.onComplete?.(scoreLog);
     debug.log('🚀 DirectTypingEngine2 単語完了:', scoreLog);
-  }
-  /**
+  }  /**
    * リセット
    */
   reset(): void {
@@ -389,23 +528,27 @@ export class DirectTypingEngine2 {
     this.state.startTime = 0;
 
     this.state.typingChars.forEach(char => char.reset());
+    
+    // かな文字もリセット
+    this.kanaChars.forEach(kanaChar => kanaChar.setInactive());
+    
     this.updateDisplay();
     
     debug.log('🚀 DirectTypingEngine2 リセット完了');
   }
-
   /**
    * リソース解放
-   */
-  destroy(): void {
+   */  destroy(): void {
     if (this.keyHandler) {
       document.removeEventListener('keydown', this.keyHandler, { capture: true });
       this.keyHandler = undefined;
     }
     this.container = null;
     this.originalTextDisplay = null;
+    this.kanaDisplay = null;
     this.romajiContainer = null;
     this.romajiChars = [];
+    this.kanaChars = [];
     this.onProgress = undefined;
     this.onComplete = undefined;
     
