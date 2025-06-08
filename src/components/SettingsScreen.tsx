@@ -5,7 +5,7 @@ import { useGlobalShortcuts } from '@/hooks/useGlobalShortcuts';
 import styles from './SettingsScreen.module.css';
 
 const SettingsScreen: React.FC = React.memo(() => {
-  const { goBack, goToMenu } = useSceneNavigationStore();
+  const { goBack } = useSceneNavigationStore();
   // 音響・表示設定ストア
   const {
     bgmEnabled,
@@ -159,15 +159,10 @@ const SettingsScreen: React.FC = React.memo(() => {
               />
             </div>
           </div>
-        </section>
-
-        {/* Navigation Buttons */}
+        </section>        {/* Navigation Buttons */}
         <nav className={styles.system__buttons}>
           <button className={styles.system__button} onClick={goBack}>
             Back
-          </button>
-          <button className={styles.system__button} onClick={goToMenu}>
-            Main Menu
           </button>
         </nav>
       </main>

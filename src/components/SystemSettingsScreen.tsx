@@ -25,13 +25,8 @@ export default function SystemSettingsScreen() {
     setHitSoundVolume,
     setShowKeyboard,
     setShowKanaDisplay,
-  } = useSettingsStore();
-  const handleBack = useCallback(() => {
+  } = useSettingsStore();  const handleBack = useCallback(() => {
     router.back();
-  }, [router]);
-
-  const handleMainMenu = useCallback(() => {
-    router.push('/');
   }, [router]);
 
   // Toggle クリックハンドラー
@@ -152,15 +147,10 @@ export default function SystemSettingsScreen() {
               />
             </div>
           </div>
-        </section>
-
-        {/* ボタンエリア */}
+        </section>        {/* ボタンエリア */}
         <nav className={styles.system__buttons}>
           <button className={styles.button} onClick={handleBack}>
             Back
-          </button>
-          <button className={styles.button} onClick={handleMainMenu}>
-            Main Menu
           </button>
         </nav>
       </main>
