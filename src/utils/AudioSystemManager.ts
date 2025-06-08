@@ -27,15 +27,14 @@ class AudioSystemManager {
   /**
    * 音声システム設定を更新
    */
-  static configure(newConfig: Partial<AudioSystemConfig>) {
-    this.config = { ...this.config, ...newConfig };
+  static configure(newConfig: Partial<AudioSystemConfig>) {    this.config = { ...this.config, ...newConfig };
     
     if (!this.config.enableConsoleLogging) {
       // コンソールログを無効化してパフォーマンス向上
       this.disableAudioLogging();
     }
     
-    console.log('🔧 AudioSystemManager設定更新:', this.config);
+    // Performance optimization: Remove console.log for production
   }
   /**
    * 音声システム初期化（シンプル化版）
@@ -44,13 +43,12 @@ class AudioSystemManager {
     if (this.isInitialized) return;
 
     try {      // 現在の実装のみ使用（遅延最小化）
-      switch (this.config.engine) {
-        case 'current':
+      switch (this.config.engine) {        case 'current':
           OptimizedAudioSystem.init();
-          console.log('🔊 OptimizedAudioSystem初期化完了');
+          // Performance optimization: Remove console.log for production
           break;
         case 'silent':
-          console.log('🔇 音声無効モード');
+          // Performance optimization: Remove console.log for production
           break;
       }
 
@@ -119,9 +117,8 @@ class AudioSystemManager {
 
   /**
    * 音声エンジンの切り替え（リアルタイム）
-   */
-  static switchEngine(engine: AudioSystemConfig['engine']) {
-    console.log(`🔄 音声エンジン切り替え: ${this.config.engine} → ${engine}`);
+   */  static switchEngine(engine: AudioSystemConfig['engine']) {
+    // Performance optimization: Remove console.log for production
     
     this.config.engine = engine;
     this.isInitialized = false; // 再初期化を促す
@@ -131,25 +128,23 @@ class AudioSystemManager {
   }
   /**
    * パフォーマンスモード切り替え（遅延を最小化）
-   */
-  static enablePerformanceMode() {
+   */  static enablePerformanceMode() {
     this.configure({
       engine: 'current',
       enableConsoleLogging: false,
       enablePerformanceMeasurement: false
     });
-    console.log('⚡ パフォーマンスモード有効化');
+    // Performance optimization: Remove console.log for production
   }
 
   /**
    * デバッグモード切り替え（詳細ログ有効）
-   */
-  static enableDebugMode() {
+   */  static enableDebugMode() {
     this.configure({
       enableConsoleLogging: true,
       enablePerformanceMeasurement: true
     });
-    console.log('🐛 デバッグモード有効化');
+    // Performance optimization: Remove console.log for production
   }
 
   /**
@@ -180,16 +175,14 @@ class AudioSystemManager {
   }
   /**
    * パフォーマンステスト用：シンプル化版（遅延測定のみ）
-   */
-  static async benchmarkEngines(testCount = 50) {
-    console.log('🏁 音声システム遅延測定開始');
+   */  static async benchmarkEngines(testCount = 50) {
+    // Performance optimization: Remove console.log for production
     
     const results = {
       current: await this.benchmarkEngine('current', testCount)
     };
 
-    console.log('📊 遅延測定結果:');
-    console.log(`  現在の実装: ${results.current.averageLatency.toFixed(2)}ms`);
+    // Performance optimization: Remove console.log for production
 
     return { results, improvement: 0, improvementPercent: 0 };
   }

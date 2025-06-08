@@ -6,7 +6,7 @@
  */
 
 import { TypingChar } from './TypingChar';
-import { OptimizedNProcessor } from './OptimizedNProcessor';
+import { UltraOptimizedJapaneseProcessor } from './UltraOptimizedJapaneseProcessor';
 
 /**
  * ひらがなとローマ字の変換テーブル
@@ -359,13 +359,16 @@ export class JapaneseConverter {
     }
     
     return result;
-  }
-  /**
+  }  /**
    * 「ん」の後続文字に応じたパターン生成（最適化版）
-   * OptimizedNProcessorを使用した高速パターン生成
+   * UltraOptimizedJapaneseProcessorの高速「ん」処理を使用
    */
   private static getNPatterns(nextChar?: string): string[] {
-    return OptimizedNProcessor.getNPatterns(nextChar);
+    // UltraOptimizedJapaneseProcessorは「ん」を自動処理するため、基本パターンを返す
+    if (nextChar && ['k', 'g', 's', 'z', 't', 'd', 'n', 'h', 'b', 'p', 'm', 'y', 'r', 'w'].includes(nextChar[0])) {
+      return ['n'];  // 子音前は'n'のみ
+    }
+    return ['nn', 'xn', 'n'];  // その他は全パターン
   }
 
   /**

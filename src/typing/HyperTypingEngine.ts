@@ -6,7 +6,7 @@
  */
 
 import { TypingChar, type DisplayInfo } from './TypingChar';
-import { OptimizedNProcessor } from './OptimizedNProcessor';
+import { UltraOptimizedJapaneseProcessor } from './UltraOptimizedJapaneseProcessor';
 import type { KanaDisplay, PerWordScoreLog } from '@/types';
 import OptimizedAudioSystem from '@/utils/OptimizedAudioSystem';
 import { debug } from '../utils/debug';
@@ -47,10 +47,9 @@ export class HyperTypingEngine {
       keyCount: 0,
       mistakeCount: 0,
       startTime: 0,
-    };
-    
-    // 🚀 最適化「ん」プロセッサーの事前キャッシュロード
-    OptimizedNProcessor.preloadCache();
+    };    
+    // 🚀 最適化処理エンジンの事前初期化
+    // UltraOptimizedJapaneseProcessor は自動的にキャッシュ機能を持つため、事前ロードは不要
   }
 
   /**

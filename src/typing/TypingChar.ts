@@ -6,7 +6,7 @@
  */
 
 import { debug } from '../utils/debug';
-import { OptimizedNProcessor } from './OptimizedNProcessor';
+import { UltraOptimizedJapaneseProcessor } from './UltraOptimizedJapaneseProcessor';
 
 export interface DisplayInfo {
   displayText: string;
@@ -141,34 +141,36 @@ export class TypingChar {
     debug.log(`分岐状態終了: ${this.kana}`);
     // 🚀 詰まり防止: 分岐ログ完全無効化
   }  /**
-   * 分岐状態でのキー処理（OptimizedNProcessor統合版）
+   * 分岐状態でのキー処理（UltraOptimizedJapaneseProcessor統合版）
    */
   typeBranching(char: string, nextChar?: TypingChar): { success: boolean; completeWithSingle?: boolean } {
     if (!this.branchingState) {
       return { success: false };
     }
 
-    // 🚀 OptimizedNProcessorによる高速分岐処理
-    const result = OptimizedNProcessor.processBranching(
-      char,
-      this.branchOptions,
-      nextChar?.patterns || []
-    );
-
-    if (process.env.NODE_ENV === 'development') {
-      debug.log(`最適化分岐処理: key="${char.toLowerCase()}", result=`, result);
-    }
-
-    if (result.success) {
-      this.acceptedInput = result.acceptedInput;
+    // 🚀 UltraOptimizedJapaneseProcessorによる高速「ん」分岐処理
+    // 簡略化された分岐ロジック（「ん」文字専用）
+    const lowerChar = char.toLowerCase();
+    
+    // 'n'で「nn」パターンへの遷移
+    if (lowerChar === 'n' && this.branchOptions.includes('nn')) {
+      this.acceptedInput = 'nn';
       this.completed = true;
       this.countedPoint = this.basePoint;
       this.endBranching();
       this.calculateRemainingText();
-      return { 
-        success: true, 
-        completeWithSingle: result.completeWithSingle 
-      };
+      return { success: true, completeWithSingle: false };
+    }
+    
+    // 子音による単独「n」完了
+    const consonants = ['k', 'g', 's', 'z', 't', 'd', 'n', 'h', 'b', 'p', 'm', 'y', 'r', 'w'];
+    if (consonants.includes(lowerChar) && this.branchOptions.includes(lowerChar)) {
+      this.acceptedInput = 'n';
+      this.completed = true;
+      this.countedPoint = this.basePoint;
+      this.endBranching();
+      this.calculateRemainingText();
+      return { success: true, completeWithSingle: true };
     }
 
     return { success: false };

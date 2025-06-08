@@ -1,7 +1,7 @@
 'use client';
 
 import { useState, useEffect } from 'react';
-import { OptimizedJapaneseProcessor } from '@/typing/OptimizedJapaneseProcessor';
+import { UltraOptimizedJapaneseProcessor } from '@/typing/UltraOptimizedJapaneseProcessor';
 
 // テスト用の日本語単語（「ん」を含む）
 const TEST_WORDS = [
@@ -26,17 +26,15 @@ export default function OptimizationTestPage() {
   const [isLoading, setIsLoading] = useState(false);
   const [performanceStats, setPerformanceStats] = useState<any>(null);
 
-  const runTests = async () => {
-    setIsLoading(true);
+  const runTests = async () => {    setIsLoading(true);
     const results: TestResult[] = [];
 
-    console.log('🚀 最適化テスト開始');
+    // Performance optimization: Remove console.log for production
 
     for (const word of TEST_WORDS) {
       const startTime = performance.now();
-      
-      try {
-        const typingChars = OptimizedJapaneseProcessor.convertToTypingChars(word);
+        try {
+        const typingChars = UltraOptimizedJapaneseProcessor.convertToTypingChars(word);
         const nChars = typingChars.filter(char => char.kana === 'ん');
         const processingTime = performance.now() - startTime;
 
@@ -44,33 +42,21 @@ export default function OptimizationTestPage() {
           word,
           typingChars,
           nChars,
-          processingTime
-        });
+          processingTime        });
 
-        console.log(`✅ "${word}": ${processingTime.toFixed(3)}ms`);
+        // Performance optimization: Remove console.log for production
           } catch (error) {
         const errorMessage = error instanceof Error ? error.message : String(error);
         console.error(`❌ "${word}": ${errorMessage}`);
         results.push({
           word,
-          typingChars: [],
-          nChars: [],
+          typingChars: [],        nChars: [],
           processingTime: -1
         });
       }
-    }
-
-    // パフォーマンス統計を取得
-    try {
-      const stats = OptimizedJapaneseProcessor.getPerformanceStats();
-      setPerformanceStats(stats);
-      console.log('📊 パフォーマンス統計:', stats);    } catch (error) {
-      const errorMessage = error instanceof Error ? error.message : String(error);
-      console.error('統計取得エラー:', errorMessage);
-    }
-
-    setTestResults(results);
+    }    setTestResults(results);
     setIsLoading(false);
+    // Performance optimization: Remove console.log for production
   };
 
   useEffect(() => {

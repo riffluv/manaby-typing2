@@ -1,7 +1,7 @@
 // コールバック関数版のMCPステータスチェッカー
 export async function checkMCPStatus(callback) {
   try {
-    console.log('MCPサーバーのステータスを確認しています...');
+    // Performance optimization: Remove console.log for production
     const response = await fetch('http://localhost:3005/mcp/status');
     
     if (!response.ok) {
@@ -9,7 +9,7 @@ export async function checkMCPStatus(callback) {
     }
     
     const data = await response.json();
-    console.log('MCPステータスデータ:', data);
+    // Performance optimization: Remove console.log for production
     callback({
       success: true,
       data: data,

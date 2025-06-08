@@ -472,14 +472,13 @@ export class UltraOptimizedJapaneseProcessor {
       memoryUsage: 0
     };
   }
-  
-  /**
+    /**
    * WeakMapキャッシュクリア（メモリ最適化）
    */
   static clearCache(): void {
     // WeakMapは直接クリアできないため、新しいインスタンスを作成
     // ガベージコレクションによって自動的にクリアされる
-    console.log('🧹 UltraOptimizedJapaneseProcessor: キャッシュクリア完了');
+    // Removed console.log for production optimization
   }
 }
 

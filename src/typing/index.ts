@@ -8,11 +8,9 @@
 // Core Classes
 export { TypingChar } from './TypingChar';
 export { JapaneseConverter } from './JapaneseConverter';
-export { OptimizedJapaneseProcessor } from './OptimizedJapaneseProcessor';
 
-// 🚀 2025年最新技術による超高速化システム
+// 🚀 2025年最新技術による超高速化システム（Production Ready）
 export { UltraOptimizedJapaneseProcessor } from './UltraOptimizedJapaneseProcessor';
-export { UltraFastNProcessor } from './UltraFastNProcessor';
 
 // 🚀 HyperTypingEngine - typingmania-ref スタイル
 export { HyperTypingEngine } from './HyperTypingEngine';
