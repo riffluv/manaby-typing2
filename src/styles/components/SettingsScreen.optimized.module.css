@@ -1,0 +1,284 @@
+/* SettingsScreen.module.css - パフォーマンス最適化版 */
+
+/* GPU加速を使用した要素 */
+.settings {
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  /* GPU加速で滑らかなレンダリング */
+  transform: translateZ(0);
+  will-change: transform;
+}
+
+.settings__container {
+  /* Composite layerを作�EしてGPU最適匁E*/
+  transform: translateZ(0);
+  will-change: transform;
+  /* メモリ効玁E�� */
+  contain: layout style paint;
+}
+
+.settings__title {
+  /* チE��ストレンダリング最適匁E*/
+  text-rendering: optimizeSpeed;
+  font-display: swap;
+  /* GPU加送E*/
+  transform: translateZ(0);
+  will-change: transform;
+}
+
+.settings__item {
+  /* 設定頁E��の最適匁E*/
+  transform: translateZ(0);
+  will-change: transform;
+  /* レイアウト最適匁E*/
+  contain: layout style;
+}
+
+.settings__row {
+  /* 行レイアウト�E最適匁E*/
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  /* レイアウトシフト防止 */
+  contain: layout;
+}
+
+.settings__label {
+  /* ラベルチE��スト�E最適匁E*/
+  text-rendering: optimizeSpeed;
+  /* 軽量な要素にはGPU加速を適用しなぁE*/
+  contain: style;
+}
+
+.settings__controls {
+  /* コントロール群の最適匁E*/
+  display: flex;
+  align-items: center;
+  gap: 15px;
+  /* GPU加送E*/
+  transform: translateZ(0);
+  will-change: transform;
+}
+
+.settings__toggle {
+  /* トグルボタンの最適匁E*/
+  transition: transform 0.15s ease-out, background-color 0.15s ease-out;
+  transform: translateZ(0);
+  will-change: transform, background-color;
+  cursor: pointer;
+  /* レイアウト最適匁E*/
+  contain: layout;
+}
+
+.settings__toggle:hover {
+  /* ホバー効果�EGPU最適匁E*/
+  transform: translateZ(0) scale(1.05);
+}
+
+.settings__toggle--on {
+  /* アクチE��ブ状態�E最適匁E*/
+  transform: translateZ(0);
+}
+
+.settings__slider {
+  /* スライダーの最適匁E*/
+  transition: transform 0.15s ease-out, background-color 0.15s ease-out;
+  transform: translateZ(0);
+  will-change: transform, background;
+  /* カスタムスライダーの最適匁E*/
+  appearance: none;
+  background: linear-gradient(to right, #4A90E2 0%, #4A90E2 50%, #ddd 50%, #ddd 100%);
+  background-size: 100% 100%;
+}
+
+.settings__slider:hover {
+  /* スライダーホバーの最適匁E*/
+  transform: translateZ(0) scale(1.02);
+}
+
+.settings__slider:disabled {
+  /* 無効状態�E最適匁E*/
+  will-change: auto;
+  opacity: 0.5;
+}
+
+.settings__slider::-webkit-slider-thumb {
+  /* Webkitスライダーサムの最適匁E*/
+  appearance: none;
+  width: 20px;
+  height: 20px;
+  border-radius: 50%;
+  background: #4A90E2;
+  cursor: pointer;
+  /* GPU加送E*/
+  transform: translateZ(0);
+  transition: transform 0.15s ease-out, background-color 0.15s ease-out;
+}
+
+.settings__slider::-webkit-slider-thumb:hover {
+  /* サムのホバー効极E*/
+  transform: translateZ(0) scale(1.1);
+}
+
+.settings__slider::-moz-range-thumb {
+  /* Firefoxスライダーサムの最適匁E*/
+  width: 20px;
+  height: 20px;
+  border-radius: 50%;
+  background: #4A90E2;
+  cursor: pointer;
+  border: none;
+  /* GPU加送E*/
+  transform: translateZ(0);
+  transition: transform 0.15s ease-out, background-color 0.15s ease-out;
+}
+
+.settings__buttons {
+  /* ボタングループ�E最適匁E*/
+  display: flex;
+  gap: 15px;
+  margin-top: 30px;
+  /* GPU加送E*/
+  transform: translateZ(0);
+  will-change: transform;
+}
+
+.button {
+  /* 共通�Eタンの最適匁E*/
+  transition: transform 0.15s ease-out, background-color 0.15s ease-out;
+  transform: translateZ(0);
+  will-change: transform, background-color;
+  cursor: pointer;
+  /* レイアウト最適匁E*/
+  contain: layout;
+}
+
+.button:hover {
+  /* ボタンホバーの最適匁E*/
+  transform: translateZ(0) translateY(-2px);
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.08);
+}
+
+.button:active {
+  /* ボタンアクチE��ブ状態�E最適匁E*/
+  transform: translateZ(0) translateY(0);
+}
+
+/* フォーカス状態�E最適匁E*/
+.settings__toggle:focus,
+.settings__slider:focus,
+.button:focus {
+  /* フォーカスリングの最適匁E*/
+  outline: 2px solid #4A90E2;
+  outline-offset: 2px;
+}
+
+/* アニメーション最適匁E*/
+@keyframes settingsFadeIn {
+  from {
+    opacity: 0;
+    transform: translateZ(0) translateY(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateZ(0) translateY(0);
+  }
+}
+
+.settings__item {
+  animation: settingsFadeIn 0.3s ease-out;
+  animation-fill-mode: both;
+}
+
+.settings__item:nth-child(1) { animation-delay: 0.1s; }
+.settings__item:nth-child(2) { animation-delay: 0.2s; }
+.settings__item:nth-child(3) { animation-delay: 0.3s; }
+.settings__item:nth-child(4) { animation-delay: 0.4s; }
+
+/* レスポンシブ最適匁E*/
+@media (max-width: 768px) {
+  .settings__container {
+    /* モバイルでのメモリ使用量削渁E*/
+    contain: layout;
+    padding: 20px;
+  }
+  
+  .settings__row {
+    /* モバイルでの縦レイアウチE*/
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 10px;
+  }
+  
+  .settings__controls {
+    /* モバイルでのコントロール配置 */
+    width: 100%;
+    justify-content: space-between;
+  }
+  
+  .settings__slider {
+    /* モバイルでのスライダー幁E*/
+    flex: 1;
+    min-width: 120px;
+  }
+}
+
+/* ダークモード最適匁E*/
+@media (prefers-color-scheme: dark) {
+  .settings {
+    /* ダークモードでのコントラスト最適匁E*/
+    color-scheme: dark;
+  }
+  
+  .settings__slider {
+    /* ダークモードでのスライダー色 */
+    background: linear-gradient(to right, #5AA3F0 0%, #5AA3F0 50%, #555 50%, #555 100%);
+  }
+}
+
+/* 高コントラストモード対忁E*/
+@media (prefers-contrast: high) {
+  .settings__toggle,
+  .settings__slider,
+  .button {
+    /* 高コントラストでのアクセシビリチE��最適匁E*/
+    forced-color-adjust: auto;
+  }
+}
+
+/* Reduced motion対忁E*/
+@media (prefers-reduced-motion: reduce) {
+  .settings__toggle,
+  .settings__slider,
+  .button,
+  .settings__item {
+    /* アニメーションを無効化してパフォーマンス向丁E*/
+    animation: none;
+    transition: none;
+    will-change: auto;
+  }
+  
+  .settings__item {
+    /* 初期状態に固宁E*/
+    opacity: 1;
+    transform: translateZ(0) translateY(0);
+  }
+}
+
+/* プリント最適匁E*/
+@media print {
+  .settings__buttons {
+    /* 印刷時�E不要な要素を非表示 */
+    display: none;
+  }
+  
+  .settings__toggle,
+  .settings__slider {
+    /* 印刷時�EインタラクチE��ブ要素最適匁E*/
+    will-change: auto;
+    transform: none;
+  }
+}

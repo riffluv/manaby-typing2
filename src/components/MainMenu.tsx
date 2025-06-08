@@ -1,4 +1,4 @@
-import React, { useState, useCallback } from 'react';
+import React, { useState, useCallback, useMemo } from 'react';
 import { useTypingGameStore, useQuestionCount } from '@/store/typingGameStore';
 import { useSceneNavigationStore } from '@/store/sceneNavigationStore';
 import { useGlobalShortcuts } from '@/hooks/useGlobalShortcuts';
@@ -16,7 +16,7 @@ interface MainMenuProps {
 }
 
 // モード説明文オブジェクト
-const modeDescriptions = {
+const modeDescriptions: Record<string, string> = {
   'normal': '一般的な入力練習モードです。基本的な言葉遣いを扱います。',
   'hard': '難易度の高い入力練習モードです。さらに高度な言葉を扱います。',
   'sonkeigo': '敬語の中でも「相手を高める」言葉遣いを学びます。',
@@ -28,9 +28,13 @@ const modeDescriptions = {
  * MainMenu - 製品化レベル高品質メインメニュー
  * indexselect.htmlの完全再現 + アクセシビリティ + パフォーマンス最適化
  */
-const MainMenu: React.FC<MainMenuProps> = ({ onStart, onRetry, onRanking }) => {
-  const { resetGame, setGameStatus, setMode, setQuestionCount, mode } = useTypingGameStore();
-  const { setLastScore, goToSettings } = useSceneNavigationStore(); // 状態管理ストアの使用
+const MainMenu: React.FC<MainMenuProps> = React.memo(({ onStart, onRetry, onRanking }) => {
+  // 直接のstore使用に変更
+  const mode = useTypingGameStore((state) => state.mode);
+  const resetGame = useTypingGameStore((state) => state.resetGame);
+  const setGameStatus = useTypingGameStore((state) => state.setGameStatus);
+  const setMode = useTypingGameStore((state) => state.setMode);
+  const { setLastScore, goToSettings } = useSceneNavigationStore();
   const questionCount = useQuestionCount();
   
   // セキュリティチェック: 開発環境でのみ管理者機能を有効化
@@ -82,33 +86,39 @@ const MainMenu: React.FC<MainMenuProps> = ({ onStart, onRetry, onRanking }) => {
       e.preventDefault();
       handleModeSelect(newMode);
     }
-  }, [handleModeSelect]);
-  // ショートカット定義
-  useGlobalShortcuts([
+  }, [handleModeSelect]);  // ショートカット定義をメモ化
+  const shortcuts = useMemo(() => [
     {
       key: ' ',
-      handler: async (e) => {
+      handler: async (e: KeyboardEvent) => {
         if (adminOpen || modeSelectOpen) return; // モーダルが開いているときは無効化
         e.preventDefault();
         await handleStart();
       },
-    },      {
-        key: 'r',
-        altKey: true,
-        handler: (e) => { if (!adminOpen && !modeSelectOpen) { e.preventDefault(); handleGoRanking(); } },
+    },
+    {
+      key: 'r',
+      altKey: true,
+      handler: (e: KeyboardEvent) => { 
+        if (!adminOpen && !modeSelectOpen) { 
+          e.preventDefault(); 
+          handleGoRanking(); 
+        } 
       },
+    },
     {
       key: 'Escape',
-      handler: (e) => {
+      handler: (e: KeyboardEvent) => {
         if (modeSelectOpen) {
           e.preventDefault();
           setModeSelectOpen(false);
         }
-      },    },
+      },
+    },
     {
       key: '@',
       ctrlKey: true,
-      handler: (e) => {
+      handler: (e: KeyboardEvent) => {
         // 本番環境では管理者パネルを無効化
         if (!isDevelopment) {
           console.warn('🚨 Admin panel is disabled in production environment');
@@ -118,7 +128,22 @@ const MainMenu: React.FC<MainMenuProps> = ({ onStart, onRetry, onRanking }) => {
         setAdminOpen((v) => !v);
       },
       allowInputFocus: true
-    },], [handleStart, handleGoRanking, adminOpen, modeSelectOpen]);
+    },
+  ], [handleStart, handleGoRanking, adminOpen, modeSelectOpen, isDevelopment]);
+
+  useGlobalShortcuts(shortcuts);
+
+  // selectedModeのメモ化
+  const selectedModeDisplay = useMemo(() => {
+    switch (mode) {
+      case 'normal': return 'Normal';
+      case 'hard': return 'Hard';
+      case 'sonkeigo': return '尊敬語';
+      case 'kenjougo': return '謙譲語';
+      case 'business': return 'ビジネスマナー';
+      default: return 'Normal';
+    }
+  }, [mode]);
 
   return (
     <div className={styles.mainMenu}>
@@ -185,14 +210,9 @@ const MainMenu: React.FC<MainMenuProps> = ({ onStart, onRetry, onRanking }) => {
           >
             SYSTEM
           </div>
-        </div>
-        
+        </div>        
         <div className={styles.mainMenu__selectedMode} role="status" aria-live="polite">
-          Mode: {mode === 'normal' ? 'Normal' :
-                 mode === 'hard' ? 'Hard' :
-                 mode === 'sonkeigo' ? '尊敬語' :
-                 mode === 'kenjougo' ? '謙譲語' :
-                 mode === 'business' ? 'ビジネスマナー' : 'Normal'}
+          Mode: {selectedModeDisplay}
         </div>
       </div>      {/* ショートカットキー表示（index.htmlスタイル完全再現） */}
       <div className={styles.shortcut}>
@@ -282,10 +302,11 @@ const MainMenu: React.FC<MainMenuProps> = ({ onStart, onRetry, onRanking }) => {
         <AdminModal 
           isOpen={adminOpen} 
           onClose={() => setAdminOpen(false)} 
-        />
-      )}
+        />      )}
     </div>
   );
-};
+});
+
+MainMenu.displayName = 'MainMenu';
 
 export default MainMenu;

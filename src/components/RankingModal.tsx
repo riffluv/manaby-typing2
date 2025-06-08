@@ -1,5 +1,6 @@
 'use client';
 
+import React, { useCallback } from 'react';
 import CommonModal from './common/CommonModal';
 import CommonButton from './common/CommonButton';
 
@@ -16,10 +17,11 @@ interface RankingModalProps {
 }
 
 /**
- * ランキング登録用モーダルコンポーネント
+ * ランキング登録用モーダルコンポーネント - React最適化版
  * monkeytype × THE FINALS サイバーパンク美学
+ * React最適化: React.memo + useCallback最適化
  */
-export default function RankingModal({
+const RankingModal: React.FC<RankingModalProps> = React.memo(({
   show,
   name,
   registering,
@@ -29,7 +31,18 @@ export default function RankingModal({
   onSubmit,
   onChangeName,
   onClose
-}: RankingModalProps) {
+}) => {
+  // フォーム送信をメモ化
+  const handleSubmit = useCallback((e: React.FormEvent) => {
+    e.preventDefault();
+    onSubmit(e);
+  }, [onSubmit]);
+
+  // 名前変更をメモ化
+  const handleNameChange = useCallback((e: React.ChangeEvent<HTMLInputElement>) => {
+    onChangeName(e.target.value);
+  }, [onChangeName]);
+
   if (!show || typeof window === 'undefined') return null;
 
   return (
@@ -40,20 +53,19 @@ export default function RankingModal({
           <div className="success-message">登録が完了しました！</div>
           <CommonButton onClick={onClose} variant="primary">閉じる</CommonButton>
         </div>
-      ) : (
-        <form className="modal-form" onSubmit={onSubmit}>
+      ) : (        <form className="modal-form" onSubmit={handleSubmit}>
           <input
             type="text"
             placeholder="名前を入力（10文字以内）"
             maxLength={10}
             value={name}
-            onChange={e => onChangeName(e.target.value)}
+            onChange={handleNameChange}
             className="modal-input"
             disabled={registering || isScoreRegistered}
           />
           <div className="modal-actions">
             <CommonButton
-              onClick={onSubmit}
+              onClick={handleSubmit}
               variant="primary"
               disabled={registering || isScoreRegistered}
             >登録</CommonButton>
@@ -63,8 +75,11 @@ export default function RankingModal({
             >キャンセル</CommonButton>
             {error && <div className="error-message">{error}</div>}
           </div>
-        </form>
-      )}
+        </form>      )}
     </CommonModal>
   );
-}
+});
+
+RankingModal.displayName = 'RankingModal';
+
+export default RankingModal;

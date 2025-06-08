@@ -1,7 +1,7 @@
 import { StoreApi, UseBoundStore } from 'zustand';
 
 /**
- * Zustandストア用セレクター作成ユーティリティ
+ * Zustandストア用セレクター作成ユーティリティ - 安定版
  * @template T ストア型
  * @template F セレクター型
  * @param store Zustandストア
@@ -18,13 +18,18 @@ export const createSelectors = <T extends object, F extends object = T>(
     {
       get: (_, prop: string) => {
         // prop が元のストアのプロパティであれば、セレクターを返す
-        return useStore((state) => {
-          const storeState = state as any;
-          if (prop in storeState) {
-            return storeState[prop];
+        return (selector?: any) => {
+          if (selector) {
+            return useStore(selector);
           }
-          return undefined;
-        });
+          return useStore((state) => {
+            const storeState = state as any;
+            if (prop in storeState) {
+              return storeState[prop];
+            }
+            return undefined;
+          });
+        };
       },
     }
   );

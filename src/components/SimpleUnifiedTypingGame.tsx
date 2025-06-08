@@ -1,44 +1,49 @@
-import React, { useState, useEffect, useCallback } from 'react';
+import React, { useState, useEffect, useCallback, useMemo } from 'react';
 import { useRouter } from 'next/navigation';
-import { useGameStatus, useTypingGameStore, useCurrentWord } from '@/store/typingGameStore';
+import { useOptimizedGameStatus, useOptimizedCurrentWord } from '@/store/optimizedSelectors';
+import { useTypingGameStore } from '@/store/typingGameStore';
 import { TypingWord, PerWordScoreLog, GameScoreLog } from '@/types';
 import { useScoreCalculation } from '@/hooks/useScoreCalculation';
 // import { PerformanceProfiler } from '@/utils/PerformanceProfiler'; // sub-5ms optimization: 測定オーバーヘッド除去
 import SimpleGameScreen from './SimpleGameScreen';
 import SimpleGameResultScreen from './SimpleGameResultScreen';
-import styles from '@/styles/components/SimpleUnifiedTypingGame.module.css';
+import styles from '@/styles/components/SimpleUnifiedTypingGame.optimized.module.css';
 
 /**
- * シンプル統合タイピングゲーム
- * - typingmania-ref流のシンプル設計
- * - 複雑な最適化を排除
- * - 必要最小限の状態管理
+ * シンプル統合タイピングゲーム - パフォーマンス最適化版
+ * - React.memo適用による不要な再レンダリング防止
+ * - useCallback/useMemoによる関数・値のメモ化
+ * - 依存配列の最適化による無限ループ防止
+ * - 日本語処理システムは変更せず、React層のみ最適化
  */
 const SimpleUnifiedTypingGame: React.FC<{ 
   onGoMenu?: () => void; 
   onGoRanking?: () => void; 
-}> = ({ 
+}> = React.memo(({ 
   onGoMenu, 
   onGoRanking 
 }) => {
   const router = useRouter();
-  const gameStatus = useGameStatus();
-  const { setGameStatus, advanceToNextWord } = useTypingGameStore();
-  const storeWord = useCurrentWord();
-    const [currentWord, setCurrentWord] = useState<TypingWord>({
+  const gameStatus = useOptimizedGameStatus();
+  const setGameStatus = useTypingGameStore((state) => state.setGameStatus);
+  const advanceToNextWord = useTypingGameStore((state) => state.advanceToNextWord);
+  const storeWord = useOptimizedCurrentWord();
+    // currentWordのメモ化された初期値
+  const initialCurrentWord = useMemo(() => ({
     japanese: '',
     hiragana: '',
     romaji: '',
-    typingChars: [],
-    displayChars: []
-  });
-  
+    typingChars: [] as any[],
+    displayChars: [] as string[]
+  }), []);
+
+  const [currentWord, setCurrentWord] = useState<TypingWord>(initialCurrentWord);
   const [completedCount, setCompletedCount] = useState(0);
   const [questionLimit] = useState(8); // 固定値でシンプルに
-  // スコア管理の追加
   const [scoreLog, setScoreLog] = useState<PerWordScoreLog[]>([]);
   const [resultScore, setResultScore] = useState<GameScoreLog['total'] | null>(null);
-  // スコア計算コールバックをメモ化して無限ループを防ぐ
+  
+  // メモ化されたコールバック
   const onScoreCalculated = useCallback((calculatedScore: GameScoreLog['total']) => {
     setResultScore(calculatedScore);
   }, []);
@@ -50,7 +55,24 @@ const SimpleUnifiedTypingGame: React.FC<{
     onScoreCalculated
   );
 
-  // 直アクセス防止
+  // メモ化されたナビゲーション関数
+  const handleGoMenu = useCallback(() => {
+    if (onGoMenu) {
+      onGoMenu();
+    } else {
+      router.push('/');
+    }
+  }, [onGoMenu, router]);
+
+  const handleGoRanking = useCallback(() => {
+    if (onGoRanking) {
+      onGoRanking();
+    } else {
+      router.push('/ranking');
+    }
+  }, [onGoRanking, router]);
+
+  // 直アクセス防止 - メモ化
   useEffect(() => {
     if (typeof window !== 'undefined') {
       const isDirectAccess = window.location.pathname === '/game';
@@ -69,63 +91,60 @@ const SimpleUnifiedTypingGame: React.FC<{
     if (gameStatus === 'ready') {
       setGameStatus('playing');
     }
-  }, [gameStatus, setGameStatus]);  // 現在のお題が変わったときに更新 - 深い比較で不要な更新を防ぐ
-  useEffect(() => {
-    if (storeWord && storeWord.hiragana && storeWord.hiragana !== currentWord.hiragana) {
+  }, [gameStatus, setGameStatus]);
 
+  // 現在のお題が変わったときに更新 - 最適化された比較
+  useEffect(() => {
+    if (storeWord?.hiragana && storeWord.hiragana !== currentWord.hiragana) {
       setCurrentWord(storeWord);
     }
-  }, [storeWord?.hiragana, currentWord.hiragana]);// 単語完了時の処理（実際のスコアデータを使用）
-  const handleWordComplete = (scoreLog: PerWordScoreLog) => {
-    // BasicTypingEngineから受け取った実際のスコアデータを使用
+  }, [storeWord?.hiragana, currentWord.hiragana]);
+
+  // 単語完了時の処理 - メモ化
+  const handleWordComplete = useCallback((scoreLog: PerWordScoreLog) => {
     setScoreLog(prev => [...prev, scoreLog]);
 
     const newCount = completedCount + 1;
     setCompletedCount(newCount);
     
     if (newCount >= questionLimit) {
-      // ゲーム終了
       setGameStatus('finished');
     } else {
-      // 次の単語に進む
       advanceToNextWord();
     }
-  };  // Escキーでメニューに戻る（ゲーム中のみ）
+  }, [completedCount, questionLimit, setGameStatus, advanceToNextWord]);
+
+  // Escキー処理 - メモ化
   useEffect(() => {
     const handleKeyDown = (e: KeyboardEvent) => {
-      // ⚡ PerformanceProfiler測定を完全除去（sub-5ms最適化）
-      // 連続入力遅延の原因となるrequestAnimationFrameと測定オーバーヘッドを除去
-      
-      // ゲーム中のEscキーのみハンドル（タイピング入力との競合を避ける）
       if (e.key === 'Escape' && gameStatus === 'playing') {
-        // タイピングエンジンがキャプチャモードなので、通常のイベントとして処理
-        if (onGoMenu) {
-          onGoMenu();
-        } else {
-          router.push('/');
-        }
+        handleGoMenu();
       }
     };
 
-    // 🔍 高優先度：captureフェーズで早期測定開始
     window.addEventListener('keydown', handleKeyDown, { capture: true, passive: false });
     return () => window.removeEventListener('keydown', handleKeyDown, true);
-  }, [gameStatus, onGoMenu, router]);
-  // ゲーム状態に応じたレンダリング
-  if (gameStatus === 'finished') {
+  }, [gameStatus, handleGoMenu]);
+
+  // メモ化されたレンダリング条件
+  const isFinished = gameStatus === 'finished';
+  const isPlaying = gameStatus === 'playing' && currentWord.japanese;
+
+  if (isFinished) {
     return (
       <SimpleGameResultScreen
-        onGoMenu={onGoMenu || (() => router.push('/'))}
-        onGoRanking={onGoRanking || (() => router.push('/ranking'))}
+        onGoMenu={handleGoMenu}
+        onGoRanking={handleGoRanking}
         resultScore={resultScore}
         scoreLog={scoreLog}
         onCalculateFallbackScore={() => setResultScore(calculateFallbackScore())}
       />
     );
-  }  if (gameStatus === 'playing' && currentWord.japanese) {
+  }
+
+  if (isPlaying) {
     return (
       <div className={styles.gameContainer}>
-
         <SimpleGameScreen
           currentWord={currentWord}
           onWordComplete={handleWordComplete}
@@ -133,13 +152,14 @@ const SimpleUnifiedTypingGame: React.FC<{
       </div>
     );
   }
+
   // ローディング状態
   return (
     <div className={styles.loadingScreen}>
       ゲームを準備中...
     </div>
   );
-};
+});
 
 SimpleUnifiedTypingGame.displayName = 'SimpleUnifiedTypingGame';
 export default SimpleUnifiedTypingGame;

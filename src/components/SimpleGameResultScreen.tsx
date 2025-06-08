@@ -21,8 +21,9 @@ export type SimpleGameResultScreenProps = {
  * - HTMLファイルと同じデザインを適用
  * - WebWorkerで計算されたスコアを表示
  * - ランキング登録機能
+ * - React最適化版: React.memo + useCallback最適化
  */
-const SimpleGameResultScreen: React.FC<SimpleGameResultScreenProps> = ({ 
+const SimpleGameResultScreen: React.FC<SimpleGameResultScreenProps> = React.memo(({ 
   onGoMenu, 
   onGoRanking,
   resultScore,
@@ -220,9 +221,8 @@ const SimpleGameResultScreen: React.FC<SimpleGameResultScreenProps> = ({
           )}
         </div>
       </div>
-    </div>
-  );
-};
+    </div>  );
+});
 
 SimpleGameResultScreen.displayName = 'SimpleGameResultScreen';
 export default SimpleGameResultScreen;

@@ -1,4 +1,4 @@
-import { forwardRef } from 'react';
+import React, { forwardRef, useCallback } from 'react';
 
 interface ToggleProps {
   checked: boolean;
@@ -7,8 +7,21 @@ interface ToggleProps {
   className?: string;
 }
 
-export const Toggle = forwardRef<HTMLButtonElement, ToggleProps>(
+/**
+ * 最適化されたToggleコンポーネント - React最適化版
+ * - React.memoとuseCallbackによる最適化
+ * - forwardRefとの組み合わせで最大パフォーマンス
+ * - CSS-in-JSの最適化
+ */
+export const Toggle = React.memo(forwardRef<HTMLButtonElement, ToggleProps>(
   ({ checked, onChange, disabled = false, className = '' }, ref) => {
+    // クリックハンドラーのメモ化
+    const handleClick = useCallback(() => {
+      if (!disabled) {
+        onChange(!checked);
+      }
+    }, [checked, disabled, onChange]);
+
     return (
       <button
         ref={ref}
@@ -28,7 +41,7 @@ export const Toggle = forwardRef<HTMLButtonElement, ToggleProps>(
           flex-shrink-0
           ${className}
         `}
-        onClick={() => !disabled && onChange(!checked)}
+        onClick={handleClick}
       >
         <div
           className={`
@@ -38,10 +51,9 @@ export const Toggle = forwardRef<HTMLButtonElement, ToggleProps>(
               : 'left-0.5 bg-[#c8b78d]'
             }
           `}
-        />
-      </button>
+        />      </button>
     );
   }
-);
+));
 
 Toggle.displayName = 'Toggle';

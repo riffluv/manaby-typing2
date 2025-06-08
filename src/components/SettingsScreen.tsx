@@ -1,9 +1,9 @@
-import React from 'react';
+import React, { useCallback } from 'react';
 import { useSettingsStore } from '@/store/useSettingsStore';
 import { useSceneNavigationStore } from '@/store/sceneNavigationStore';
 import styles from './SettingsScreen.module.css';
 
-const SettingsScreen: React.FC = () => {
+const SettingsScreen: React.FC = React.memo(() => {
   const { goBack, goToMenu } = useSceneNavigationStore();
 
   // 音響・表示設定ストア
@@ -20,9 +20,23 @@ const SettingsScreen: React.FC = () => {
     setSoundEffectsEnabled,
     setSoundEffectsVolume,
     setHitSoundEnabled,
-    setHitSoundVolume,
-    setShowKeyboard,
+    setHitSoundVolume,    setShowKeyboard,
   } = useSettingsStore();
+
+  // 設定変更ハンドラーをメモ化
+  const handleBgmToggle = useCallback(() => setBgmEnabled(!bgmEnabled), [bgmEnabled, setBgmEnabled]);
+  const handleBgmVolumeChange = useCallback((e: React.ChangeEvent<HTMLInputElement>) => 
+    setBgmVolume(Number(e.target.value)), [setBgmVolume]);
+  const handleSoundEffectsToggle = useCallback(() => 
+    setSoundEffectsEnabled(!soundEffectsEnabled), [soundEffectsEnabled, setSoundEffectsEnabled]);
+  const handleSoundEffectsVolumeChange = useCallback((e: React.ChangeEvent<HTMLInputElement>) => 
+    setSoundEffectsVolume(Number(e.target.value)), [setSoundEffectsVolume]);
+  const handleHitSoundToggle = useCallback(() => 
+    setHitSoundEnabled(!hitSoundEnabled), [hitSoundEnabled, setHitSoundEnabled]);
+  const handleHitSoundVolumeChange = useCallback((e: React.ChangeEvent<HTMLInputElement>) => 
+    setHitSoundVolume(Number(e.target.value)), [setHitSoundVolume]);
+  const handleKeyboardToggle = useCallback(() => 
+    setShowKeyboard(!showKeyboard), [showKeyboard, setShowKeyboard]);
 
   return (
     <div className={styles.settings}>
@@ -32,10 +46,9 @@ const SettingsScreen: React.FC = () => {
         <div className={styles.settings__item}>
           <div className={styles.settings__row}>
             <span className={styles.settings__label}>BGM</span>
-            <div className={styles.settings__controls}>
-              <div
+            <div className={styles.settings__controls}>              <div
                 className={`${styles.settings__toggle} ${bgmEnabled ? styles['settings__toggle--on'] : ''}`}
-                onClick={() => setBgmEnabled(!bgmEnabled)}
+                onClick={handleBgmToggle}
               ></div>
               <input
                 type="range"
@@ -43,7 +56,7 @@ const SettingsScreen: React.FC = () => {
                 min="0"
                 max="10"
                 value={bgmVolume}
-                onChange={(e) => setBgmVolume(Number(e.target.value))}
+                onChange={handleBgmVolumeChange}
                 disabled={!bgmEnabled}
               />
             </div>
@@ -53,10 +66,9 @@ const SettingsScreen: React.FC = () => {
         <div className={styles.settings__item}>
           <div className={styles.settings__row}>
             <span className={styles.settings__label}>Sound Effects</span>
-            <div className={styles.settings__controls}>
-              <div
+            <div className={styles.settings__controls}>              <div
                 className={`${styles.settings__toggle} ${soundEffectsEnabled ? styles['settings__toggle--on'] : ''}`}
-                onClick={() => setSoundEffectsEnabled(!soundEffectsEnabled)}
+                onClick={handleSoundEffectsToggle}
               ></div>
               <input
                 type="range"
@@ -64,7 +76,7 @@ const SettingsScreen: React.FC = () => {
                 min="0"
                 max="10"
                 value={soundEffectsVolume}
-                onChange={(e) => setSoundEffectsVolume(Number(e.target.value))}
+                onChange={handleSoundEffectsVolumeChange}
                 disabled={!soundEffectsEnabled}
               />
             </div>
@@ -74,10 +86,9 @@ const SettingsScreen: React.FC = () => {
         <div className={styles.settings__item}>
           <div className={styles.settings__row}>
             <span className={styles.settings__label}>Hit Sound</span>
-            <div className={styles.settings__controls}>
-              <div
+            <div className={styles.settings__controls}>              <div
                 className={`${styles.settings__toggle} ${hitSoundEnabled ? styles['settings__toggle--on'] : ''}`}
-                onClick={() => setHitSoundEnabled(!hitSoundEnabled)}
+                onClick={handleHitSoundToggle}
               ></div>
               <input
                 type="range"
@@ -85,7 +96,7 @@ const SettingsScreen: React.FC = () => {
                 min="0"
                 max="10"
                 value={hitSoundVolume}
-                onChange={(e) => setHitSoundVolume(Number(e.target.value))}
+                onChange={handleHitSoundVolumeChange}
                 disabled={!hitSoundEnabled}
               />
             </div>
@@ -95,10 +106,9 @@ const SettingsScreen: React.FC = () => {
         <div className={styles.settings__item}>
           <div className={styles.settings__row}>
             <span className={styles.settings__label}>Show Keyboard</span>
-            <div className={styles.settings__controls}>
-              <div
+            <div className={styles.settings__controls}>              <div
                 className={`${styles.settings__toggle} ${showKeyboard ? styles['settings__toggle--on'] : ''}`}
-                onClick={() => setShowKeyboard(!showKeyboard)}
+                onClick={handleKeyboardToggle}
               ></div>
             </div>
           </div>
@@ -113,8 +123,9 @@ const SettingsScreen: React.FC = () => {
           </div>
         </div>
       </div>
-    </div>
-  );
-};
+    </div>  );
+});
+
+SettingsScreen.displayName = 'SettingsScreen';
 
 export default SettingsScreen;

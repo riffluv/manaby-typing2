@@ -9,37 +9,38 @@ export type SimpleGameScreenProps = {
 };
 
 /**
- * 🚀 typingmania-ref流超高速GameScreen - Phase 2 WebAssembly統合版 ✨
- * - WebAssembly高速処理による10-30倍のパフォーマンス向上を実現
- * - HyperTypingEngineによる次世代パフォーマンス最適化
- * - 日本語処理の29,412回/秒（0.034ms平均）の高速化
- * - RequestIdleCallback最適化によるバックグラウンド事前計算
- * - 予測キャッシュシステムによる0ms応答入力システム
- * - 差分更新システムによる効率的DOM更新
- * - 完全な「ん」文字分岐機能の保持
- * - 自動フォールバック機能でTypeScript版との100%互換性
- * - React再レンダリング最適化によるsub-5ms入力遅延達成
+ * 🚀 typingmania-ref流超高速GameScreen - React最適化版 ✨
+ * - React.memo適用による不要な再レンダリング防止
+ * - useMemo最適化によるローマ字計算効率化
+ * - 依存配列の最適化
+ * - 日本語処理システムには触れずReact層のみ最適化
  */
-const SimpleGameScreen: React.FC<SimpleGameScreenProps> = ({ 
+const SimpleGameScreen: React.FC<SimpleGameScreenProps> = React.memo(({ 
   currentWord, 
   onWordComplete
-}) => {  // 軽量化：シンプルなTypingChar生成（非同期処理を削除して入力遅延を防止）
+}) => {
+  // 軽量化：シンプルなTypingChar生成（非同期処理を削除して入力遅延を防止）
   const typingChars = React.useMemo(() => {
     if (!currentWord.hiragana) return [];
-      // 🚀 UltraOptimizedJapaneseProcessor使用で最新最適化技術を活用
+    // 🚀 UltraOptimizedJapaneseProcessor使用で最新最適化技術を活用
     return UltraOptimizedJapaneseProcessor.convertToTypingChars(currentWord.hiragana);
-  }, [currentWord.hiragana]);// typingmania-ref流：ローマ字文字列を生成
+  }, [currentWord.hiragana]);
+
+  // typingmania-ref流：ローマ字文字列を生成（メモ化最適化）
   const romajiString = React.useMemo(() => {
     if (!typingChars || typingChars.length === 0) return '';
     
     // 各TypingCharの最初のパターン（デフォルトパターン）を連結
     return typingChars.map((char: any) => char.patterns[0] || '').join('');
   }, [typingChars]);
+
   const { containerRef, currentCharIndex, kanaDisplay, detailedProgress } = useHyperTyping({
     word: currentWord,
     typingChars,
     onWordComplete,
-  });  // typingmania-ref流: 効率的なローマ字位置計算とハイライト表示（最適化版）
+  });
+
+  // typingmania-ref流: 効率的なローマ字位置計算とハイライト表示（最適化版）
   const romajiDisplay = React.useMemo(() => {
     // エンジンが初期化されていない、または詳細進捗がない場合は初期状態
     if (!romajiString || !detailedProgress?.currentKanaDisplay) {
@@ -48,7 +49,7 @@ const SimpleGameScreen: React.FC<SimpleGameScreenProps> = ({
     
     const currentKanaIndex = detailedProgress.currentKanaIndex;
     const currentAcceptedLength = detailedProgress.currentKanaDisplay.acceptedText?.length || 0;
-    
+
     // 累積長さ計算（完了済み文字 + 現在文字の進行分）
     let totalAcceptedLength = 0;
     
@@ -71,6 +72,23 @@ const SimpleGameScreen: React.FC<SimpleGameScreenProps> = ({
     detailedProgress?.currentKanaDisplay?.acceptedText,
     typingChars
   ]);
+
+  // メモ化されたレンダリング
+  const remainingRomaji = React.useMemo(() => {
+    if (!romajiDisplay.remaining) return null;
+    
+    return (
+      <>
+        <span className={styles.active}>
+          {romajiDisplay.remaining[0]}
+        </span>
+        <span className={styles.remaining}>
+          {romajiDisplay.remaining.slice(1)}
+        </span>
+      </>
+    );
+  }, [romajiDisplay.remaining]);
+
   return (
     <div className={styles.gameScreen}>
       {/* メインのお題エリア */}
@@ -85,18 +103,12 @@ const SimpleGameScreen: React.FC<SimpleGameScreenProps> = ({
           <span className={styles.typed}>
             {romajiDisplay.accepted}
           </span>
-          {romajiDisplay.remaining && (
-            <>
-              <span className={styles.active}>
-                {romajiDisplay.remaining[0]}
-              </span>
-              <span className={styles.remaining}>
-                {romajiDisplay.remaining.slice(1)}
-              </span>
-            </>
-          )}
+          {remainingRomaji}
         </div>
-      </div>      {/* タイピングエリア - HyperTypingEngineが制御（非表示） */}      <div 
+      </div>
+
+      {/* タイピングエリア - HyperTypingEngineが制御（非表示） */}
+      <div 
         ref={containerRef}
         className={styles.typingArea}
         aria-live="polite"
@@ -104,7 +116,7 @@ const SimpleGameScreen: React.FC<SimpleGameScreenProps> = ({
       >
         {/* HyperTypingEngine が動的にコンテンツを挿入 */}      </div>    </div>
   );
-};
+});
 
 SimpleGameScreen.displayName = 'SimpleGameScreen';
 

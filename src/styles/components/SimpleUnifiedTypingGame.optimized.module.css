@@ -1,0 +1,142 @@
+/* SimpleUnifiedTypingGame.module.css - パフォーマンス最適化版 */
+
+/* GPU加速を使用した要素 */
+.gameContainer {
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  /* GPU加速で滑らかなレンダリング */
+  transform: translateZ(0);
+  will-change: transform;
+}
+
+.progressIndicator {
+  position: fixed;
+  top: var(--spacing-sm);
+  right: var(--spacing-sm);
+  font-size: var(--font-size-lg);
+  color: var(--text-primary);
+  background: var(--surface-overlay);
+  padding: var(--spacing-xs) var(--spacing-sm);
+  border-radius: var(--border-radius-sm);
+  border: 1px solid var(--border-primary);
+  backdrop-filter: blur(8px);
+  font-weight: var(--font-weight-bold);
+  z-index: var(--z-index-overlay);
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+  transition: transform 0.15s ease-out;
+  /* GPU加送E*/
+  transform: translateZ(0);
+  will-change: transform, box-shadow;
+}
+
+.progressIndicator:hover {
+  transform: translateY(-1px) translateZ(0);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+}
+
+.loadingScreen {
+  min-height: 100vh;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  font-size: var(--font-size-xl);
+  color: var(--text-secondary);
+  font-weight: var(--font-weight-medium);
+  /* GPU加送E*/
+  transform: translateZ(0);
+}
+
+/* 最適化されたローチE��ングアニメーション */
+.loadingScreen::after {
+  content: '';
+  display: inline-block;
+  width: 20px;
+  height: 20px;
+  margin-left: var(--spacing-xs);
+  border: 2px solid var(--border-primary);
+  border-top: 2px solid var(--color-gaming-text-accent);
+  border-radius: 50%;
+  animation: optimizedLoading 1s linear infinite;
+  /* GPU加速アニメーション */
+  transform: translateZ(0);
+  will-change: transform;
+}
+
+/* GPU最適化されたローチE��ングアニメーション */
+@keyframes optimizedLoading {
+  0% { transform: rotate(0deg) translateZ(0); }
+  100% { transform: rotate(360deg) translateZ(0); }
+}
+
+/* レスポンシブデザイン - メチE��アクエリ最適匁E*/
+@media (max-width: 768px) {
+  .progressIndicator {
+    top: var(--spacing-xs);
+    right: var(--spacing-xs);
+    font-size: var(--font-size-md);
+    padding: var(--spacing-2xs) var(--spacing-xs);
+  }
+  
+  .loadingScreen {
+    font-size: var(--font-size-lg);
+    padding: var(--spacing-md);
+    text-align: center;
+  }
+}
+
+/* 高DPI画面での最適匁E*/
+@media (-webkit-min-device-pixel-ratio: 2), (min-resolution: 192dpi) {
+  .progressIndicator {
+    border-width: 0.5px;
+  }
+}
+
+/* ダークモード対忁E*/
+@media (prefers-color-scheme: dark) {
+  .progressIndicator {
+    background: rgba(0, 0, 0, 0.85);
+    border-color: var(--border-secondary);
+    backdrop-filter: blur(8px) saturate(1.2);
+  }
+}
+
+/* アクセシビリチE�� - モーション削減対忁E*/
+@media (prefers-reduced-motion: reduce) {
+  .loadingScreen::after {
+    animation: none;
+  }
+  
+  .progressIndicator {
+    transition: none;
+  }
+  
+  .gameContainer {
+    will-change: auto;
+  }
+}
+
+/* フォーカス管琁E�E最適匁E*/
+.gameContainer:focus-within .progressIndicator {
+  opacity: 0.7;
+  transition: opacity 0.2s ease;
+}
+
+/* パフォーマンス最適化：composite layer刁E�� */
+.progressIndicator,
+.loadingScreen {
+  isolation: isolate;
+}
+
+/* メモリ効玁E���E�不要なanimation-fill-modeを設宁E*/
+@keyframes optimizedLoading {
+  0% { transform: rotate(0deg) translateZ(0); }
+  100% { transform: rotate(360deg) translateZ(0); }
+}
+
+.loadingScreen::after {
+  animation: optimizedLoading 1s linear infinite;
+  animation-fill-mode: none; /* メモリ効玁E�� */
+}

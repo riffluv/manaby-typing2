@@ -10,8 +10,9 @@ interface CleanRankingScreenProps {
 
 /**
  * ランキング画面 - ranking.htmlのデザインを完全に再現
+ * React最適化版: React.memo + useCallback最適化
  */
-const CleanRankingScreen: React.FC<CleanRankingScreenProps> = ({ onGoMenu }) => {
+const CleanRankingScreen: React.FC<CleanRankingScreenProps> = React.memo(({ onGoMenu }) => {
   const [rankings, setRankings] = useState<RankingEntry[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState('');// ページネーション状態
@@ -47,12 +48,16 @@ const CleanRankingScreen: React.FC<CleanRankingScreenProps> = ({ onGoMenu }) => 
   const startIndex = currentPage * perPage;
   const endIndex = Math.min(startIndex + perPage, rankings.length);
   const currentPageData = rankings.slice(startIndex, endIndex);
-
-  // ページ変更ハンドラ（Prev/Next）
-  const changePage = (direction: number) => {
+  // ページ変更ハンドラ（Prev/Next）をメモ化
+  const changePage = useCallback((direction: number) => {
     const maxPage = Math.max(0, totalPages - 1);
     setCurrentPage(Math.max(0, Math.min(maxPage, currentPage + direction)));
-  };
+  }, [totalPages, currentPage]);
+
+  // 前のページハンドラーをメモ化
+  const handlePrevPage = useCallback(() => changePage(-1), [changePage]);
+  // 次のページハンドラーをメモ化
+  const handleNextPage = useCallback(() => changePage(1), [changePage]);
 
   // ショートカットキー
   useGlobalShortcuts([
@@ -94,20 +99,19 @@ const CleanRankingScreen: React.FC<CleanRankingScreenProps> = ({ onGoMenu }) => 
                 </tr>
               </thead>
               <tbody>{currentPageData.map((entry, index) => (<tr key={index}><td>{startIndex + index + 1}</td><td>{entry.name}</td><td>{entry.kpm.toFixed(1)}</td><td>{entry.accuracy.toFixed(1)}%</td><td>{entry.miss}</td><td>{entry.createdAt ? new Date(entry.createdAt).toLocaleDateString() : '-'}</td></tr>))}</tbody>
-            </table>
-
-            <div className={styles.ranking__pagination}>
-              <button className={styles.ranking__pageBtn} onClick={() => changePage(-1)}>Prev</button>
-              <button className={styles.ranking__pageBtn} onClick={() => changePage(1)}>Next</button>
-            </div>            <div className={styles.ranking__buttons}>
+            </table>            <div className={styles.ranking__pagination}>
+              <button className={styles.ranking__pageBtn} onClick={handlePrevPage}>Prev</button>
+              <button className={styles.ranking__pageBtn} onClick={handleNextPage}>Next</button>
+            </div><div className={styles.ranking__buttons}>
               <button className={styles.button} onClick={handleGoMenu}>Back</button>
               <button className={styles.button} onClick={handleGoMenu}>Main Menu</button>
             </div>
           </>
         )}
       </div>
-    </div>
-  );
-};
+    </div>  );
+});
+
+CleanRankingScreen.displayName = 'CleanRankingScreen';
 
 export default CleanRankingScreen;

@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useCallback } from 'react';
 import { useQuestionCount, useTypingGameStore } from '@/store/typingGameStore';
 import { deleteRankingEntriesByMode } from '@/lib/rankingManaby2';
 import { isAdminEnabled, logAdminAccess, showSecurityWarning } from '@/utils/adminSecurity';
@@ -10,13 +10,14 @@ interface AdminModalProps {
 }
 
 /**
- * 管理者パネルモーダルコンポーネント
+ * 管理者パネルモーダルコンポーネント - React最適化版
  * admin.htmlのデザインを完全再現
  * Cinzelフォント、ダークグラデーション、ゴールドアクセントカラー
  * 
  * セキュリティ: 開発環境でのみ有効
+ * React最適化: React.memo + useCallback最適化
  */
-const AdminModal: React.FC<AdminModalProps> = ({ isOpen, onClose }) => {
+const AdminModal: React.FC<AdminModalProps> = React.memo(({ isOpen, onClose }) => {
   const questionCount = useQuestionCount();
   const { setQuestionCount } = useTypingGameStore();
   
@@ -36,11 +37,11 @@ const AdminModal: React.FC<AdminModalProps> = ({ isOpen, onClose }) => {
   // 状態管理
   const [questionInput, setQuestionInput] = useState(questionCount);
   const [status, setStatus] = useState('');
-  const [loading, setLoading] = useState(false);
-  const [showConfirmModal, setShowConfirmModal] = useState(false);
+  const [loading, setLoading] = useState(false);  const [showConfirmModal, setShowConfirmModal] = useState(false);
   const [confirmAction, setConfirmAction] = useState<'normal' | 'hard' | null>(null);
-  // 問題数の更新
-  const handleUpdateQuestionCount = () => {
+  
+  // 問題数の更新をメモ化
+  const handleUpdateQuestionCount = useCallback(() => {
     if (questionInput < 1 || questionInput > 100) {
       setStatus('問題数は1-100の範囲で入力してください');
       return;
@@ -58,16 +59,16 @@ const AdminModal: React.FC<AdminModalProps> = ({ isOpen, onClose }) => {
     
     // 3秒後にステータスをクリア
     setTimeout(() => setStatus(''), 3000);
-  };
+  }, [questionInput, questionCount, setQuestionCount]);
 
-  // ランキングリセットの確認
-  const handleResetRankingConfirm = (mode: 'normal' | 'hard') => {
+  // ランキングリセットの確認をメモ化
+  const handleResetRankingConfirm = useCallback((mode: 'normal' | 'hard') => {
     setConfirmAction(mode);
     setShowConfirmModal(true);
-  };
+  }, []);
 
-  // ランキングリセットの実行
-  const handleResetRanking = async () => {
+  // ランキングリセットの実行をメモ化
+  const handleResetRanking = useCallback(async () => {
     if (!confirmAction) return;
     
     setLoading(true);
@@ -86,17 +87,16 @@ const AdminModal: React.FC<AdminModalProps> = ({ isOpen, onClose }) => {
       // 3秒後にステータスをクリア
       setTimeout(() => setStatus(''), 3000);
     }
-  };
-
-  // モーダルを閉じる
-  const handleClose = () => {
+  }, [confirmAction]);
+  // モーダルを閉じる処理をメモ化
+  const handleClose = useCallback(() => {
     setShowConfirmModal(false);
     setConfirmAction(null);
     onClose();
-  };
+  }, [onClose]);
 
-  // ESCキーでモーダルを閉じる
-  const handleKeyDown = (e: React.KeyboardEvent) => {
+  // ESCキーでモーダルを閉じる処理をメモ化
+  const handleKeyDown = useCallback((e: React.KeyboardEvent) => {
     if (e.key === 'Escape') {
       if (showConfirmModal) {
         setShowConfirmModal(false);
@@ -105,15 +105,15 @@ const AdminModal: React.FC<AdminModalProps> = ({ isOpen, onClose }) => {
         handleClose();
       }
     }
-  };
+  }, [showConfirmModal, handleClose]);
 
-  // Enterキーで問題数更新
-  const handleQuestionInputKeyDown = (e: React.KeyboardEvent) => {
+  // Enterキーで問題数更新をメモ化
+  const handleQuestionInputKeyDown = useCallback((e: React.KeyboardEvent) => {
     if (e.key === 'Enter') {
       e.preventDefault();
       handleUpdateQuestionCount();
     }
-  };
+  }, [handleUpdateQuestionCount]);
 
   if (!isOpen) return null;
 
@@ -268,8 +268,9 @@ const AdminModal: React.FC<AdminModalProps> = ({ isOpen, onClose }) => {
           </div>
         </div>
       )}
-    </>
-  );
-};
+    </>  );
+});
+
+AdminModal.displayName = 'AdminModal';
 
 export default AdminModal;

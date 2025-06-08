@@ -50,10 +50,10 @@ const useSceneNavigationStoreBase = create<SceneNavigationStore>((set, get) => (
   isTransitioning: false,
   lastScoreLog: [],
   lastResultScore: null,
-
-  navigateTo: (scene) => set((state) => {
+  navigateTo: (scene) => {
+    const state = get();
     // 同一シーンへの遷移の場合は何もしない
-    if (state.currentScene === scene) return state;
+    if (state.currentScene === scene) return;
 
     // 遷移中フラグを設定
     set({ isTransitioning: true });
@@ -66,12 +66,13 @@ const useSceneNavigationStoreBase = create<SceneNavigationStore>((set, get) => (
       console.log(`[Navigation] ${state.currentScene} -> ${scene}`, transitionConfig);
     }
 
-    return {
+    set({
       previousScene: state.currentScene,
       sceneHistory: [...state.sceneHistory, state.currentScene],
       currentScene: scene,
-    };
-  }),
+      isTransitioning: false
+    });
+  },
 
   goBack: () => set((state) => {
     if (state.sceneHistory.length === 0) {
@@ -87,8 +88,7 @@ const useSceneNavigationStoreBase = create<SceneNavigationStore>((set, get) => (
       previousScene: state.currentScene,
       sceneHistory: state.sceneHistory.slice(0, -1),
     };
-  }),
-  goToMenu: () => get().navigateTo('menu'),
+  }),  goToMenu: () => get().navigateTo('menu'),
   goToGame: () => get().navigateTo('game'),
   goToRanking: () => get().navigateTo('ranking'),
   goToResult: () => get().navigateTo('result'),
