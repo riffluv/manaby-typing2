@@ -6,7 +6,6 @@ import "./globals.css";
 import AppLayout from '@/components/AppLayout';
 import AudioSystemInitializer from '@/components/AudioSystemInitializer';
 import BGMInitializer from '@/components/BGMInitializer';
-import PerformanceDebugInitializer from '@/components/PerformanceDebugInitializer';
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -46,7 +45,6 @@ export default function RootLayout({
       >
         <AudioSystemInitializer />
         <BGMInitializer />
-        <PerformanceDebugInitializer />
         <AppLayout>
           {children}
         </AppLayout>
