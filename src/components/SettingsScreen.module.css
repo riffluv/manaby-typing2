@@ -1,188 +1,203 @@
-/* SettingsScreen - 2025年最新基準対応 + 横幅制御最適化 */
-
-/* ========================================================================== 
-   Base Settings Layout - BEM + 2025 Standards + 適切な横幅制御
+/* ==========================================================================
+   System Settings - system.html完全一致デザイン
+   フルスクリーンレイアウト + BEM記法 + CSS Variables
    ========================================================================== */
 
-.settings *,
-.settings *::before,
-.settings *::after {
+/* CSS Reset - system.html完全一致 */
+.systemFullscreen *,
+.systemFullscreen *::before,
+.systemFullscreen *::after {
   box-sizing: border-box;
   margin: 0;
   padding: 0;
 }
 
-.settings {
-  /* 2025年 Modern Layout */
-  inline-size: 100%;
-  block-size: 100dvh; /* Dynamic Viewport */
-  font-family: var(--font-family-gaming, 'Cinzel', serif);
-  background: radial-gradient(ellipse at center, 
-    color-mix(in oklch, #0a0f1b 80%, black),
-    #000000
-  );
-  color: var(--color-text-secondary, #f0f0f0);
+/* ==========================================================================
+   CSS Variables - system.html完全一致
+   ========================================================================== */
+.systemFullscreen {
+  --bg-gradient: radial-gradient(ellipse at center, #0a0f1b, #000);
+  --text-color: #ccc;
+  --accent-color: #e5ccaa;
+  --highlight-color: #c8b78d;
+  --button-bg: rgba(255, 255, 255, 0.02);
+  --button-border: rgba(200, 200, 255, 0.1);
+  --button-hover-bg: rgba(180, 220, 255, 0.05);
+  --button-hover-border: rgba(150, 180, 255, 0.3);
+  --shadow-color: rgba(0, 0, 0, 0.6);
+  --radius: 16px;
+}
+
+/* ==========================================================================
+   フルスクリーンコンテナ - system.htmlのbody再現
+   ========================================================================== */
+.systemFullscreen {
+  /* system.html の html, body スタイル再現 */
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  font-family: var(--font-cinzel), 'Cinzel', serif;
+  background: var(--bg-gradient);
+  color: var(--text-color);
+  
+  /* system.html の body レイアウト再現 */
   display: flex;
   justify-content: center;
   align-items: flex-start;
-  padding-block-start: clamp(2rem, 5vh, 4rem);
-  
-  /* Container Query準備 */
-  container-type: inline-size;
-  container-name: settings-screen;
-  
-  /* パフォーマンス最適化 */
-  contain: layout style paint;
-  will-change: scroll-position;
+  padding-top: 6vh;
+  overflow-y: auto;
+  z-index: 1000;
 }
 
-/* ========================================================================== 
-   Settings Container - BEM Block + 横幅制御最適化（MainMenuスタイル）
+/* ==========================================================================
+   System Container - system.htmlの.system再現
    ========================================================================== */
-
-.settings__container {
-  /* 🎯 横幅制御最適化: MainMenuと同等の制御 */
-  inline-size: 100%;
-  max-inline-size: min(90vw, 800px); /* MainMenuと同じ制御 */
-    /* 適応的パディング */
-  padding: clamp(1rem, 3vw, 2rem) clamp(1.5rem, 4vw, 3rem);
+.system {
+  width: 100%;
+  max-width: 960px;
+  padding: 2rem 3rem;
   background: rgba(255, 255, 255, 0.02);
   border: 1px solid rgba(255, 255, 255, 0.05);
-  box-shadow: 0 0 50px rgba(0, 0, 0, 0.6), 
-              inset 0 1px 0 rgba(255, 255, 255, 0.1);
-  border-radius: 16px;
-  animation: fadeIn 1.2s ease-out;
-  
-  /* パフォーマンス最適化 */
-  contain: layout style;
-  transform: translateZ(0);
-  isolation: isolate;
+  box-shadow: 0 0 50px var(--shadow-color);
+  border-radius: var(--radius);
+  animation: fadeIn 1.2s ease;
 }
 
-/* Container Query対応 */
-@container settings-screen (inline-size < 640px) {
-  .settings__container {
-    padding: 1rem 1.5rem;
-    max-inline-size: 95vw; /* モバイルではより小さく */
-  }
-}
-
-@container settings-screen (640px <= inline-size < 1024px) {
-  .settings__container {
-    max-inline-size: 85vw; /* タブレットサイズ */
-  }
-}
-
-@container settings-screen (inline-size >= 1024px) {
-  .settings__container {
-    max-inline-size: min(80vw, 800px); /* デスクトップ最適化 */
-  }
-}
-
-/* ========================================================================== 
-   Settings Title - BEM Element + 2025 Standards
+/* ==========================================================================
+   System Title - BEM Element
    ========================================================================== */
-
-.settings__title {
-  /* 2025年 Modern Typography */
+.system__title {
   text-align: center;
-  font-size: clamp(2rem, 5vw, 2.8rem);
-  color: #e5ccaa;
+  font-size: 2.8rem;
+  color: var(--accent-color);
   letter-spacing: 0.15rem;
-  margin-block-end: 2.5rem;
+  margin-bottom: 2.5rem;
   text-shadow: 0 0 8px rgba(255, 220, 150, 0.3);
-  
-  /* DPI Scale対応 */
-  text-rendering: optimizeSpeed;
-  font-display: swap;
-  contain: style;
 }
 
-/* ========================================================================== 
-   Settings Items - BEM Elements + 2025 Standards
+/* ==========================================================================
+   System Item - BEM Element
    ========================================================================== */
-
-.settings__item {
-  /* 2025年 BEM Standard */
+.system__item {
   padding: 1.2rem 0;
-  border-block-end: 1px solid rgba(255, 255, 255, 0.07);
-  contain: layout style;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.07);
 }
 
-.settings__row {
-  /* Modern Flexbox Layout */
+/* ==========================================================================
+   System Row - BEM Element
+   ========================================================================== */
+.system__row {
   display: flex;
-  align-items: center;
   justify-content: space-between;
-  gap: 1rem;
+  align-items: center;
 }
 
-/* Container Query対応 */
-@container settings-screen (inline-size < 640px) {
-  .settings__row {
-    flex-direction: column;
-    align-items: flex-start;
-    gap: 0.75rem;
-  }
-}
-
-.settings__label {
-  /* ラベルテキスト */
+/* ==========================================================================
+   System Label - BEM Element
+   ========================================================================== */
+.system__label {
   font-size: 1.2rem;
-  color: #c8b78d;
-  min-inline-size: 180px;
-  
-  /* DPI Scale対応 */
-  text-rendering: optimizeSpeed;
-  contain: style;
+  color: var(--highlight-color);
+  min-width: 180px;
 }
 
-@container settings-screen (inline-size < 640px) {
-  .settings__label {
-    min-inline-size: auto;
-    font-size: clamp(1rem, 4vw, 1.2rem);
-  }
-}
-
-.settings__controls {
-  /* コントロール群 */
+/* ==========================================================================
+   System Controls - BEM Element
+   ========================================================================== */
+.system__controls {
   display: flex;
   align-items: center;
   gap: 1.2rem;
 }
 
-@container settings-screen (inline-size < 640px) {
-  .settings__controls {
-    inline-size: 100%;
-    justify-content: space-between;
-  }
+/* ==========================================================================
+   System Slider - BEM Element
+   ========================================================================== */
+.system__slider {
+  width: 200px;
+  height: 8px;
+  appearance: none;
+  background: #1f1f1f;
+  border-radius: 4px;
+  outline: none;
 }
 
-/* ========================================================================== 
-   Settings Buttons - BEM Element + 2025 Standards
-   ========================================================================== */
+.system__slider::-webkit-slider-thumb {
+  appearance: none;
+  width: 14px;
+  height: 14px;
+  background: var(--accent-color);
+  border-radius: 50%;
+  cursor: pointer;
+  box-shadow: 0 0 6px var(--accent-color);
+}
 
-.settings__buttons {
-  /* ボタン群のレイアウト */
+.system__slider::-moz-range-thumb {
+  appearance: none;
+  width: 14px;
+  height: 14px;
+  background: var(--accent-color);
+  border-radius: 50%;
+  cursor: pointer;
+  box-shadow: 0 0 6px var(--accent-color);
+  border: none;
+}
+
+/* ==========================================================================
+   System Toggle - BEM Element
+   ========================================================================== */
+.system__toggle {
+  width: 50px;
+  height: 24px;
+  border-radius: 12px;
+  background: #333;
+  position: relative;
+  cursor: pointer;
+  box-shadow: inset 0 0 3px rgba(255, 255, 255, 0.2);
+  flex-shrink: 0;
+  transition: all 0.3s ease;
+}
+
+.system__toggle::before {
+  content: '';
+  position: absolute;
+  width: 20px;
+  height: 20px;
+  border-radius: 50%;
+  top: 2px;
+  left: 2px;
+  background: var(--highlight-color);
+  transition: all 0.3s;
+}
+
+/* ==========================================================================
+   System Toggle Modifier - BEM Modifier
+   ========================================================================== */
+.system__toggle--on {
+  background: linear-gradient(to right, var(--highlight-color), #a08850);
+}
+
+.system__toggle--on::before {
+  left: 28px;
+  background: #0b0b0b;
+}
+
+/* ==========================================================================
+   System Buttons - BEM Element
+   ========================================================================== */
+.system__buttons {
   display: flex;
   justify-content: center;
   gap: 2rem;
-  margin-block-start: 2.5rem;
+  margin-top: 2.5rem;
 }
 
-@container settings-screen (inline-size < 640px) {
-  .settings__buttons {
-    flex-direction: column;
-    align-items: center;
-    gap: 1rem;
-  }
-}
-
-.settings__button {
-  /* 2025年 Modern Button */
+.system__button {
   padding: 0.5rem 2rem;
-  border: 1px solid rgba(200, 200, 255, 0.1);
-  background: rgba(255, 255, 255, 0.02);
+  border: 1px solid var(--button-border);
+  background: var(--button-bg);
   color: #cce0ff;
   border-radius: 4px;
   font-size: 1rem;
@@ -191,146 +206,47 @@
   box-shadow: 0 0 8px rgba(150, 180, 255, 0.1);
   transition: all 0.25s ease;
   font-family: inherit;
-  
-  /* Touch Target対応 */
-  min-inline-size: 44px;
-  min-block-size: 44px;
-  
-  /* パフォーマンス最適化 */
-  contain: layout style;
-  will-change: transform, box-shadow;
 }
 
-.settings__button:hover {
-  background: rgba(180, 220, 255, 0.05);
-  border-color: rgba(150, 180, 255, 0.3);
-  color: #fff;
-  box-shadow: 0 0 12px rgba(120, 180, 255, 0.2);
+.system__button:hover {
+  background: var(--button-hover-bg);
+  border-color: var(--button-hover-border);
+  box-shadow: 0 0 12px rgba(150, 180, 255, 0.2);
   transform: translateY(-1px);
 }
 
-.settings__button:active {
+.system__button:active {
   transform: translateY(0);
-  box-shadow: 0 0 6px rgba(120, 180, 255, 0.1);
+  box-shadow: 0 0 6px rgba(150, 180, 255, 0.15);
 }
 
-@container settings-screen (inline-size < 640px) {
-  .settings__button {
-    inline-size: 200px;
-    padding: 0.75rem 1.5rem;
-  }
-}
-
-/* ========================================================================== 
-   Settings Slider - BEM Element + 2025 Standards
+/* ==========================================================================
+   Button Component - 汎用ボタン
    ========================================================================== */
-
-.settings__slider {
-  /* 2025年 Modern Slider */
-  inline-size: var(--sizing-48);
-  block-size: var(--sizing-2);
-  appearance: none;
-  background: var(--color-surface-dark);
-  border-radius: var(--border-radius-sm);
-  outline: none;
+.button {
+  padding: 0.5rem 2rem;
+  border: 1px solid var(--button-border);
+  background: var(--button-bg);
+  color: #cce0ff;
+  border-radius: 4px;
+  font-size: 1rem;
   cursor: pointer;
-  
-  /* DPI Scale対応 */
-  @media (min-resolution: 1.25dppx) {
-    inline-size: clamp(var(--sizing-40), 15vw, var(--sizing-56));
-  }
-  
-  /* パフォーマンス最適化 */
-  transition: background-color var(--animation-duration-fast) ease-out;
-  will-change: background-color;
-  contain: layout style;
+  text-shadow: 0 0 3px rgba(0, 0, 0, 0.4);
+  box-shadow: 0 0 8px rgba(150, 180, 255, 0.1);
+  transition: all 0.25s ease;
+  font-family: inherit;
 }
 
-.settings__slider:disabled {
-  opacity: 0.5;
-  cursor: not-allowed;
+.button:hover {
+  background: var(--button-hover-bg);
+  border-color: var(--button-hover-border);
+  color: #fff;
+  box-shadow: 0 0 12px rgba(120, 180, 255, 0.2);
 }
 
-.settings__slider::-webkit-slider-thumb {
-  appearance: none;
-  inline-size: var(--sizing-3-5);
-  block-size: var(--sizing-3-5);
-  background: var(--color-gaming-accent-gold);
-  border-radius: 50%;
-  cursor: pointer;
-  box-shadow: var(--shadow-gaming-glow);
-  transition: transform var(--animation-duration-fast) ease-out;
-}
-
-.settings__slider::-webkit-slider-thumb:hover {
-  transform: scale(1.1);
-}
-
-.settings__slider::-moz-range-thumb {
-  inline-size: var(--sizing-3-5);
-  block-size: var(--sizing-3-5);
-  background: var(--color-gaming-accent-gold);
-  border-radius: 50%;
-  cursor: pointer;
-  box-shadow: var(--shadow-gaming-glow);
-  border: none;
-  transition: transform var(--animation-duration-fast) ease-out;
-}
-
-.settings__slider::-moz-range-thumb:hover {
-  transform: scale(1.1);
-}
-
-/* ========================================================================== 
-   Settings Toggle - BEM Element + 2025 Standards
+/* ==========================================================================
+   Animations - system.html完全一致
    ========================================================================== */
-
-.settings__toggle {
-  /* 2025年 Modern Toggle */
-  inline-size: var(--sizing-12);
-  block-size: var(--sizing-6);
-  border-radius: var(--border-radius-full);
-  background: var(--color-surface-medium);
-  position: relative;
-  cursor: pointer;
-  box-shadow: inset 0 0 var(--spacing-xs) color-mix(in oklch, white 20%, transparent);
-  flex-shrink: 0;
-  transition: background-color var(--animation-duration-normal) ease-out;
-  
-  /* パフォーマンス最適化 */
-  will-change: background-color;
-  contain: layout style;
-}
-
-.settings__toggle::before {
-  content: '';
-  position: absolute;
-  inline-size: var(--sizing-5);
-  block-size: var(--sizing-5);
-  border-radius: 50%;
-  inset-block-start: var(--spacing-xs);
-  inset-inline-start: var(--spacing-xs);
-  background: var(--color-gaming-accent-secondary);
-  transition: transform var(--animation-duration-normal) ease-out;
-  
-  /* GPU加速 */
-  transform: translateZ(0);
-  will-change: transform;
-}
-
-/* Toggle States - BEM Modifiers */
-.settings__toggle--on {
-  background: var(--color-gaming-accent-primary);
-}
-
-.settings__toggle--on::before {
-  transform: translateX(var(--spacing-6)) translateZ(0);
-}
-
-/* ========================================================================== 
-   Animation Definitions - 2025 Standards
-   ========================================================================== */
-
 @keyframes fadeIn {
   from {
     opacity: 0;
@@ -342,79 +258,55 @@
   }
 }
 
-/* ========================================================================== 
-   Accessibility & Performance - 2025 Standards
+/* ==========================================================================
+   Responsive Design - レスポンシブ対応
    ========================================================================== */
-
-@media (prefers-reduced-motion: reduce) {
-  .settings__container,
-  .settings__button {
-    animation: none;
-    transition: none;
+@media (max-width: 768px) {
+  .system {
+    padding: 1.5rem 2rem;
   }
   
-  .settings__button:hover {
-    transform: none;
-  }
-}
-
-@media (prefers-contrast: high) {
-  .settings__container {
-    border: 2px solid #ffffff;
+  .system__title {
+    font-size: 2.2rem;
   }
   
-  .settings__title,
-  .settings__label {
-    color: #ffffff;
-    text-shadow: none;
+  .system__controls {
+    gap: 0.8rem;
   }
   
-  .settings__button {
-    border: 2px solid currentColor;
-  }
-}
-
-/* ========================================================================== 
-   DPI対応 - 高解像度ディスプレイ最適化
-   ========================================================================== */
-
-@media (min-resolution: 1.25dppx) {
-  .settings__title {
-    font-size: clamp(1.8rem, 4.5vw, 2.5rem);
+  .system__slider {
+    width: 150px;
   }
   
-  .settings__label {
-    font-size: clamp(1rem, 3.5vw, 1.1rem);
+  .system__buttons {
+    flex-direction: column;
+    gap: 1rem;
   }
 }
 
-@media (min-resolution: 2dppx) {
-  .settings__container {
-    box-shadow: 
-      0 0 25px rgba(0, 0, 0, 0.4),
-      inset 0 0.5px 0 rgba(255, 255, 255, 0.05);
+@media (max-width: 480px) {
+  .system {
+    padding: 1rem 1.5rem;
+    margin: 0 1rem;
   }
-}
-
-/* ========================================================================== 
-   Performance Optimizations
-   ========================================================================== */
-
-/* GPU レイヤー分離 */
-.settings__container {
-  isolation: isolate;
-}
-
-.settings__button {
-  backface-visibility: hidden;
-  perspective: 1000px;
-}
-
-/* Layout thrashing 防止 */
-.settings__row {
-  contain: layout;
-}
-
-.settings__controls {
-  contain: layout style;
+  
+  .system__title {
+    font-size: 1.8rem;
+    margin-bottom: 2rem;
+  }
+  
+  .system__row {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 0.8rem;
+  }
+  
+  .system__label {
+    min-width: auto;
+  }
+  
+  .system__slider {
+    width: 100%;
+    min-width: 200px;
+  }
 }

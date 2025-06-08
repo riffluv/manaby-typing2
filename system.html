@@ -1,0 +1,229 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8" />
+  <title>System Settings</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@700&display=swap" rel="stylesheet" />
+  <style>
+    :root {
+      --bg-gradient: radial-gradient(ellipse at center, #0a0f1b, #000);
+      --text-color: #ccc;
+      --accent-color: #e5ccaa;
+      --highlight-color: #c8b78d;
+      --button-bg: rgba(255, 255, 255, 0.02);
+      --button-border: rgba(200, 200, 255, 0.1);
+      --button-hover-bg: rgba(180, 220, 255, 0.05);
+      --button-hover-border: rgba(150, 180, 255, 0.3);
+      --shadow-color: rgba(0, 0, 0, 0.6);
+      --radius: 16px;
+    }
+
+    *, *::before, *::after {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    html, body {
+      width: 100%;
+      height: 100%;
+      font-family: 'Cinzel', serif;
+      background: var(--bg-gradient);
+      color: var(--text-color);
+    }
+
+    body {
+      display: flex;
+      justify-content: center;
+      align-items: flex-start;
+      padding-top: 6vh;
+    }
+
+    .system {
+      width: 100%;
+      max-width: 960px;
+      padding: 2rem 3rem;
+      background: rgba(255, 255, 255, 0.02);
+      border: 1px solid rgba(255, 255, 255, 0.05);
+      box-shadow: 0 0 50px var(--shadow-color);
+      border-radius: var(--radius);
+      animation: fadeIn 1.2s ease;
+    }
+
+    .system__title {
+      text-align: center;
+      font-size: 2.8rem;
+      color: var(--accent-color);
+      letter-spacing: 0.15rem;
+      margin-bottom: 2.5rem;
+      text-shadow: 0 0 8px rgba(255, 220, 150, 0.3);
+    }
+
+    .system__item {
+      padding: 1.2rem 0;
+      border-bottom: 1px solid rgba(255,255,255,0.07);
+    }
+
+    .system__row {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    .system__label {
+      font-size: 1.2rem;
+      color: var(--highlight-color);
+      min-width: 180px;
+    }
+
+    .system__controls {
+      display: flex;
+      align-items: center;
+      gap: 1.2rem;
+    }
+
+    .system__slider {
+      width: 200px;
+      height: 8px;
+      appearance: none;
+      background: #1f1f1f;
+      border-radius: 4px;
+      outline: none;
+    }
+
+    .system__slider::-webkit-slider-thumb,
+    .system__slider::-moz-range-thumb {
+      appearance: none;
+      width: 14px;
+      height: 14px;
+      background: var(--accent-color);
+      border-radius: 50%;
+      cursor: pointer;
+      box-shadow: 0 0 6px var(--accent-color);
+    }
+
+    .system__toggle {
+      width: 50px;
+      height: 24px;
+      border-radius: 12px;
+      background: #333;
+      position: relative;
+      cursor: pointer;
+      box-shadow: inset 0 0 3px rgba(255,255,255,0.2);
+      flex-shrink: 0;
+    }
+
+    .system__toggle::before {
+      content: '';
+      position: absolute;
+      width: 20px;
+      height: 20px;
+      border-radius: 50%;
+      top: 2px;
+      left: 2px;
+      background: var(--highlight-color);
+      transition: all 0.3s;
+    }
+
+    .system__toggle--on {
+      background: linear-gradient(to right, var(--highlight-color), #a08850);
+    }
+
+    .system__toggle--on::before {
+      left: 28px;
+      background: #0b0b0b;
+    }
+
+    .system__buttons {
+      display: flex;
+      justify-content: center;
+      gap: 2rem;
+      margin-top: 2.5rem;
+    }
+
+    .button {
+      padding: 0.5rem 2rem;
+      border: 1px solid var(--button-border);
+      background: var(--button-bg);
+      color: #cce0ff;
+      border-radius: 4px;
+      font-size: 1rem;
+      cursor: pointer;
+      text-shadow: 0 0 3px rgba(0,0,0,0.4);
+      box-shadow: 0 0 8px rgba(150,180,255,0.1);
+      transition: all 0.25s ease;
+    }
+
+    .button:hover {
+      background: var(--button-hover-bg);
+      border-color: var(--button-hover-border);
+      color: #fff;
+      box-shadow: 0 0 12px rgba(120,180,255,0.2);
+    }
+
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(10px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+  </style>
+</head>
+<body>
+  <main class="system">
+    <h1 class="system__title">System Settings</h1>
+
+    <section class="system__item">
+      <div class="system__row">
+        <label class="system__label">BGM</label>
+        <div class="system__controls">
+          <div class="system__toggle system__toggle--on" role="switch" aria-checked="true"></div>
+          <input type="range" class="system__slider" min="0" max="10" value="8" />
+        </div>
+      </div>
+    </section>
+
+    <section class="system__item">
+      <div class="system__row">
+        <label class="system__label">Sound Effects</label>
+        <div class="system__controls">
+          <div class="system__toggle system__toggle--on" role="switch" aria-checked="true"></div>
+          <input type="range" class="system__slider" min="0" max="10" value="7" />
+        </div>
+      </div>
+    </section>
+
+    <section class="system__item">
+      <div class="system__row">
+        <label class="system__label">Hit Sound</label>
+        <div class="system__controls">
+          <div class="system__toggle system__toggle--on" role="switch" aria-checked="true"></div>
+          <input type="range" class="system__slider" min="0" max="10" value="6" />
+        </div>
+      </div>
+    </section>
+
+    <section class="system__item">
+      <div class="system__row">
+        <label class="system__label">Show Keyboard</label>
+        <div class="system__controls">
+          <div class="system__toggle system__toggle--on" role="switch" aria-checked="true"></div>
+        </div>
+      </div>
+    </section>
+
+    <section class="system__item">
+      <div class="system__row">
+        <label class="system__label">Kana Display</label>
+        <div class="system__controls">
+          <div class="system__toggle system__toggle--on" role="switch" aria-checked="true"></div>
+        </div>
+      </div>
+    </section>
+
+    <nav class="system__buttons">
+      <button class="button" onclick="history.back()">Back</button>
+      <button class="button" onclick="window.location.href='index.html'">Main Menu</button>
+    </nav>
+  </main>
+</body>
+</html>

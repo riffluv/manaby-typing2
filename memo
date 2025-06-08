@@ -2,3 +2,16 @@
 既存のcssを削除して新しく作り直して
 
 ※ CSS-Design-Best-Practices.mdの「完全デザイン移行手順」に従ってください
+
+
+
+📋 HTMLデザイン記述ガイドライン
+🎯 基本原則
+CSS Reset使用
+BEM記法準拠
+CSS Variables活用
+セマンティックHTML
+モダンCSS機能利用
+
+
+sceneNavigationStore　で遷移している　

@@ -1,0 +1,108 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8">
+  <title>タイピングゲーム画面</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <style>
+    :root {
+      --bg-color: radial-gradient(ellipse at center, #0a0f1b, #000);
+      --jp-gradient: linear-gradient(to right, #c9a76f, #f8e6b0);
+      --jp-shadow: rgba(255, 223, 128, 0.2);
+      --typed-color: #a3d8ff;
+      --focus-color: #ffe18d;
+      --remaining-color: #9c7e5c;
+      --prompt-bg: rgba(20, 20, 25, 0.75);
+      --prompt-border: rgba(255, 255, 255, 0.1);
+      --prompt-shadow: rgba(100, 180, 255, 0.1);
+    }
+
+    /* CSS Reset */
+    *, *::before, *::after {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    html, body {
+      height: 100%;
+      width: 100%;
+      font-family: 'Cinzel', serif;
+      background: var(--bg-color);
+      color: #ccc;
+    }
+
+    body {
+      display: flex;
+      justify-content: center;
+      align-items: flex-start;
+      padding-top: 12vh;
+    }
+
+    .prompt-box {
+      width: 90%;
+      max-width: 960px;
+      background: var(--prompt-bg);
+      border: 1px solid var(--prompt-border);
+      border-radius: 12px;
+      padding: 2rem;
+      box-shadow: 0 0 20px var(--prompt-shadow);
+      text-align: center;
+      backdrop-filter: blur(4px);
+    }
+
+    .prompt-box__jp,
+    .prompt-box__kana,
+    .prompt-box__roma {
+      letter-spacing: 0.04rem;
+      line-height: 1.6;
+      margin-bottom: 1.2rem;
+    }
+
+    .prompt-box__jp {
+      font-size: 1.4rem;
+      font-weight: bold;
+      background: var(--jp-gradient);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      text-shadow: 0 0 6px var(--jp-shadow);
+    }
+
+    .prompt-box__kana {
+      font-size: 1.3rem;
+      color: #d6cbb2;
+    }
+
+    .prompt-box__roma {
+      font-size: 1.2rem;
+    }
+
+    .typed {
+      color: var(--typed-color);
+    }
+
+    .focus {
+      color: var(--focus-color);
+    }
+
+    .remaining {
+      color: var(--remaining-color);
+    }
+  </style>
+</head>
+<body>
+  <main class="prompt-box">
+    <p class="prompt-box__jp">これはダミーです。お好きな文に変更してください。</p>
+    <p class="prompt-box__kana">
+      <span class="typed">これはだ</span><span class="focus">み</span><span class="remaining">ーです。おすきなぶんにへんこうしてください。</span>
+    </p>
+    <p class="prompt-box__roma">
+      <span class="typed">kore wa </span><span class="focus">d</span><span class="remaining">ummy desu. osuki na bun ni henkou shite kudasai.</span>
+    </p>
+  </main>
+
+  <script>
+    console.log("タイピングUI Ready - 改良後バージョン");
+  </script>
+</body>
+</html>

@@ -20,7 +20,8 @@ const SettingsScreen: React.FC = React.memo(() => {
     setSoundEffectsEnabled,
     setSoundEffectsVolume,
     setHitSoundEnabled,
-    setHitSoundVolume,    setShowKeyboard,
+    setHitSoundVolume,
+    setShowKeyboard,
     setShowKanaDisplay,
   } = useSettingsStore();
 
@@ -33,7 +34,8 @@ const SettingsScreen: React.FC = React.memo(() => {
   const handleSoundEffectsVolumeChange = useCallback((e: React.ChangeEvent<HTMLInputElement>) => 
     setSoundEffectsVolume(Number(e.target.value)), [setSoundEffectsVolume]);
   const handleHitSoundToggle = useCallback(() => 
-    setHitSoundEnabled(!hitSoundEnabled), [hitSoundEnabled, setHitSoundEnabled]);  const handleHitSoundVolumeChange = useCallback((e: React.ChangeEvent<HTMLInputElement>) => 
+    setHitSoundEnabled(!hitSoundEnabled), [hitSoundEnabled, setHitSoundEnabled]);
+  const handleHitSoundVolumeChange = useCallback((e: React.ChangeEvent<HTMLInputElement>) => 
     setHitSoundVolume(Number(e.target.value)), [setHitSoundVolume]);
   const handleKeyboardToggle = useCallback(() => 
     setShowKeyboard(!showKeyboard), [showKeyboard, setShowKeyboard]);
@@ -41,20 +43,25 @@ const SettingsScreen: React.FC = React.memo(() => {
     setShowKanaDisplay(!showKanaDisplay), [showKanaDisplay, setShowKanaDisplay]);
 
   return (
-    <div className={styles.settings}>
-      <div className={styles.settings__container}>
-        <h1 className={styles.settings__title}>System Settings</h1>
+    // system.html完全再現: フルスクリーンレイアウト
+    <div className={styles.systemFullscreen}>
+      <main className={styles.system}>
+        <h1 className={styles.system__title}>System Settings</h1>
 
-        <div className={styles.settings__item}>
-          <div className={styles.settings__row}>
-            <span className={styles.settings__label}>BGM</span>
-            <div className={styles.settings__controls}>              <div
-                className={`${styles.settings__toggle} ${bgmEnabled ? styles['settings__toggle--on'] : ''}`}
+        {/* BGM設定 */}
+        <section className={styles.system__item}>
+          <div className={styles.system__row}>
+            <label className={styles.system__label}>BGM</label>
+            <div className={styles.system__controls}>
+              <div
+                className={`${styles.system__toggle} ${bgmEnabled ? styles['system__toggle--on'] : ''}`}
+                role="switch"
+                aria-checked={bgmEnabled}
                 onClick={handleBgmToggle}
-              ></div>
+              />
               <input
                 type="range"
-                className={styles.settings__slider}
+                className={styles.system__slider}
                 min="0"
                 max="10"
                 value={bgmVolume}
@@ -63,18 +70,22 @@ const SettingsScreen: React.FC = React.memo(() => {
               />
             </div>
           </div>
-        </div>
+        </section>
 
-        <div className={styles.settings__item}>
-          <div className={styles.settings__row}>
-            <span className={styles.settings__label}>Sound Effects</span>
-            <div className={styles.settings__controls}>              <div
-                className={`${styles.settings__toggle} ${soundEffectsEnabled ? styles['settings__toggle--on'] : ''}`}
+        {/* Sound Effects設定 */}
+        <section className={styles.system__item}>
+          <div className={styles.system__row}>
+            <label className={styles.system__label}>Sound Effects</label>
+            <div className={styles.system__controls}>
+              <div
+                className={`${styles.system__toggle} ${soundEffectsEnabled ? styles['system__toggle--on'] : ''}`}
+                role="switch"
+                aria-checked={soundEffectsEnabled}
                 onClick={handleSoundEffectsToggle}
-              ></div>
+              />
               <input
                 type="range"
-                className={styles.settings__slider}
+                className={styles.system__slider}
                 min="0"
                 max="10"
                 value={soundEffectsVolume}
@@ -83,18 +94,22 @@ const SettingsScreen: React.FC = React.memo(() => {
               />
             </div>
           </div>
-        </div>
+        </section>
 
-        <div className={styles.settings__item}>
-          <div className={styles.settings__row}>
-            <span className={styles.settings__label}>Hit Sound</span>
-            <div className={styles.settings__controls}>              <div
-                className={`${styles.settings__toggle} ${hitSoundEnabled ? styles['settings__toggle--on'] : ''}`}
+        {/* Hit Sound設定 */}
+        <section className={styles.system__item}>
+          <div className={styles.system__row}>
+            <label className={styles.system__label}>Hit Sound</label>
+            <div className={styles.system__controls}>
+              <div
+                className={`${styles.system__toggle} ${hitSoundEnabled ? styles['system__toggle--on'] : ''}`}
+                role="switch"
+                aria-checked={hitSoundEnabled}
                 onClick={handleHitSoundToggle}
-              ></div>
+              />
               <input
                 type="range"
-                className={styles.settings__slider}
+                className={styles.system__slider}
                 min="0"
                 max="10"
                 value={hitSoundVolume}
@@ -103,39 +118,50 @@ const SettingsScreen: React.FC = React.memo(() => {
               />
             </div>
           </div>
-        </div>        <div className={styles.settings__item}>
-          <div className={styles.settings__row}>
-            <span className={styles.settings__label}>Show Keyboard</span>
-            <div className={styles.settings__controls}>              <div
-                className={`${styles.settings__toggle} ${showKeyboard ? styles['settings__toggle--on'] : ''}`}
-                onClick={handleKeyboardToggle}
-              ></div>
-            </div>
-          </div>
-        </div>
+        </section>
 
-        <div className={styles.settings__item}>
-          <div className={styles.settings__row}>
-            <span className={styles.settings__label}>Kana Display</span>
-            <div className={styles.settings__controls}>
+        {/* Show Keyboard設定 */}
+        <section className={styles.system__item}>
+          <div className={styles.system__row}>
+            <label className={styles.system__label}>Show Keyboard</label>
+            <div className={styles.system__controls}>
               <div
-                className={`${styles.settings__toggle} ${showKanaDisplay ? styles['settings__toggle--on'] : ''}`}
-                onClick={handleKanaDisplayToggle}
-              ></div>
+                className={`${styles.system__toggle} ${showKeyboard ? styles['system__toggle--on'] : ''}`}
+                role="switch"
+                aria-checked={showKeyboard}
+                onClick={handleKeyboardToggle}
+              />
             </div>
           </div>
-        </div>
+        </section>
 
-        <div className={styles.settings__buttons}>
-          <div className={styles.button} onClick={goBack}>
+        {/* Kana Display設定 */}
+        <section className={styles.system__item}>
+          <div className={styles.system__row}>
+            <label className={styles.system__label}>Kana Display</label>
+            <div className={styles.system__controls}>
+              <div
+                className={`${styles.system__toggle} ${showKanaDisplay ? styles['system__toggle--on'] : ''}`}
+                role="switch"
+                aria-checked={showKanaDisplay}
+                onClick={handleKanaDisplayToggle}
+              />
+            </div>
+          </div>
+        </section>
+
+        {/* Navigation Buttons */}
+        <nav className={styles.system__buttons}>
+          <button className={styles.system__button} onClick={goBack}>
             Back
-          </div>
-          <div className={styles.button} onClick={goToMenu}>
+          </button>
+          <button className={styles.system__button} onClick={goToMenu}>
             Main Menu
-          </div>
-        </div>
-      </div>
-    </div>  );
+          </button>
+        </nav>
+      </main>
+    </div>
+  );
 });
 
 SettingsScreen.displayName = 'SettingsScreen';

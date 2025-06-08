@@ -2,8 +2,6 @@
 
 import { useRouter } from 'next/navigation';
 import { useSettingsStore } from '@/store/useSettingsStore';
-import { Toggle } from '@/components/ui/Toggle';
-import { Slider } from '@/components/ui/Slider';
 import styles from './SettingsScreen.module.css';
 
 export default function SystemSettingsScreen() {
@@ -34,113 +32,126 @@ export default function SystemSettingsScreen() {
   const handleMainMenu = () => {
     router.push('/');
   };
+
+  // Toggle クリックハンドラー
+  const handleToggleClick = (setter: (value: boolean) => void, currentValue: boolean) => {
+    setter(!currentValue);
+  };
   return (
-    <div className={styles.settings}>
-      <div className={styles.settings__container}>
-        <h1 className={styles.settings__title}>System Settings</h1>
+    // system.html完全再現: フルスクリーンレイアウト
+    <div className={styles.systemFullscreen}>
+      <main className={styles.system}>
+        <h1 className={styles.system__title}>System Settings</h1>
 
         {/* BGM設定 */}
-        <div className={styles.settings__item}>
-          <div className={styles.settings__row}>
-            <span className={styles.settings__label}>BGM</span>
-            <div className={styles.settings__controls}>
-              <Toggle
-                checked={bgmEnabled}
-                onChange={setBgmEnabled}
+        <section className={styles.system__item}>
+          <div className={styles.system__row}>
+            <label className={styles.system__label}>BGM</label>
+            <div className={styles.system__controls}>
+              <div 
+                className={`${styles.system__toggle} ${bgmEnabled ? styles['system__toggle--on'] : ''}`}
+                role="switch"
+                aria-checked={bgmEnabled}
+                onClick={() => handleToggleClick(setBgmEnabled, bgmEnabled)}
               />
-              <Slider
+              <input 
+                type="range" 
+                className={styles.system__slider} 
+                min="0" 
+                max="10" 
                 value={bgmVolume}
-                onChange={setBgmVolume}
-                min={0}
-                max={10}
-                disabled={!bgmEnabled}
+                onChange={(e) => setBgmVolume(Number(e.target.value))}
               />
             </div>
           </div>
-        </div>
+        </section>
 
         {/* Sound Effects設定 */}
-        <div className={styles.settings__item}>
-          <div className={styles.settings__row}>
-            <span className={styles.settings__label}>Sound Effects</span>
-            <div className={styles.settings__controls}>
-              <Toggle
-                checked={soundEffectsEnabled}
-                onChange={setSoundEffectsEnabled}
+        <section className={styles.system__item}>
+          <div className={styles.system__row}>
+            <label className={styles.system__label}>Sound Effects</label>
+            <div className={styles.system__controls}>
+              <div 
+                className={`${styles.system__toggle} ${soundEffectsEnabled ? styles['system__toggle--on'] : ''}`}
+                role="switch"
+                aria-checked={soundEffectsEnabled}
+                onClick={() => handleToggleClick(setSoundEffectsEnabled, soundEffectsEnabled)}
               />
-              <Slider
+              <input 
+                type="range" 
+                className={styles.system__slider} 
+                min="0" 
+                max="10" 
                 value={soundEffectsVolume}
-                onChange={setSoundEffectsVolume}
-                min={0}
-                max={10}
-                disabled={!soundEffectsEnabled}
+                onChange={(e) => setSoundEffectsVolume(Number(e.target.value))}
               />
             </div>
           </div>
-        </div>
+        </section>
 
         {/* Hit Sound設定 */}
-        <div className={styles.settings__item}>
-          <div className={styles.settings__row}>
-            <span className={styles.settings__label}>Hit Sound</span>
-            <div className={styles.settings__controls}>
-              <Toggle
-                checked={hitSoundEnabled}
-                onChange={setHitSoundEnabled}
+        <section className={styles.system__item}>
+          <div className={styles.system__row}>
+            <label className={styles.system__label}>Hit Sound</label>
+            <div className={styles.system__controls}>
+              <div 
+                className={`${styles.system__toggle} ${hitSoundEnabled ? styles['system__toggle--on'] : ''}`}
+                role="switch"
+                aria-checked={hitSoundEnabled}
+                onClick={() => handleToggleClick(setHitSoundEnabled, hitSoundEnabled)}
               />
-              <Slider
+              <input 
+                type="range" 
+                className={styles.system__slider} 
+                min="0" 
+                max="10" 
                 value={hitSoundVolume}
-                onChange={setHitSoundVolume}
-                min={0}
-                max={10}
-                disabled={!hitSoundEnabled}
+                onChange={(e) => setHitSoundVolume(Number(e.target.value))}
               />
             </div>
           </div>
-        </div>
+        </section>
 
         {/* Show Keyboard設定 */}
-        <div className={styles.settings__item}>
-          <div className={styles.settings__row}>
-            <span className={styles.settings__label}>Show Keyboard</span>
-            <div className={styles.settings__controls}>
-              <Toggle
-                checked={showKeyboard}
-                onChange={setShowKeyboard}
+        <section className={styles.system__item}>
+          <div className={styles.system__row}>
+            <label className={styles.system__label}>Show Keyboard</label>
+            <div className={styles.system__controls}>
+              <div 
+                className={`${styles.system__toggle} ${showKeyboard ? styles['system__toggle--on'] : ''}`}
+                role="switch"
+                aria-checked={showKeyboard}
+                onClick={() => handleToggleClick(setShowKeyboard, showKeyboard)}
               />
             </div>
           </div>
-        </div>
+        </section>
 
         {/* Kana Display設定 */}
-        <div className={styles.settings__item}>
-          <div className={styles.settings__row}>
-            <span className={styles.settings__label}>Kana Display</span>
-            <div className={styles.settings__controls}>
-              <Toggle
-                checked={showKanaDisplay}
-                onChange={setShowKanaDisplay}
+        <section className={styles.system__item}>
+          <div className={styles.system__row}>
+            <label className={styles.system__label}>Kana Display</label>
+            <div className={styles.system__controls}>
+              <div 
+                className={`${styles.system__toggle} ${showKanaDisplay ? styles['system__toggle--on'] : ''}`}
+                role="switch"
+                aria-checked={showKanaDisplay}
+                onClick={() => handleToggleClick(setShowKanaDisplay, showKanaDisplay)}
               />
             </div>
           </div>
-        </div>
+        </section>
 
-        {/* ボタン */}
-        <div className={styles.settings__buttons}>
-          <button 
-            className={styles.settings__button}
-            onClick={handleBack}
-          >
+        {/* ボタンエリア */}
+        <nav className={styles.system__buttons}>
+          <button className={styles.button} onClick={handleBack}>
             Back
           </button>
-          <button 
-            className={styles.settings__button}
-            onClick={handleMainMenu}
-          >
+          <button className={styles.button} onClick={handleMainMenu}>
             Main Menu
           </button>
-        </div>
-      </div>
+        </nav>
+      </main>
     </div>
   );
 }
