@@ -1,5 +1,5 @@
 /**
- * DirectTypingEngine2 - 高速レスポンス最適化版タイピングエンジン
+ * DirectTypingEngine2 - 🚀 ZERO-LATENCY 高速レスポンス最適化版タイピングエンジン
  * 
  * 表示内容:
  * 1. 上部: 原文（漢字入り）
@@ -12,17 +12,18 @@
  * - 「ん」の分岐入力対応
  * - リアルタイム進捗表示
  * 
- * パフォーマンス最適化 (2025/6/9):
- * - ひらがなハイライト機能を削除（目のチカチカ防止とパフォーマンス向上）
- * - ひらがなは静的な参考表示のみ
+ * 🚀 ZERO-LATENCY 最適化 (2025/6/9):
+ * - requestAnimationFrame完全排除 → 即座実行（16.67ms遅延削除）
+ * - ひらがなハイライト機能を削除（パフォーマンス向上）
  * - CSS遷移を削除（0.15s ease → 即座のフィードバック）
  * - スケール変換を削除（GPU負荷軽減）
- * - requestAnimationFrame によるレンダリング最適化
+ * - UltraFastAudioSystem採用（typingmania-ref流の超高速音響）
+ * - 40年タイピング経験者の感覚に対応した遅延ゼロ実装
  */
 
 import { TypingChar, type DisplayInfo } from './TypingChar';
 import type { KanaDisplay, PerWordScoreLog, TypingWord } from '@/types';
-import OptimizedAudioSystem from '@/utils/OptimizedAudioSystem';
+import UltraFastAudioSystem from '@/utils/UltraFastAudioSystem';
 import { debug } from '../utils/debug';
 
 
@@ -49,44 +50,43 @@ class RomajiChar {
     // GPU最適化（背景色を削除）
     this.el.style.willChange = 'color';
     this.setInactive();
-  }
-  setActive(): void {
+  }  setActive(): void {
     if (this.lastState === 'active') return; // 重複更新防止
     this.lastState = 'active';
     this.isActive = true;
-    this.isCompleted = false;    requestAnimationFrame(() => {
-      this.el.style.color = '#ffeb3b'; // 世界観に合う黄色系
-      this.el.style.background = 'transparent'; // バックグラウンドは透明      this.el.style.textShadow = '0 0 8px rgba(255, 235, 59, 0.8), 0 0 1px #fff';
-      // 高速レスポンス: スケール変換を削除
-      // this.el.style.transform = 'scale(1.1)';
-    });
-  }
-  setCompleted(): void {
+    this.isCompleted = false;
+    
+    // 🚀 ZERO-LATENCY: requestAnimationFrameを排除して即座実行
+    this.el.style.color = '#ffeb3b'; // 世界観に合う黄色系
+    this.el.style.background = 'transparent'; // バックグラウンドは透明
+    this.el.style.textShadow = '0 0 8px rgba(255, 235, 59, 0.8), 0 0 1px #fff';
+    // 高速レスポンス: スケール変換を削除
+    // this.el.style.transform = 'scale(1.1)';
+  }  setCompleted(): void {
     if (this.lastState === 'completed') return; // 重複更新防止
     this.lastState = 'completed';
     this.isCompleted = true;
     this.isActive = false;
-    requestAnimationFrame(() => {
-      this.el.style.color = '#87ceeb';
-      this.el.style.background = 'transparent'; // バックグラウンドカラーを削除（RomajiChar）
-      this.el.style.textShadow = '0 0 6px rgba(135, 206, 235, 0.6)';
-      // 高速レスポンス: スケール変換を削除
-      // this.el.style.transform = 'scale(1)';
-    });
+    
+    // 🚀 ZERO-LATENCY: requestAnimationFrameを排除して即座実行
+    this.el.style.color = '#87ceeb';
+    this.el.style.background = 'transparent'; // バックグラウンドカラーを削除（RomajiChar）
+    this.el.style.textShadow = '0 0 6px rgba(135, 206, 235, 0.6)';
+    // 高速レスポンス: スケール変換を削除
+    // this.el.style.transform = 'scale(1)';
   }
-
   setInactive(): void {
     if (this.lastState === 'inactive') return; // 重複更新防止
     this.lastState = 'inactive';
     this.isActive = false;
     this.isCompleted = false;
-    requestAnimationFrame(() => {
-      this.el.style.color = '#999';
-      this.el.style.background = 'transparent';
-      this.el.style.textShadow = '0 0 1px rgba(0,0,0,0.5)';
-      // 高速レスポンス: スケール変換を削除
-      // this.el.style.transform = 'scale(1)';
-    });
+    
+    // 🚀 ZERO-LATENCY: requestAnimationFrameを排除して即座実行
+    this.el.style.color = '#999';
+    this.el.style.background = 'transparent';
+    this.el.style.textShadow = '0 0 1px rgba(0,0,0,0.5)';
+    // 高速レスポンス: スケール変換を削除
+    // this.el.style.transform = 'scale(1)';
   }
 }
 
@@ -312,10 +312,9 @@ export class DirectTypingEngine2 {  private state: DirectEngineState;
 
   /**
    * キー処理
-   */
-  private processKey(key: string): void {
+   */  private processKey(key: string): void {
     if (this.state.keyCount === 0) {
-      OptimizedAudioSystem.resumeAudioContext();
+      UltraFastAudioSystem.resumeAudioContext();
     }
 
     if (this.state.startTime === 0) {
@@ -331,7 +330,7 @@ export class DirectTypingEngine2 {  private state: DirectEngineState;
       const result = currentChar.typeBranching(key, nextChar);
 
       if (result.success) {
-        OptimizedAudioSystem.playClickSound();
+        UltraFastAudioSystem.playClickSound();
 
         if (result.completeWithSingle) {
           // 'n'パターン: 「ん」完了後、次文字に継続
@@ -356,7 +355,7 @@ export class DirectTypingEngine2 {  private state: DirectEngineState;
         return;
       } else {
         this.state.mistakeCount++;
-        OptimizedAudioSystem.playErrorSound();
+        UltraFastAudioSystem.playErrorSound();
         this.updateDisplay();
         this.notifyProgress();
         return;
@@ -367,7 +366,7 @@ export class DirectTypingEngine2 {  private state: DirectEngineState;
     const isCorrect = currentChar.type(key);
 
     if (isCorrect) {
-      OptimizedAudioSystem.playClickSound();
+      UltraFastAudioSystem.playClickSound();
 
       if (currentChar.completed) {
         this.state.currentIndex++;
@@ -379,31 +378,29 @@ export class DirectTypingEngine2 {  private state: DirectEngineState;
       }
     } else {
       this.state.mistakeCount++;
-      OptimizedAudioSystem.playErrorSound();
+      UltraFastAudioSystem.playErrorSound();
     }    this.updateDisplay();
     this.notifyProgress();
-  }  /**
+  }/**
    * 表示更新
    */
   private updateDisplay(): void {
-    // 高速レスポンス: requestAnimationFrame を使用してレンダリングを最適化
-    requestAnimationFrame(() => {
-      // 正しいromaji位置を動的に計算
-      const progress = this.getDetailedProgress();
-      if (!progress) return;
-      
-      const currentRomajiIndex = progress.currentRomajiIndex;
-      
-      // ローマ字フォーカス更新
-      this.romajiChars.forEach((romajiChar, index) => {
-        if (index < currentRomajiIndex) {
-          romajiChar.setCompleted();
-        } else if (index === currentRomajiIndex) {
-          romajiChar.setActive();
-        } else {
-          romajiChar.setInactive();
-        }
-      });
+    // 🚀 ZERO-LATENCY: requestAnimationFrameを排除して即座実行
+    // 正しいromaji位置を動的に計算
+    const progress = this.getDetailedProgress();
+    if (!progress) return;
+    
+    const currentRomajiIndex = progress.currentRomajiIndex;
+    
+    // ローマ字フォーカス更新
+    this.romajiChars.forEach((romajiChar, index) => {
+      if (index < currentRomajiIndex) {
+        romajiChar.setCompleted();
+      } else if (index === currentRomajiIndex) {
+        romajiChar.setActive();
+      } else {
+        romajiChar.setInactive();
+      }
     });
   }
 
