@@ -8,6 +8,7 @@
 // Core Classes
 export { TypingChar } from './TypingChar';
 export { JapaneseConverter } from './JapaneseConverter';
+export { OptimizedJapaneseProcessor } from './OptimizedJapaneseProcessor';
 
 // 🚀 HyperTypingEngine - typingmania-ref スタイル
 export { HyperTypingEngine } from './HyperTypingEngine';

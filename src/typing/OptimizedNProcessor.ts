@@ -233,15 +233,14 @@ export class OptimizedTypingChar {
 
   /**
    * 最適化された分岐処理
-   */
-  typeBranching(char: string, nextChar?: OptimizedTypingChar): {
+   */  typeBranching(char: string, nextChar?: OptimizedTypingChar): {
     success: boolean;
     completeWithSingle?: boolean;
   } {
     const result = OptimizedNProcessor.processBranching(
-      this.acceptedInput,
       char,
-      nextChar ? { kana: nextChar.kana, patterns: nextChar.patterns } : undefined
+      this.patterns,
+      nextChar ? nextChar.patterns : []
     );
 
     if (result.success) {

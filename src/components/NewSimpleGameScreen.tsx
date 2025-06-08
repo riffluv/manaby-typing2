@@ -1,6 +1,6 @@
 import React from 'react';
 import { TypingWord, PerWordScoreLog } from '@/types';
-import { useHyperTyping, JapaneseConverter } from '@/typing';
+import { useHyperTyping, OptimizedJapaneseProcessor } from '@/typing';
 import styles from '@/styles/components/SimpleGameScreen.module.css';
 
 export type NewSimpleGameScreenProps = {
@@ -22,7 +22,7 @@ const NewSimpleGameScreen: React.FC<NewSimpleGameScreenProps> = ({
   // typingmania-ref流：ひらがなから新TypingChar配列を生成
   const typingChars = React.useMemo(() => {
     if (!currentWord.hiragana) return [];
-    return JapaneseConverter.convertToTypingChars(currentWord.hiragana);
+    return OptimizedJapaneseProcessor.convertToTypingChars(currentWord.hiragana);
   }, [currentWord.hiragana]);
   // typingmania-ref流：ローマ字文字列を生成
   const romajiString = React.useMemo(() => {
