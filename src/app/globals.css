@@ -7,6 +7,9 @@
    Design Tokens Import - Architecture Compliance
    ========================================================================== */
 
+/* Import 2025 Modern Design Tokens */
+@import '../styles/design-tokens/2025-modern.css';
+
 /* Note: Design tokens are defined here directly to avoid import issues in CSS Modules */
 
 /* ==========================================================================
@@ -68,8 +71,7 @@
   
   --spacing-button-padding-x: 2rem;
   --spacing-button-padding-y: 1rem;
-  
-  /* Animation Tokens */
+    /* Animation Tokens */
   --duration-fast: 150ms;
   --duration-normal: 250ms;
   --duration-slow: 350ms;
@@ -80,6 +82,18 @@
   --timing-smooth: cubic-bezier(0.4, 0, 0.2, 1);
   
   --transition-all: all 250ms cubic-bezier(0.4, 0, 0.2, 1);
+  
+  /* Z-Index Scale - CSS競合解決のために追加 */
+  --z-index-hide: -1;
+  --z-index-base: 0;
+  --z-index-docked: 10;
+  --z-index-dropdown: 100;
+  --z-index-sticky: 200;
+  --z-index-overlay: 500;
+  --z-index-modal: 1000;
+  --z-index-popover: 1500;
+  --z-index-tooltip: 2000;
+  --z-modal: 1000;
 }
 
 /* ==========================================================================
@@ -115,11 +129,11 @@ html, body {
 
 body {
   overflow: hidden;
-  position: fixed;
+  /* position: fixed を削除してCSS競合解決 */
   width: 100vw;
   height: 100vh;
-  top: 0;
-  left: 0;
+  margin: 0;
+  padding: 0;
 }
 
 /* ==========================================================================
@@ -152,10 +166,10 @@ body {
    Gaming Theme Enhancements
    ========================================================================== */
 
-/* Gaming focused background gradient */
+/* Gaming focused background gradient - CSS競合解決のためposition固定を削除 */
 body::before {
   content: '';
-  position: fixed;
+  position: absolute;
   top: 0;
   left: 0;
   width: 100%;
@@ -193,9 +207,9 @@ body::before {
    Game Specific Utilities
    ========================================================================== */
 
-/* Game overlay base */
+/* Game overlay base - CSS競合解決のためposition:absolute使用 */
 .game-overlay {
-  position: fixed;
+  position: absolute;
   top: 0;
   left: 0;
   width: 100%;
@@ -227,11 +241,11 @@ body::before {
    Legacy Support (Temporary)
    ========================================================================== */
 
-/* Support for existing components during migration */
+/* Support for existing components during migration - CSS競合解決のためposition:relativeに変更 */
 .legacy-container {
   width: 100vw;
   height: 100vh;
-  position: fixed;
+  position: relative;
   top: 0;
   left: 0;
   overflow: hidden;

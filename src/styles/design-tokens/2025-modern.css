@@ -37,13 +37,13 @@
   /* ==========================================================================
      2025: Container Query Breakpoints
      ========================================================================== */
-  
-  --container-xs: 20rem;    /* 320px */
+    --container-xs: 20rem;    /* 320px */
   --container-sm: 24rem;    /* 384px */
   --container-md: 32rem;    /* 512px */
   --container-lg: 48rem;    /* 768px */
   --container-xl: 64rem;    /* 1024px */
   --container-2xl: 80rem;   /* 1280px */
+  --container-3xl: 96rem;   /* 1536px */
   
   /* ==========================================================================
      Modern Color System - HDR & Wide Gamut 対応

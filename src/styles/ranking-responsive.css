@@ -3,13 +3,13 @@
  * ランキング画面のレスポンシブ対応スタイル - DPI対応強化版
  */
 
-/* ランキング画面用のコンテナスタイル */
+/* ランキング画面用のコンテナスタイル - CSS競合解決のためposition:relativeに変更 */
 .ranking-screen-container {
   box-sizing: border-box;
   width: 100vw !important;
   height: 100vh !important;
   overflow: hidden !important; /* スクロール完全禁止 */
-  position: fixed !important; /* positionをfixedに強制 */
+  position: relative !important; /* position:fixedから変更してCSS競合解決 */
   top: 0 !important;
   left: 0 !important;
   right: 0 !important;

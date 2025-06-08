@@ -125,25 +125,24 @@ const SimpleGameResultScreen: React.FC<SimpleGameResultScreenProps> = React.memo
   }, [handleGoMenu, handleGoRanking, currentScore, isScoreRegistered, modalState.show, handleOpenRankingModal]);  return (
     <div className={styles.resultScreen}>
       <div className={styles.result}>
-        <div className={styles.resultTitle}>RESULT</div>
-
-        {/* スコア表示 */}
+        <div className={styles.resultTitle}>RESULT</div>        {/* スコア表示 */}
         {currentScore ? (
-          <div className={styles.resultStats}>            <div className={styles.resultStat}>
-              <span className={styles.resultStatLabel}>KPM</span>
-              <span className={styles.resultStatValue}>{Math.floor(currentScore.kpm || 0)}</span>
+          <div className={styles.resultStats}>
+            <div className={styles.statItem}>
+              <span className={styles.statLabel}>KPM</span>
+              <span className={styles.statValue}>{Math.floor(currentScore.kpm || 0)}</span>
             </div>
-            <div className={styles.resultStat}>
-              <span className={styles.resultStatLabel}>Accuracy</span>
-              <span className={styles.resultStatValue}>{Math.floor(currentScore.accuracy || 0)}%</span>
+            <div className={styles.statItem}>
+              <span className={styles.statLabel}>Accuracy</span>
+              <span className={styles.statValue}>{Math.floor(currentScore.accuracy || 0)}%</span>
             </div>
-            <div className={styles.resultStat}>
-              <span className={styles.resultStatLabel}>Correct</span>
-              <span className={styles.resultStatValue}>{currentScore.correct || 0}</span>
+            <div className={styles.statItem}>
+              <span className={styles.statLabel}>Correct</span>
+              <span className={styles.statValue}>{currentScore.correct || 0}</span>
             </div>
-            <div className={styles.resultStat}>
-              <span className={styles.resultStatLabel}>Misses</span>
-              <span className={styles.resultStatValue}>{currentScore.miss || 0}</span>
+            <div className={styles.statItem}>
+              <span className={styles.statLabel}>Misses</span>
+              <span className={styles.statValue}>{currentScore.miss || 0}</span>
             </div>
           </div>
         ) : scoreLog && scoreLog.length > 0 ? (

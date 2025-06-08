@@ -151,7 +151,7 @@ body {
 }
 
 .app__background {
-  position: fixed;
+  position: absolute; /* CSS競合解決のためfixedから変更 */
   top: 0;
   left: 0;
   width: 100%;

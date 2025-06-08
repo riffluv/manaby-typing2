@@ -1,144 +1,109 @@
-/* SimpleGameResultScreen - 2025年最新基準対応 */
+/* SimpleGameResultScreen - result2.html完全一致CSS */
 
 /* ==========================================================================
-   Main Result Screen Container - BEM Block + 2025 Standards
+   Main Result Screen Container
    ========================================================================== */
 
 .resultScreen {
-  /* 2025年 Modern Layout */
-  position: fixed;
-  inset: 0;
-  inline-size: 100vw;
-  block-size: 100dvh; /* Dynamic Viewport */
-  z-index: var(--z-index-modal);
-  
-  /* Modern Background */
-  background: radial-gradient(ellipse at center, 
-    color-mix(in oklch, var(--color-gaming-bg-secondary) 80%, black),
-    var(--color-gaming-bg-primary)
-  );
-  font-family: var(--font-family-gaming);
-  color: var(--color-text-secondary);
+  /* result2.html完全一致 */
+  width: 100vw;
+  height: 100vh;
+  background: radial-gradient(ellipse at center, #0a0f1b, #000);
+  font-family: 'Cinzel', serif;
   overflow: hidden;
+  color: #e0e0e0;
   
-  /* Container Query準備 */
-  container-type: inline-size;
-  container-name: result-screen;
-  
-  /* Flexbox layout */
+  /* Flexbox layout - result2.html match */
   display: flex;
   flex-direction: column;
+  justify-content: center;
   align-items: center;
-  padding-block-start: var(--spacing-viewport-lg);
-  padding-block-end: var(--spacing-2xl);
+  position: relative;
   
-  /* パフォーマンス最適化 */
-  contain: layout style paint;
-  will-change: opacity;
-  transform: translateZ(0);
+  /* Reset */
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
 }
 
 /* ==========================================================================
-   Main Content Container - BEM Element
+   Main Content Container
    ========================================================================== */
 
 .result {
-  /* 2025年 Container Query対応 */
-  inline-size: 100%;
-  max-inline-size: var(--container-2xl);
+  /* result2.html完全一致 */
   text-align: center;
-  
-  /* Container Query対応 */
-  @container result-screen (inline-size < 640px) {
-    max-inline-size: 95%;
-  }
-  
-  /* パフォーマンス最適化 */
-  contain: layout style;
+  animation: fadeIn 2s ease;
+}
+
+/* アニメーション定義 */
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(-20px); }
+  to { opacity: 1; transform: translateY(0); }
 }
 
 /* ==========================================================================
-   Result Title - BEM Element
+   Result Title
    ========================================================================== */
 
 .resultTitle {
-  /* 2025年 Modern Typography */
-  font-size: var(--font-size-4xl);
-  color: var(--color-gaming-accent-gold);
-  letter-spacing: var(--letter-spacing-wide);
-  margin-block-end: var(--spacing-xl);
-  text-shadow: var(--text-shadow-gaming);
-  
-  /* DPI Scale対応 */
-  @media (min-resolution: 1.25dppx) {
-    font-size: clamp(var(--font-size-2xl), 5vw, var(--font-size-5xl));
-  }
-  
-  /* Container Query対応 */
-  @container result-screen (inline-size < 640px) {
-    font-size: var(--font-size-2xl);
-    margin-block-end: var(--spacing-lg);
-  }
-  
-  /* パフォーマンス最適化 */
-  text-rendering: optimizeSpeed;
-  font-display: swap;
-  contain: style;
-}
-
-.result__title {
-  color: #e5ccaa;
-  letter-spacing: 0.15rem;
-  text-shadow: 0 0 6px rgba(255, 230, 160, 0.4);
+  /* result2.html完全一致 */
+  font-size: 2.8rem;
+  color: #d6e4ff;
+  letter-spacing: 0.2rem;
+  text-shadow: 0 0 14px rgba(150,180,255,0.4);
   margin-bottom: 2rem;
-  font-family: 'Cinzel', serif;
-  font-weight: normal;
 }
 
 /* ==========================================================================
-   Score Statistics Grid (result3.html match)
+   Score Statistics Grid
    ========================================================================== */
 
 .resultStats {
+  /* result2.html完全一致 */
   display: grid;
-  grid-template-columns: 1fr 1fr;
-  gap: 1.5rem;
-  justify-items: center;
-  margin-bottom: 2rem;
+  grid-template-columns: auto auto;
+  gap: 1.2rem 4rem;
+  font-size: 1.2rem;
+  margin-bottom: 2.5rem;
 }
 
-.resultStat {
-  font-size: 1.1rem;
-  color: #d0e8ff;
-  text-shadow: 0 0 4px rgba(100, 180, 255, 0.2);}
-
-.resultStatLabel {
-  color: #d0e8ff;
-  font-family: 'Cinzel', serif;
+.statItem {
+  /* result2.html完全一致 */
+  display: flex;
+  justify-content: space-between;
+  width: 220px;
+  padding: 0.3rem 0;
+  border-bottom: 1px solid rgba(255,255,255,0.06);
 }
 
-.resultStatValue {
+.statLabel {
+  color: #bbb;
+}
+
+.statValue {
   font-weight: bold;
-  color: #d0e8ff;
-  font-family: 'Cinzel', serif;
+  color: #fff;
 }
 
 /* ==========================================================================
-   Button Container (result3.html match)
+   Button Container
    ========================================================================== */
 
 .resultButtons {
+  /* result2.html完全一致 */
   display: flex;
-  justify-content: center;
   gap: 2rem;
-  margin-top: 1rem;
+  flex-wrap: wrap;
+  justify-content: center;
 }
 
 /* ==========================================================================
-   Result Buttons (result3.html match)
+   Result Buttons
    ========================================================================== */
 
 .resultButton {
+  /* result2.html完全一致 */
   padding: 0.5rem 2rem;
   border: 1px solid rgba(200, 200, 255, 0.1);
   background: rgba(255, 255, 255, 0.02);
@@ -149,14 +114,6 @@
   text-shadow: 0 0 3px rgba(0,0,0,0.4);
   box-shadow: 0 0 8px rgba(150,180,255,0.1);
   transition: all 0.25s ease;
-  font-family: 'Cinzel', serif;
-  
-  /* Remove default button styles */
-  appearance: none;
-  border-style: solid;
-  text-decoration: none;
-  display: inline-block;
-  user-select: none;
 }
 
 .resultButton:hover {
@@ -164,14 +121,6 @@
   border-color: rgba(150, 180, 255, 0.3);
   color: #fff;
   box-shadow: 0 0 12px rgba(120,180,255,0.2);
-}
-
-/* ==========================================================================
-   Footer (removed for result3.html simplicity)
-   ========================================================================== */
-
-.resultFooter {
-  display: none;
 }
 
 /* ==========================================================================
@@ -192,7 +141,6 @@
   font-size: 1rem;
   margin-bottom: 1rem;
   font-weight: normal;
-  font-family: 'Cinzel', serif;
   color: #d0e8ff;
 }
 
@@ -204,7 +152,6 @@
   border-radius: 4px;
   cursor: pointer;
   font-size: 1rem;
-  font-family: 'Cinzel', serif;
   transition: all 0.25s ease;
 }
 
@@ -215,70 +162,58 @@
 }
 
 /* ==========================================================================
-   Modal Overlay (result3.html match)
+   Modal Overlay (result2.html match)
    ========================================================================== */
 
 .modalOverlay {
+  /* result2.html完全一致 */
   position: fixed;
-  top: 0;
-  left: 0;
-  width: 100vw;
-  height: 100vh;
-  background: rgba(0, 0, 0, 0.75);
-  display: flex;
+  inset: 0;
+  display: none;
   justify-content: center;
   align-items: center;
-  z-index: 999;
-  backdrop-filter: blur(5px);
-  opacity: 0;
-  visibility: hidden;
-  transition: all 0.3s ease;
+  z-index: 1000;
+  background: rgba(5, 10, 20, 0.9);
+  backdrop-filter: blur(6px);
 }
 
 .modalActive {
-  opacity: 1;
-  visibility: visible;
+  display: flex;
 }
 
 .modalContent {
-  background: rgba(20, 25, 40, 0.9);
-  border: 1px solid rgba(255,255,255,0.05);
+  /* result2.html完全一致 */
+  position: relative;
+  background: linear-gradient(to right, rgba(20,25,40,0.95), rgba(10,10,20,0.9));
+  padding: 2rem 3rem;
   border-radius: 12px;
-  padding: 2rem;
-  max-width: 400px;
-  text-align: center;
-  color: #ccc;
-  box-shadow: 0 0 18px rgba(100, 180, 255, 0.15);
+  border: 1px solid rgba(255,255,255,0.1);
+  box-shadow: 0 0 30px rgba(120,180,255,0.1);
+  width: 420px;
   display: flex;
   flex-direction: column;
-  gap: 1rem;
+  gap: 1.4rem;
 }
 
 .modalTitle {
-  font-size: 1.4rem;
-  margin-bottom: 1rem;
-  color: #e5ccaa;
-  font-family: 'Cinzel', serif;
-  margin: 0;
+  font-size: 1.6rem;
+  color: #d6e4ff;
+  text-align: center;
+  text-shadow: 0 0 12px rgba(150,180,255,0.3);
 }
 
 .modalInput {
-  width: 80%;
-  padding: 0.5rem;
+  padding: 0.6rem;
   font-size: 1rem;
-  margin-bottom: 1.2rem;
-  background: rgba(0,0,0,0.4);
-  border: 1px solid rgba(255,255,255,0.1);
-  color: #fff;
-  border-radius: 6px;
+  border: none;
+  background: #000;
+  color: #eee;
+  border-bottom: 1px solid rgba(255,255,255,0.2);
   outline: none;
-  font-family: 'Cinzel', serif;
-  align-self: center;
-  box-sizing: border-box;
 }
 
 .modalInput:focus {
-  border-color: rgba(150, 180, 255, 0.3);
+  border-color: #88ccff;
 }
 
 .modalActions {
@@ -288,21 +223,21 @@
 }
 
 .modalButton {
-  padding: 0.5rem 1.5rem;
+  align-self: center;
+  padding: 0.4rem 1.8rem;
   font-size: 1rem;
-  background: rgba(255, 255, 255, 0.02);
-  border: 1px solid rgba(200, 200, 255, 0.1);
-  color: #cce0ff;
+  background: rgba(255,255,255,0.02);
+  border: 1px solid rgba(255,255,255,0.1);
+  color: #b8cfe7;
   border-radius: 4px;
   cursor: pointer;
   transition: all 0.3s ease;
-  font-family: 'Cinzel', serif;
 }
 
 .modalButton:hover {
-  background: rgba(180, 220, 255, 0.05);
-  border-color: rgba(150, 180, 255, 0.3);
+  background: rgba(200, 220, 255, 0.05);
   color: #fff;
+  border-color: rgba(180,220,255,0.2);
 }
 
 .modalButton:disabled {
@@ -326,7 +261,6 @@
   margin-top: 0.5rem;
   font-size: 0.9rem;
   text-align: center;
-  font-family: 'Cinzel', serif;
 }
 
 .modalSuccess {
@@ -334,21 +268,15 @@
   margin-top: 0.5rem;
   font-size: 0.9rem;
   text-align: center;
-  font-family: 'Cinzel', serif;
 }
 
 /* ==========================================================================
-   Responsive Design (result3.html compatible)
+   Responsive Design
    ========================================================================== */
 
 @media screen and (max-width: 767px) {
   .resultScreen {
-    padding-top: 8vh;
-    padding-bottom: 3rem;
-  }
-  
-  .result {
-    max-width: 95%;
+    padding: 2rem 1rem;
   }
   
   .resultTitle {
@@ -365,57 +293,19 @@
   
   .resultButtons {
     gap: 1rem;
-    flex-wrap: wrap;
+    flex-direction: column;
+    align-items: center;
   }
   
   .resultButton {
     padding: 0.6rem 1.5rem;
     font-size: 0.9rem;
+    min-width: 150px;
   }
   
   .modalContent {
     width: 90%;
     max-width: 350px;
     padding: 1.5rem;
-  }
-}
-
-@media screen and (max-width: 479px) {
-  .resultTitle {
-    font-size: 1.8rem;
-    letter-spacing: 0.08rem;
-  }
-  
-  .resultStat {
-    font-size: 1rem;
-  }
-  
-  .resultButton {
-    width: 100%;
-    max-width: 200px;
-  }
-}
-
-/* ==========================================================================
-   Accessibility & High Contrast
-   ========================================================================== */
-
-@media (prefers-contrast: high) {
-  .resultButton {
-    border-width: 2px;
-  }
-  
-  .modalContent {
-    border-width: 2px;
-  }
-}
-
-@media (prefers-reduced-motion: reduce) {
-  .resultButton {
-    transition: none;
-  }
-  
-  .modalOverlay {
-    transition: none;
   }
 }

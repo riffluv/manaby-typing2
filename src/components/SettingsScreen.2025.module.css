@@ -1,8 +1,7 @@
-/* SettingsScreen - 2025年最新基準対応 */
-@import '../styles/design-tokens/2025-modern.css';
+/* SettingsScreen - 2025年最新基準対応 + 横幅制御最適化 */
 
 /* ========================================================================== 
-   Base Settings Layout - BEM + 2025 Standards
+   Base Settings Layout - BEM + 2025 Standards + 適切な横幅制御
    ========================================================================== */
 
 .settings *,
@@ -17,16 +16,16 @@
   /* 2025年 Modern Layout */
   inline-size: 100%;
   block-size: 100dvh; /* Dynamic Viewport */
-  font-family: var(--font-family-gaming);
+  font-family: var(--font-family-gaming, 'Cinzel', serif);
   background: radial-gradient(ellipse at center, 
-    color-mix(in oklch, var(--color-gaming-bg-secondary) 80%, black),
-    var(--color-gaming-bg-primary)
+    color-mix(in oklch, #0a0f1b 80%, black),
+    #000000
   );
-  color: var(--color-text-secondary);
+  color: var(--color-text-secondary, #f0f0f0);
   display: flex;
   justify-content: center;
   align-items: flex-start;
-  padding-block-start: var(--spacing-viewport-lg);
+  padding-block-start: clamp(2rem, 5vh, 4rem);
   
   /* Container Query準備 */
   container-type: inline-size;
@@ -38,63 +37,75 @@
 }
 
 /* ========================================================================== 
-   Settings Container - BEM Block
+   Settings Container - BEM Block + 横幅制御最適化（MainMenuスタイル）
    ========================================================================== */
 
 .settings__container {
-  /* 2025年 Container Query対応 */
+  /* 🎯 横幅制御最適化: MainMenuと同等の制御 */
   inline-size: 100%;
-  max-inline-size: var(--container-3xl);
-  padding: var(--spacing-lg) var(--spacing-xl);
-  background: color-mix(in oklch, white 2%, transparent);
-  border: 1px solid color-mix(in oklch, white 5%, transparent);
-  box-shadow: var(--shadow-gaming-large);
-  border-radius: var(--border-radius-xl);
-  animation: var(--animation-fade-in) var(--animation-duration-slow) ease-out;
-  
-  /* Container Query */
-  @container settings-screen (inline-size < 640px) {
-    padding: var(--spacing-md) var(--spacing-lg);
-    max-inline-size: 100%;
-  }
+  max-inline-size: min(90vw, 800px); /* MainMenuと同じ制御 */
+    /* 適応的パディング */
+  padding: clamp(1rem, 3vw, 2rem) clamp(1.5rem, 4vw, 3rem);
+  background: rgba(255, 255, 255, 0.02);
+  border: 1px solid rgba(255, 255, 255, 0.05);
+  box-shadow: 0 0 50px rgba(0, 0, 0, 0.6), 
+              inset 0 1px 0 rgba(255, 255, 255, 0.1);
+  border-radius: 16px;
+  animation: fadeIn 1.2s ease-out;
   
   /* パフォーマンス最適化 */
   contain: layout style;
   transform: translateZ(0);
+  isolation: isolate;
+}
+
+/* Container Query対応 */
+@container settings-screen (inline-size < 640px) {
+  .settings__container {
+    padding: 1rem 1.5rem;
+    max-inline-size: 95vw; /* モバイルではより小さく */
+  }
+}
+
+@container settings-screen (640px <= inline-size < 1024px) {
+  .settings__container {
+    max-inline-size: 85vw; /* タブレットサイズ */
+  }
+}
+
+@container settings-screen (inline-size >= 1024px) {
+  .settings__container {
+    max-inline-size: min(80vw, 800px); /* デスクトップ最適化 */
+  }
 }
 
 /* ========================================================================== 
-   Settings Title - BEM Element
+   Settings Title - BEM Element + 2025 Standards
    ========================================================================== */
 
 .settings__title {
   /* 2025年 Modern Typography */
   text-align: center;
-  font-size: var(--font-size-3xl);
-  color: var(--color-gaming-accent-gold);
-  letter-spacing: var(--letter-spacing-wide);
-  margin-block-end: var(--spacing-2xl);
-  text-shadow: var(--text-shadow-gaming);
+  font-size: clamp(2rem, 5vw, 2.8rem);
+  color: #e5ccaa;
+  letter-spacing: 0.15rem;
+  margin-block-end: 2.5rem;
+  text-shadow: 0 0 8px rgba(255, 220, 150, 0.3);
   
   /* DPI Scale対応 */
-  @media (min-resolution: 1.25dppx) {
-    font-size: clamp(var(--font-size-2xl), 4vw, var(--font-size-4xl));
-  }
-  
-  /* パフォーマンス最適化 */
   text-rendering: optimizeSpeed;
   font-display: swap;
   contain: style;
 }
 
 /* ========================================================================== 
-   Settings Items - BEM Elements
+   Settings Items - BEM Elements + 2025 Standards
    ========================================================================== */
 
 .settings__item {
   /* 2025年 BEM Standard */
-  padding: var(--spacing-lg) 0;
-  border-block-end: 1px solid color-mix(in oklch, white 7%, transparent);
+  padding: 1.2rem 0;
+  border-block-end: 1px solid rgba(255, 255, 255, 0.07);
   contain: layout style;
 }
 
@@ -103,42 +114,110 @@
   display: flex;
   align-items: center;
   justify-content: space-between;
-  gap: var(--spacing-md);
-  
-  /* Container Query対応 */
-  @container settings-screen (inline-size < 640px) {
+  gap: 1rem;
+}
+
+/* Container Query対応 */
+@container settings-screen (inline-size < 640px) {
+  .settings__row {
     flex-direction: column;
     align-items: flex-start;
-    gap: var(--spacing-sm);
+    gap: 0.75rem;
   }
 }
 
 .settings__label {
   /* ラベルテキスト */
-  font-size: var(--font-size-lg);
-  color: var(--color-gaming-accent-secondary);
-  min-inline-size: var(--sizing-44);
+  font-size: 1.2rem;
+  color: #c8b78d;
+  min-inline-size: 180px;
   
   /* DPI Scale対応 */
-  @media (min-resolution: 1.25dppx) {
-    font-size: clamp(var(--font-size-base), 3.5vw, var(--font-size-xl));
-  }
-  
-  /* パフォーマンス最適化 */
   text-rendering: optimizeSpeed;
   contain: style;
+}
+
+@container settings-screen (inline-size < 640px) {
+  .settings__label {
+    min-inline-size: auto;
+    font-size: clamp(1rem, 4vw, 1.2rem);
+  }
 }
 
 .settings__controls {
   /* コントロール群 */
   display: flex;
   align-items: center;
-  gap: var(--spacing-lg);
-  
-  /* Container Query対応 */
-  @container settings-screen (inline-size < 640px) {
+  gap: 1.2rem;
+}
+
+@container settings-screen (inline-size < 640px) {
+  .settings__controls {
     inline-size: 100%;
-    justify-content: flex-start;
+    justify-content: space-between;
+  }
+}
+
+/* ========================================================================== 
+   Settings Buttons - BEM Element + 2025 Standards
+   ========================================================================== */
+
+.settings__buttons {
+  /* ボタン群のレイアウト */
+  display: flex;
+  justify-content: center;
+  gap: 2rem;
+  margin-block-start: 2.5rem;
+}
+
+@container settings-screen (inline-size < 640px) {
+  .settings__buttons {
+    flex-direction: column;
+    align-items: center;
+    gap: 1rem;
+  }
+}
+
+.settings__button {
+  /* 2025年 Modern Button */
+  padding: 0.5rem 2rem;
+  border: 1px solid rgba(200, 200, 255, 0.1);
+  background: rgba(255, 255, 255, 0.02);
+  color: #cce0ff;
+  border-radius: 4px;
+  font-size: 1rem;
+  cursor: pointer;
+  text-shadow: 0 0 3px rgba(0, 0, 0, 0.4);
+  box-shadow: 0 0 8px rgba(150, 180, 255, 0.1);
+  transition: all 0.25s ease;
+  font-family: inherit;
+  
+  /* Touch Target対応 */
+  min-inline-size: 44px;
+  min-block-size: 44px;
+  
+  /* パフォーマンス最適化 */
+  contain: layout style;
+  will-change: transform, box-shadow;
+}
+
+.settings__button:hover {
+  background: rgba(180, 220, 255, 0.05);
+  border-color: rgba(150, 180, 255, 0.3);
+  color: #fff;
+  box-shadow: 0 0 12px rgba(120, 180, 255, 0.2);
+  transform: translateY(-1px);
+}
+
+.settings__button:active {
+  transform: translateY(0);
+  box-shadow: 0 0 6px rgba(120, 180, 255, 0.1);
+}
+
+@container settings-screen (inline-size < 640px) {
+  .settings__button {
+    inline-size: 200px;
+    padding: 0.75rem 1.5rem;
   }
 }
 
@@ -249,41 +328,93 @@
 }
 
 /* ========================================================================== 
-   Accessibility & Reduced Motion - 2025 Standards
-   ========================================================================== */
-
-@media (prefers-reduced-motion: reduce) {
-  .settings__slider,
-  .settings__toggle,
-  .settings__toggle::before {
-    transition: none;
-    animation: none;
-  }
-}
-
-/* High Contrast Mode */
-@media (prefers-contrast: high) {
-  .settings__container {
-    border: 2px solid var(--color-text-primary);
-    background: var(--color-surface-dark);
-  }
-  
-  .settings__toggle {
-    border: 1px solid var(--color-text-primary);
-  }
-}
-
-/* ========================================================================== 
    Animation Definitions - 2025 Standards
    ========================================================================== */
 
 @keyframes fadeIn {
   from {
     opacity: 0;
-    transform: translateY(var(--spacing-lg)) translateZ(0);
+    transform: translateY(10px);
   }
   to {
     opacity: 1;
-    transform: translateY(0) translateZ(0);
+    transform: translateY(0);
   }
+}
+
+/* ========================================================================== 
+   Accessibility & Performance - 2025 Standards
+   ========================================================================== */
+
+@media (prefers-reduced-motion: reduce) {
+  .settings__container,
+  .settings__button {
+    animation: none;
+    transition: none;
+  }
+  
+  .settings__button:hover {
+    transform: none;
+  }
+}
+
+@media (prefers-contrast: high) {
+  .settings__container {
+    border: 2px solid #ffffff;
+  }
+  
+  .settings__title,
+  .settings__label {
+    color: #ffffff;
+    text-shadow: none;
+  }
+  
+  .settings__button {
+    border: 2px solid currentColor;
+  }
+}
+
+/* ========================================================================== 
+   DPI対応 - 高解像度ディスプレイ最適化
+   ========================================================================== */
+
+@media (min-resolution: 1.25dppx) {
+  .settings__title {
+    font-size: clamp(1.8rem, 4.5vw, 2.5rem);
+  }
+  
+  .settings__label {
+    font-size: clamp(1rem, 3.5vw, 1.1rem);
+  }
+}
+
+@media (min-resolution: 2dppx) {
+  .settings__container {
+    box-shadow: 
+      0 0 25px rgba(0, 0, 0, 0.4),
+      inset 0 0.5px 0 rgba(255, 255, 255, 0.05);
+  }
+}
+
+/* ========================================================================== 
+   Performance Optimizations
+   ========================================================================== */
+
+/* GPU レイヤー分離 */
+.settings__container {
+  isolation: isolate;
+}
+
+.settings__button {
+  backface-visibility: hidden;
+  perspective: 1000px;
+}
+
+/* Layout thrashing 防止 */
+.settings__row {
+  contain: layout;
+}
+
+.settings__controls {
+  contain: layout style;
 }
