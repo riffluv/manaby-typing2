@@ -69,7 +69,7 @@
 /* Prompt Box - Japanese Text (BEM Element) */
 .promptBox__jp {
   /* Typography: game.html Style */
-  font-size: 1.4rem;
+  font-size: 1.6rem;
   font-weight: bold;
   letter-spacing: 0.04rem;
   line-height: 1.6;
@@ -86,7 +86,7 @@
 /* Prompt Box - Kana Text (BEM Element) */
 .promptBox__kana {
   /* Typography: game.html Style */
-  font-size: 1.3rem;
+  font-size: 1.5rem;
   color: var(--kana-color);
   letter-spacing: 0.04rem;
   line-height: 1.6;
@@ -96,7 +96,7 @@
 /* Prompt Box - Romaji Text (BEM Element) */
 .promptBox__roma {
   /* Typography: game.html Style */
-  font-size: 1.2rem;
+  font-size: 1.6rem;
   letter-spacing: 0.04rem;
   line-height: 1.6;
   margin-bottom: 1.2rem;
@@ -147,17 +147,16 @@
     width: 95%;
     padding: 1.5rem;
   }
-  
-  .promptBox__jp {
-    font-size: 1.2rem;
+    .promptBox__jp {
+    font-size: 1.4rem;
   }
   
   .promptBox__kana {
-    font-size: 1.1rem;
+    font-size: 1.3rem;
   }
   
   .promptBox__roma {
-    font-size: 1rem;
+    font-size: 1.4rem;
   }
 }
 
@@ -169,17 +168,16 @@
   .typingArea {
     padding: 1rem;
   }
-  
-  .promptBox__jp {
-    font-size: 1.1rem;
+    .promptBox__jp {
+    font-size: 1.2rem;
   }
   
   .promptBox__kana {
-    font-size: 1rem;
+    font-size: 1.1rem;
   }
   
   .promptBox__roma {
-    font-size: 0.9rem;
+    font-size: 1.2rem;
   }
 }
 

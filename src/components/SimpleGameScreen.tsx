@@ -30,7 +30,7 @@ const SimpleGameScreen: React.FC<SimpleGameScreenProps> = React.memo(({
   }, [currentWord.hiragana]);  // DirectTypingEngine2 設定 - showKanaDisplay を含む完全設定
   const directTypingConfig = React.useMemo(() => ({
     fontFamily: '"Cinzel", "Hiragino Kaku Gothic Pro", "Meiryo", serif',
-    fontSize: '1.4rem',
+    fontSize: '1.6rem',
     fontWeight: 'bold',
     backgroundColor: 'transparent', // game.html の backdrop-filter を活用
     showKanaDisplay, // 設定ストアの値を直接渡す
