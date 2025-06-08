@@ -12,13 +12,15 @@
   font-family: 'Cinzel', serif;
   overflow: hidden;
   color: #e0e0e0;
-  
-  /* Flexbox layout - result2.html match */
+    /* Flexbox layout - Best Practice Position */
   display: flex;
   flex-direction: column;
-  justify-content: center;
+  justify-content: flex-start;
   align-items: center;
   position: relative;
+  
+  /* Result Screen Optimal Position */
+  padding-top: 15vh; /* Base: Mobile-first - same as typing screen */
   
   /* Reset */
   margin: 0;
@@ -274,9 +276,48 @@
    Responsive Design
    ========================================================================== */
 
+/* リザルト画面 - ベストプラクティス位置調整 */
+
+/* タブレット: 中央より少し上の位置 */
+@media (min-width: 768px) {
+  .resultScreen {
+    padding-top: 18vh; /* タブレット最適位置 */
+  }
+}
+
+/* デスクトップ: リザルト画面黄金比位置 */
+@media (min-width: 1024px) {
+  .resultScreen {
+    padding-top: 22vh; /* デスクトップ最適位置 */
+  }
+}
+
+/* 大画面: 視線負担軽減 */
+@media (min-width: 1440px) {
+  .resultScreen {
+    padding-top: 25vh; /* 大画面での最適位置 */
+  }
+}
+
+/* 縦画面モバイル: コンパクト配置 */
+@media (max-width: 767px) and (orientation: portrait) {
+  .resultScreen {
+    padding-top: 12vh; /* モバイル縦画面 */
+  }
+}
+
+/* 横画面モバイル/タブレット: 中央寄り */
+@media (max-height: 600px) and (orientation: landscape) {
+  .resultScreen {
+    padding-top: 8vh; /* 横画面での最適化 */
+  }
+}
+
+/* モバイル専用レイアウト調整 */
 @media screen and (max-width: 767px) {
   .resultScreen {
-    padding: 2rem 1rem;
+    padding-left: 1rem;
+    padding-right: 1rem;
   }
   
   .resultTitle {
