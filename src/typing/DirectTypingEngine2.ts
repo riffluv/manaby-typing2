@@ -3,20 +3,21 @@
  * 
  * 表示内容:
  * 1. 上部: 原文（漢字入り）
- * 2. 中部: ひらがな文字列（個別フォーカス機能付き）- 設定で切り替え可能
+ * 2. 中部: ひらがな文字列（静的表示）- 設定で切り替え可能
  * 3. 下部: ローマ字文字列（個別フォーカス機能付き）
  * 
  * 機能:
- * - 文字単位でのビジュアルフォーカス
+ * - ローマ字文字単位でのビジュアルフォーカス
  * - 完了状態の視覚的フィードバック
  * - 「ん」の分岐入力対応
  * - リアルタイム進捗表示
  * 
- * パフォーマンス最適化 (2025/6/8):
+ * パフォーマンス最適化 (2025/6/9):
+ * - ひらがなハイライト機能を削除（目のチカチカ防止とパフォーマンス向上）
+ * - ひらがなは静的な参考表示のみ
  * - CSS遷移を削除（0.15s ease → 即座のフィードバック）
  * - スケール変換を削除（GPU負荷軽減）
  * - requestAnimationFrame によるレンダリング最適化
- * - willChange プロパティでGPU最適化
  */
 
 import { TypingChar, type DisplayInfo } from './TypingChar';
@@ -24,68 +25,7 @@ import type { KanaDisplay, PerWordScoreLog, TypingWord } from '@/types';
 import OptimizedAudioSystem from '@/utils/OptimizedAudioSystem';
 import { debug } from '../utils/debug';
 
-/**
- * ひらがな文字クラス - 個別span要素
- */
-class KanaChar {
-  public el: HTMLSpanElement;
-  private isCompleted: boolean = false;
-  private isActive: boolean = false;
-  private lastState: 'inactive' | 'active' | 'completed' = 'inactive'; // 状態キャッシュ
 
-  constructor(char: string) {
-    this.el = document.createElement('span');
-    this.el.textContent = char;
-    this.el.style.fontFamily = '"ヒラギノ角ゴ Pro", "Hiragino Kaku Gothic Pro", "メイリオ", Meiryo, sans-serif';
-    this.el.style.fontSize = '1.3rem';
-    this.el.style.fontWeight = 'bold';
-    // 高速レスポンス: 遷移を削除して即座のフィードバックを実現
-    // this.el.style.transition = 'all 0.15s ease';
-    this.el.style.padding = '2px 4px';
-    this.el.style.borderRadius = '3px';
-    this.el.style.marginRight = '1px';
-    this.el.style.letterSpacing = '0.04rem';    // GPU最適化
-    this.el.style.willChange = 'color, background-color';
-    this.setInactive();
-  }  setActive(): void {
-    if (this.lastState === 'active') return; // 重複更新防止
-    this.lastState = 'active';
-    this.isActive = true;
-    this.isCompleted = false;    requestAnimationFrame(() => {
-      this.el.style.color = '#ffeb3b'; // 世界観に合う黄色系      this.el.style.background = 'rgba(255, 235, 59, 0.1)'; // ひらがなは薄い背景を残す
-      this.el.style.textShadow = '0 0 8px rgba(255, 235, 59, 0.8), 0 0 1px #fff';
-      // 高速レスポンス: スケール変換を削除
-      // this.el.style.transform = 'scale(1.1)';
-    });
-  }
-  setCompleted(): void {
-    if (this.lastState === 'completed') return; // 重複更新防止
-    this.lastState = 'completed';
-    this.isCompleted = true;
-    this.isActive = false;
-    requestAnimationFrame(() => {
-      this.el.style.color = '#87ceeb';
-      this.el.style.background = 'transparent'; // バックグラウンドカラーを削除（KanaChar）
-      this.el.style.textShadow = '0 0 6px rgba(135, 206, 235, 0.6)';
-      // 高速レスポンス: スケール変換を削除
-      // this.el.style.transform = 'scale(1)';
-    });
-  }
-
-  setInactive(): void {
-    if (this.lastState === 'inactive') return; // 重複更新防止
-    this.lastState = 'inactive';
-    this.isActive = false;
-    this.isCompleted = false;
-    requestAnimationFrame(() => {
-      this.el.style.color = '#999';
-      this.el.style.background = 'transparent';
-      this.el.style.textShadow = '0 0 1px rgba(0,0,0,0.5)';
-      // 高速レスポンス: スケール変換を削除
-      // this.el.style.transform = 'scale(1)';
-    });
-  }
-}
 
 /**
  * ローマ字文字クラス - 個別span要素
@@ -177,17 +117,15 @@ interface DirectEngineState {
  * 🚀 DirectTypingEngine2 - 高度タイピングエンジン
  * 
  * 特徴:
- * - 原文、ひらがな、ローマ字の3段階表示
- * - 個別文字フォーカス機能
+ * - 原文、ひらがな（静的）、ローマ字の3段階表示
+ * - ローマ字の個別文字フォーカス機能
  * - 設定による表示切り替え
  * - 高精度の進捗管理
  */
-export class DirectTypingEngine2 {
-  private state: DirectEngineState;
+export class DirectTypingEngine2 {  private state: DirectEngineState;
   private container: HTMLElement | null = null;
   private originalTextDisplay: HTMLElement | null = null;
   private kanaDisplay: HTMLElement | null = null;
-  private kanaChars: KanaChar[] = [];
   private romajiChars: RomajiChar[] = [];
   private romajiContainer: HTMLElement | null = null;
   private onProgress?: (index: number, display: KanaDisplay) => void;
@@ -309,34 +247,24 @@ export class DirectTypingEngine2 {
       "></div>
     `;// 原文表示
     this.originalTextDisplay = this.container.querySelector('.direct-typing-original-text') as HTMLElement;
-    this.originalTextDisplay.textContent = this.originalText;
-
-    // かな表示（設定で有効な場合のみ）
+    this.originalTextDisplay.textContent = this.originalText;    // かな表示（設定で有効な場合のみ）
     if (this.config.showKanaDisplay) {
       this.kanaDisplay = this.container.querySelector('.direct-typing-kana-container') as HTMLElement;
-      this.createKanaChars();
+      this.setStaticKanaDisplay();
     }
 
     // ローマ字表示エリア
     this.romajiContainer = this.container.querySelector('.direct-typing-romaji-container') as HTMLElement;
     this.createRomajiChars();
   }  /**
-   * ひらがな文字要素作成
+   * ひらがな静的表示設定
    */
-  private createKanaChars(): void {
+  private setStaticKanaDisplay(): void {
     if (!this.kanaDisplay) return;
-
-    this.kanaChars = [];
-    this.kanaDisplay.innerHTML = '';
 
     // 全ひらがな文字列を構築
     const fullKana = this.state.typingChars.map(char => char.kana).join('');
-    
-    for (let i = 0; i < fullKana.length; i++) {
-      const kanaChar = new KanaChar(fullKana[i]);
-      this.kanaChars.push(kanaChar);
-      this.kanaDisplay.appendChild(kanaChar.el);
-    }
+    this.kanaDisplay.textContent = fullKana;
   }
 
   /**
@@ -454,8 +382,7 @@ export class DirectTypingEngine2 {
       OptimizedAudioSystem.playErrorSound();
     }    this.updateDisplay();
     this.notifyProgress();
-  }
-  /**
+  }  /**
    * 表示更新
    */
   private updateDisplay(): void {
@@ -477,72 +404,6 @@ export class DirectTypingEngine2 {
           romajiChar.setInactive();
         }
       });
-
-      // かな文字フォーカス更新（設定で有効な場合のみ）
-      if (this.config.showKanaDisplay && this.kanaChars.length > 0) {
-        this.updateKanaCharFocus();
-      }
-    });
-  }
-  private updateKanaCharFocus(): void {
-    // 完了したひらがな文字数を計算
-    const completedKanaCount = this.calculateCompletedKanaCount();
-    
-    // 現在アクティブなひらがな文字のインデックスを計算
-    const currentActiveKanaIndex = this.calculateCurrentActiveKanaIndex(completedKanaCount);
-    
-    // 各ひらがな文字の状態を更新
-    this.updateKanaCharStates(completedKanaCount, currentActiveKanaIndex);
-  }
-
-  /**
-   * 完了したひらがな文字数を計算
-   */
-  private calculateCompletedKanaCount(): number {
-    let count = 0;
-    for (let i = 0; i < this.state.currentIndex && i < this.state.typingChars.length; i++) {
-      count += this.state.typingChars[i].kana.length;
-    }
-    return count;
-  }
-
-  /**
-   * 現在アクティブなひらがな文字のインデックスを計算
-   */
-  private calculateCurrentActiveKanaIndex(completedKanaCount: number): number {
-    const currentChar = this.state.typingChars[this.state.currentIndex];
-    
-    // 入力がない場合はアクティブなし
-    if (!currentChar || currentChar.acceptedInput.length === 0) {
-      return -1;
-    }
-
-    const totalPatternLength = currentChar.patterns[0].length;
-    const progressRatio = currentChar.acceptedInput.length / totalPatternLength;
-    const kanaLength = currentChar.kana.length;
-
-    if (kanaLength > 1) {
-      // 複数文字（例：「きゃ」）の場合は進捗に応じて段階的にアクティブ
-      const activeKanaSubIndex = Math.floor(progressRatio * kanaLength);
-      return completedKanaCount + Math.min(activeKanaSubIndex, kanaLength - 1);
-    } else {
-      // 単一文字の場合は10%進捗でアクティブ
-      return progressRatio > 0.1 ? completedKanaCount : -1;
-    }
-  }
-
-  /**
-   * ひらがな文字の状態を更新
-   */
-  private updateKanaCharStates(completedKanaCount: number, currentActiveKanaIndex: number): void {
-    this.kanaChars.forEach((kanaChar, index) => {
-      if (index < completedKanaCount) {
-        kanaChar.setCompleted();
-      } else if (index === currentActiveKanaIndex) {
-        kanaChar.setActive();
-      } else {
-        kanaChar.setInactive();
-      }
     });
   }
 
@@ -584,7 +445,6 @@ export class DirectTypingEngine2 {
     };    this.onComplete?.(scoreLog);
     debug.log('🚀 DirectTypingEngine2 単語完了:', scoreLog);
   }
-
   /**
    * リセット
    */
@@ -595,14 +455,11 @@ export class DirectTypingEngine2 {
     this.state.startTime = 0;
 
     this.state.typingChars.forEach(char => char.reset());
-      // かな文字もリセット
-    this.kanaChars.forEach(kanaChar => kanaChar.setInactive());
     
     this.updateDisplay();
     
     debug.log('🚀 DirectTypingEngine2 リセット完了');
   }
-
   /**
    * リソース解放
    */
@@ -616,7 +473,6 @@ export class DirectTypingEngine2 {
     this.kanaDisplay = null;
     this.romajiContainer = null;
     this.romajiChars = [];
-    this.kanaChars = [];
     this.onProgress = undefined;
     this.onComplete = undefined;
       debug.log('🚀 DirectTypingEngine2 リソース解放完了');
