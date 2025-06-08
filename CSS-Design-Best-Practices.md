@@ -5,7 +5,7 @@
 2. [CSS アーキテクチャ設計](#css-アーキテクチャ設計)
 3. [デザインシステム](#デザインシステム)
 4. [コンポーネント設計パターン](#コンポーネント設計パターン)
-5. [完全デザイン移行手順](#完全デザイン移行手順)
+5. [CSS設計準拠チェック](#css設計準拠チェック)
 6. [パフォーマンス最適化](#パフォーマンス最適化)
 7. [レスポンシブ対応](#レスポンシブ対応)
 8. [アクセシビリティ](#アクセシビリティ)
@@ -314,161 +314,44 @@ src/
 
 ---
 
-## 完全デザイン移行手順
+## CSS設計準拠チェック
 
-### 🔄 HTML→React デザイン移行ワークフロー
+### 📋 準拠確認のためのガイドライン
 
-#### ⚡ 効率化された指示方法
+このセクションは、既存のCSS実装がベストプラクティスに準拠しているかをチェックするためのものです。
 
-```bash
-# 🎯 シンプル指示（推奨）
-# game.htmlと完全一致なデザインにして！
+#### ✅ チェック項目
 
-# 📋 詳細が必要な場合のみ
-# game.htmlと完全一致なデザインにして！既存CSS削除してゼロから作り直し
-```
+1. **ファイル構造準拠**
+   - CSS Modulesの適切な使用
+   - デザイントークンの分離
+   - BEM記法の適用
 
-#### 🤖 デフォルト動作原則
+2. **デザインシステム準拠**
+   - 統一されたカラーパレット
+   - 一貫したタイポグラフィ
+   - 標準化されたスペーシング
 
-**AI側のデフォルト処理**：
-1. ✅ **既存CSS自動削除** - 古いスタイルを必ず削除
-2. ✅ **ゼロベース再構築** - HTMLから完全移行
-3. ✅ **デザイントークン適用** - 統一されたトークン使用
-4. ✅ **レスポンシブ対応** - 全画面サイズ対応
-5. ✅ **パフォーマンス最適化** - GPU加速等を自動適用
+3. **パフォーマンス準拠**
+   - GPU加速の適用
+   - 適切なアニメーション最適化
+   - レスポンシブ対応
 
-#### ステップ1: 既存CSS削除と新デザイン適用
+4. **アクセシビリティ準拠**
+   - カラーコントラスト
+   - キーボードナビゲーション
+   - セマンティックHTML
 
-```bash
-# 🎯 新しい効率的な指示例：
-# game.htmlと完全一致なデザインにして！
-# → AIが自動的に既存CSS削除＋完全移行を実行
-```
+#### 🔍 準拠チェック手順
 
-#### ステップ2: デザイン移行プロセス
+1. **構造確認**: ファイル配置がベストプラクティス通りか
+2. **命名確認**: BEM記法が正しく適用されているか  
+3. **トークン確認**: ハードコーディング値が残っていないか
+4. **機能確認**: レスポンシブ・アクセシビリティが動作するか
 
-1. **対象コンポーネントの特定**
-   ```typescript
-   // 例：SimpleGameScreen.tsx の場合
-   import styles from '@/styles/components/SimpleGameScreen.module.css'
-   ```
+---
 
-2. **既存CSSの完全削除**
-   ```css
-   /* SimpleGameScreen.module.css の内容を全削除 */
-   ```
-
-3. **HTMLからCSS抽出とトークン変換**
-   ```html
-   <!-- 元のHTML -->
-   <div style="
-     width: 100%;
-     height: 100vh;
-     background: radial-gradient(ellipse at center, #0a0f1b, #000);
-     font-family: 'Cinzel', serif;
-     display: flex;
-     flex-direction: column;
-     justify-content: center;
-     align-items: center;
-     color: #9c7e5c;
-   ">
-   ```
-
-   ↓ **変換**
-
-   ```css
-   /* CSS Modules + デザイントークン */
-   .gameScreen {
-     width: 100%;
-     height: 100vh;
-     background: var(--color-bg-primary);
-     font-family: var(--font-family-game);
-     display: flex;
-     flex-direction: column;
-     justify-content: center;
-     align-items: center;
-     color: var(--color-gaming-text-secondary);
-   }
-   ```
-
-#### ステップ3: CSS命名規則の統一
-
-```css
-/* BEM記法に従った命名 */
-.gameScreen { }                    /* Block */
-.gameScreen__container { }         /* Element */
-.gameScreen__container--large { }  /* Modifier */
-
-.typingArea { }
-.typingArea__text { }
-.typingArea__text--highlighted { }
-```
-
-#### ステップ4: レスポンシブ対応
-
-```css
-/* モバイルファースト */
-.gameScreen {
-  padding: 1rem 0;
-  gap: 1.5rem;
-}
-
-/* タブレット */
-@media (min-width: 768px) {
-  .gameScreen {
-    padding: 2rem 0;
-    gap: 2rem;
-  }
-}
-
-/* デスクトップ */
-@media (min-width: 1024px) {
-  .gameScreen {
-    padding: 3rem 0;
-  }
-}
-```
-
-#### ステップ5: アニメーション・インタラクション
-
-```css
-/* GPU加速アニメーション */
-.typingArea {
-  transform: translateZ(0);
-  will-change: transform;
-  transition: all var(--duration-normal) var(--timing-smooth);
-}
-
-.typingArea:hover {
-  transform: translateY(-2px) translateZ(0);
-  box-shadow: 0 8px 25px rgba(0, 0, 0, 0.2);
-}
-
-/* Loading アニメーション */
-@keyframes optimizedLoading {
-  0% { transform: rotate(0deg) translateZ(0); }
-  100% { transform: rotate(360deg) translateZ(0); }
-}
-```
-
-### 📋 移行チェックリスト
-
-#### 🤖 AI側の自動実行項目
-- [x] **既存CSS完全削除** - 古いスタイルの除去（自動）
-- [x] **HTMLデザイン分析** - インライン/内部CSSの抽出（自動）
-- [x] **デザイントークン変換** - ハードコーディング値の置換（自動）
-- [x] **BEM記法適用** - 統一された命名規則（自動）
-- [x] **CSS Modules統合** - コンポーネント固有スタイル（自動）
-- [x] **レスポンシブ対応** - 全画面サイズ対応（自動）
-- [x] **アクセシビリティ** - focus、contrast対応（自動）
-- [x] **パフォーマンス最適化** - GPU加速、will-change（自動）
-- [x] **ブラウザ互換性** - Webkit、Firefox対応（自動）
-
-#### 🚨 CSS競合防止原則
-1. **完全削除ファースト** - 既存CSSは必ず削除してからスタート
-2. **単一責任原則** - 1つのモジュールファイル = 1つのコンポーネント
-3. **名前空間分離** - CSS Modulesによる自動スコープ化
-4. **グローバル汚染防止** - デザイントークンのみグローバル
+**💡 ヒント**: 実際のデザイン移行作業については `HTML-to-React-Migration-Guide.md` を参照してください。
 
 ---
 
