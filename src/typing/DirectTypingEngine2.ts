@@ -1,9 +1,16 @@
 /**
- * DirectTypingEngine2 - ユーザー要求対応版
+ * DirectTypingEngine2 - 高度タイピングエンジン
  * 
  * 表示内容:
- * 1. 上部: 原文（漢字入り）「トマト食べたい」
- * 2. 下部: ローマ字全体 「tomatotabetai」で一文字ずつフォーカス
+ * 1. 上部: 原文（漢字入り）
+ * 2. 中部: ひらがな文字列（個別フォーカス機能付き）- 設定で切り替え可能
+ * 3. 下部: ローマ字文字列（個別フォーカス機能付き）
+ * 
+ * 機能:
+ * - 文字単位でのビジュアルフォーカス
+ * - 完了状態の視覚的フィードバック
+ * - 「ん」の分岐入力対応
+ * - リアルタイム進捗表示
  */
 
 import { TypingChar, type DisplayInfo } from './TypingChar';
@@ -129,7 +136,13 @@ interface DirectEngineState {
 }
 
 /**
- * 🚀 DirectTypingEngine2 - 原文 + ローマ字フォーカス版
+ * 🚀 DirectTypingEngine2 - 高度タイピングエンジン
+ * 
+ * 特徴:
+ * - 原文、ひらがな、ローマ字の3段階表示
+ * - 個別文字フォーカス機能
+ * - 設定による表示切り替え
+ * - 高精度の進捗管理
  */
 export class DirectTypingEngine2 {
   private state: DirectEngineState;
@@ -258,11 +271,11 @@ export class DirectTypingEngine2 {
         flex-wrap: wrap;
         gap: 2px;
       "></div>
-    `;
-
-    // 原文表示
+    `;    // 原文表示
     this.originalTextDisplay = this.container.querySelector('.direct-typing-original-text') as HTMLElement;
-    this.originalTextDisplay.textContent = this.originalText;    // かな表示（設定で有効な場合のみ）
+    this.originalTextDisplay.textContent = this.originalText;
+
+    // かな表示（設定で有効な場合のみ）
     if (this.config.showKanaDisplay) {
       this.kanaDisplay = this.container.querySelector('.direct-typing-kana-container') as HTMLElement;
       this.createKanaChars();
@@ -345,10 +358,10 @@ export class DirectTypingEngine2 {
       this.state.startTime = Date.now();
     }
 
-    this.state.keyCount++;
+    this.state.keyCount++;    const currentChar = this.state.typingChars[this.state.currentIndex];
+    if (!currentChar) return;
 
-    const currentChar = this.state.typingChars[this.state.currentIndex];
-    if (!currentChar) return;    // 「ん」の分岐状態処理
+    // 「ん」の分岐状態処理
     if (currentChar.branchingState) {
       const nextChar = this.state.typingChars[this.state.currentIndex + 1];
       const result = currentChar.typeBranching(key, nextChar);
@@ -374,9 +387,7 @@ export class DirectTypingEngine2 {
         if (this.state.currentIndex >= this.state.typingChars.length) {
           this.handleWordComplete();
           return;
-        }
-
-        this.updateDisplay();
+        }        this.updateDisplay();
         this.notifyProgress();
         return;
       } else {
@@ -386,7 +397,9 @@ export class DirectTypingEngine2 {
         this.notifyProgress();
         return;
       }
-    }    // 通常のタイピング処理
+    }
+
+    // 通常のタイピング処理
     const isCorrect = currentChar.type(key);
 
     if (isCorrect) {
@@ -403,11 +416,11 @@ export class DirectTypingEngine2 {
     } else {
       this.state.mistakeCount++;
       OptimizedAudioSystem.playErrorSound();
-    }
-
-    this.updateDisplay();
+    }    this.updateDisplay();
     this.notifyProgress();
-  }  /**
+  }
+
+  /**
    * 表示更新
    */
   private updateDisplay(): void {
@@ -432,42 +445,58 @@ export class DirectTypingEngine2 {
     if (this.config.showKanaDisplay && this.kanaChars.length > 0) {
       this.updateKanaCharFocus();
     }
-  }  /**
-   * かな文字フォーカス更新
-   */
+  }
   private updateKanaCharFocus(): void {
-    // 現在完了したひらがな文字数を計算
-    let completedKanaCount = 0;
+    // 完了したひらがな文字数を計算
+    const completedKanaCount = this.calculateCompletedKanaCount();
     
-    for (let i = 0; i < this.state.currentIndex && i < this.state.typingChars.length; i++) {
-      const char = this.state.typingChars[i];
-      completedKanaCount += char.kana.length;
-    }
-    
-    // 現在のTypingCharでの進捗を計算
-    const currentChar = this.state.typingChars[this.state.currentIndex];
-    let currentActiveKanaIndex = -1; // -1は何もアクティブでない状態
-    
-    if (currentChar && currentChar.acceptedInput.length > 0) {
-      // ローマ字の進捗に基づいて現在アクティブなひらがな文字のインデックスを決定
-      const totalPatternLength = currentChar.patterns[0].length;
-      const progressRatio = currentChar.acceptedInput.length / totalPatternLength;
-      
-      // 長音や複合文字の場合は複数のひらがな文字があるため、進捗に応じて適切にアクティブにする
-      const kanaLength = currentChar.kana.length;
-      if (kanaLength > 1) {
-        // 複数文字の場合は進捗に応じて段階的にアクティブにする
-        const activeKanaSubIndex = Math.floor(progressRatio * kanaLength);
-        currentActiveKanaIndex = completedKanaCount + Math.min(activeKanaSubIndex, kanaLength - 1);
-      } else {
-        // 単一文字の場合は10%進捗でアクティブにする
-        if (progressRatio > 0.1) {
-          currentActiveKanaIndex = completedKanaCount;
-        }
-      }
-    }
+    // 現在アクティブなひらがな文字のインデックスを計算
+    const currentActiveKanaIndex = this.calculateCurrentActiveKanaIndex(completedKanaCount);
     
     // 各ひらがな文字の状態を更新
+    this.updateKanaCharStates(completedKanaCount, currentActiveKanaIndex);
+  }
+
+  /**
+   * 完了したひらがな文字数を計算
+   */
+  private calculateCompletedKanaCount(): number {
+    let count = 0;
+    for (let i = 0; i < this.state.currentIndex && i < this.state.typingChars.length; i++) {
+      count += this.state.typingChars[i].kana.length;
+    }
+    return count;
+  }
+
+  /**
+   * 現在アクティブなひらがな文字のインデックスを計算
+   */
+  private calculateCurrentActiveKanaIndex(completedKanaCount: number): number {
+    const currentChar = this.state.typingChars[this.state.currentIndex];
+    
+    // 入力がない場合はアクティブなし
+    if (!currentChar || currentChar.acceptedInput.length === 0) {
+      return -1;
+    }
+
+    const totalPatternLength = currentChar.patterns[0].length;
+    const progressRatio = currentChar.acceptedInput.length / totalPatternLength;
+    const kanaLength = currentChar.kana.length;
+
+    if (kanaLength > 1) {
+      // 複数文字（例：「きゃ」）の場合は進捗に応じて段階的にアクティブ
+      const activeKanaSubIndex = Math.floor(progressRatio * kanaLength);
+      return completedKanaCount + Math.min(activeKanaSubIndex, kanaLength - 1);
+    } else {
+      // 単一文字の場合は10%進捗でアクティブ
+      return progressRatio > 0.1 ? completedKanaCount : -1;
+    }
+  }
+
+  /**
+   * ひらがな文字の状態を更新
+   */
+  private updateKanaCharStates(completedKanaCount: number, currentActiveKanaIndex: number): void {
     this.kanaChars.forEach((kanaChar, index) => {
       if (index < completedKanaCount) {
         kanaChar.setCompleted();
@@ -514,11 +543,11 @@ export class DirectTypingEngine2 {
       duration: elapsedTime,
       kpm: Math.round((this.state.keyCount / elapsedTime) * 60),
       accuracy: (this.state.keyCount - this.state.mistakeCount) / this.state.keyCount,
-    };
-
-    this.onComplete?.(scoreLog);
+    };    this.onComplete?.(scoreLog);
     debug.log('🚀 DirectTypingEngine2 単語完了:', scoreLog);
-  }  /**
+  }
+
+  /**
    * リセット
    */
   reset(): void {
@@ -528,17 +557,18 @@ export class DirectTypingEngine2 {
     this.state.startTime = 0;
 
     this.state.typingChars.forEach(char => char.reset());
-    
-    // かな文字もリセット
+      // かな文字もリセット
     this.kanaChars.forEach(kanaChar => kanaChar.setInactive());
     
     this.updateDisplay();
     
     debug.log('🚀 DirectTypingEngine2 リセット完了');
   }
+
   /**
    * リソース解放
-   */  destroy(): void {
+   */
+  destroy(): void {
     if (this.keyHandler) {
       document.removeEventListener('keydown', this.keyHandler, { capture: true });
       this.keyHandler = undefined;
@@ -551,9 +581,9 @@ export class DirectTypingEngine2 {
     this.kanaChars = [];
     this.onProgress = undefined;
     this.onComplete = undefined;
-    
-    debug.log('🚀 DirectTypingEngine2 リソース解放完了');
+      debug.log('🚀 DirectTypingEngine2 リソース解放完了');
   }
+
   /**
    * 詳細進捗取得（HyperTypingEngine互換の正しい方式）
    */
