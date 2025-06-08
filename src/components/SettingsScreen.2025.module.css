@@ -1,0 +1,289 @@
+/* SettingsScreen - 2025年最新基準対応 */
+@import '../styles/design-tokens/2025-modern.css';
+
+/* ========================================================================== 
+   Base Settings Layout - BEM + 2025 Standards
+   ========================================================================== */
+
+.settings *,
+.settings *::before,
+.settings *::after {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+.settings {
+  /* 2025年 Modern Layout */
+  inline-size: 100%;
+  block-size: 100dvh; /* Dynamic Viewport */
+  font-family: var(--font-family-gaming);
+  background: radial-gradient(ellipse at center, 
+    color-mix(in oklch, var(--color-gaming-bg-secondary) 80%, black),
+    var(--color-gaming-bg-primary)
+  );
+  color: var(--color-text-secondary);
+  display: flex;
+  justify-content: center;
+  align-items: flex-start;
+  padding-block-start: var(--spacing-viewport-lg);
+  
+  /* Container Query準備 */
+  container-type: inline-size;
+  container-name: settings-screen;
+  
+  /* パフォーマンス最適化 */
+  contain: layout style paint;
+  will-change: scroll-position;
+}
+
+/* ========================================================================== 
+   Settings Container - BEM Block
+   ========================================================================== */
+
+.settings__container {
+  /* 2025年 Container Query対応 */
+  inline-size: 100%;
+  max-inline-size: var(--container-3xl);
+  padding: var(--spacing-lg) var(--spacing-xl);
+  background: color-mix(in oklch, white 2%, transparent);
+  border: 1px solid color-mix(in oklch, white 5%, transparent);
+  box-shadow: var(--shadow-gaming-large);
+  border-radius: var(--border-radius-xl);
+  animation: var(--animation-fade-in) var(--animation-duration-slow) ease-out;
+  
+  /* Container Query */
+  @container settings-screen (inline-size < 640px) {
+    padding: var(--spacing-md) var(--spacing-lg);
+    max-inline-size: 100%;
+  }
+  
+  /* パフォーマンス最適化 */
+  contain: layout style;
+  transform: translateZ(0);
+}
+
+/* ========================================================================== 
+   Settings Title - BEM Element
+   ========================================================================== */
+
+.settings__title {
+  /* 2025年 Modern Typography */
+  text-align: center;
+  font-size: var(--font-size-3xl);
+  color: var(--color-gaming-accent-gold);
+  letter-spacing: var(--letter-spacing-wide);
+  margin-block-end: var(--spacing-2xl);
+  text-shadow: var(--text-shadow-gaming);
+  
+  /* DPI Scale対応 */
+  @media (min-resolution: 1.25dppx) {
+    font-size: clamp(var(--font-size-2xl), 4vw, var(--font-size-4xl));
+  }
+  
+  /* パフォーマンス最適化 */
+  text-rendering: optimizeSpeed;
+  font-display: swap;
+  contain: style;
+}
+
+/* ========================================================================== 
+   Settings Items - BEM Elements
+   ========================================================================== */
+
+.settings__item {
+  /* 2025年 BEM Standard */
+  padding: var(--spacing-lg) 0;
+  border-block-end: 1px solid color-mix(in oklch, white 7%, transparent);
+  contain: layout style;
+}
+
+.settings__row {
+  /* Modern Flexbox Layout */
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--spacing-md);
+  
+  /* Container Query対応 */
+  @container settings-screen (inline-size < 640px) {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: var(--spacing-sm);
+  }
+}
+
+.settings__label {
+  /* ラベルテキスト */
+  font-size: var(--font-size-lg);
+  color: var(--color-gaming-accent-secondary);
+  min-inline-size: var(--sizing-44);
+  
+  /* DPI Scale対応 */
+  @media (min-resolution: 1.25dppx) {
+    font-size: clamp(var(--font-size-base), 3.5vw, var(--font-size-xl));
+  }
+  
+  /* パフォーマンス最適化 */
+  text-rendering: optimizeSpeed;
+  contain: style;
+}
+
+.settings__controls {
+  /* コントロール群 */
+  display: flex;
+  align-items: center;
+  gap: var(--spacing-lg);
+  
+  /* Container Query対応 */
+  @container settings-screen (inline-size < 640px) {
+    inline-size: 100%;
+    justify-content: flex-start;
+  }
+}
+
+/* ========================================================================== 
+   Settings Slider - BEM Element + 2025 Standards
+   ========================================================================== */
+
+.settings__slider {
+  /* 2025年 Modern Slider */
+  inline-size: var(--sizing-48);
+  block-size: var(--sizing-2);
+  appearance: none;
+  background: var(--color-surface-dark);
+  border-radius: var(--border-radius-sm);
+  outline: none;
+  cursor: pointer;
+  
+  /* DPI Scale対応 */
+  @media (min-resolution: 1.25dppx) {
+    inline-size: clamp(var(--sizing-40), 15vw, var(--sizing-56));
+  }
+  
+  /* パフォーマンス最適化 */
+  transition: background-color var(--animation-duration-fast) ease-out;
+  will-change: background-color;
+  contain: layout style;
+}
+
+.settings__slider:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+.settings__slider::-webkit-slider-thumb {
+  appearance: none;
+  inline-size: var(--sizing-3-5);
+  block-size: var(--sizing-3-5);
+  background: var(--color-gaming-accent-gold);
+  border-radius: 50%;
+  cursor: pointer;
+  box-shadow: var(--shadow-gaming-glow);
+  transition: transform var(--animation-duration-fast) ease-out;
+}
+
+.settings__slider::-webkit-slider-thumb:hover {
+  transform: scale(1.1);
+}
+
+.settings__slider::-moz-range-thumb {
+  inline-size: var(--sizing-3-5);
+  block-size: var(--sizing-3-5);
+  background: var(--color-gaming-accent-gold);
+  border-radius: 50%;
+  cursor: pointer;
+  box-shadow: var(--shadow-gaming-glow);
+  border: none;
+  transition: transform var(--animation-duration-fast) ease-out;
+}
+
+.settings__slider::-moz-range-thumb:hover {
+  transform: scale(1.1);
+}
+
+/* ========================================================================== 
+   Settings Toggle - BEM Element + 2025 Standards
+   ========================================================================== */
+
+.settings__toggle {
+  /* 2025年 Modern Toggle */
+  inline-size: var(--sizing-12);
+  block-size: var(--sizing-6);
+  border-radius: var(--border-radius-full);
+  background: var(--color-surface-medium);
+  position: relative;
+  cursor: pointer;
+  box-shadow: inset 0 0 var(--spacing-xs) color-mix(in oklch, white 20%, transparent);
+  flex-shrink: 0;
+  transition: background-color var(--animation-duration-normal) ease-out;
+  
+  /* パフォーマンス最適化 */
+  will-change: background-color;
+  contain: layout style;
+}
+
+.settings__toggle::before {
+  content: '';
+  position: absolute;
+  inline-size: var(--sizing-5);
+  block-size: var(--sizing-5);
+  border-radius: 50%;
+  inset-block-start: var(--spacing-xs);
+  inset-inline-start: var(--spacing-xs);
+  background: var(--color-gaming-accent-secondary);
+  transition: transform var(--animation-duration-normal) ease-out;
+  
+  /* GPU加速 */
+  transform: translateZ(0);
+  will-change: transform;
+}
+
+/* Toggle States - BEM Modifiers */
+.settings__toggle--on {
+  background: var(--color-gaming-accent-primary);
+}
+
+.settings__toggle--on::before {
+  transform: translateX(var(--spacing-6)) translateZ(0);
+}
+
+/* ========================================================================== 
+   Accessibility & Reduced Motion - 2025 Standards
+   ========================================================================== */
+
+@media (prefers-reduced-motion: reduce) {
+  .settings__slider,
+  .settings__toggle,
+  .settings__toggle::before {
+    transition: none;
+    animation: none;
+  }
+}
+
+/* High Contrast Mode */
+@media (prefers-contrast: high) {
+  .settings__container {
+    border: 2px solid var(--color-text-primary);
+    background: var(--color-surface-dark);
+  }
+  
+  .settings__toggle {
+    border: 1px solid var(--color-text-primary);
+  }
+}
+
+/* ========================================================================== 
+   Animation Definitions - 2025 Standards
+   ========================================================================== */
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(var(--spacing-lg)) translateZ(0);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0) translateZ(0);
+  }
+}

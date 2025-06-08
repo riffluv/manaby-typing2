@@ -1,0 +1,370 @@
+/* RPGTransitionSystem - 2025年最新基準対応 */
+@import '../design-tokens/2025-modern.css';
+
+/* ==========================================================================
+   RPG Transition Container - BEM Block + 2025 Standards
+   ========================================================================== */
+
+.transitionContainer {
+  /* 2025年 Modern Layout */
+  inline-size: 100%;
+  block-size: 100%;
+  position: fixed;
+  inset: 0;
+  overflow: auto;
+  z-index: var(--z-index-modal);
+  
+  /* Modern Background */
+  background: radial-gradient(ellipse at center, 
+    color-mix(in oklch, var(--color-gaming-bg-secondary) 90%, black),
+    var(--color-gaming-bg-primary)
+  );
+  
+  /* Container Query準備 */
+  container-type: inline-size;
+  container-name: rpg-transition;
+  
+  /* パフォーマンス最適化 */
+  contain: layout style paint;
+  will-change: opacity, transform;
+  transform: translateZ(0);
+  
+  /* Modern Scrollbar */
+  scrollbar-width: thin;
+  scrollbar-color: var(--color-gaming-accent-primary) transparent;
+}
+
+/* Webkit Scrollbar Styling */
+.transitionContainer::-webkit-scrollbar {
+  inline-size: var(--sizing-2);
+}
+
+.transitionContainer::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+.transitionContainer::-webkit-scrollbar-thumb {
+  background: var(--color-gaming-accent-primary);
+  border-radius: var(--border-radius-full);
+  opacity: 0.6;
+}
+
+.transitionContainer::-webkit-scrollbar-thumb:hover {
+  opacity: 1;
+}
+
+/* ==========================================================================
+   Transition Content - BEM Element
+   ========================================================================== */
+
+.transitionContent {
+  /* 2025年 Flexbox Layout */
+  inline-size: 100%;
+  block-size: 100%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: var(--spacing-lg);
+  
+  /* Container Query対応 */
+  @container rpg-transition (inline-size < 768px) {
+    padding: var(--spacing-md);
+    align-items: flex-start;
+    padding-block-start: var(--spacing-viewport-md);
+  }
+  
+  /* パフォーマンス最適化 */
+  contain: layout style;
+  transform: translateZ(0);
+}
+
+/* ==========================================================================
+   Transition Effects - BEM Modifiers
+   ========================================================================== */
+
+/* Fade Transition */
+.transitionContainer--fade {
+  animation: rpgFadeIn var(--animation-duration-slow) ease-out;
+}
+
+.transitionContainer--fadeOut {
+  animation: rpgFadeOut var(--animation-duration-slow) ease-in;
+}
+
+/* Slide Transitions */
+.transitionContainer--slideLeft {
+  animation: rpgSlideInLeft var(--animation-duration-normal) ease-out;
+}
+
+.transitionContainer--slideRight {
+  animation: rpgSlideInRight var(--animation-duration-normal) ease-out;
+}
+
+.transitionContainer--slideUp {
+  animation: rpgSlideInUp var(--animation-duration-normal) ease-out;
+}
+
+.transitionContainer--slideDown {
+  animation: rpgSlideInDown var(--animation-duration-normal) ease-out;
+}
+
+/* Zoom Transitions */
+.transitionContainer--zoomIn {
+  animation: rpgZoomIn var(--animation-duration-normal) ease-out;
+}
+
+.transitionContainer--zoomOut {
+  animation: rpgZoomOut var(--animation-duration-normal) ease-in;
+}
+
+/* Magic Circle Transition (RPG特化) */
+.transitionContainer--magicCircle {
+  animation: rpgMagicCircle var(--animation-duration-slow) ease-in-out;
+}
+
+.transitionContainer--magicCircle::before {
+  content: '';
+  position: fixed;
+  inset: 50% auto auto 50%;
+  inline-size: 0;
+  block-size: 0;
+  border: 2px solid var(--color-gaming-accent-gold);
+  border-radius: 50%;
+  transform: translate(-50%, -50%);
+  animation: magicCircleExpand var(--animation-duration-slow) ease-out;
+  z-index: var(--z-index-overlay);
+}
+
+/* Portal Transition (RPG特化) */
+.transitionContainer--portal {
+  background: radial-gradient(circle at center, 
+    transparent 0%, 
+    transparent 30%, 
+    var(--color-gaming-bg-primary) 70%
+  );
+  animation: portalOpen var(--animation-duration-slow) ease-in-out;
+}
+
+/* ==========================================================================
+   Loading States - BEM Elements
+   ========================================================================== */
+
+.transitionLoading {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: var(--spacing-xl);
+  color: var(--color-gaming-accent-gold);
+  font-family: var(--font-family-gaming);
+  
+  /* パフォーマンス最適化 */
+  contain: layout style;
+}
+
+.transitionLoading__spinner {
+  inline-size: var(--sizing-16);
+  block-size: var(--sizing-16);
+  border: 3px solid color-mix(in oklch, var(--color-gaming-accent-gold) 30%, transparent);
+  border-block-start-color: var(--color-gaming-accent-gold);
+  border-radius: 50%;
+  animation: rpgSpin var(--animation-duration-slow) linear infinite;
+  
+  /* GPU加速 */
+  transform: translateZ(0);
+  will-change: transform;
+}
+
+.transitionLoading__text {
+  font-size: var(--font-size-xl);
+  letter-spacing: var(--letter-spacing-wide);
+  text-shadow: var(--text-shadow-gaming);
+  animation: textPulse var(--animation-duration-normal) ease-in-out infinite alternate;
+  
+  /* Container Query対応 */
+  @container rpg-transition (inline-size < 640px) {
+    font-size: var(--font-size-lg);
+  }
+  
+  /* パフォーマンス最適化 */
+  text-rendering: optimizeSpeed;
+  contain: style;
+}
+
+/* ==========================================================================
+   Responsive Design - Container Queries
+   ========================================================================== */
+
+@container rpg-transition (inline-size < 480px) {
+  .transitionContainer {
+    overflow-y: auto;
+    overflow-x: hidden;
+  }
+  
+  .transitionLoading__spinner {
+    inline-size: var(--sizing-12);
+    block-size: var(--sizing-12);
+  }
+  
+  .transitionLoading__text {
+    font-size: var(--font-size-base);
+  }
+}
+
+/* ==========================================================================
+   Accessibility & Reduced Motion - 2025 Standards
+   ========================================================================== */
+
+@media (prefers-reduced-motion: reduce) {
+  .transitionContainer,
+  .transitionContainer--fade,
+  .transitionContainer--fadeOut,
+  .transitionContainer--slideLeft,
+  .transitionContainer--slideRight,
+  .transitionContainer--slideUp,
+  .transitionContainer--slideDown,
+  .transitionContainer--zoomIn,
+  .transitionContainer--zoomOut,
+  .transitionContainer--magicCircle,
+  .transitionContainer--portal {
+    animation: none;
+  }
+  
+  .transitionContainer--magicCircle::before {
+    animation: none;
+    opacity: 0;
+  }
+  
+  .transitionLoading__spinner,
+  .transitionLoading__text {
+    animation: none;
+  }
+}
+
+/* High Contrast Mode */
+@media (prefers-contrast: high) {
+  .transitionContent {
+    outline: 2px solid var(--color-text-primary);
+  }
+  
+  .transitionLoading__spinner {
+    border-color: var(--color-text-primary);
+    border-block-start-color: var(--color-text-primary);
+  }
+}
+
+/* ==========================================================================
+   Animation Definitions - 2025 Standards
+   ========================================================================== */
+
+@keyframes rpgFadeIn {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
+@keyframes rpgFadeOut {
+  from { opacity: 1; }
+  to { opacity: 0; }
+}
+
+@keyframes rpgSlideInLeft {
+  from { transform: translateX(-100vw) translateZ(0); }
+  to { transform: translateX(0) translateZ(0); }
+}
+
+@keyframes rpgSlideInRight {
+  from { transform: translateX(100vw) translateZ(0); }
+  to { transform: translateX(0) translateZ(0); }
+}
+
+@keyframes rpgSlideInUp {
+  from { transform: translateY(100vh) translateZ(0); }
+  to { transform: translateY(0) translateZ(0); }
+}
+
+@keyframes rpgSlideInDown {
+  from { transform: translateY(-100vh) translateZ(0); }
+  to { transform: translateY(0) translateZ(0); }
+}
+
+@keyframes rpgZoomIn {
+  from { 
+    opacity: 0;
+    transform: scale(0.3) translateZ(0);
+  }
+  to { 
+    opacity: 1;
+    transform: scale(1) translateZ(0);
+  }
+}
+
+@keyframes rpgZoomOut {
+  from { 
+    opacity: 1;
+    transform: scale(1) translateZ(0);
+  }
+  to { 
+    opacity: 0;
+    transform: scale(1.2) translateZ(0);
+  }
+}
+
+@keyframes rpgMagicCircle {
+  0% { 
+    opacity: 0;
+    backdrop-filter: blur(0px);
+  }
+  50% { 
+    opacity: 0.8;
+    backdrop-filter: blur(4px);
+  }
+  100% { 
+    opacity: 1;
+    backdrop-filter: blur(0px);
+  }
+}
+
+@keyframes magicCircleExpand {
+  0% {
+    inline-size: 0;
+    block-size: 0;
+    opacity: 1;
+  }
+  50% {
+    inline-size: 200px;
+    block-size: 200px;
+    opacity: 0.8;
+  }
+  100% {
+    inline-size: 100vmax;
+    block-size: 100vmax;
+    opacity: 0;
+  }
+}
+
+@keyframes portalOpen {
+  0% {
+    background-size: 0% 0%;
+  }
+  50% {
+    background-size: 100% 100%;
+  }
+  100% {
+    background-size: 150% 150%;
+  }
+}
+
+@keyframes rpgSpin {
+  0% { transform: rotate(0deg) translateZ(0); }
+  100% { transform: rotate(360deg) translateZ(0); }
+}
+
+@keyframes textPulse {
+  0% { 
+    opacity: 0.7;
+    text-shadow: var(--text-shadow-gaming);
+  }
+  100% { 
+    opacity: 1;
+    text-shadow: 0 0 20px var(--color-gaming-accent-gold);
+  }
+}

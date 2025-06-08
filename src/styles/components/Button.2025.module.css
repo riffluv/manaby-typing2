@@ -1,0 +1,315 @@
+/* ==========================================================================
+   Button Component - 2025年最新基準対応
+   ========================================================================== */
+@import '../design-tokens/2025-modern.css';
+
+/* ==========================================================================
+   Base Button - BEM Block
+   ========================================================================== */
+
+.button {
+  /* Base Layout - 2025年 */
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: var(--spacing-sm);
+  position: relative;
+  
+  /* Typography - Modern */
+  font-family: var(--font-family-gaming);
+  font-weight: var(--font-weight-semibold);
+  font-size: var(--font-size-base);
+  letter-spacing: var(--letter-spacing-wide);
+  text-transform: uppercase;
+  line-height: 1;
+  
+  /* Layout - Logical Properties */
+  padding: var(--spacing-md) var(--spacing-lg);
+  border-radius: var(--border-radius-md);
+  border: 1px solid transparent;
+  min-block-size: var(--sizing-11); /* Touch Target */
+  min-inline-size: var(--sizing-20);
+  
+  /* Interaction - Modern Transitions */
+  cursor: pointer;
+  transition: 
+    background-color var(--animation-duration-fast) ease-out,
+    border-color var(--animation-duration-fast) ease-out,
+    transform var(--animation-duration-fast) ease-out,
+    box-shadow var(--animation-duration-fast) ease-out;
+  outline: none;
+  
+  /* User Experience */
+  user-select: none;
+  -webkit-user-select: none;
+  -webkit-tap-highlight-color: transparent;
+  
+  /* Performance Optimization */
+  will-change: transform, background-color;
+  contain: layout style;
+  transform: translateZ(0); /* GPU加速 */
+}
+
+/* Button States */
+.button:hover {
+  transform: translateY(-1px) translateZ(0);
+  box-shadow: var(--shadow-gaming-medium);
+}
+
+.button:active {
+  transform: translateY(0) translateZ(0);
+}
+
+.button:focus-visible {
+  outline: 2px solid var(--color-gaming-accent-primary);
+  outline-offset: 2px;
+}
+
+.button:disabled {
+  opacity: var(--opacity-disabled);
+  cursor: not-allowed;
+  pointer-events: none;
+  transform: none;
+}
+
+/* ==========================================================================
+   Button Variants - BEM Modifiers
+   ========================================================================== */
+
+/* Primary Button */
+.button--primary {
+  background: linear-gradient(135deg, 
+    var(--color-gaming-accent-primary), 
+    color-mix(in oklch, var(--color-gaming-accent-primary) 85%, black)
+  );
+  border-color: var(--color-gaming-accent-primary);
+  color: var(--color-text-on-primary);
+  box-shadow: var(--shadow-gaming-small);
+}
+
+.button--primary:hover {
+  background: linear-gradient(135deg, 
+    color-mix(in oklch, var(--color-gaming-accent-primary) 110%, white), 
+    var(--color-gaming-accent-primary)
+  );
+  box-shadow: var(--shadow-gaming-large);
+}
+
+/* Secondary Button */
+.button--secondary {
+  background: transparent;
+  border-color: var(--color-gaming-accent-secondary);
+  color: var(--color-gaming-accent-secondary);
+  box-shadow: inset 0 0 0 1px var(--color-gaming-accent-secondary);
+}
+
+.button--secondary:hover {
+  background: color-mix(in oklch, var(--color-gaming-accent-secondary) 10%, transparent);
+  border-color: color-mix(in oklch, var(--color-gaming-accent-secondary) 120%, white);
+}
+
+/* Danger Button */
+.button--danger {
+  background: linear-gradient(135deg, 
+    var(--color-error), 
+    color-mix(in oklch, var(--color-error) 85%, black)
+  );
+  border-color: var(--color-error);
+  color: var(--color-text-on-primary);
+  box-shadow: var(--shadow-gaming-small);
+}
+
+.button--danger:hover {
+  background: linear-gradient(135deg, 
+    color-mix(in oklch, var(--color-error) 110%, white), 
+    var(--color-error)
+  );
+}
+
+/* Ghost Button */
+.button--ghost {
+  background: transparent;
+  border-color: transparent;
+  color: var(--color-text-secondary);
+}
+
+.button--ghost:hover {
+  background: color-mix(in oklch, var(--color-surface-medium) 50%, transparent);
+  color: var(--color-text-primary);
+}
+
+/* ==========================================================================
+   Button Sizes - BEM Modifiers
+   ========================================================================== */
+
+.button--small {
+  padding: var(--spacing-sm) var(--spacing-md);
+  font-size: var(--font-size-sm);
+  min-block-size: var(--sizing-8);
+  min-inline-size: var(--sizing-16);
+}
+
+.button--large {
+  padding: var(--spacing-lg) var(--spacing-xl);
+  font-size: var(--font-size-lg);
+  min-block-size: var(--sizing-12);
+  min-inline-size: var(--sizing-24);
+}
+
+.button--xl {
+  padding: var(--spacing-xl) var(--spacing-2xl);
+  font-size: var(--font-size-xl);
+  min-block-size: var(--sizing-14);
+  min-inline-size: var(--sizing-32);
+}
+
+/* ==========================================================================
+   Button Width Modifiers
+   ========================================================================== */
+
+.button--full {
+  inline-size: 100%;
+}
+
+.button--fit {
+  inline-size: fit-content;
+}
+
+/* ==========================================================================
+   Icon Buttons - BEM Elements
+   ========================================================================== */
+
+.button__icon {
+  inline-size: var(--sizing-4);
+  block-size: var(--sizing-4);
+  flex-shrink: 0;
+}
+
+.button__icon--start {
+  margin-inline-end: var(--spacing-xs);
+}
+
+.button__icon--end {
+  margin-inline-start: var(--spacing-xs);
+}
+
+/* Icon Only Button */
+.button--icon-only {
+  padding: var(--spacing-md);
+  min-inline-size: var(--sizing-11);
+  aspect-ratio: 1;
+}
+
+.button--icon-only .button__icon {
+  margin: 0;
+}
+
+/* ==========================================================================
+   Loading State - BEM Modifier
+   ========================================================================== */
+
+.button--loading {
+  color: transparent;
+  pointer-events: none;
+}
+
+.button--loading::after {
+  content: '';
+  position: absolute;
+  inset-inline-start: 50%;
+  inset-block-start: 50%;
+  inline-size: var(--sizing-4);
+  block-size: var(--sizing-4);
+  margin-inline-start: calc(var(--sizing-4) / -2);
+  margin-block-start: calc(var(--sizing-4) / -2);
+  border: 2px solid transparent;
+  border-block-start-color: currentColor;
+  border-radius: 50%;
+  animation: buttonSpin var(--animation-duration-slow) linear infinite;
+}
+
+/* ==========================================================================
+   Button Groups - BEM Block
+   ========================================================================== */
+
+.buttonGroup {
+  display: flex;
+  gap: var(--spacing-sm);
+}
+
+.buttonGroup--vertical {
+  flex-direction: column;
+}
+
+.buttonGroup--attached .button {
+  border-radius: 0;
+}
+
+.buttonGroup--attached .button:first-child {
+  border-start-start-radius: var(--border-radius-md);
+  border-end-start-radius: var(--border-radius-md);
+}
+
+.buttonGroup--attached .button:last-child {
+  border-start-end-radius: var(--border-radius-md);
+  border-end-end-radius: var(--border-radius-md);
+}
+
+/* ==========================================================================
+   Responsive Design - Container Queries
+   ========================================================================== */
+
+@container (inline-size < 480px) {
+  .button {
+    font-size: var(--font-size-sm);
+    padding: var(--spacing-sm) var(--spacing-md);
+  }
+  
+  .button--large {
+    font-size: var(--font-size-base);
+    padding: var(--spacing-md) var(--spacing-lg);
+  }
+}
+
+/* ==========================================================================
+   Accessibility & Reduced Motion - 2025 Standards
+   ========================================================================== */
+
+@media (prefers-reduced-motion: reduce) {
+  .button {
+    transition: none;
+    animation: none;
+  }
+  
+  .button:hover {
+    transform: none;
+  }
+  
+  .button--loading::after {
+    animation: none;
+  }
+}
+
+/* High Contrast Mode */
+@media (prefers-contrast: high) {
+  .button {
+    border: 2px solid currentColor;
+  }
+  
+  .button--ghost {
+    border: 1px solid currentColor;
+  }
+}
+
+/* ==========================================================================
+   Animation Definitions
+   ========================================================================== */
+
+@keyframes buttonSpin {
+  0% {
+    transform: rotate(0deg);
+  }
+  100% {
+    transform: rotate(360deg);
+  }
+}

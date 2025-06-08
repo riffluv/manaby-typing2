@@ -1,8 +1,7 @@
 import type { Metadata, Viewport } from "next";
 import { Geist, Geist_Mono, Cinzel } from "next/font/google";
-import "@/styles/design-tokens.css";
-import "@/styles/globals-reset.css";
-import "./globals.css";
+// 2025年最新基準CSS統合
+import "@/styles/globals-2025.css";
 import AppLayout from '@/components/AppLayout';
 import AudioSystemInitializer from '@/components/AudioSystemInitializer';
 import BGMInitializer from '@/components/BGMInitializer';

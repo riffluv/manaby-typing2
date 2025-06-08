@@ -1,53 +1,92 @@
-/* SimpleGameResultScreen.module.css - result3.html Complete Match Design */
-/* CSS Architecture compliant with Design Tokens */
+/* SimpleGameResultScreen - 2025年最新基準対応 */
 
 /* ==========================================================================
-   Main Result Screen Container - Full Screen Layout (result3.html match)
+   Main Result Screen Container - BEM Block + 2025 Standards
    ========================================================================== */
 
 .resultScreen {
-  /* Full screen positioning */
+  /* 2025年 Modern Layout */
   position: fixed;
-  top: 0;
-  left: 0;
-  width: 100vw;
-  height: 100vh;
-  z-index: var(--z-index-modal, 1000);
+  inset: 0;
+  inline-size: 100vw;
+  block-size: 100dvh; /* Dynamic Viewport */
+  z-index: var(--z-index-modal);
   
-  /* Background matching result3.html */
-  background: radial-gradient(ellipse at center, #0a0f1b, #000);
-  font-family: 'Cinzel', serif;
-  color: #ccc;
+  /* Modern Background */
+  background: radial-gradient(ellipse at center, 
+    color-mix(in oklch, var(--color-gaming-bg-secondary) 80%, black),
+    var(--color-gaming-bg-primary)
+  );
+  font-family: var(--font-family-gaming);
+  color: var(--color-text-secondary);
   overflow: hidden;
   
-  /* Flexbox layout matching result3.html */
+  /* Container Query準備 */
+  container-type: inline-size;
+  container-name: result-screen;
+  
+  /* Flexbox layout */
   display: flex;
   flex-direction: column;
   align-items: center;
-  padding-top: 10vh;
-  padding-bottom: 4rem;
+  padding-block-start: var(--spacing-viewport-lg);
+  padding-block-end: var(--spacing-2xl);
   
-  /* Box model using design token spacing */
-  box-sizing: border-box;
-  margin: 0;
+  /* パフォーマンス最適化 */
+  contain: layout style paint;
+  will-change: opacity;
+  transform: translateZ(0);
 }
 
 /* ==========================================================================
-   Main Content Container (result3.html match)
+   Main Content Container - BEM Element
    ========================================================================== */
 
 .result {
-  width: 100%;
-  max-width: 800px;
+  /* 2025年 Container Query対応 */
+  inline-size: 100%;
+  max-inline-size: var(--container-2xl);
   text-align: center;
+  
+  /* Container Query対応 */
+  @container result-screen (inline-size < 640px) {
+    max-inline-size: 95%;
+  }
+  
+  /* パフォーマンス最適化 */
+  contain: layout style;
 }
 
 /* ==========================================================================
-   Result Title (result3.html match)
+   Result Title - BEM Element
    ========================================================================== */
 
 .resultTitle {
-  font-size: 2.5rem;
+  /* 2025年 Modern Typography */
+  font-size: var(--font-size-4xl);
+  color: var(--color-gaming-accent-gold);
+  letter-spacing: var(--letter-spacing-wide);
+  margin-block-end: var(--spacing-xl);
+  text-shadow: var(--text-shadow-gaming);
+  
+  /* DPI Scale対応 */
+  @media (min-resolution: 1.25dppx) {
+    font-size: clamp(var(--font-size-2xl), 5vw, var(--font-size-5xl));
+  }
+  
+  /* Container Query対応 */
+  @container result-screen (inline-size < 640px) {
+    font-size: var(--font-size-2xl);
+    margin-block-end: var(--spacing-lg);
+  }
+  
+  /* パフォーマンス最適化 */
+  text-rendering: optimizeSpeed;
+  font-display: swap;
+  contain: style;
+}
+
+.result__title {
   color: #e5ccaa;
   letter-spacing: 0.15rem;
   text-shadow: 0 0 6px rgba(255, 230, 160, 0.4);

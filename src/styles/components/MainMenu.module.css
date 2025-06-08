@@ -1,31 +1,54 @@
 /* ==========================================================================
-   Main Menu Component - Production Level
+   MainMenu - 2025年最新基準 CSS設計
+   Container Queries + DPI対応 + モダンレスポンシブ
    ========================================================================== */
 
 .mainMenu {
-  width: 100vw;
-  min-height: 100vh;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
+  /* 2025: Container Queries */
+  container: main-menu / inline-size;
+  
+  /* 2025: Dynamic Viewport */
+  inline-size: 100%;
+  min-block-size: var(--viewport-height-dynamic, 100vh);
+  
+  /* Layout: Modern Grid */
+  display: grid;
+  place-items: center;
   position: relative;
-  background: var(--color-bg-primary);
+  
+  /* Background: Enhanced */
+  background: var(--color-bg-primary, radial-gradient(ellipse at center, #0a0f1b, #000));
+  
+  /* Performance: GPU最適化 */
   overflow: hidden;
-  animation: fadeIn var(--transition-slow) ease;
+  will-change: contents;
+  contain: layout style;
+  
+  /* Animation: Modern Transition */
+  animation: fadeIn var(--duration-slow, 0.6s) var(--easing-smooth, ease);
 }
 
 /* ==========================================================================
-   Menu Container
+   Menu Container - BEM準拠
    ========================================================================== */
 
 .mainMenu__container {
+  /* Container Queries準備 */
+  container: menu-container / inline-size;
+  
+  /* Layout: Flex with gap */
   display: flex;
   flex-direction: column;
   align-items: center;
-  gap: var(--spacing-6);
-  max-width: 90vw;
-  width: 100%;
+  gap: var(--spacing-lg, 1.5rem);
+  
+  /* Size: Responsive */
+  max-inline-size: min(90vw, 800px);
+  inline-size: 100%;
+  
+  /* Spacing: Fluid padding */
+  padding-inline: var(--spacing-md, 1rem);
+  padding-block: var(--spacing-xl, 2rem);
 }
 
 /* ==========================================================================

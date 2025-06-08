@@ -1,10 +1,12 @@
 /* ==========================================================================
-   Screen Layout Component - Production Level
+   Screen Layout Component - 2025年最新基準対応
    ========================================================================== */
+@import '../design-tokens/2025-modern.css';
 
 .screenLayout {
-  width: 100vw;
-  min-height: 100vh;
+  /* 2025年 Modern Layout */
+  inline-size: 100vw;
+  min-block-size: 100dvh; /* Dynamic Viewport */
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -12,10 +14,18 @@
   position: relative;
   padding: var(--spacing-section);
   overflow: hidden;
+  
+  /* Container Query準備 */
+  container-type: inline-size;
+  container-name: screen-layout;
+  
+  /* パフォーマンス最適化 */
+  contain: layout style paint;
+  will-change: scroll-position;
 }
 
 /* ==========================================================================
-   Layout Variants
+   Layout Variants - BEM Modifiers
    ========================================================================== */
 
 .screenLayout--centered {
@@ -24,7 +34,7 @@
 }
 
 .screenLayout--fullscreen {
-  height: 100vh;
+  block-size: 100dvh; /* Dynamic Viewport */
   padding: 0;
 }
 
@@ -39,8 +49,8 @@
 .screenLayout--ranking {
   background: radial-gradient(
     ellipse at center,
-    #0a0f1b,
-    #000
+    color-mix(in oklch, var(--color-gaming-bg-secondary) 80%, black),
+    var(--color-gaming-bg-primary)
   );
 }
 
@@ -49,14 +59,25 @@
    ========================================================================== */
 
 .screenLayout__content {
-  width: 100%;
-  max-width: min(1200px, 90vw);
-  height: calc(100vh - 8vh);
+  /* 2025年 Container Query対応 */
+  inline-size: 100%;
+  max-inline-size: min(var(--container-4xl), 90vi); /* Viewport Inline */
+  block-size: calc(100dvh - var(--spacing-viewport-lg));
   display: flex;
   flex-direction: column;
-  animation: fadeIn 1.2s ease;
+  animation: var(--animation-fade-in) var(--animation-duration-slow) ease-out;
   position: relative;
   z-index: var(--z-index-base);
+  
+  /* Container Query対応 */
+  @container screen-layout (inline-size < 768px) {
+    max-inline-size: 95%;
+    block-size: calc(100dvh - var(--spacing-viewport-md));
+  }
+  
+  /* パフォーマンス最適化 */
+  contain: layout style;
+  transform: translateZ(0);
 }
 
 .screenLayout__header {
@@ -81,14 +102,31 @@
    ========================================================================== */
 
 .screenLayout__title {
-  font-family: var(--font-family-primary);
+  /* 2025年 Modern Typography */
+  font-family: var(--font-family-gaming);
   font-size: var(--font-size-5xl);
   font-weight: var(--font-weight-bold);
-  color: var(--color-brand-secondary);
-  letter-spacing: var(--letter-spacing-widest);
-  text-shadow: 0 0 12px rgba(255, 200, 120, 0.3);
+  color: var(--color-gaming-accent-gold);
+  letter-spacing: var(--letter-spacing-wide);
+  text-shadow: var(--text-shadow-gaming);
   margin: 0;
   text-align: center;
+  
+  /* DPI Scale対応 */
+  @media (min-resolution: 1.25dppx) {
+    font-size: clamp(var(--font-size-3xl), 6vw, var(--font-size-6xl));
+  }
+  
+  /* Container Query対応 */
+  @container screen-layout (inline-size < 640px) {
+    font-size: var(--font-size-3xl);
+    letter-spacing: var(--letter-spacing-normal);
+  }
+  
+  /* パフォーマンス最適化 */
+  text-rendering: optimizeSpeed;
+  font-display: swap;
+  contain: style;
 }
 
 .screenLayout__subtitle {

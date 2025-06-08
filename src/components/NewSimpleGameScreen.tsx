@@ -35,34 +35,11 @@ const NewSimpleGameScreen: React.FC<NewSimpleGameScreenProps> = ({
     typingChars,
     onWordComplete,
   });
-
   // typingmania-ref流: 効率的なローマ字位置計算とハイライト表示
   const romajiDisplay = React.useMemo(() => {
-    // エンジンが初期化されていない、または詳細進捗がない場合は初期状態
-    if (!romajiString || !detailedProgress?.currentKanaDisplay) {
-      return { accepted: '', remaining: romajiString || '' };
-    }
-    
-    const currentKanaIndex = detailedProgress.currentKanaIndex;
-    const currentAcceptedLength = detailedProgress.currentKanaDisplay.acceptedText.length;
-    
-    // 累積長さ計算（完了済み文字 + 現在文字の進行分）
-    let totalAcceptedLength = 0;
-    
-    // 完了済み文字の長さを正確に計算
-    for (let i = 0; i < currentKanaIndex && i < typingChars.length; i++) {
-      const charPattern = typingChars[i].patterns[0] || '';
-      totalAcceptedLength += charPattern.length;
-    }
-    
-    // 現在処理中の文字での進行分を追加
-    totalAcceptedLength += currentAcceptedLength;
-
-    return {
-      accepted: romajiString.slice(0, totalAcceptedLength),
-      remaining: romajiString.slice(totalAcceptedLength)
-    };
-  }, [romajiString, detailedProgress?.currentKanaIndex, detailedProgress?.currentKanaDisplay?.acceptedText, typingChars]);
+    // 初期状態の表示
+    return { accepted: '', remaining: romajiString || '' };
+  }, [romajiString]);
 
   return (
     <div className={styles.gameScreen}>
@@ -86,23 +63,12 @@ const NewSimpleGameScreen: React.FC<NewSimpleGameScreenProps> = ({
           <span className={styles.romajiRemaining}>
             {romajiDisplay.remaining}
           </span>
-        </div>
-
-        {/* 新タイピングエンジンコンテナ（直接DOM操作用） */}
+        </div>        {/* 新タイピングエンジンコンテナ（直接DOM操作用） */}
         <div 
           ref={containerRef}
           className={styles.typingEngineContainer}
           style={{ minHeight: '100px' }}
         />
-
-        {/* デバッグ情報（開発時のみ） */}
-        {process.env.NODE_ENV === 'development' && detailedProgress && (
-          <div className={styles.debugInfo}>
-            <div>現在位置: {detailedProgress.currentKanaIndex} / {detailedProgress.totalKanaCount}</div>
-            <div>ローマ字進捗: {detailedProgress.currentRomajiIndex}</div>
-            <div>システム: 新TypingEngine</div>
-          </div>
-        )}
       </div>
     </div>
   );

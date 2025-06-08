@@ -1,0 +1,59 @@
+/* ==========================================================================
+   CSS競合解決 - 統一デザイントークン
+   ========================================================================== */
+
+/* 単一ソースの真理 (Single Source of Truth) */
+:root {
+  /* ブランドカラー */
+  --brand-primary: #0ea5e9;
+  --brand-secondary: #c9a76f;
+  --brand-accent: #88ccff;
+  
+  /* ゲーミングテーマ */
+  --game-bg-primary: radial-gradient(ellipse at center, #0a0f1b, #000);
+  --game-bg-secondary: #1a2740;
+  --game-text-primary: #e0e0e0;
+  --game-text-secondary: #b8cfe7;
+  --game-text-accent: #ffd88a;
+  --game-text-muted: #9ca3af;
+  
+  /* フォントシステム */
+  --font-primary: 'Cinzel', serif;
+  --font-secondary: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+  --font-mono: 'JetBrains Mono', 'SF Mono', Monaco, monospace;
+  
+  /* z-index階層 */
+  --z-base: 0;
+  --z-dropdown: 10;
+  --z-modal: 100;
+  --z-overlay: 1000;
+  --z-tooltip: 2000;
+  
+  /* スペーシング */
+  --space-xs: 0.25rem;   /* 4px */
+  --space-sm: 0.5rem;    /* 8px */
+  --space-md: 1rem;      /* 16px */
+  --space-lg: 1.5rem;    /* 24px */
+  --space-xl: 2rem;      /* 32px */
+  --space-2xl: 3rem;     /* 48px */
+}
+
+/* 廃止予定トークンの移行マップ（下位互換性） */
+:root {
+  /* 旧: globals.cssから */
+  --color-gaming-bg-primary: var(--game-bg-primary);
+  --color-gaming-text-secondary: var(--game-text-secondary);
+  --color-gaming-text-accent: var(--game-text-accent);
+  
+  /* 旧: design-system.cssから */
+  --color-text-primary: var(--game-text-primary);
+  --color-text-secondary: var(--game-text-secondary);
+  --color-bg-primary: var(--game-bg-primary);
+  
+  /* 旧: design-tokens.cssから */
+  --font-family-primary: var(--font-primary);
+  --font-family-secondary: var(--font-secondary);
+  --spacing-md: var(--space-md);
+  --spacing-lg: var(--space-lg);
+  --spacing-xl: var(--space-xl);
+}

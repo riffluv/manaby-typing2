@@ -1,5 +1,4 @@
-/* System Settings Screen - system.html完全再現 */
-@import url('https://fonts.googleapis.com/css2?family=Cinzel:wght@700&display=swap');
+/* SettingsScreen - 2025年最新基準対応 */
 
 .settings *, 
 .settings *::before, 
@@ -10,46 +9,93 @@
 }
 
 .settings {
-  width: 100%;
-  height: 100vh;
-  font-family: 'Cinzel', serif;
-  background: radial-gradient(ellipse at center, #0a0f1b, #000);
-  color: #ccc;
+  /* 2025年 Modern Layout */
+  inline-size: 100%;
+  block-size: 100dvh; /* Dynamic Viewport */
+  font-family: var(--font-family-gaming);
+  background: radial-gradient(ellipse at center, 
+    color-mix(in oklch, var(--color-gaming-bg-secondary) 80%, black),
+    var(--color-gaming-bg-primary)
+  );
+  color: var(--color-text-secondary);
   display: flex;
   justify-content: center;
   align-items: flex-start;
-  padding-top: 6vh;
+  padding-block-start: var(--spacing-viewport-lg);
+  
+  /* Container Query準備 */
+  container-type: inline-size;
+  container-name: settings-screen;
+  
+  /* パフォーマンス最適化 */
+  contain: layout style paint;
+  will-change: scroll-position;
 }
 
 .settings__container {
-  width: 100%;
-  max-width: 960px;
-  padding: 2rem 3rem;
-  background: rgba(255, 255, 255, 0.02);
-  border: 1px solid rgba(255, 255, 255, 0.05);
-  box-shadow: 0 0 50px rgba(0, 0, 0, 0.6);
-  border-radius: 16px;
-  animation: fadeIn 1.2s ease;
+  /* 2025年 Container Query対応 */
+  inline-size: 100%;
+  max-inline-size: var(--container-3xl);
+  padding: var(--spacing-lg) var(--spacing-xl);
+  background: color-mix(in oklch, white 2%, transparent);
+  border: 1px solid color-mix(in oklch, white 5%, transparent);
+  box-shadow: var(--shadow-gaming-large);
+  border-radius: var(--border-radius-xl);
+  animation: var(--animation-fade-in) var(--animation-duration-slow) ease-out;
+  
+  /* Container Query */
+  @container settings-screen (inline-size < 640px) {
+    padding: var(--spacing-md) var(--spacing-lg);
+    max-inline-size: 100%;
+  }
+  
+  /* パフォーマンス最適化 */
+  contain: layout style;
+  transform: translateZ(0);
 }
 
 .settings__title {
+  /* 2025年 Modern Typography */
   text-align: center;
-  font-size: 2.8rem;
-  color: #e5ccaa;
-  letter-spacing: 0.15rem;
-  margin-bottom: 2.5rem;
-  text-shadow: 0 0 8px rgba(255, 220, 150, 0.3);
+  font-size: var(--font-size-3xl);
+  color: var(--color-gaming-accent-gold);
+  letter-spacing: var(--letter-spacing-wide);
+  margin-block-end: var(--spacing-2xl);
+  text-shadow: var(--text-shadow-gaming);
+  
+  /* DPI Scale対応 */
+  @media (min-resolution: 1.25dppx) {
+    font-size: clamp(var(--font-size-2xl), 4vw, var(--font-size-4xl));
+  }
+  
+  /* パフォーマンス最適化 */
+  text-rendering: optimizeSpeed;
+  font-display: swap;
+  contain: style;
 }
 
 .settings__item {
-  padding: 1.2rem 0;
-  border-bottom: 1px solid rgba(255,255,255,0.07);
+  /* 2025年 BEM Standard */
+  padding: var(--spacing-lg) 0;
+  border-block-end: 1px solid color-mix(in oklch, white 7%, transparent);
+  contain: layout style;
 }
 
 .settings__row {
+  /* Modern Flexbox Layout */
   display: flex;
-  justify-content: space-between;
   align-items: center;
+  justify-content: space-between;
+  gap: var(--spacing-md);
+  }
+
+/* Container Query対応 */
+@container (inline-size < 640px) {
+  .settings__item {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: var(--spacing-sm);
+  }
 }
 
 .settings__label {

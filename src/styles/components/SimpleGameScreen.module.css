@@ -1,59 +1,125 @@
-/* SimpleGameScreen.module.css - Exact match with game.html design */
+/* ==========================================================================
+   SimpleGameScreen - 2025年最新基準 CSS設計
+   DPI対応 + Container Queries + モダンレスポンシブ
+   ========================================================================== */
 
 .gameScreen {
+  /* 2025: Container Queries対応 */
+  container: game-screen / inline-size;
+  
+  /* 2025: Dynamic Viewport対応 */
   width: 100%;
-  height: 100vh;
-  background: var(--color-bg-primary);
-  font-family: 'Cinzel', serif;
+  block-size: var(--viewport-height-dynamic, 100vh);
+  
+  /* 2025: Modern Color Syntax */
+  background: var(--color-game-bg-primary, radial-gradient(ellipse at center, #0a0f1b, #000));
+  
+  /* Layout: Modern Flexbox */
   display: flex;
   flex-direction: column;
   justify-content: center;
   align-items: center;
-  color: var(--color-gaming-text-secondary);
+  
+  /* Typography: DPI対応 */
+  font-family: var(--font-family-primary, 'Cinzel', serif);
+  color: var(--color-game-text-primary, #e0e0e0);
+  
+  /* Spacing: Fluid & DPI適応 */
+  padding-block: var(--spacing-lg, 2rem);
+  padding-inline: var(--spacing-md, 1rem);
+  gap: var(--spacing-lg, 2rem);
+  
+  /* Performance: GPU加速 */
+  will-change: contents;
+  contain: layout style;
+  
+  /* Basic Reset */
   margin: 0;
-  padding: 2rem 0;
   box-sizing: border-box;
-  gap: 2rem;
+  overflow: hidden;
 }
 
 .topArea {
+  /* 2025: Logical Properties */
+  inline-size: 100%;
+  max-inline-size: min(720px, 90vw);
+  
+  /* Layout: Flex Container */
   display: flex;
   justify-content: center;
   align-items: center;
-  width: 100%;
-  max-width: 720px;
+  
+  /* Container Queries準備 */
+  container: top-area / inline-size;
 }
 
 .progressText {
-  font-family: 'Cinzel', serif;
-  font-size: 1.1rem;
-  font-weight: bold;
-  color: var(--color-gaming-text-accent);
-  letter-spacing: 0.1rem;
-  text-shadow: 0 0 8px rgba(255, 225, 141, 0.5);
+  /* Typography: DPI対応フォントサイズ */
+  font-family: var(--font-family-primary, 'Cinzel', serif);
+  font-size: var(--font-size-game-ui, clamp(1rem, 0.875rem + 0.5vi, 1.25rem));
+  font-weight: var(--font-weight-bold, 700);
+  
+  /* Colors: Modern Tokens */
+  color: var(--color-game-text-accent, #ffd88a);
+  
+  /* Typography Effects */
+  letter-spacing: var(--letter-spacing-wide, 0.1rem);
+  text-shadow: 0 0 8px color-mix(in srgb, var(--color-game-text-accent, #ffd88a) 50%, transparent);
+  
+  /* Performance */
+  will-change: contents;
 }
 
 .bottomArea {
+  /* 2025: Logical Properties */
+  inline-size: 100%;
+  max-inline-size: min(720px, 90vw);
+  
+  /* Layout: Flex Container */
   display: flex;
   justify-content: center;
   align-items: center;
-  width: 100%;
-  max-width: 720px;
+  
+  /* Container Queries準備 */
+  container: bottom-area / inline-size;
 }
 
 .typingContainer {
-  max-width: 720px;
-  width: 90%;
-  padding: 2rem;
-  background: var(--color-game-window-bg);
-  background-image: url('/textures/old-wall.png'), url('https://www.transparenttextures.com/patterns/old-wall.png');
+  /* 2025: Container Queries */
+  container: typing-area / inline-size;
+  
+  /* Size: Responsive & DPI対応 */
+  inline-size: min(90%, 720px);
+  max-inline-size: 720px;
+  
+  /* Spacing: Fluid Padding */
+  padding: var(--spacing-xl, clamp(1.5rem, 2vw, 2.5rem));
+  
+  /* Background: Modern Layering */
+  background: var(--color-game-window-bg, linear-gradient(to bottom, #f6f1e3, #e9dec6));
+  background-image: 
+    url('/textures/old-wall.png'),
+    url('https://www.transparenttextures.com/patterns/old-wall.png');
   background-blend-mode: overlay;
-  border: 1px solid rgba(0, 0, 0, 0.15);
-  border-radius: 14px;
+  background-size: cover;
+  background-position: center;
+  background-attachment: local;
+  
+  /* Border & Shadow: Enhanced */
+  border: 1px solid color-mix(in srgb, black 15%, transparent);
+  border-radius: var(--radius-lg, 14px);
   box-shadow: 
-    0 8px 20px rgba(0, 0, 0, 0.3), 
-    inset 0 0 30px rgba(255, 255, 255, 0.15);
+    0 8px 25px color-mix(in srgb, black 30%, transparent),
+    inset 0 0 30px color-mix(in srgb, white 15%, transparent),
+    var(--shadow-game, 0 0 30px rgba(201, 167, 111, 0.2));
+  
+  /* Layout */
   text-align: center;
+  
+  /* Performance: GPU最適化 */
+  will-change: contents;
+  contain: layout style;
+  transform: translateZ(0);
 }
 
 .japaneseText {
@@ -117,96 +183,225 @@
   letter-spacing: 0.05rem;
 }
 
-/* Responsive Design - Only for mobile devices */
-@media (max-width: 768px) {
+/* ==========================================================================
+   2025年最新: Container Queries レスポンシブ設計
+   ========================================================================== */
+
+/* Game Screen Container Queries */
+@container game-screen (inline-size < 640px) {
   .gameScreen {
-    padding: 1rem 0;
-    gap: 1.5rem;
+    gap: var(--spacing-md, 1rem);
+    padding-block: var(--spacing-md, 1rem);
   }
   
   .typingContainer {
-    width: 95%;
-    max-width: 95vw;
-    padding: 1.5rem;
-  }
-  
-  .japaneseText {
-    font-size: 1.2rem;
-    margin-bottom: 1.2rem;
-  }
-    .romajiText {
-    font-size: 1.1rem;
-    font-weight: 900; /* モバイルでもローマ字を太く */
-  }
-  
-  .progressText {
-    font-size: 1rem;
-  }
-  
-  .shortcutGuide {
-    font-size: 0.8rem;
+    inline-size: 95%;
+    padding: var(--spacing-md, 1rem);
   }
 }
 
-@media (max-width: 480px) {
+@container game-screen (640px <= inline-size < 1024px) {
   .gameScreen {
-    padding: 0.5rem 0;
-    gap: 1rem;
+    gap: var(--spacing-lg, 1.5rem);
+    padding-block: var(--spacing-lg, 1.5rem);
   }
   
   .typingContainer {
-    width: 95%;
-    max-width: 95vw;
-    padding: 1rem;
-  }
-  
-  .japaneseText {
-    font-size: 1rem;
-    margin-bottom: 1rem;
-  }
-    .romajiText {
-    font-size: 1rem;
-    font-weight: 900; /* 小画面でもローマ字を太く */
-  }
-  
-  .progressText {
-    font-size: 0.9rem;
-  }
-  
-  .shortcutGuide {
-    font-size: 0.7rem;
+    inline-size: 90%;
+    padding: var(--spacing-lg, 1.5rem);
   }
 }
 
-/* High contrast mode support */
+@container game-screen (inline-size >= 1024px) {
+  .gameScreen {
+    gap: var(--spacing-xl, 2rem);
+    padding-block: var(--spacing-xl, 2rem);
+  }
+  
+  .typingContainer {
+    inline-size: 85%;
+    padding: var(--spacing-2xl, 2.5rem);
+  }
+}
+
+/* Typing Area Container Queries */
+@container typing-area (inline-size < 400px) {
+  .japaneseText {
+    font-size: var(--font-size-lg, 1.125rem);
+    margin-block-end: var(--spacing-sm, 0.75rem);
+  }
+  
+  .romajiText {
+    font-size: var(--font-size-base, 1rem);
+  }
+}
+
+@container typing-area (400px <= inline-size < 600px) {
+  .japaneseText {
+    font-size: var(--font-size-xl, 1.25rem);
+    margin-block-end: var(--spacing-md, 1rem);
+  }
+  
+  .romajiText {
+    font-size: var(--font-size-lg, 1.125rem);
+  }
+}
+
+@container typing-area (inline-size >= 600px) {
+  .japaneseText {
+    font-size: var(--font-size-2xl, 1.5rem);
+    margin-block-end: var(--spacing-lg, 1.5rem);
+  }
+  
+  .romajiText {
+    font-size: var(--font-size-xl, 1.25rem);
+  }
+}
+
+/* ==========================================================================
+   2025年: Range Syntax Media Queries (Fallback)
+   ========================================================================== */
+
+/* モバイル: 0-639px */
+@media (width < 640px) {
+  .gameScreen {
+    block-size: var(--viewport-height-small, 100svh);
+    padding-inline: var(--spacing-sm, 0.5rem);
+  }
+  
+  .progressText {
+    font-size: var(--font-size-sm, 0.875rem);
+  }
+}
+
+/* タブレット: 640px-1023px */
+@media (640px <= width < 1024px) {
+  .gameScreen {
+    block-size: var(--viewport-height-dynamic, 100dvh);
+    padding-inline: var(--spacing-md, 1rem);
+  }
+  
+  .progressText {
+    font-size: var(--font-size-base, 1rem);
+  }
+}
+
+/* デスクトップ: 1024px以上 */
+@media (width >= 1024px) {
+  .gameScreen {
+    block-size: var(--viewport-height-large, 100lvh);
+    padding-inline: var(--spacing-lg, 1.5rem);
+  }
+  
+  .progressText {
+    font-size: var(--font-size-lg, 1.125rem);
+  }
+}
+
+/* ==========================================================================
+   DPIスケール対応 (125%, 150%, 200%)
+   ========================================================================== */
+
+/* 125% DPIスケール */
+@media (resolution >= 120dpi) and (resolution < 168dpi) {
+  .gameScreen {
+    gap: calc(var(--spacing-lg, 1.5rem) * 1.25);
+  }
+  
+  .typingContainer {
+    padding: calc(var(--spacing-xl, 2rem) * 1.25);
+  }
+  
+  .progressText {
+    font-size: calc(var(--font-size-game-ui, 1rem) * 1.25);
+    letter-spacing: calc(var(--letter-spacing-wide, 0.1rem) * 1.25);
+  }
+}
+
+/* 150% DPIスケール */
+@media (resolution >= 168dpi) and (resolution < 240dpi) {
+  .gameScreen {
+    gap: calc(var(--spacing-lg, 1.5rem) * 1.5);
+  }
+  
+  .typingContainer {
+    padding: calc(var(--spacing-xl, 2rem) * 1.5);
+  }
+  
+  .progressText {
+    font-size: calc(var(--font-size-game-ui, 1rem) * 1.5);
+    letter-spacing: calc(var(--letter-spacing-wide, 0.1rem) * 1.5);
+  }
+}
+
+/* 200% DPIスケール */
+@media (resolution >= 240dpi) {
+  .gameScreen {
+    gap: calc(var(--spacing-lg, 1.5rem) * 2);
+  }
+  
+  .typingContainer {
+    padding: calc(var(--spacing-xl, 2rem) * 2);
+  }
+  
+  .progressText {
+    font-size: calc(var(--font-size-game-ui, 1rem) * 2);
+    letter-spacing: calc(var(--letter-spacing-wide, 0.1rem) * 2);
+  }
+}
+
+/* ==========================================================================
+   アクセシビリティ対応
+   ========================================================================== */
+
+/* 高コントラストモード */
 @media (prefers-contrast: high) {
+  .gameScreen {
+    background: #000000;
+    color: #ffffff;
+  }
+  
   .typingContainer {
-    border-width: 2px;
-    border-color: rgba(0, 0, 0, 0.3);
+    background: #ffffff;
+    color: #000000;
+    border: 2px solid #000000;
+  }
+  
+  .progressText {
+    color: #ffffff;
+    text-shadow: none;
   }
   
   .japaneseText {
-    text-shadow: 0 0 2px #fff, 0 0 4px rgba(0,0,0,0.8);
+    color: #000000;
+    text-shadow: none;
+    background: none;
+    -webkit-text-fill-color: #000000;
   }
 }
 
-/* Reduced motion support */
+/* モーション軽減 */
 @media (prefers-reduced-motion: reduce) {
-  .gameScreen {
-    background: #0a0f1b;
-  }
-  
-  .typingContainer {
-    background: #f6f1e3;
-    background-image: none;
+  .gameScreen,
+  .typingContainer,
+  .progressText,
+  .japaneseText,
+  .romajiText {
+    transition: none;
+    animation: none;
+    will-change: auto;
   }
 }
 
-/* Print styles */
+/* ==========================================================================
+   印刷スタイル
+   ========================================================================== */
 @media print {
   .gameScreen {
     background: white;
     color: black;
+    block-size: auto;
+    min-block-size: 100vh;
   }
   
   .typingContainer {
@@ -214,23 +409,14 @@
     background-image: none;
     border: 1px solid black;
     box-shadow: none;
+    page-break-inside: avoid;
   }
   
+  .progressText,
   .japaneseText {
-    background: none;
-    -webkit-text-fill-color: black;
     color: black;
     text-shadow: none;
+    background: none;
+    -webkit-text-fill-color: black;
   }
-  
-  .romajiText .typed {
-    color: blue;
-  }
-  
-  .romajiText .active {
-    color: orange;
-  }
-  
-  .romajiText .char {
-    color: gray;  }
 }

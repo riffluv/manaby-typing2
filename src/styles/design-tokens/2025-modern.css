@@ -1,0 +1,217 @@
+/* ==========================================================================
+   2025年最新 Modern Design Tokens - DPI & Viewport 完全対応
+   ========================================================================== */
+
+:root {
+  /* ==========================================================================
+     2025: Dynamic Viewport Units (Modern Browsers)
+     ========================================================================== */
+  
+  /* Dynamic Viewport - モバイルブラウザのUI変動対応 */
+  --viewport-height-small: 100svh;     /* Small Viewport Height */
+  --viewport-height-large: 100lvh;     /* Large Viewport Height */
+  --viewport-height-dynamic: 100dvh;   /* Dynamic Viewport Height */
+  --viewport-width-dynamic: 100dvw;    /* Dynamic Viewport Width */
+  
+  /* ==========================================================================
+     DPI Scale 完全対応 (125%, 150%, 200%)
+     ========================================================================== */
+  
+  /* Base Font Sizes - DPI Adaptive */
+  --font-size-xs: clamp(0.75rem, 0.625rem + 0.125vi, 0.875rem);
+  --font-size-sm: clamp(0.875rem, 0.75rem + 0.125vi, 1rem);
+  --font-size-base: clamp(1rem, 0.875rem + 0.125vi, 1.125rem);
+  --font-size-lg: clamp(1.125rem, 1rem + 0.125vi, 1.25rem);
+  --font-size-xl: clamp(1.25rem, 1.125rem + 0.125vi, 1.5rem);
+  --font-size-2xl: clamp(1.5rem, 1.25rem + 0.25vi, 1.875rem);
+  --font-size-3xl: clamp(1.875rem, 1.5rem + 0.375vi, 2.25rem);
+  --font-size-4xl: clamp(2.25rem, 1.875rem + 0.375vi, 3rem);
+  --font-size-5xl: clamp(3rem, 2.5rem + 0.5vi, 4rem);
+  
+  /* Game-specific Typography - DPI Optimized */
+  --font-size-game-title: clamp(2.5rem, 2rem + 2vi, 4rem);
+  --font-size-game-subtitle: clamp(1.5rem, 1.25rem + 1vi, 2rem);
+  --font-size-game-text: clamp(1.25rem, 1rem + 1vi, 1.75rem);
+  --font-size-game-ui: clamp(1rem, 0.875rem + 0.5vi, 1.25rem);
+  
+  /* ==========================================================================
+     2025: Container Query Breakpoints
+     ========================================================================== */
+  
+  --container-xs: 20rem;    /* 320px */
+  --container-sm: 24rem;    /* 384px */
+  --container-md: 32rem;    /* 512px */
+  --container-lg: 48rem;    /* 768px */
+  --container-xl: 64rem;    /* 1024px */
+  --container-2xl: 80rem;   /* 1280px */
+  
+  /* ==========================================================================
+     Modern Color System - HDR & Wide Gamut 対応
+     ========================================================================== */
+  
+  /* P3 Color Space Support */
+  --color-brand-primary: color(display-p3 0.055 0.647 0.914);
+  --color-brand-secondary: color(display-p3 0.788 0.655 0.435);
+  --color-brand-accent: color(display-p3 0.533 0.8 1);
+  
+  /* Fallback for non-P3 displays */
+  --color-brand-primary-fallback: #0ea5e9;
+  --color-brand-secondary-fallback: #c9a76f;
+  --color-brand-accent-fallback: #88ccff;
+  
+  /* Gaming Theme Colors - Modern Syntax */
+  --color-game-bg-primary: oklch(0.1 0.05 250);
+  --color-game-bg-secondary: oklch(0.15 0.03 230);
+  --color-game-text-primary: oklch(0.9 0.02 90);
+  --color-game-text-accent: oklch(0.8 0.12 80);
+  
+  /* ==========================================================================
+     2025: Modern Animations & Transitions
+     ========================================================================== */
+  
+  /* GPU Accelerated Animations */
+  --animation-fade: opacity var(--duration-normal) var(--easing-smooth);
+  --animation-slide: transform var(--duration-normal) var(--easing-smooth);
+  --animation-scale: scale var(--duration-fast) var(--easing-bounce);
+  
+  /* Modern Easing Functions */
+  --easing-smooth: cubic-bezier(0.25, 0.1, 0.25, 1);
+  --easing-bounce: cubic-bezier(0.68, -0.55, 0.265, 1.55);
+  --easing-spring: cubic-bezier(0.175, 0.885, 0.32, 1.275);
+  
+  /* Performance Optimized Durations */
+  --duration-instant: 0ms;
+  --duration-fast: 150ms;
+  --duration-normal: 250ms;
+  --duration-slow: 350ms;
+  
+  /* ==========================================================================
+     DPI & Accessibility Responsive Spacing
+     ========================================================================== */
+  
+  /* Touch-Friendly Sizing - DPI Aware */
+  --touch-target-min: max(44px, 2.75rem);
+  --touch-spacing: max(8px, 0.5rem);
+  
+  /* Fluid Spacing System */
+  --spacing-xs: clamp(0.25rem, 0.125rem + 0.125vi, 0.5rem);
+  --spacing-sm: clamp(0.5rem, 0.25rem + 0.25vi, 1rem);
+  --spacing-md: clamp(1rem, 0.5rem + 0.5vi, 1.5rem);
+  --spacing-lg: clamp(1.5rem, 1rem + 0.5vi, 2rem);
+  --spacing-xl: clamp(2rem, 1.5rem + 0.5vi, 3rem);
+  --spacing-2xl: clamp(3rem, 2rem + 1vi, 4rem);
+  
+  /* ==========================================================================
+     Modern Browser Feature Detection
+     ========================================================================== */
+  
+  /* Container Queries Support */
+  --has-container-queries: true;
+  
+  /* Logical Properties Support */
+  --inline-size: 100%;
+  --block-size: 100%;
+  
+  /* ==========================================================================
+     Game UI Optimizations
+     ========================================================================== */
+  
+  /* High Refresh Rate Support */
+  --refresh-rate-60: 16.67ms;
+  --refresh-rate-120: 8.33ms;
+  --refresh-rate-144: 6.94ms;
+  
+  /* Input Lag Reduction */
+  --will-change-transform: transform;
+  --will-change-opacity: opacity;
+  --will-change-scroll: scroll-position;
+}
+
+/* ==========================================================================
+   2025: Responsive Strategy with Range Syntax
+   ========================================================================== */
+
+/* Modern Range Media Queries */
+@media (width < 640px) {
+  :root {
+    --font-scale: 0.875;
+    --spacing-scale: 0.75;
+  }
+}
+
+@media (640px <= width < 1024px) {
+  :root {
+    --font-scale: 1;
+    --spacing-scale: 1;
+  }
+}
+
+@media (width >= 1024px) {
+  :root {
+    --font-scale: 1.125;
+    --spacing-scale: 1.25;
+  }
+}
+
+/* ==========================================================================
+   2025: Modern Feature Queries
+   ========================================================================== */
+
+/* P3 Color Support */
+@supports (color: color(display-p3 1 1 1)) {
+  :root {
+    --color-brand-primary: color(display-p3 0.055 0.647 0.914);
+    --color-brand-secondary: color(display-p3 0.788 0.655 0.435);
+  }
+}
+
+/* Container Queries Support */
+@supports (container-type: inline-size) {
+  .responsive-container {
+    container-type: inline-size;
+    container-name: main-content;
+  }
+}
+
+/* Dynamic Viewport Support */
+@supports (height: 100dvh) {
+  .fullscreen {
+    height: var(--viewport-height-dynamic);
+  }
+}
+
+/* ==========================================================================
+   Accessibility & Performance
+   ========================================================================== */
+
+/* High Contrast Mode */
+@media (prefers-contrast: high) {
+  :root {
+    --color-game-text-primary: #ffffff;
+    --color-game-bg-primary: #000000;
+    --color-border-width: 2px;
+  }
+}
+
+/* Reduced Motion */
+@media (prefers-reduced-motion: reduce) {
+  :root {
+    --duration-fast: 0.01ms;
+    --duration-normal: 0.01ms;
+    --duration-slow: 0.01ms;
+  }
+  
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    transition-duration: 0.01ms !important;
+  }
+}
+
+/* Dark Mode System Integration */
+@media (prefers-color-scheme: dark) {
+  :root {
+    color-scheme: dark;
+  }
+}
