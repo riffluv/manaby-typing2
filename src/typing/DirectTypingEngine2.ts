@@ -1,5 +1,5 @@
 /**
- * DirectTypingEngine2 - 高度タイピングエンジン
+ * DirectTypingEngine2 - 高速レスポンス最適化版タイピングエンジン
  * 
  * 表示内容:
  * 1. 上部: 原文（漢字入り）
@@ -11,6 +11,12 @@
  * - 完了状態の視覚的フィードバック
  * - 「ん」の分岐入力対応
  * - リアルタイム進捗表示
+ * 
+ * パフォーマンス最適化 (2025/6/8):
+ * - CSS遷移を削除（0.15s ease → 即座のフィードバック）
+ * - スケール変換を削除（GPU負荷軽減）
+ * - requestAnimationFrame によるレンダリング最適化
+ * - willChange プロパティでGPU最適化
  */
 
 import { TypingChar, type DisplayInfo } from './TypingChar';
@@ -25,43 +31,59 @@ class KanaChar {
   public el: HTMLSpanElement;
   private isCompleted: boolean = false;
   private isActive: boolean = false;
+  private lastState: 'inactive' | 'active' | 'completed' = 'inactive'; // 状態キャッシュ
+
   constructor(char: string) {
     this.el = document.createElement('span');
     this.el.textContent = char;
     this.el.style.fontFamily = '"ヒラギノ角ゴ Pro", "Hiragino Kaku Gothic Pro", "メイリオ", Meiryo, sans-serif';
     this.el.style.fontSize = '1.3rem';
     this.el.style.fontWeight = 'bold';
-    this.el.style.transition = 'all 0.15s ease';
+    // 高速レスポンス: 遷移を削除して即座のフィードバックを実現
+    // this.el.style.transition = 'all 0.15s ease';
     this.el.style.padding = '2px 4px';
     this.el.style.borderRadius = '3px';
     this.el.style.marginRight = '1px';
-    this.el.style.letterSpacing = '0.04rem';
+    this.el.style.letterSpacing = '0.04rem';    // GPU最適化
+    this.el.style.willChange = 'color, background-color';
     this.setInactive();
-  }
-
-  setActive(): void {
+  }  setActive(): void {
+    if (this.lastState === 'active') return; // 重複更新防止
+    this.lastState = 'active';
     this.isActive = true;
-    this.el.style.color = '#fff';
-    this.el.style.background = 'rgba(255, 245, 170, 0.2)';
-    this.el.style.textShadow = '0 0 8px rgba(255, 245, 170, 0.8), 0 0 1px #fff';
-    this.el.style.transform = 'scale(1.1)';
+    this.isCompleted = false;    requestAnimationFrame(() => {
+      this.el.style.color = '#ffeb3b'; // 世界観に合う黄色系      this.el.style.background = 'rgba(255, 235, 59, 0.1)'; // ひらがなは薄い背景を残す
+      this.el.style.textShadow = '0 0 8px rgba(255, 235, 59, 0.8), 0 0 1px #fff';
+      // 高速レスポンス: スケール変換を削除
+      // this.el.style.transform = 'scale(1.1)';
+    });
   }
-
   setCompleted(): void {
+    if (this.lastState === 'completed') return; // 重複更新防止
+    this.lastState = 'completed';
     this.isCompleted = true;
     this.isActive = false;
-    this.el.style.color = '#87ceeb';
-    this.el.style.background = 'rgba(135, 206, 235, 0.1)';
-    this.el.style.textShadow = '0 0 6px rgba(135, 206, 235, 0.6)';
-    this.el.style.transform = 'scale(1)';
+    requestAnimationFrame(() => {
+      this.el.style.color = '#87ceeb';
+      this.el.style.background = 'transparent'; // バックグラウンドカラーを削除（KanaChar）
+      this.el.style.textShadow = '0 0 6px rgba(135, 206, 235, 0.6)';
+      // 高速レスポンス: スケール変換を削除
+      // this.el.style.transform = 'scale(1)';
+    });
   }
 
   setInactive(): void {
+    if (this.lastState === 'inactive') return; // 重複更新防止
+    this.lastState = 'inactive';
     this.isActive = false;
-    this.el.style.color = '#999';
-    this.el.style.background = 'transparent';
-    this.el.style.textShadow = '0 0 1px rgba(0,0,0,0.5)';
-    this.el.style.transform = 'scale(1)';
+    this.isCompleted = false;
+    requestAnimationFrame(() => {
+      this.el.style.color = '#999';
+      this.el.style.background = 'transparent';
+      this.el.style.textShadow = '0 0 1px rgba(0,0,0,0.5)';
+      // 高速レスポンス: スケール変換を削除
+      // this.el.style.transform = 'scale(1)';
+    });
   }
 }
 
@@ -72,43 +94,59 @@ class RomajiChar {
   public el: HTMLSpanElement;
   private isCompleted: boolean = false;
   private isActive: boolean = false;
+  private lastState: 'inactive' | 'active' | 'completed' = 'inactive'; // 状態キャッシュ
   constructor(char: string) {
     this.el = document.createElement('span');
-    this.el.textContent = char;
-    this.el.style.fontFamily = "'Courier New', 'Consolas', monospace";
+    this.el.textContent = char;    this.el.style.fontFamily = "'Courier New', 'Consolas', monospace";
     this.el.style.fontSize = '1.2rem';
     this.el.style.fontWeight = 'bold';
-    this.el.style.transition = 'all 0.15s ease';
-    this.el.style.padding = '2px 4px';
+    // 高速レスポンス: 遷移を削除して即座のフィードバックを実現
+    // this.el.style.transition = 'all 0.15s ease';
+    this.el.style.padding = '1px 1px'; // パディングを最小限に
     this.el.style.borderRadius = '3px';
-    this.el.style.marginRight = '1px';
-    this.el.style.letterSpacing = '0.04rem';
+    this.el.style.marginRight = '0px'; // 文字間隔を詰める
+    this.el.style.letterSpacing = '0.02rem'; // レターリングを詰める
+    // GPU最適化（背景色を削除）
+    this.el.style.willChange = 'color';
     this.setInactive();
   }
-
   setActive(): void {
+    if (this.lastState === 'active') return; // 重複更新防止
+    this.lastState = 'active';
     this.isActive = true;
-    this.el.style.color = '#fff';
-    this.el.style.background = 'rgba(255, 245, 170, 0.2)';
-    this.el.style.textShadow = '0 0 8px rgba(255, 245, 170, 0.8), 0 0 1px #fff';
-    this.el.style.transform = 'scale(1.1)';
+    this.isCompleted = false;    requestAnimationFrame(() => {
+      this.el.style.color = '#ffeb3b'; // 世界観に合う黄色系
+      this.el.style.background = 'transparent'; // バックグラウンドは透明      this.el.style.textShadow = '0 0 8px rgba(255, 235, 59, 0.8), 0 0 1px #fff';
+      // 高速レスポンス: スケール変換を削除
+      // this.el.style.transform = 'scale(1.1)';
+    });
   }
-
   setCompleted(): void {
+    if (this.lastState === 'completed') return; // 重複更新防止
+    this.lastState = 'completed';
     this.isCompleted = true;
     this.isActive = false;
-    this.el.style.color = '#87ceeb';
-    this.el.style.background = 'rgba(135, 206, 235, 0.1)';
-    this.el.style.textShadow = '0 0 6px rgba(135, 206, 235, 0.6)';
-    this.el.style.transform = 'scale(1)';
+    requestAnimationFrame(() => {
+      this.el.style.color = '#87ceeb';
+      this.el.style.background = 'transparent'; // バックグラウンドカラーを削除（RomajiChar）
+      this.el.style.textShadow = '0 0 6px rgba(135, 206, 235, 0.6)';
+      // 高速レスポンス: スケール変換を削除
+      // this.el.style.transform = 'scale(1)';
+    });
   }
 
   setInactive(): void {
+    if (this.lastState === 'inactive') return; // 重複更新防止
+    this.lastState = 'inactive';
     this.isActive = false;
-    this.el.style.color = '#999';
-    this.el.style.background = 'transparent';
-    this.el.style.textShadow = '0 0 1px rgba(0,0,0,0.5)';
-    this.el.style.transform = 'scale(1)';
+    this.isCompleted = false;
+    requestAnimationFrame(() => {
+      this.el.style.color = '#999';
+      this.el.style.background = 'transparent';
+      this.el.style.textShadow = '0 0 1px rgba(0,0,0,0.5)';
+      // 高速レスポンス: スケール変換を削除
+      // this.el.style.transform = 'scale(1)';
+    });
   }
 }
 
@@ -417,32 +455,34 @@ export class DirectTypingEngine2 {
     }    this.updateDisplay();
     this.notifyProgress();
   }
-
   /**
    * 表示更新
    */
   private updateDisplay(): void {
-    // 正しいromaji位置を動的に計算
-    const progress = this.getDetailedProgress();
-    if (!progress) return;
-    
-    const currentRomajiIndex = progress.currentRomajiIndex;
-    
-    // ローマ字フォーカス更新
-    this.romajiChars.forEach((romajiChar, index) => {
-      if (index < currentRomajiIndex) {
-        romajiChar.setCompleted();
-      } else if (index === currentRomajiIndex) {
-        romajiChar.setActive();
-      } else {
-        romajiChar.setInactive();
+    // 高速レスポンス: requestAnimationFrame を使用してレンダリングを最適化
+    requestAnimationFrame(() => {
+      // 正しいromaji位置を動的に計算
+      const progress = this.getDetailedProgress();
+      if (!progress) return;
+      
+      const currentRomajiIndex = progress.currentRomajiIndex;
+      
+      // ローマ字フォーカス更新
+      this.romajiChars.forEach((romajiChar, index) => {
+        if (index < currentRomajiIndex) {
+          romajiChar.setCompleted();
+        } else if (index === currentRomajiIndex) {
+          romajiChar.setActive();
+        } else {
+          romajiChar.setInactive();
+        }
+      });
+
+      // かな文字フォーカス更新（設定で有効な場合のみ）
+      if (this.config.showKanaDisplay && this.kanaChars.length > 0) {
+        this.updateKanaCharFocus();
       }
     });
-
-    // かな文字フォーカス更新（設定で有効な場合のみ）
-    if (this.config.showKanaDisplay && this.kanaChars.length > 0) {
-      this.updateKanaCharFocus();
-    }
   }
   private updateKanaCharFocus(): void {
     // 完了したひらがな文字数を計算
