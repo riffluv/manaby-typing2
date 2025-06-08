@@ -1,7 +1,9 @@
 'use client';
 
 import { useRouter } from 'next/navigation';
+import { useCallback } from 'react';
 import { useSettingsStore } from '@/store/useSettingsStore';
+import { useGlobalShortcuts } from '@/hooks/useGlobalShortcuts';
 import styles from './SettingsScreen.module.css';
 
 export default function SystemSettingsScreen() {
@@ -24,19 +26,29 @@ export default function SystemSettingsScreen() {
     setShowKeyboard,
     setShowKanaDisplay,
   } = useSettingsStore();
-
-  const handleBack = () => {
+  const handleBack = useCallback(() => {
     router.back();
-  };
+  }, [router]);
 
-  const handleMainMenu = () => {
+  const handleMainMenu = useCallback(() => {
     router.push('/');
-  };
+  }, [router]);
 
   // Toggle クリックハンドラー
   const handleToggleClick = (setter: (value: boolean) => void, currentValue: boolean) => {
     setter(!currentValue);
   };
+
+  // ESCキーでの戻る機能を追加
+  useGlobalShortcuts([
+    {
+      key: 'Escape',
+      handler: (e) => {
+        e.preventDefault();
+        handleBack();
+      },
+    },
+  ], [handleBack]);
   return (
     // system.html完全再現: フルスクリーンレイアウト
     <div className={styles.systemFullscreen}>

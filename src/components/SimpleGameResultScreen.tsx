@@ -2,6 +2,7 @@ import React, { useState, useEffect, useCallback } from 'react';
 import type { GameScoreLog, PerWordScoreLog } from '@/types';
 import { useRankingModal } from '@/hooks/useRankingModal';
 import { useSceneNavigationStore } from '@/store/sceneNavigationStore';
+import { useGlobalShortcuts } from '@/hooks/useGlobalShortcuts';
 import RankingModal from './RankingModal';
 import styles from '@/styles/components/SimpleGameResultScreen.module.css';
 
@@ -98,31 +99,43 @@ const SimpleGameResultScreen: React.FC<SimpleGameResultScreenProps> = React.memo
     e.preventDefault();
     handleRegisterRanking();
   };
-
-  // キーボードショートカット（メモ化されたハンドラーを使用）
-  useEffect(() => {
-    const handleKeyDown = (e: KeyboardEvent) => {
-      if (modalState.show) return; // モーダルが開いている場合は無視
-      
-      switch (e.key) {
-        case 'Escape':
-          handleGoMenu();
-          break;
-        case 'r':
-        case 'R':
-          handleGoRanking();
-          break;
-        case 'Enter':
-          if (currentScore && !isScoreRegistered) {
-            handleOpenRankingModal();
-          }
-          break;
-      }
-    };
-
-    window.addEventListener('keydown', handleKeyDown);
-    return () => window.removeEventListener('keydown', handleKeyDown);
-  }, [handleGoMenu, handleGoRanking, currentScore, isScoreRegistered, modalState.show, handleOpenRankingModal]);  return (
+  // キーボードショートカット（useGlobalShortcutsを使用）
+  useGlobalShortcuts([
+    {
+      key: 'Escape',
+      handler: (e) => {
+        if (modalState.show) return; // モーダルが開いている場合は無視
+        e.preventDefault();
+        handleGoMenu();
+      },
+    },
+    {
+      key: 'r',
+      handler: (e) => {
+        if (modalState.show) return; // モーダルが開いている場合は無視
+        e.preventDefault();
+        handleGoRanking();
+      },
+    },
+    {
+      key: 'R',
+      handler: (e) => {
+        if (modalState.show) return; // モーダルが開いている場合は無視
+        e.preventDefault();
+        handleGoRanking();
+      },
+    },
+    {
+      key: 'Enter',
+      handler: (e) => {
+        if (modalState.show) return; // モーダルが開いている場合は無視
+        if (currentScore && !isScoreRegistered) {
+          e.preventDefault();
+          handleOpenRankingModal();
+        }
+      },
+    },
+  ], [handleGoMenu, handleGoRanking, currentScore, isScoreRegistered, modalState.show, handleOpenRankingModal]);return (
     <div className={styles.resultScreen}>
       <div className={styles.result}>
         <div className={styles.resultTitle}>RESULT</div>        {/* スコア表示 */}

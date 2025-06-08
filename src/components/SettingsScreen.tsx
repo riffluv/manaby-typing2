@@ -1,6 +1,7 @@
 import React, { useCallback } from 'react';
 import { useSettingsStore } from '@/store/useSettingsStore';
 import { useSceneNavigationStore } from '@/store/sceneNavigationStore';
+import { useGlobalShortcuts } from '@/hooks/useGlobalShortcuts';
 import styles from './SettingsScreen.module.css';
 
 const SettingsScreen: React.FC = React.memo(() => {
@@ -38,9 +39,19 @@ const SettingsScreen: React.FC = React.memo(() => {
   const handleHitSoundVolumeChange = useCallback((e: React.ChangeEvent<HTMLInputElement>) => 
     setHitSoundVolume(Number(e.target.value)), [setHitSoundVolume]);
   const handleKeyboardToggle = useCallback(() => 
-    setShowKeyboard(!showKeyboard), [showKeyboard, setShowKeyboard]);
-  const handleKanaDisplayToggle = useCallback(() => 
+    setShowKeyboard(!showKeyboard), [showKeyboard, setShowKeyboard]);  const handleKanaDisplayToggle = useCallback(() => 
     setShowKanaDisplay(!showKanaDisplay), [showKanaDisplay, setShowKanaDisplay]);
+
+  // ESCキーでの戻る機能を追加
+  useGlobalShortcuts([
+    {
+      key: 'Escape',
+      handler: (e) => {
+        e.preventDefault();
+        goBack();
+      },
+    },
+  ], [goBack]);
 
   return (
     // system.html完全再現: フルスクリーンレイアウト
