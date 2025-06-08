@@ -1,6 +1,6 @@
 import React from 'react';
 import { TypingWord, PerWordScoreLog } from '@/types';
-import { useHyperTyping, OptimizedJapaneseProcessor } from '@/typing';
+import { useHyperTyping, UltraOptimizedJapaneseProcessor } from '@/typing';
 import styles from '@/styles/components/SimpleGameScreen.module.css';
 
 export type SimpleGameScreenProps = {
@@ -23,12 +23,11 @@ export type SimpleGameScreenProps = {
 const SimpleGameScreen: React.FC<SimpleGameScreenProps> = ({ 
   currentWord, 
   onWordComplete
-}) => {
-  // 軽量化：シンプルなTypingChar生成（非同期処理を削除して入力遅延を防止）
+}) => {  // 軽量化：シンプルなTypingChar生成（非同期処理を削除して入力遅延を防止）
   const typingChars = React.useMemo(() => {
     if (!currentWord.hiragana) return [];
-      // 同期的なTypeScript版のみ使用（WebAssemblyの非同期処理を削除）
-    return OptimizedJapaneseProcessor.convertToTypingChars(currentWord.hiragana);
+      // 🚀 UltraOptimizedJapaneseProcessor使用で最新最適化技術を活用
+    return UltraOptimizedJapaneseProcessor.convertToTypingChars(currentWord.hiragana);
   }, [currentWord.hiragana]);// typingmania-ref流：ローマ字文字列を生成
   const romajiString = React.useMemo(() => {
     if (!typingChars || typingChars.length === 0) return '';

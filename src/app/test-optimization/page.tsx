@@ -48,9 +48,9 @@ export default function OptimizationTestPage() {
         });
 
         console.log(`✅ "${word}": ${processingTime.toFixed(3)}ms`);
-        
-      } catch (error) {
-        console.error(`❌ "${word}": ${error.message}`);
+          } catch (error) {
+        const errorMessage = error instanceof Error ? error.message : String(error);
+        console.error(`❌ "${word}": ${errorMessage}`);
         results.push({
           word,
           typingChars: [],
@@ -64,9 +64,9 @@ export default function OptimizationTestPage() {
     try {
       const stats = OptimizedJapaneseProcessor.getPerformanceStats();
       setPerformanceStats(stats);
-      console.log('📊 パフォーマンス統計:', stats);
-    } catch (error) {
-      console.error('統計取得エラー:', error);
+      console.log('📊 パフォーマンス統計:', stats);    } catch (error) {
+      const errorMessage = error instanceof Error ? error.message : String(error);
+      console.error('統計取得エラー:', errorMessage);
     }
 
     setTestResults(results);

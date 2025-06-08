@@ -10,6 +10,10 @@ export { TypingChar } from './TypingChar';
 export { JapaneseConverter } from './JapaneseConverter';
 export { OptimizedJapaneseProcessor } from './OptimizedJapaneseProcessor';
 
+// 🚀 2025年最新技術による超高速化システム
+export { UltraOptimizedJapaneseProcessor } from './UltraOptimizedJapaneseProcessor';
+export { UltraFastNProcessor } from './UltraFastNProcessor';
+
 // 🚀 HyperTypingEngine - typingmania-ref スタイル
 export { HyperTypingEngine } from './HyperTypingEngine';
 

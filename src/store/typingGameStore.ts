@@ -1,7 +1,7 @@
 import { create } from 'zustand';
 import { createSelectors } from '@/store/createSelectors';
 import { wordList } from '@/data/wordList';
-import { OptimizedJapaneseProcessor } from '@/typing';
+import { UltraOptimizedJapaneseProcessor } from '@/typing';
 import { shallow } from 'zustand/shallow';
 
 /**
@@ -211,8 +211,8 @@ const useTypingGameStoreBase = create<TypingGameState>((set, get) => ({
     const word = currentGameQuestions[currentWordIndex];
     if (!word) return;
     
-    // 🚀 新システム：OptimizedJapaneseProcessorを使用してTypingChar配列を生成
-    const typingChars = OptimizedJapaneseProcessor.convertToTypingChars(word.hiragana);
+    // 🚀 新システム：UltraOptimizedJapaneseProcessorを使用してTypingChar配列を生成  
+    const typingChars = UltraOptimizedJapaneseProcessor.convertToTypingChars(word.hiragana);
     
     // ローマ字表示用：各文字の最初のパターンを使用
     const romajiString = typingChars.map((char: any) => char.patterns[0] || '').join('');

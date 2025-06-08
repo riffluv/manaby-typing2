@@ -6,7 +6,7 @@ import "./globals.css";
 import AppLayout from '@/components/AppLayout';
 import AudioSystemInitializer from '@/components/AudioSystemInitializer';
 import BGMInitializer from '@/components/BGMInitializer';
-import { OptimizedJapaneseProcessor } from '@/typing/OptimizedJapaneseProcessor';
+import { UltraOptimizedJapaneseProcessor } from '@/typing/UltraOptimizedJapaneseProcessor';
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -34,10 +34,10 @@ export const viewport: Viewport = {
   initialScale: 1,
 };
 
-// 最適化されたキャッシュの事前生成
+// 🚀 最新最適化技術による超高速キャッシュの事前生成
 if (typeof window !== 'undefined') {
-  // アプリ起動時にキャッシュを事前生成
-  OptimizedJapaneseProcessor.clearCache();
+  // アプリ起動時にUltraOptimizedキャッシュを事前生成
+  UltraOptimizedJapaneseProcessor.clearCache();
   
   // よく使用される日本語文字列でキャッシュを事前生成
   const commonWords = [
@@ -46,7 +46,7 @@ if (typeof window !== 'undefined') {
   ];
   
   commonWords.forEach(word => {
-    OptimizedJapaneseProcessor.createOptimizedTypingChars(word);
+    UltraOptimizedJapaneseProcessor.createUltraOptimizedTypingChars(word);
   });
 }
 
