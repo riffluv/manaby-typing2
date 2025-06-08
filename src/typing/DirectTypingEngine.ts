@@ -22,38 +22,53 @@ class DirectTypingChar {
   constructor(char: TypingChar, config: DirectTypingConfig) {
     this.char = char;
     this.config = config;
-    
-    // typingmania-ref スタイル：文字ごとの個別span要素
+      // typingmania-ref スタイル：文字ごとの個別span要素
     this.el = document.createElement('span');
     this.el.style.color = char.completed ? this.config.completedColor : this.config.inactiveColor;
     this.el.textContent = char.kana;
     this.el.style.fontFamily = this.config.fontFamily;
     this.el.style.fontSize = this.config.fontSize;
     this.el.style.fontWeight = this.config.fontWeight;
-    this.el.style.transition = 'color 0.1s ease'; // スムーズな色変化
+    this.el.style.transition = 'all 0.2s ease'; // スムーズな色・影変化
+    this.el.style.textShadow = '0 0 1px #fff, 0 0 2px rgba(0,0,0,0.6)'; // 基本の輪郭
+    this.el.style.padding = '2px';
+    this.el.style.borderRadius = '2px';
   }
-
   /**
    * 状態変化通知 - typingmania-ref風の即座な色変更
    */
   updateState(): void {
     if (this.char.completed) {
       this.el.style.color = this.config.completedColor;
+      this.el.style.textShadow = '0 0 8px rgba(135, 206, 235, 0.7), 0 0 1px #fff';
+      this.el.style.background = 'rgba(135, 206, 235, 0.1)';
     } else if (this.char.acceptedInput.length > 0) {
       this.el.style.color = this.config.progressColor;
+      this.el.style.textShadow = '0 0 8px rgba(255, 215, 0, 0.7), 0 0 1px #fff';
+      this.el.style.background = 'rgba(255, 215, 0, 0.1)';
     } else {
       this.el.style.color = this.config.activeColor;
+      this.el.style.textShadow = '0 0 6px rgba(255, 245, 170, 0.6), 0 0 1px #fff';
+      this.el.style.background = 'transparent';
     }
   }
 
   /**
    * アクティブ状態設定
+   */  /**
+   * アクティブ状態設定
    */
   setActive(active: boolean): void {
     if (active && !this.char.completed) {
       this.el.style.color = this.config.activeColor;
+      this.el.style.textShadow = '0 0 10px rgba(255, 245, 170, 0.8), 0 0 20px rgba(255, 245, 170, 0.4), 0 0 1px #fff';
+      this.el.style.background = 'rgba(255, 245, 170, 0.15)';
+      this.el.style.transform = 'scale(1.05)';
     } else if (!active) {
       this.el.style.color = this.config.inactiveColor;
+      this.el.style.textShadow = '0 0 1px #fff, 0 0 2px rgba(0,0,0,0.6)';
+      this.el.style.background = 'transparent';
+      this.el.style.transform = 'scale(1)';
     }
   }
 }
@@ -68,17 +83,17 @@ class DirectTypingLine {
 
   constructor(typingChars: TypingChar[], config: DirectTypingConfig) {
     this.config = config;
-    
-    // typingmania-ref スタイル：flex行コンテナ
+      // typingmania-ref スタイル：flex行コンテナ
     this.el = document.createElement('div');
     this.el.style.display = 'flex';
     this.el.style.flexDirection = 'row';
-    this.el.style.flexWrap = 'nowrap';
+    this.el.style.flexWrap = 'wrap';
     this.el.style.alignItems = 'baseline';
-    this.el.style.justifyContent = 'flex-start';
-    this.el.style.gap = '2px';
+    this.el.style.justifyContent = 'center';
+    this.el.style.gap = '3px';
     this.el.style.color = config.activeColor;
-    this.el.style.lineHeight = '1.2';
+    this.el.style.lineHeight = '1.8';
+    this.el.style.letterSpacing = '0.05rem';
 
     // 各文字のDirectTypingChar要素を作成
     for (const typingChar of typingChars) {
@@ -213,29 +228,32 @@ export class DirectTypingEngine {
     this.container.style.minHeight = '100px';
     this.container.style.display = 'flex';
     this.container.style.flexDirection = 'column';
-    this.container.style.gap = '15px';
-
-    this.container.innerHTML = `
+    this.container.style.gap = '15px';    this.container.innerHTML = `
       <div class="direct-typing-kana-container" style="
         display: flex;
         align-items: center;
         justify-content: center;
-        min-height: 60px;
-        background: rgba(0,0,0,0.1);
-        border-radius: 4px;
-        padding: 10px;
+        min-height: 80px;
+        background: rgba(0,0,0,0.05);
+        border-radius: 8px;
+        padding: 20px;
+        margin-bottom: 15px;
+        text-shadow: 0 0 1px #fff, 0 0 2px rgba(0,0,0,0.6);
       "></div>
       <div class="direct-typing-romaji-container" style="
         display: flex;
         align-items: center;
         justify-content: center;
-        min-height: 40px;
-        font-family: 'Courier New', monospace;
-        font-size: 1.5rem;
+        min-height: 50px;
+        font-family: 'Courier New', 'Consolas', monospace;
+        font-size: 1.2rem;
+        font-weight: 900;
         color: #cccccc;
         background: rgba(0,0,0,0.05);
-        border-radius: 4px;
-        padding: 8px;
+        border-radius: 8px;
+        padding: 15px;
+        letter-spacing: 0.05rem;
+        text-shadow: 0 0 1px rgba(0,0,0,0.3);
       "></div>
     `;
 
@@ -371,15 +389,13 @@ export class DirectTypingEngine {
     if (!this.typingLine || !this.romajiDisplay) return;
 
     // かな文字表示更新（DirectTypingLineが担当）
-    this.typingLine.updateDisplay(this.state.currentIndex);
-
-    // ローマ字表示更新
+    this.typingLine.updateDisplay(this.state.currentIndex);    // ローマ字表示更新
     const currentChar = this.state.typingChars[this.state.currentIndex];
     if (currentChar) {
       const displayInfo = currentChar.getDisplayInfo();
       this.romajiDisplay.innerHTML = `
-        <span style="color: #00ffff;">${displayInfo.acceptedText}</span>
-        <span style="color: #ffffff;">${displayInfo.remainingText}</span>
+        <span style="color: #87ceeb; text-shadow: 0 0 4px rgba(135, 206, 235, 0.5);">${displayInfo.acceptedText}</span>
+        <span style="color: #fff5aa; text-shadow: 0 0 4px rgba(255, 245, 170, 0.5); background: rgba(255, 245, 170, 0.1); padding: 2px 4px; border-radius: 3px;">${displayInfo.remainingText}</span>
       `;
     }
   }

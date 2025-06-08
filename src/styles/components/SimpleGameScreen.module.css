@@ -101,7 +101,20 @@
 }
 
 .typingArea {
-  display: none;
+  max-width: 720px;
+  width: 90%;
+  padding: 2rem;
+  background: var(--color-game-window-bg);
+  background-image: url('/textures/old-wall.png'), url('https://www.transparenttextures.com/patterns/old-wall.png');
+  background-blend-mode: overlay;
+  border: 1px solid rgba(0, 0, 0, 0.15);
+  border-radius: 14px;
+  box-shadow: 
+    0 8px 20px rgba(0, 0, 0, 0.3), 
+    inset 0 0 30px rgba(255, 255, 255, 0.15);
+  text-align: center;
+  line-height: 1.8;
+  letter-spacing: 0.05rem;
 }
 
 /* Responsive Design - Only for mobile devices */
