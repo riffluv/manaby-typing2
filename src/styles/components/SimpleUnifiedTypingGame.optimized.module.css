@@ -49,7 +49,7 @@
   transform: translateZ(0);
 }
 
-/* 最適化されたローチE��ングアニメーション */
+/* 最適化されたローチE��ングアニメーション */
 .loadingScreen::after {
   content: '';
   display: inline-block;
@@ -65,13 +65,13 @@
   will-change: transform;
 }
 
-/* GPU最適化されたローチE��ングアニメーション */
+/* GPU最適化されたローチE��ングアニメーション */
 @keyframes optimizedLoading {
   0% { transform: rotate(0deg) translateZ(0); }
   100% { transform: rotate(360deg) translateZ(0); }
 }
 
-/* レスポンシブデザイン - メチE��アクエリ最適匁E*/
+/* レスポンシブデザイン - メチE��アクエリ最適匁E*/
 @media (max-width: 768px) {
   .progressIndicator {
     top: var(--spacing-xs);
@@ -103,7 +103,7 @@
   }
 }
 
-/* アクセシビリチE�� - モーション削減対忁E*/
+/* アクセシビリチE�� - モーション削減対忁E*/
 @media (prefers-reduced-motion: reduce) {
   .loadingScreen::after {
     animation: none;
@@ -118,19 +118,19 @@
   }
 }
 
-/* フォーカス管琁E�E最適匁E*/
+/* フォーカス管琁E�E最適匁E*/
 .gameContainer:focus-within .progressIndicator {
   opacity: 0.7;
   transition: opacity 0.2s ease;
 }
 
-/* パフォーマンス最適化：composite layer刁E�� */
+/* パフォーマンス最適化：composite layer刁E�� */
 .progressIndicator,
 .loadingScreen {
   isolation: isolate;
 }
 
-/* メモリ効玁E���E�不要なanimation-fill-modeを設宁E*/
+/* メモリ効玁E���E�不要なanimation-fill-modeを設宁E*/
 @keyframes optimizedLoading {
   0% { transform: rotate(0deg) translateZ(0); }
   100% { transform: rotate(360deg) translateZ(0); }
@@ -138,5 +138,5 @@
 
 .loadingScreen::after {
   animation: optimizedLoading 1s linear infinite;
-  animation-fill-mode: none; /* メモリ効玁E�� */
+  animation-fill-mode: none; /* メモリ効玁E�� */
 }

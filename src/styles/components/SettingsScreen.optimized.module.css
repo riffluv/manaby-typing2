@@ -13,15 +13,15 @@
 }
 
 .settings__container {
-  /* Composite layerを作�EしてGPU最適匁E*/
+  /* Composite layerを作�EしてGPU最適匁E*/
   transform: translateZ(0);
   will-change: transform;
-  /* メモリ効玁E�� */
+  /* メモリ効玁E�� */
   contain: layout style paint;
 }
 
 .settings__title {
-  /* チE��ストレンダリング最適匁E*/
+  /* チE��ストレンダリング最適匁E*/
   text-rendering: optimizeSpeed;
   font-display: swap;
   /* GPU加送E*/
@@ -30,7 +30,7 @@
 }
 
 .settings__item {
-  /* 設定頁E��の最適匁E*/
+  /* 設定頁E��の最適匁E*/
   transform: translateZ(0);
   will-change: transform;
   /* レイアウト最適匁E*/
@@ -38,7 +38,7 @@
 }
 
 .settings__row {
-  /* 行レイアウト�E最適匁E*/
+  /* 行レイアウト�E最適匁E*/
   display: flex;
   align-items: center;
   justify-content: space-between;
@@ -47,7 +47,7 @@
 }
 
 .settings__label {
-  /* ラベルチE��スト�E最適匁E*/
+  /* ラベルチE��スト�E最適匁E*/
   text-rendering: optimizeSpeed;
   /* 軽量な要素にはGPU加速を適用しなぁE*/
   contain: style;
@@ -74,12 +74,12 @@
 }
 
 .settings__toggle:hover {
-  /* ホバー効果�EGPU最適匁E*/
+  /* ホバー効果�EGPU最適匁E*/
   transform: translateZ(0) scale(1.05);
 }
 
 .settings__toggle--on {
-  /* アクチE��ブ状態�E最適匁E*/
+  /* アクチE��ブ状態�E最適匁E*/
   transform: translateZ(0);
 }
 
@@ -100,7 +100,7 @@
 }
 
 .settings__slider:disabled {
-  /* 無効状態�E最適匁E*/
+  /* 無効状態�E最適匁E*/
   will-change: auto;
   opacity: 0.5;
 }
@@ -137,7 +137,7 @@
 }
 
 .settings__buttons {
-  /* ボタングループ�E最適匁E*/
+  /* ボタングループ�E最適匁E*/
   display: flex;
   gap: 15px;
   margin-top: 30px;
@@ -147,7 +147,7 @@
 }
 
 .button {
-  /* 共通�Eタンの最適匁E*/
+  /* 共通�Eタンの最適匁E*/
   transition: transform 0.15s ease-out, background-color 0.15s ease-out;
   transform: translateZ(0);
   will-change: transform, background-color;
@@ -163,11 +163,11 @@
 }
 
 .button:active {
-  /* ボタンアクチE��ブ状態�E最適匁E*/
+  /* ボタンアクチE��ブ状態�E最適匁E*/
   transform: translateZ(0) translateY(0);
 }
 
-/* フォーカス状態�E最適匁E*/
+/* フォーカス状態�E最適匁E*/
 .settings__toggle:focus,
 .settings__slider:focus,
 .button:focus {
@@ -244,7 +244,7 @@
   .settings__toggle,
   .settings__slider,
   .button {
-    /* 高コントラストでのアクセシビリチE��最適匁E*/
+    /* 高コントラストでのアクセシビリチE��最適匁E*/
     forced-color-adjust: auto;
   }
 }
@@ -271,13 +271,13 @@
 /* プリント最適匁E*/
 @media print {
   .settings__buttons {
-    /* 印刷時�E不要な要素を非表示 */
+    /* 印刷時�E不要な要素を非表示 */
     display: none;
   }
   
   .settings__toggle,
   .settings__slider {
-    /* 印刷時�EインタラクチE��ブ要素最適匁E*/
+    /* 印刷時�EインタラクチE��ブ要素最適匁E*/
     will-change: auto;
     transform: none;
   }
