@@ -6,6 +6,7 @@
  */
 
 import { TypingChar } from './TypingChar';
+import { OptimizedNProcessor } from './OptimizedNProcessor';
 
 /**
  * ひらがなとローマ字の変換テーブル
@@ -359,34 +360,12 @@ export class JapaneseConverter {
     
     return result;
   }
-
   /**
-   * 「ん」の後続文字に応じたパターン生成
+   * 「ん」の後続文字に応じたパターン生成（最適化版）
+   * OptimizedNProcessorを使用した高速パターン生成
    */
   private static getNPatterns(nextChar?: string): string[] {
-    if (!nextChar) {
-      return ['nn', 'xn', 'n'];
-    }
-    
-    const nextRomaji = japaneseToRomajiMap[nextChar];
-    if (!nextRomaji || nextRomaji.length === 0) {
-      return ['nn', 'xn', 'n'];
-    }
-    
-    const firstRomaji = nextRomaji[0].toLowerCase();
-    const firstChar = firstRomaji[0];
-    
-    // 'y'や'w'で始まる場合は'n'を許可しない
-    if (firstChar === 'y' || firstChar === 'w') {
-      return ['nn', 'xn'];
-    }
-    
-    // 母音で始まる場合は'n'を許可しない
-    if (['a', 'i', 'u', 'e', 'o'].includes(firstChar)) {
-      return ['nn', 'xn'];
-    }
-    
-    return ['nn', 'xn', 'n'];
+    return OptimizedNProcessor.getNPatterns(nextChar);
   }
 
   /**

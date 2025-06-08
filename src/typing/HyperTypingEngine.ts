@@ -6,6 +6,7 @@
  */
 
 import { TypingChar, type DisplayInfo } from './TypingChar';
+import { OptimizedNProcessor } from './OptimizedNProcessor';
 import type { KanaDisplay, PerWordScoreLog } from '@/types';
 import OptimizedAudioSystem from '@/utils/OptimizedAudioSystem';
 import { debug } from '../utils/debug';
@@ -39,7 +40,6 @@ export class HyperTypingEngine {
   private onProgress?: (index: number, display: KanaDisplay) => void;
   private onComplete?: (scoreLog: PerWordScoreLog) => void;
   private keyHandler?: (e: KeyboardEvent) => void;
-
   constructor() {
     this.state = {
       typingChars: [],
@@ -48,6 +48,9 @@ export class HyperTypingEngine {
       mistakeCount: 0,
       startTime: 0,
     };
+    
+    // 🚀 最適化「ん」プロセッサーの事前キャッシュロード
+    OptimizedNProcessor.preloadCache();
   }
 
   /**

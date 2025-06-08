@@ -6,6 +6,7 @@
  */
 
 import { debug } from '../utils/debug';
+import { OptimizedNProcessor } from './OptimizedNProcessor';
 
 export interface DisplayInfo {
   displayText: string;
@@ -139,41 +140,37 @@ export class TypingChar {
     this.branchOptions = [];
     debug.log(`分岐状態終了: ${this.kana}`);
     // 🚀 詰まり防止: 分岐ログ完全無効化
-  }/**
-   * 分岐状態でのキー処理
+  }  /**
+   * 分岐状態でのキー処理（OptimizedNProcessor統合版）
    */
   typeBranching(char: string, nextChar?: TypingChar): { success: boolean; completeWithSingle?: boolean } {
     if (!this.branchingState) {
-      return { success: false };    }    const lowerChar = char.toLowerCase();
-    debug.log(`分岐状態でのキー処理: key="${lowerChar}", options=[${this.branchOptions.join(', ')}]`);
-    // 🚀 詰まり防止: 分岐ログ完全無効化
+      return { success: false };
+    }
 
-    // 'nn'パターンのチェック（同じ文字の繰り返し）
-    if (lowerChar === 'n' && this.branchOptions.includes('nn')) {
-      debug.log(`'nn'パターンで完了`);
-      // 🚀 詰まり防止: 分岐ログ完全無効化
-      this.acceptedInput = 'nn';
+    // 🚀 OptimizedNProcessorによる高速分岐処理
+    const result = OptimizedNProcessor.processBranching(
+      char,
+      this.branchOptions,
+      nextChar?.patterns || []
+    );
+
+    if (process.env.NODE_ENV === 'development') {
+      debug.log(`最適化分岐処理: key="${char.toLowerCase()}", result=`, result);
+    }
+
+    if (result.success) {
+      this.acceptedInput = result.acceptedInput;
       this.completed = true;
       this.countedPoint = this.basePoint;
       this.endBranching();
       this.calculateRemainingText();
-      return { success: true };
+      return { 
+        success: true, 
+        completeWithSingle: result.completeWithSingle 
+      };
     }
 
-    // 次の文字がある場合、その文字のパターンをチェック
-    if (nextChar) {
-      for (const pattern of nextChar.patterns) {        if (pattern.startsWith(lowerChar)) {
-          debug.log(`次の文字のパターンマッチ: "${pattern}" が "${lowerChar}" で始まります`);
-          // 🚀 詰まり防止: 分岐ログ完全無効化
-          this.acceptedInput = 'n';
-          this.completed = true;
-          this.countedPoint = this.basePoint;
-          this.endBranching();
-          this.calculateRemainingText();
-          return { success: true, completeWithSingle: true };
-        }}
-    }    debug.log(`分岐状態で無効なキー: "${lowerChar}"`);
-    // 🚀 詰まり防止: 分岐ログ完全無効化
     return { success: false };
   }
 
@@ -215,5 +212,20 @@ export class TypingChar {
     const firstPattern = this.patterns[0];
     if (!firstPattern) return 1;
     return this.acceptedInput.length / firstPattern.length;
+  }
+
+  /**
+   * パフォーマンステスト用：オブジェクトのクローンを作成
+   */
+  clone(): TypingChar {
+    const cloned = new TypingChar(this.kana, [...this.patterns]);
+    cloned.acceptedInput = this.acceptedInput;
+    cloned.remainingText = this.remainingText;
+    cloned.completed = this.completed;
+    cloned.basePoint = this.basePoint;
+    cloned.countedPoint = this.countedPoint;
+    cloned.branchingState = this.branchingState;
+    cloned.branchOptions = [...this.branchOptions];
+    return cloned;
   }
 }
