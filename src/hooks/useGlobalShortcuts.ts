@@ -14,8 +14,7 @@ export type ShortcutConfig = {
  * グローバルショートカット管理フック
  * @returns 登録・解除関数
  */
-export function useGlobalShortcuts(shortcuts: ShortcutConfig[], deps: any[] = []) {
-  useEffect(() => {
+export function useGlobalShortcuts(shortcuts: ShortcutConfig[], deps: any[] = []) {  useEffect(() => {
     const handleKeyDown = (e: KeyboardEvent) => {
       // 入力系要素へのフォーカス時はデフォルトで無効化
       const tag = (e.target as HTMLElement)?.tagName;

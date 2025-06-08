@@ -1,4 +1,4 @@
-import React, { useState, useCallback, useMemo } from 'react';
+import React, { useState, useCallback, useMemo, useEffect, useRef } from 'react';
 import { useTypingGameStore, useQuestionCount } from '@/store/typingGameStore';
 import { useSceneNavigationStore } from '@/store/sceneNavigationStore';
 import { useGlobalShortcuts } from '@/hooks/useGlobalShortcuts';
@@ -39,12 +39,12 @@ const MainMenu: React.FC<MainMenuProps> = React.memo(({ onStart, onRetry, onRank
   
   // セキュリティチェック: 開発環境でのみ管理者機能を有効化
   const isDevelopment = process.env.NODE_ENV === 'development';
-  
-  // 状態管理
+    // 状態管理
   const [adminOpen, setAdminOpen] = useState(false);
   const [modeSelectOpen, setModeSelectOpen] = useState(false);
   const [isStarting, setIsStarting] = useState(false);
   const [error, setError] = useState<string | null>(null);
+  const modalRef = useRef<HTMLDivElement>(null);
     // パフォーマンス最適化 - useCallback
   const handleStart = useCallback(async () => {
     if (isStarting) return; // 重複実行防止
@@ -105,8 +105,7 @@ const MainMenu: React.FC<MainMenuProps> = React.memo(({ onStart, onRetry, onRank
           handleGoRanking(); 
         } 
       },
-    },
-    {
+    },    {
       key: 'Escape',
       handler: (e: KeyboardEvent) => {
         if (modeSelectOpen) {
@@ -128,10 +127,9 @@ const MainMenu: React.FC<MainMenuProps> = React.memo(({ onStart, onRetry, onRank
         setAdminOpen((v) => !v);
       },
       allowInputFocus: true
-    },
-  ], [handleStart, handleGoRanking, adminOpen, modeSelectOpen, isDevelopment]);
+    },  ], [handleStart, handleGoRanking, adminOpen, modeSelectOpen, isDevelopment]);
 
-  useGlobalShortcuts(shortcuts);
+  useGlobalShortcuts(shortcuts, [handleStart, handleGoRanking, adminOpen, modeSelectOpen, isDevelopment]);
 
   // selectedModeのメモ化
   const selectedModeDisplay = useMemo(() => {
@@ -142,8 +140,13 @@ const MainMenu: React.FC<MainMenuProps> = React.memo(({ onStart, onRetry, onRank
       case 'kenjougo': return '謙譲語';
       case 'business': return 'ビジネスマナー';
       default: return 'Normal';
+    }  }, [mode]);
+  // モーダルが開いた時にフォーカスを当てる
+  useEffect(() => {
+    if (modeSelectOpen && modalRef.current) {
+      modalRef.current.focus();
     }
-  }, [mode]);
+  }, [modeSelectOpen]);
 
   return (
     <div className={styles.mainMenu}>
@@ -231,14 +234,20 @@ const MainMenu: React.FC<MainMenuProps> = React.memo(({ onStart, onRetry, onRank
         <div className={styles.mainMenu__error} role="alert" aria-live="assertive">
           {error}
         </div>
-      )}      {/* モードセレクトモーダル（index.htmlと完全同一デザイン） */}
-      {modeSelectOpen && (
+      )}      {/* モードセレクトモーダル（index.htmlと完全同一デザイン） */}      {modeSelectOpen && (
         <div 
+          ref={modalRef}
           className={`${styles.modal} ${styles['modal--active']}`}
           role="dialog"
           aria-modal="true"
           aria-labelledby="mode-select-title"
-          id="modeModal"
+          id="modeModal"          onKeyDown={(e) => {
+            if (e.key === 'Escape') {
+              e.preventDefault();
+              setModeSelectOpen(false);
+            }
+          }}
+          tabIndex={-1}
         >
           <div 
             className={styles.modal__overlay} 
