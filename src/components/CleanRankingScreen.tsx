@@ -2,6 +2,7 @@
 import React, { useEffect, useState, useCallback } from 'react';
 import { getRankingEntries, RankingEntry } from '@/lib/rankingManaby2';
 import { useGlobalShortcuts } from '@/hooks/useGlobalShortcuts';
+import { useSceneNavigationStore } from '@/store/sceneNavigationStore';
 import styles from '@/styles/components/RankingScreen.module.css';
 
 interface CleanRankingScreenProps {
@@ -15,7 +16,12 @@ interface CleanRankingScreenProps {
 const CleanRankingScreen: React.FC<CleanRankingScreenProps> = React.memo(({ onGoMenu }) => {
   const [rankings, setRankings] = useState<RankingEntry[]>([]);
   const [loading, setLoading] = useState(true);
-  const [error, setError] = useState('');// ページネーション状態
+  const [error, setError] = useState('');
+  
+  // 履歴ベースのナビゲーションストアから goBack を取得
+  const goBack = useSceneNavigationStore((state) => state.goBack);
+
+  // ページネーション状態
   const [currentPage, setCurrentPage] = useState(0); // 0ベースのページングに変更
   const perPage = 6; // 1ページあたりの表示件数
   
@@ -58,17 +64,21 @@ const CleanRankingScreen: React.FC<CleanRankingScreenProps> = React.memo(({ onGo
   const handlePrevPage = useCallback(() => changePage(-1), [changePage]);
   // 次のページハンドラーをメモ化
   const handleNextPage = useCallback(() => changePage(1), [changePage]);
-
+  // 履歴ベースのナビゲーション処理をメモ化
+  const handleGoBack = useCallback(() => {
+    goBack();
+  }, [goBack]);
   // ショートカットキー
+  // ESC: 履歴に基づいて前の画面に戻る (Result → Ranking なら Result に、Menu → Ranking なら Menu に戻る)
   useGlobalShortcuts([
     {
       key: 'Escape',
       handler: (e) => {
         e.preventDefault();
-        handleGoMenu();
+        handleGoBack();
       },
     },
-  ], [handleGoMenu]);  return (
+  ], [handleGoBack]);return (
     <div className={styles.ranking}>
       <div className={styles.ranking__container}>
         <h1 className={styles.ranking__title}>Ranking</h1>
