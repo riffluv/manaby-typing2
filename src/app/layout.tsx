@@ -34,7 +34,7 @@ export const viewport: Viewport = {
   initialScale: 1,
 };
 
-// 🚀 最新最適化技術による超高速キャッシュの事前生成
+// 🚀 JapaneseConverterによる事前キャッシュ生成
 if (typeof window !== 'undefined') {
   // よく使用される日本語文字列でキャッシュを事前生成
   const commonWords = [
