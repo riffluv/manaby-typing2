@@ -6,7 +6,6 @@
  */
 
 import { debug } from '../utils/debug';
-import { UltraOptimizedJapaneseProcessor } from './UltraOptimizedJapaneseProcessor';
 
 export interface DisplayInfo {
   displayText: string;
@@ -141,14 +140,14 @@ export class TypingChar {
     debug.log(`分岐状態終了: ${this.kana}`);
     // 🚀 詰まり防止: 分岐ログ完全無効化
   }  /**
-   * 分岐状態でのキー処理（UltraOptimizedJapaneseProcessor統合版）
+   * 分岐状態でのキー処理（最適化版）
    */
   typeBranching(char: string, nextChar?: TypingChar): { success: boolean; completeWithSingle?: boolean } {
     if (!this.branchingState) {
       return { success: false };
     }
 
-    // 🚀 UltraOptimizedJapaneseProcessorによる高速「ん」分岐処理
+    // 🚀 高速「ん」分岐処理
     // 簡略化された分岐ロジック（「ん」文字専用）
     const lowerChar = char.toLowerCase();
     

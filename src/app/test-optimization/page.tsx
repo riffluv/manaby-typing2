@@ -1,7 +1,7 @@
 'use client';
 
 import { useState, useEffect } from 'react';
-import { UltraOptimizedJapaneseProcessor } from '@/typing/UltraOptimizedJapaneseProcessor';
+import { JapaneseConverter } from '@/typing/JapaneseConverter';
 
 // テスト用の日本語単語（「ん」を含む）
 const TEST_WORDS = [
@@ -34,7 +34,7 @@ export default function OptimizationTestPage() {
     for (const word of TEST_WORDS) {
       const startTime = performance.now();
         try {
-        const typingChars = UltraOptimizedJapaneseProcessor.convertToTypingChars(word);
+        const typingChars = JapaneseConverter.convertToTypingChars(word);
         const nChars = typingChars.filter(char => char.kana === 'ん');
         const processingTime = performance.now() - startTime;
 

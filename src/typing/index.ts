@@ -1,40 +1,26 @@
 /**
- * Typing Module - 🚀 HyperTypingEngine typingmania-ref Style System
+ * Typing Module - DirectTypingEngine2 System
  * 
- * シンプルで高速なタイピングエンジンシステム
- * デッドタイム解消と連続入力最適化を実現
+ * 高度なタイピングエンジンシステム
+ * ひらがな文字フォーカス機能付き
  */
 
 // Core Classes
 export { TypingChar } from './TypingChar';
 export { JapaneseConverter } from './JapaneseConverter';
 
-// 🚀 2025年最新技術による超高速化システム（Production Ready）
-export { UltraOptimizedJapaneseProcessor } from './UltraOptimizedJapaneseProcessor';
-
-// 🚀 HyperTypingEngine - typingmania-ref スタイル
-export { HyperTypingEngine } from './HyperTypingEngine';
-
-// 🚀 DirectTypingEngine - typingmania-ref 完全準拠（Production Ready）
-export { DirectTypingEngine } from './DirectTypingEngine';
-
-// 🚀 DirectTypingEngine2 - 原文 + ローマ字フォーカス版
+// 🚀 DirectTypingEngine2 - ひらがな文字フォーカス版（メイン）
 export { DirectTypingEngine2 } from './DirectTypingEngine2';
 
-// React Integration  
-export { useHyperTyping } from './HyperTypingHook';
-export { useDirectTyping } from './DirectTypingHook';
+// React Integration
 export { useDirectTyping2 } from './DirectTypingHook2';
 
 // Types
 export type { DisplayInfo } from './TypingChar';
 export type { RomajiData } from './JapaneseConverter';
 
-// 🚀 HyperTypingHook Types
-export type { HyperTypingHookProps, HyperTypingHookReturn } from './HyperTypingHook';
-
-// 🚀 DirectTypingHook Types
-export type { DirectTypingHookProps, DirectTypingHookReturn } from './DirectTypingHook';
+// 🚀 DirectTypingHook2 Types
+export type { UseDirectTyping2Props, DirectTypingHook2Config } from './DirectTypingHook2';
 
 // Utilities
 export { japaneseToRomajiMap } from './JapaneseConverter';

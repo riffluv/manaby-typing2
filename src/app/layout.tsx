@@ -6,7 +6,7 @@ import "./globals.css";
 import AppLayout from '@/components/AppLayout';
 import AudioSystemInitializer from '@/components/AudioSystemInitializer';
 import BGMInitializer from '@/components/BGMInitializer';
-import { UltraOptimizedJapaneseProcessor } from '@/typing/UltraOptimizedJapaneseProcessor';
+import { JapaneseConverter } from '@/typing/JapaneseConverter';
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -43,7 +43,7 @@ if (typeof window !== 'undefined') {
   ];
   
   commonWords.forEach(word => {
-    UltraOptimizedJapaneseProcessor.createUltraOptimizedTypingChars(word);
+    JapaneseConverter.convertToTypingChars(word);
   });
 }
 

@@ -1,6 +1,6 @@
 import React from 'react';
 import { TypingWord, PerWordScoreLog } from '@/types';
-import { useDirectTyping2, UltraOptimizedJapaneseProcessor } from '@/typing';
+import { useDirectTyping2, JapaneseConverter } from '@/typing';
 import styles from '@/styles/components/SimpleGameScreen.module.css';
 
 export type SimpleGameScreenProps = {
@@ -17,11 +17,10 @@ export type SimpleGameScreenProps = {
 const SimpleGameScreen: React.FC<SimpleGameScreenProps> = React.memo(({ 
   currentWord, 
   onWordComplete
-}) => {
-  // DirectTypingEngine2用のTypingChar生成
+}) => {  // DirectTypingEngine2用のTypingChar生成
   const typingChars = React.useMemo(() => {
     if (!currentWord.hiragana) return [];
-    return UltraOptimizedJapaneseProcessor.convertToTypingChars(currentWord.hiragana);
+    return JapaneseConverter.convertToTypingChars(currentWord.hiragana);
   }, [currentWord.hiragana]);
 
   const { containerRef } = useDirectTyping2({
