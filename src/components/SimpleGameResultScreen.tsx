@@ -98,8 +98,7 @@ const SimpleGameResultScreen: React.FC<SimpleGameResultScreenProps> = React.memo
   const handleSubmitRanking = (e: React.FormEvent) => {
     e.preventDefault();
     handleRegisterRanking();
-  };
-  // キーボードショートカット（useGlobalShortcutsを使用）
+  };  // キーボードショートカット（useGlobalShortcutsを使用）
   useGlobalShortcuts([
     {
       key: 'Escape',
@@ -111,14 +110,7 @@ const SimpleGameResultScreen: React.FC<SimpleGameResultScreenProps> = React.memo
     },
     {
       key: 'r',
-      handler: (e) => {
-        if (modalState.show) return; // モーダルが開いている場合は無視
-        e.preventDefault();
-        handleGoRanking();
-      },
-    },
-    {
-      key: 'R',
+      altKey: true,
       handler: (e) => {
         if (modalState.show) return; // モーダルが開いている場合は無視
         e.preventDefault();
