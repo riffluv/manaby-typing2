@@ -17,11 +17,178 @@
   background: radial-gradient(ellipse at center, #0a0f1b, #000);
   color: #ccc;
   overflow-x: hidden;
+  overflow-y: hidden; /* スクロール完全防止 */
   display: flex;
   flex-direction: column;
   align-items: center;
   padding-top: 10vh;
   padding-bottom: 3rem;
+  position: fixed; /* フルスクリーン固定 */
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  
+  /* パフォーマンス最適化 */
+  transform: translateZ(0); /* GPU加速の有効化 */
+  will-change: transform;
+  contain: layout style; /* レイアウト封じ込め */
+}
+
+/* ==========================================================================
+   DPI スケール対応 - 125%, 150%, 200% 対応
+   ========================================================================== */
+
+/* 125%スケール対応（120-144 DPI）*/
+@media (min-resolution: 120dpi) and (max-resolution: 144dpi), 
+       (-webkit-min-device-pixel-ratio: 1.25) and (-webkit-max-device-pixel-ratio: 1.5) {
+  .ranking {
+    transform: scale(0.98);
+    transform-origin: top left;
+    width: calc(100vw / 0.98);
+    height: calc(100vh / 0.98);
+  }
+  
+  .ranking__title {
+    font-size: 2.5rem; /* 125%環境での最適化 */
+  }
+  
+  .ranking__table th,
+  .ranking__table td {
+    padding: 0.9rem; /* 微調整 */
+    font-size: 0.95rem;
+    border-width: 0.8px; /* 細いボーダーで鮮明に */
+  }
+  
+  .ranking__pageBtn,
+  .button {
+    border-width: 0.8px;
+    padding: 0.45rem 1.8rem;
+  }
+}
+
+/* 150%スケール対応（144+ DPI） */
+@media (min-resolution: 144dpi), (-webkit-min-device-pixel-ratio: 1.5) {
+  .ranking {
+    transform: scale(0.95);
+    transform-origin: top left;
+    width: calc(100vw / 0.95);
+    height: calc(100vh / 0.95);
+  }
+  
+  .ranking__title {
+    font-size: 2.4rem;
+  }
+  
+  .ranking__table th,
+  .ranking__table td {
+    padding: 0.8rem;
+    font-size: 0.9rem;
+    border-width: 0.6px;
+  }
+  
+  .ranking__pageBtn,
+  .button {
+    border-width: 0.6px;
+    padding: 0.4rem 1.6rem;
+  }
+}
+
+/* 200%スケール対応（Retina等） */
+@media (-webkit-min-device-pixel-ratio: 2), (min-resolution: 192dpi) {
+  .ranking {
+    transform: scale(0.9);
+    transform-origin: top left;
+    width: calc(100vw / 0.9);
+    height: calc(100vh / 0.9);
+  }
+  
+  .ranking__title {
+    font-size: 2.2rem;
+  }
+  
+  .ranking__table th,
+  .ranking__table td {
+    padding: 0.7rem;
+    font-size: 0.85rem;
+    border-width: 0.5px; /* 高DPI環境での最適化 */
+  }
+  
+  .ranking__pageBtn,
+  .button {
+    border-width: 0.5px;
+    padding: 0.35rem 1.4rem;
+    box-shadow: 0 1px 2px rgba(0, 0, 0, 0.1); /* 繊細な影 */
+  }
+}
+
+/* ==========================================================================
+   レスポンシブ対応 - 他の画面と統一
+   ========================================================================== */
+
+/* タブレット: 中央より少し上の位置 */
+@media (min-width: 768px) {
+  .ranking {
+    padding-top: 8vh; /* タブレット最適位置 */
+  }
+}
+
+/* デスクトップ: ランキング画面最適位置 */
+@media (min-width: 1024px) {
+  .ranking {
+    padding-top: 6vh; /* デスクトップ最適位置 */
+  }
+}
+
+/* 大画面: 視線負担軽減 */
+@media (min-width: 1440px) {
+  .ranking {
+    padding-top: 5vh; /* 大画面での最適位置 */
+  }
+}
+
+/* 縦画面モバイル: コンパクト配置 */
+@media (max-width: 767px) and (orientation: portrait) {
+  .ranking {
+    padding-top: 5vh; /* モバイル縦画面 */
+    padding-bottom: 2rem;
+  }
+  
+  .ranking__title {
+    font-size: 2rem;
+    margin-bottom: 2rem;
+  }
+  
+  .ranking__table th,
+  .ranking__table td {
+    padding: 0.7rem 0.5rem;
+    font-size: 0.9rem;
+  }
+  
+  .ranking__buttons {
+    gap: 1rem;
+  }
+}
+
+/* 横画面モバイル/タブレット: 中央寄り */
+@media (max-height: 600px) and (orientation: landscape) {
+  .ranking {
+    padding-top: 3vh; /* 横画面での最適化 */
+    padding-bottom: 1rem;
+  }
+}
+
+/* フォントレンダリング最適化 */
+@media (min-resolution: 120dpi) {
+  .ranking {
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+  }
+  
+  .ranking__title {
+    font-weight: 500; /* 125%環境での可読性向上 */
+    letter-spacing: 0.15rem;
+  }
 }
 
 /* ランキングコンテナ */
@@ -45,6 +212,9 @@
   width: 100%;
   border-collapse: collapse;
   margin-bottom: 2rem;
+  
+  /* パフォーマンス最適化 */
+  contain: layout; /* レイアウト最適化 */
 }
 
 .ranking__table th,
