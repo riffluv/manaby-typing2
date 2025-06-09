@@ -1,15 +1,11 @@
 /* ==========================================================================
-   MainMenu - 2025年最新基準 CSS設計
-   Container Queries + DPI対応 + モダンレスポンシブ
+   MainMenu - BEM設計 + レスポンシブ対応
    ========================================================================== */
 
 .mainMenu {
-  /* 2025: Container Queries */
-  container: main-menu / inline-size;
-  
-  /* 2025: Dynamic Viewport */
-  inline-size: 100%;
-  min-block-size: var(--viewport-height-dynamic, 100vh);
+  /* Layout: Full screen container */
+  width: 100%;
+  min-height: 100vh;
   
   /* Layout: Modern Grid */
   display: grid;
@@ -33,9 +29,6 @@
    ========================================================================== */
 
 .mainMenu__container {
-  /* Container Queries準備 */
-  container: menu-container / inline-size;
-  
   /* Layout: Flex with gap */
   display: flex;
   flex-direction: column;

@@ -1,7 +1,7 @@
-# PowerShell Profile用エイリアス設定
-# $PROFILE ファイルに追加してください
+# PowerShell Profile Setup Script
+# Agent Reset Alias Registration
 
-# Agent失敗時の完全リセット
+# Agent失敗時の完全リセット関数
 function Reset-AgentWork {
     Write-Host "🔄 Agent作業をリセットします..." -ForegroundColor Yellow
     git reset --hard HEAD
@@ -12,7 +12,7 @@ function Reset-AgentWork {
 # エイリアス登録
 Set-Alias -Name "agent-reset" -Value Reset-AgentWork
 
-# 使用方法の表示
+# ヘルプ関数
 function Show-AgentCommands {
     Write-Host "🤖 Agent作業用コマンド:" -ForegroundColor Cyan
     Write-Host "  agent-reset  : Agent作業を完全リセット" -ForegroundColor White

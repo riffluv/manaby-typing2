@@ -12,12 +12,25 @@
 		{
 			"label": "Reset Agent Work",
 			"type": "shell",
-			"command": "git reset --hard HEAD && git clean -fd",
+			"command": "git reset --hard HEAD; git clean -fd",
 			"group": "build",
 			"presentation": {
 				"echo": true,
 				"reveal": "always",
 				"focus": false,
+				"panel": "shared"
+			},
+			"problemMatcher": []
+		},
+		{
+			"label": "Pre-Commit Check",
+			"type": "shell",
+			"command": ".\\scripts\\pre-commit-check.ps1",
+			"group": "build",
+			"presentation": {
+				"echo": true,
+				"reveal": "always",
+				"focus": true,
 				"panel": "shared"
 			},
 			"problemMatcher": []
