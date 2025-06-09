@@ -66,4 +66,126 @@ result.htmlと完全一致な見た目にして！
 
 ---
 
+## 🧮 HTMLからプロジェクトルールへの変換計算
+
+### 📐 スペーシング変換計算表
+```markdown
+HTML値     → プロジェクトトークン
+4px       → var(--spacing-xs)
+8px       → var(--spacing-sm) 
+12px      → var(--spacing-3)
+16px      → var(--spacing-md)
+20px      → var(--spacing-lg)
+24px      → var(--spacing-6)
+32px      → var(--spacing-xl)
+```
+
+### 🎨 カラー変換計算表
+```markdown
+HTML色             → プロジェクトトークン
+#e0e0e0           → var(--color-text-primary)
+#ccc, #cccccc     → var(--color-text-secondary)
+#000, #000000     → var(--color-bg-primary)
+#0a0f1b           → var(--color-gaming-bg-primary)
+#ffd88a           → var(--color-gaming-text-accent)
+rgba(0,0,0,0.8)   → var(--color-overlay-dark)
+```
+
+### ✍️ フォントサイズ変換計算表
+```markdown
+HTML値     → プロジェクトトークン
+12px      → var(--font-size-xs)
+14px      → var(--font-size-sm)
+16px      → var(--font-size-base)
+18px      → var(--font-size-lg)
+20px      → var(--font-size-xl)
+24px      → var(--font-size-2xl)
+```
+
+### 🏗️ CSS Reset除外計算ルール
+```markdown
+HTMLで書いた以下は**削除**（プロジェクトで自動適用済み）:
+- margin: 0
+- padding: 0  
+- box-sizing: border-box
+- font-family の基本設定
+- line-height の基本設定
+```
+
+### 🎯 BEM記法変換計算
+```markdown
+HTML BEM            → CSS Modules BEM
+game-screen         → .gameScreen
+game-screen__title  → .gameScreen__title
+game-screen--large  → .gameScreen--large
+```
+
+---
+
+## 📝 **実際の変換計算例**
+
+### 例1: シンプルなゲーム画面
+```html
+<!-- あなたのHTML -->
+<div class="game-screen" style="background: #000; color: #e0e0e0; padding: 20px;">
+  <h1 style="font-size: 24px; text-align: center; color: #ffd88a;">ゲームタイトル</h1>
+  <div class="game-screen__container" style="margin: 16px 0;">
+    <button style="padding: 12px 24px; background: #333; border: 1px solid #666;">
+      スタート
+    </button>
+  </div>
+</div>
+```
+
+### 変換後のCSS Modules
+```css
+/* GameScreen.module.css */
+.gameScreen {
+  background: var(--color-bg-primary);         /* #000 → トークン */
+  color: var(--color-text-primary);           /* #e0e0e0 → トークン */
+  padding: var(--spacing-lg);                 /* 20px → トークン */
+}
+
+.gameScreen__title {
+  font-size: var(--font-size-2xl);           /* 24px → トークン */
+  text-align: center;
+  color: var(--color-gaming-text-accent);     /* #ffd88a → トークン */
+}
+
+.gameScreen__container {
+  margin: var(--spacing-md) 0;               /* 16px → トークン */
+}
+
+.gameScreen__button {
+  padding: var(--spacing-3) var(--spacing-6); /* 12px 24px → トークン */
+  background: var(--color-bg-secondary);      /* #333 → トークン */
+  border: 1px solid var(--color-border-primary); /* #666 → トークン */
+}
+```
+
+### 例2: CSS Reset部分の除外計算
+```html
+<!-- あなたのHTML（CSS Reset込み） -->
+<div style="margin: 0; padding: 0; box-sizing: border-box; font-family: Arial;">
+  <div style="background: #0a0f1b; height: 100vh; padding: 20px;">
+    <!-- コンテンツ -->
+  </div>
+</div>
+```
+
+### 変換後（Reset部分除外）
+```css
+/* CSS Modules - Reset部分は除外 */
+.container {
+  /* margin: 0; padding: 0; box-sizing: border-box; ← 削除（globals.cssで適用済み） */
+  /* font-family: Arial; ← 削除（globals.cssで適用済み） */
+  
+  background: var(--color-gaming-bg-primary);  /* #0a0f1b → トークン */
+  height: 100vh;                               /* そのまま */
+  padding: var(--spacing-lg);                  /* 20px → トークン */
+}
+```
+
+---
+
 **⚠️ 注意**: このガイドは実際のデザイン移行作業時のみ参照してください。CSS設計の準拠チェックとは別の用途です。
