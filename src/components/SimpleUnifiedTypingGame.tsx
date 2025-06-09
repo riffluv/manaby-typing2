@@ -7,7 +7,7 @@ import { useScoreCalculation } from '@/hooks/useScoreCalculation';
 // import { PerformanceProfiler } from '@/utils/PerformanceProfiler'; // sub-5ms optimization: 測定オーバーヘッド除去
 import SimpleGameScreen from './SimpleGameScreen';
 import SimpleGameResultScreen from './SimpleGameResultScreen';
-import styles from '@/styles/components/SimpleUnifiedTypingGame.optimized.module.css';
+import styles from '@/styles/components/SimpleUnifiedTypingGame.module.css';
 
 /**
  * シンプル統合タイピングゲーム - パフォーマンス最適化版
