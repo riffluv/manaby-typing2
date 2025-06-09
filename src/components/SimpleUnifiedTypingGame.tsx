@@ -63,7 +63,6 @@ const SimpleUnifiedTypingGame: React.FC<{
       router.push('/');
     }
   }, [onGoMenu, router]);
-
   const handleGoRanking = useCallback(() => {
     if (onGoRanking) {
       onGoRanking();
@@ -71,6 +70,19 @@ const SimpleUnifiedTypingGame: React.FC<{
       router.push('/ranking');
     }
   }, [onGoRanking, router]);
+
+  // リトライハンドラー - 同じモードでゲームを再開
+  const handleRetry = useCallback(() => {
+    // resetGame() はストアから現在のモードを保持してゲームをリセット
+    const resetGame = useTypingGameStore.getState().resetGame;
+    resetGame();
+    
+    // 状態をリセット
+    setCompletedCount(0);
+    setScoreLog([]);
+    setResultScore(null);
+    setGameStatus('playing');
+  }, [setGameStatus]);
 
   // 直アクセス防止 - メモ化
   useEffect(() => {
@@ -129,12 +141,12 @@ const SimpleUnifiedTypingGame: React.FC<{
   // メモ化されたレンダリング条件
   const isFinished = gameStatus === 'finished';
   const isPlaying = gameStatus === 'playing' && currentWord.japanese;
-
   if (isFinished) {
     return (
       <SimpleGameResultScreen
         onGoMenu={handleGoMenu}
         onGoRanking={handleGoRanking}
+        onRetry={handleRetry}
         resultScore={resultScore}
         scoreLog={scoreLog}
         onCalculateFallbackScore={() => setResultScore(calculateFallbackScore())}

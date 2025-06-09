@@ -12,6 +12,7 @@ const LAST_SCORE_KEY = 'typing_game_last_score';
 export type SimpleGameResultScreenProps = {
   onGoMenu: () => void;
   onGoRanking: () => void;
+  onRetry?: () => void;
   resultScore?: GameScoreLog['total'] | null;
   scoreLog?: PerWordScoreLog[];
   onCalculateFallbackScore?: () => void;
@@ -27,6 +28,7 @@ export type SimpleGameResultScreenProps = {
 const SimpleGameResultScreen: React.FC<SimpleGameResultScreenProps> = React.memo(({ 
   onGoMenu, 
   onGoRanking,
+  onRetry,
   resultScore,
   scoreLog,
   onCalculateFallbackScore
@@ -48,7 +50,6 @@ const SimpleGameResultScreen: React.FC<SimpleGameResultScreenProps> = React.memo
     }
     onGoMenu();
   }, [currentScore, scoreLog, setLastScore, onGoMenu]);
-
   // ランキングに移動する処理をメモ化
   const handleGoRanking = useCallback(() => {
     // スコアデータをストアに保存
@@ -57,6 +58,17 @@ const SimpleGameResultScreen: React.FC<SimpleGameResultScreenProps> = React.memo
     }
     onGoRanking();
   }, [currentScore, scoreLog, setLastScore, onGoRanking]);
+
+  // リトライ処理をメモ化
+  const handleRetry = useCallback(() => {
+    // スコアデータをストアに保存
+    if (currentScore && scoreLog) {
+      setLastScore(scoreLog, currentScore);
+    }
+    if (onRetry) {
+      onRetry();
+    }
+  }, [currentScore, scoreLog, setLastScore, onRetry]);
 
   // 初期化時にスコアを設定
   useEffect(() => {
@@ -110,6 +122,16 @@ const SimpleGameResultScreen: React.FC<SimpleGameResultScreenProps> = React.memo
     },
     {
       key: 'r',
+      handler: (e) => {
+        if (modalState.show) return; // モーダルが開いている場合は無視
+        if (onRetry) {
+          e.preventDefault();
+          handleRetry();
+        }
+      },
+    },
+    {
+      key: 'r',
       altKey: true,
       handler: (e) => {
         if (modalState.show) return; // モーダルが開いている場合は無視
@@ -127,7 +149,7 @@ const SimpleGameResultScreen: React.FC<SimpleGameResultScreenProps> = React.memo
         }
       },
     },
-  ], [handleGoMenu, handleGoRanking, currentScore, isScoreRegistered, modalState.show, handleOpenRankingModal]);return (
+  ], [handleGoMenu, handleGoRanking, handleRetry, currentScore, isScoreRegistered, modalState.show, handleOpenRankingModal, onRetry]);return (
     <div className={styles.resultScreen}>
       <div className={styles.result}>
         <div className={styles.resultTitle}>RESULT</div>        {/* スコア表示 */}
