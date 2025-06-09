@@ -1,0 +1,480 @@
+/* ==========================================================================
+   Global CSS 2025 - 統一設計システム
+   CSS競合解決 + デザイントークン統合 + パフォーマンス最適化
+   ========================================================================== */
+
+/* ==========================================================================
+   1. CSS Reset & Base Styles - Modern 2025
+   ========================================================================== */
+
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+html {
+  /* 2025: DPI対応フォントサイズ */
+  font-size: clamp(14px, 1rem, 18px);
+  
+  /* Modern font rendering */
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  text-rendering: optimizeLegibility;
+  
+  /* 2025: Scroll behavior */
+  scroll-behavior: smooth;
+  scroll-padding-top: 2rem;
+  
+  /* Performance */
+  overflow-x: hidden;
+}
+
+body {
+  /* 2025: Dynamic Viewport */
+  min-block-size: var(--viewport-height-dynamic, 100vh);
+  
+  /* Typography */
+  font-family: var(--font-primary, 'Cinzel', serif);
+  font-weight: var(--font-weight-normal, 400);
+  font-size: var(--font-size-base, 1rem);
+  line-height: var(--line-height-normal, 1.5);
+  
+  /* Colors */
+  color: var(--game-text-primary, #e0e0e0);
+  background: var(--game-bg-primary, radial-gradient(ellipse at center, #0a0f1b, #000));
+  
+  /* Layout */
+  overflow-x: hidden;
+  position: relative;
+  
+  /* Performance */
+  will-change: scroll-position;
+}
+
+/* ==========================================================================
+   2. 統一デザイントークン - Single Source of Truth
+   ========================================================================== */
+
+:root {
+  /* 🎯 2025: Dynamic Viewport Units */
+  --viewport-height-small: 100svh;
+  --viewport-height-large: 100lvh;
+  --viewport-height-dynamic: 100dvh;
+  --viewport-width-dynamic: 100dvw;
+  
+  /* 🎯 Brand Colors - HDR対応 */
+  --brand-primary: #0ea5e9;
+  --brand-secondary: #c9a76f;
+  --brand-accent: #88ccff;
+  
+  /* 🎯 Gaming Theme - P3 Color Space */
+  --game-bg-primary: radial-gradient(ellipse at center, #0a0f1b, #000);
+  --game-bg-secondary: #1a2740;
+  --game-window-bg: linear-gradient(to bottom, #f6f1e3, #e9dec6);
+  
+  --game-text-primary: #e0e0e0;
+  --game-text-secondary: #b8cfe7;
+  --game-text-accent: #ffd88a;
+  --game-text-muted: #9ca3af;
+  
+  /* タイピング状態色 */
+  --game-typed: #a3d8ff;
+  --game-focus: #ffe18d;
+  --game-remaining: #9c7e5c;
+  
+  /* 🎯 Typography System - DPI対応 */
+  --font-primary: 'Cinzel', serif;
+  --font-secondary: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+  --font-mono: 'JetBrains Mono', 'SF Mono', Monaco, monospace;
+  
+  --font-weight-normal: 400;
+  --font-weight-medium: 500;
+  --font-weight-bold: 700;
+  
+  /* Fluid Typography */
+  --font-size-xs: clamp(0.75rem, 0.625rem + 0.125vi, 0.875rem);
+  --font-size-sm: clamp(0.875rem, 0.75rem + 0.125vi, 1rem);
+  --font-size-base: clamp(1rem, 0.875rem + 0.125vi, 1.125rem);
+  --font-size-lg: clamp(1.125rem, 1rem + 0.125vi, 1.25rem);
+  --font-size-xl: clamp(1.25rem, 1.125rem + 0.125vi, 1.5rem);
+  --font-size-2xl: clamp(1.5rem, 1.25rem + 0.25vi, 1.875rem);
+  --font-size-3xl: clamp(1.875rem, 1.5rem + 0.375vi, 2.25rem);
+  --font-size-4xl: clamp(2.25rem, 1.875rem + 0.375vi, 3rem);
+  --font-size-5xl: clamp(3rem, 2.5rem + 0.5vi, 4rem);
+  
+  /* Game UI Typography */
+  --font-size-game-title: clamp(2.5rem, 2rem + 2vi, 4rem);
+  --font-size-game-subtitle: clamp(1.5rem, 1.25rem + 1vi, 2rem);
+  --font-size-game-text: clamp(1.25rem, 1rem + 1vi, 1.75rem);
+  --font-size-game-ui: clamp(1rem, 0.875rem + 0.5vi, 1.25rem);
+  
+  --line-height-tight: 1.25;
+  --line-height-normal: 1.5;
+  --line-height-relaxed: 1.75;
+  
+  --letter-spacing-tight: -0.025em;
+  --letter-spacing-normal: 0;
+  --letter-spacing-wide: 0.05em;
+  --letter-spacing-wider: 0.1em;
+  
+  /* 🎯 Spacing System - 8px Grid + Fluid */
+  --space-xs: clamp(0.25rem, 0.125rem + 0.125vi, 0.5rem);
+  --space-sm: clamp(0.5rem, 0.25rem + 0.25vi, 1rem);
+  --space-md: clamp(1rem, 0.5rem + 0.5vi, 1.5rem);
+  --space-lg: clamp(1.5rem, 1rem + 0.5vi, 2rem);
+  --space-xl: clamp(2rem, 1.5rem + 0.5vi, 3rem);
+  --space-2xl: clamp(3rem, 2rem + 1vi, 4rem);
+  --space-3xl: clamp(4rem, 3rem + 1vi, 6rem);
+  
+  /* Touch Target Sizes */
+  --touch-target-min: max(44px, 2.75rem);
+  --touch-spacing: max(8px, 0.5rem);
+  
+  /* 🎯 Border & Radius */
+  --radius-sm: 0.25rem;
+  --radius-md: 0.5rem;
+  --radius-lg: 0.75rem;
+  --radius-xl: 1rem;
+  --radius-full: 9999px;
+  
+  --border-width: 1px;
+  --border-width-thick: 2px;
+  
+  /* 🎯 Shadows - Enhanced */
+  --shadow-sm: 0 1px 3px color-mix(in srgb, black 12%, transparent);
+  --shadow-md: 0 4px 8px color-mix(in srgb, black 15%, transparent);
+  --shadow-lg: 0 8px 16px color-mix(in srgb, black 20%, transparent);
+  --shadow-xl: 0 16px 32px color-mix(in srgb, black 25%, transparent);
+  --shadow-game: 0 8px 25px color-mix(in srgb, black 30%, transparent),
+                 inset 0 0 30px color-mix(in srgb, white 15%, transparent);
+  --shadow-glow: 0 0 20px color-mix(in srgb, var(--game-text-accent) 30%, transparent);
+  
+  /* 🎯 Animations & Transitions */
+  --duration-instant: 0ms;
+  --duration-fast: 150ms;
+  --duration-normal: 250ms;
+  --duration-slow: 350ms;
+  --duration-slower: 500ms;
+  
+  --easing-linear: linear;
+  --easing-ease: ease;
+  --easing-smooth: cubic-bezier(0.25, 0.1, 0.25, 1);
+  --easing-bounce: cubic-bezier(0.68, -0.55, 0.265, 1.55);
+  --easing-spring: cubic-bezier(0.175, 0.885, 0.32, 1.275);
+  
+  /* 🎯 Z-Index Scale */
+  --z-hide: -1;
+  --z-base: 0;
+  --z-dropdown: 10;
+  --z-sticky: 100;
+  --z-modal: 1000;
+  --z-overlay: 1100;
+  --z-tooltip: 2000;
+  
+  /* 🎯 Interactive States */
+  --interactive-hover: color-mix(in srgb, white 10%, transparent);
+  --interactive-active: color-mix(in srgb, white 15%, transparent);
+  --interactive-disabled: color-mix(in srgb, white 30%, transparent);
+  --interactive-focus: var(--brand-accent);
+}
+
+/* ==========================================================================
+   3. 下位互換性 - 段階的移行用
+   ========================================================================== */
+
+:root {
+  /* 旧トークンのエイリアス - 段階的に削除予定 */
+  --color-bg-primary: var(--game-bg-primary);
+  --color-gaming-bg-primary: var(--game-bg-primary);
+  --color-gaming-text-secondary: var(--game-text-secondary);
+  --color-gaming-text-accent: var(--game-text-accent);
+  --color-game-window-bg: var(--game-window-bg);
+  --color-game-typed: var(--game-typed);
+  --color-game-focus: var(--game-focus);
+  --color-game-remaining: var(--game-remaining);
+  
+  --font-family-primary: var(--font-primary);
+  --font-family-secondary: var(--font-secondary);
+  --font-weight-normal: var(--font-weight-normal);
+  --font-weight-bold: var(--font-weight-bold);
+  
+  --spacing-xs: var(--space-xs);
+  --spacing-sm: var(--space-sm);
+  --spacing-md: var(--space-md);
+  --spacing-lg: var(--space-lg);
+  --spacing-xl: var(--space-xl);
+  --spacing-2xl: var(--space-2xl);
+  
+  --transition-fast: var(--duration-fast);
+  --transition-normal: var(--duration-normal);
+  --transition-slow: var(--duration-slow);
+}
+
+/* ==========================================================================
+   4. Component Base Styles
+   ========================================================================== */
+
+/* Reset button styles */
+button {
+  border: none;
+  background: none;
+  font: inherit;
+  cursor: pointer;
+  min-block-size: var(--touch-target-min);
+  min-inline-size: var(--touch-target-min);
+}
+
+/* Reset link styles */
+a {
+  color: inherit;
+  text-decoration: none;
+}
+
+/* Reset list styles */
+ul, ol {
+  list-style: none;
+}
+
+/* Reset form elements */
+input, textarea, select {
+  font: inherit;
+  border: none;
+  background: none;
+  outline: none;
+}
+
+/* Image & Media defaults */
+img, svg, video {
+  max-inline-size: 100%;
+  block-size: auto;
+  display: block;
+}
+
+/* Table defaults */
+table {
+  border-collapse: collapse;
+  border-spacing: 0;
+}
+
+/* Focus styles */
+:focus-visible {
+  outline: 2px solid var(--interactive-focus);
+  outline-offset: 2px;
+  border-radius: var(--radius-sm);
+}
+
+/* Selection styles */
+::selection {
+  background: color-mix(in srgb, var(--brand-accent) 30%, transparent);
+  color: var(--game-text-primary);
+}
+
+/* ==========================================================================
+   5. Layout Utilities - Modern CSS
+   ========================================================================== */
+
+/* App Container */
+#__next {
+  inline-size: 100%;
+  min-block-size: 100%;
+  overflow: hidden;
+  position: relative;
+}
+
+/* Full screen layouts */
+.fullscreen {
+  inline-size: var(--viewport-width-dynamic);
+  block-size: var(--viewport-height-dynamic);
+  position: fixed;
+  inset: 0;
+  overflow: hidden;
+}
+
+/* Container queries ready */
+.container {
+  container: main / inline-size;
+  inline-size: 100%;
+  max-inline-size: min(90vw, 1200px);
+  margin-inline: auto;
+  padding-inline: var(--space-md);
+}
+
+/* Flex utilities */
+.flex {
+  display: flex;
+}
+
+.flex-col {
+  flex-direction: column;
+}
+
+.items-center {
+  align-items: center;
+}
+
+.justify-center {
+  justify-content: center;
+}
+
+.gap-sm {
+  gap: var(--space-sm);
+}
+
+.gap-md {
+  gap: var(--space-md);
+}
+
+.gap-lg {
+  gap: var(--space-lg);
+}
+
+/* Grid utilities */
+.grid {
+  display: grid;
+}
+
+.place-center {
+  place-items: center;
+}
+
+/* Screen reader only */
+.sr-only {
+  position: absolute;
+  inline-size: 1px;
+  block-size: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+  border: 0;
+}
+
+/* ==========================================================================
+   6. Common Components
+   ========================================================================== */
+
+/* Loading spinner */
+.loading-spinner {
+  inline-size: 2.5rem;
+  block-size: 2.5rem;
+  border: 3px solid color-mix(in srgb, var(--game-text-primary) 20%, transparent);
+  border-top-color: var(--brand-accent);
+  border-radius: 50%;
+  animation: spin var(--duration-slower) linear infinite;
+  will-change: transform;
+}
+
+@keyframes spin {
+  to { transform: rotate(360deg); }
+}
+
+/* Game overlay */
+.game-overlay {
+  position: fixed;
+  inset: 0;
+  z-index: var(--z-overlay);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: color-mix(in srgb, black 80%, transparent);
+  backdrop-filter: blur(8px);
+}
+
+/* ==========================================================================
+   7. 2025年レスポンシブ戦略
+   ========================================================================== */
+
+/* Range Syntax Media Queries */
+@media (width < 640px) {
+  :root {
+    --font-scale: 0.875;
+    --space-scale: 0.75;
+  }
+  
+  body {
+    block-size: var(--viewport-height-small);
+  }
+}
+
+@media (640px <= width < 1024px) {
+  :root {
+    --font-scale: 1;
+    --space-scale: 1;
+  }
+  
+  body {
+    block-size: var(--viewport-height-dynamic);
+  }
+}
+
+@media (width >= 1024px) {
+  :root {
+    --font-scale: 1.125;
+    --space-scale: 1.25;
+  }
+  
+  body {
+    block-size: var(--viewport-height-large);
+  }
+}
+
+/* ==========================================================================
+   8. アクセシビリティ & Performance
+   ========================================================================== */
+
+/* High contrast support */
+@media (prefers-contrast: high) {
+  :root {
+    --game-text-primary: #ffffff;
+    --game-bg-primary: #000000;
+    --border-width: var(--border-width-thick);
+  }
+}
+
+/* Reduced motion support */
+@media (prefers-reduced-motion: reduce) {
+  :root {
+    --duration-fast: 0.01ms;
+    --duration-normal: 0.01ms;
+    --duration-slow: 0.01ms;
+  }
+  
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    will-change: auto !important;
+  }
+}
+
+/* Dark mode system integration */
+@media (prefers-color-scheme: dark) {
+  :root {
+    color-scheme: dark;
+  }
+}
+
+/* Print styles */
+@media print {
+  * {
+    background: white !important;
+    color: black !important;
+    box-shadow: none !important;
+    text-shadow: none !important;
+  }
+  
+  body {
+    font-size: 12pt;
+    line-height: 1.3;
+  }
+  
+  .no-print {
+    display: none !important;
+  }
+}

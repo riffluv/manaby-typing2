@@ -1,197 +1,33 @@
-/* RankingScreen.module.css - ranking.html完全一致デザイン */
+/* ==========================================================================
+   RankingScreen - シンプルリファクタリング版
+   現在の見た目を保ったまま、複雑性を削除
+   ========================================================================== */
 
-/* CSS Reset */
-.ranking *, 
-.ranking *::before, 
-.ranking *::after {
-  box-sizing: border-box;
-  margin: 0;
-  padding: 0;
-}
-
-/* メインコンテナ - bodyスタイルを再現 */
+/* メインコンテナ */
 .ranking {
   width: 100%;
   height: 100vh;
   font-family: 'Cinzel', serif;
   background: radial-gradient(ellipse at center, #0a0f1b, #000);
   color: #ccc;
-  overflow-x: hidden;
-  overflow-y: hidden; /* スクロール完全防止 */
+  overflow: hidden;
   display: flex;
   flex-direction: column;
   align-items: center;
-  padding-top: 10vh;
-  padding-bottom: 3rem;
-  position: fixed; /* フルスクリーン固定 */
-  top: 0;
-  left: 0;
-  right: 0;
-  bottom: 0;
-  
-  /* パフォーマンス最適化 */
-  transform: translateZ(0); /* GPU加速の有効化 */
-  will-change: transform;
-  contain: layout style; /* レイアウト封じ込め */
+  padding: clamp(2vh, 6vh, 10vh) 1rem 2rem;
+  position: fixed;
+  inset: 0;
+  box-sizing: border-box;
 }
 
-/* ==========================================================================
-   DPI スケール対応 - 125%, 150%, 200% 対応
-   ========================================================================== */
-
-/* 125%スケール対応（120-144 DPI）*/
-@media (min-resolution: 120dpi) and (max-resolution: 144dpi), 
-       (-webkit-min-device-pixel-ratio: 1.25) and (-webkit-max-device-pixel-ratio: 1.5) {
+/* DPI 125%環境での調整 */
+@media (min-resolution: 1.25dppx) {
   .ranking {
-    transform: scale(0.98);
-    transform-origin: top left;
-    width: calc(100vw / 0.98);
-    height: calc(100vh / 0.98);
-  }
-  
-  .ranking__title {
-    font-size: 2.5rem; /* 125%環境での最適化 */
-  }
-  
-  .ranking__table th,
-  .ranking__table td {
-    padding: 0.9rem; /* 微調整 */
-    font-size: 0.95rem;
-    border-width: 0.8px; /* 細いボーダーで鮮明に */
-  }
-  
-  .ranking__pageBtn,
-  .button {
-    border-width: 0.8px;
-    padding: 0.45rem 1.8rem;
+    padding: clamp(1vh, 4vh, 8vh) 1rem 1.5rem;
   }
 }
 
-/* 150%スケール対応（144+ DPI） */
-@media (min-resolution: 144dpi), (-webkit-min-device-pixel-ratio: 1.5) {
-  .ranking {
-    transform: scale(0.95);
-    transform-origin: top left;
-    width: calc(100vw / 0.95);
-    height: calc(100vh / 0.95);
-  }
-  
-  .ranking__title {
-    font-size: 2.4rem;
-  }
-  
-  .ranking__table th,
-  .ranking__table td {
-    padding: 0.8rem;
-    font-size: 0.9rem;
-    border-width: 0.6px;
-  }
-  
-  .ranking__pageBtn,
-  .button {
-    border-width: 0.6px;
-    padding: 0.4rem 1.6rem;
-  }
-}
-
-/* 200%スケール対応（Retina等） */
-@media (-webkit-min-device-pixel-ratio: 2), (min-resolution: 192dpi) {
-  .ranking {
-    transform: scale(0.9);
-    transform-origin: top left;
-    width: calc(100vw / 0.9);
-    height: calc(100vh / 0.9);
-  }
-  
-  .ranking__title {
-    font-size: 2.2rem;
-  }
-  
-  .ranking__table th,
-  .ranking__table td {
-    padding: 0.7rem;
-    font-size: 0.85rem;
-    border-width: 0.5px; /* 高DPI環境での最適化 */
-  }
-  
-  .ranking__pageBtn,
-  .button {
-    border-width: 0.5px;
-    padding: 0.35rem 1.4rem;
-    box-shadow: 0 1px 2px rgba(0, 0, 0, 0.1); /* 繊細な影 */
-  }
-}
-
-/* ==========================================================================
-   レスポンシブ対応 - 他の画面と統一
-   ========================================================================== */
-
-/* タブレット: 中央より少し上の位置 */
-@media (min-width: 768px) {
-  .ranking {
-    padding-top: 8vh; /* タブレット最適位置 */
-  }
-}
-
-/* デスクトップ: ランキング画面最適位置 */
-@media (min-width: 1024px) {
-  .ranking {
-    padding-top: 6vh; /* デスクトップ最適位置 */
-  }
-}
-
-/* 大画面: 視線負担軽減 */
-@media (min-width: 1440px) {
-  .ranking {
-    padding-top: 5vh; /* 大画面での最適位置 */
-  }
-}
-
-/* 縦画面モバイル: コンパクト配置 */
-@media (max-width: 767px) and (orientation: portrait) {
-  .ranking {
-    padding-top: 5vh; /* モバイル縦画面 */
-    padding-bottom: 2rem;
-  }
-  
-  .ranking__title {
-    font-size: 2rem;
-    margin-bottom: 2rem;
-  }
-  
-  .ranking__table th,
-  .ranking__table td {
-    padding: 0.7rem 0.5rem;
-    font-size: 0.9rem;
-  }
-  
-  .ranking__buttons {
-    gap: 1rem;
-  }
-}
-
-/* 横画面モバイル/タブレット: 中央寄り */
-@media (max-height: 600px) and (orientation: landscape) {
-  .ranking {
-    padding-top: 3vh; /* 横画面での最適化 */
-    padding-bottom: 1rem;
-  }
-}
-
-/* フォントレンダリング最適化 */
-@media (min-resolution: 120dpi) {
-  .ranking {
-    -webkit-font-smoothing: antialiased;
-    -moz-osx-font-smoothing: grayscale;
-  }
-  
-  .ranking__title {
-    font-weight: 500; /* 125%環境での可読性向上 */
-    letter-spacing: 0.15rem;
-  }
-}
-
-/* ランキングコンテナ */
+/* コンテナ */
 .ranking__container {
   width: 100%;
   max-width: 960px;
@@ -200,8 +36,8 @@
 
 /* タイトル */
 .ranking__title {
-  font-size: 2.6rem;
-  margin-bottom: 3rem;
+  font-size: clamp(2rem, 5vw, 2.6rem);
+  margin-bottom: clamp(1.5rem, 4vh, 3rem);
   color: #e5ccaa;
   letter-spacing: 0.2rem;
   text-shadow: 0 0 8px rgba(255, 220, 150, 0.3);
@@ -211,16 +47,13 @@
 .ranking__table {
   width: 100%;
   border-collapse: collapse;
-  margin-bottom: 2rem;
-  
-  /* パフォーマンス最適化 */
-  contain: layout; /* レイアウト最適化 */
+  margin-bottom: clamp(1rem, 3vh, 2rem);
 }
 
 .ranking__table th,
 .ranking__table td {
-  padding: 1rem;
-  font-size: 1rem;
+  padding: clamp(0.5rem, 2vw, 1rem);
+  font-size: clamp(0.8rem, 2vw, 1rem);
   border-bottom: 1px solid rgba(255,255,255,0.08);
 }
 
@@ -239,7 +72,7 @@
   display: flex;
   justify-content: center;
   gap: 1rem;
-  margin-bottom: 2rem;
+  margin-bottom: clamp(1rem, 2vh, 2rem);
 }
 
 .ranking__pageBtn {
@@ -262,7 +95,8 @@
 .ranking__buttons {
   display: flex;
   justify-content: center;
-  gap: 2rem;
+  gap: clamp(1rem, 4vw, 2rem);
+  flex-wrap: wrap;
 }
 
 .button {
@@ -283,4 +117,27 @@
   border-color: rgba(150, 180, 255, 0.3);
   color: #fff;
   box-shadow: 0 0 12px rgba(120,180,255,0.2);
+}
+
+/* レスポンシブ調整 */
+@media (max-width: 768px) {
+  .ranking__table th,
+  .ranking__table td {
+    padding: 0.6rem 0.3rem;
+    font-size: 0.85rem;
+  }
+  
+  .ranking__pagination {
+    gap: 0.5rem;
+  }
+  
+  .ranking__pageBtn {
+    padding: 0.3rem 0.8rem;
+    font-size: 0.8rem;
+  }
+  
+  .button {
+    padding: 0.4rem 1.5rem;
+    font-size: 0.9rem;
+  }
 }
