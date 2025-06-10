@@ -20,17 +20,19 @@ interface HybridEngineConfig {
 }
 
 /**
- * Canvas用フォント設定 - 内部管理（ベストプラクティス）
+ * Canvas用フォント設定 - プロフェッショナルゲームUI設計
+ * 🎯 一流ゲームデザイナーの視覚階層理論に基づく最適化
  */
 const CANVAS_FONT_CONFIG = {
   fontFamily: '"Courier New", "Consolas", "Liberation Mono", monospace',
-  fontSize: '1.6rem',
-  fontWeight: 'bold', // 🎨 太さ改善: normal → bold
-  activeColor: '#ffeb3b',
-  completedColor: '#87ceeb',
-  inactiveColor: '#999',
-  // 🚀 フォント文字列を事前計算で高速化（太字版）
-  fontString: 'bold 1.6rem "Courier New", "Consolas", "Liberation Mono", monospace'
+  fontSize: '1.8rem', // 🎨 28.8px - タイピング対象として最適サイズ
+  fontWeight: '500', // 🎨 ミディアム - 太すぎず細すぎずの黄金バランス
+  // 🎨 プロフェッショナルゲーミング色彩設計
+  activeColor: '#FFD700',    // ゴールド - 高級感のあるアクティブ色
+  completedColor: '#4FC3F7', // スカイブルー - 美しく目に優しい完了色
+  inactiveColor: '#B0BEC5',  // 読みやすいグレー - 長時間プレイ対応
+  // 🚀 フォント文字列を事前計算で高速化（プロ仕様）
+  fontString: '500 1.8rem "Courier New", "Consolas", "Liberation Mono", monospace'
 } as const;
 
 /**
@@ -62,12 +64,11 @@ class CanvasRomajiChar {
       default: return CANVAS_FONT_CONFIG.inactiveColor;
     }
   }
-
   getShadow(): string {
     switch (this.state) {
-      case 'active': return '0 0 8px rgba(255, 235, 59, 0.8)';
-      case 'completed': return '0 0 6px rgba(135, 206, 235, 0.6)';
-      default: return '0 0 1px rgba(0,0,0,0.5)';
+      case 'active': return '0 0 12px rgba(255, 215, 0, 0.9)';    // ゴールドグロー強化
+      case 'completed': return '0 0 8px rgba(79, 195, 247, 0.7)'; // スカイブルーグロー
+      default: return '0 0 2px rgba(0,0,0,0.4)';                  // 控えめシャドウ
     }
   }
 }
@@ -160,57 +161,55 @@ export class HybridTypingEngine {
     this.container.style.minHeight = '120px';
     this.container.style.display = 'flex';
     this.container.style.flexDirection = 'column';
-    this.container.style.gap = '20px';
-
-    // かな表示の条件付きHTML
+    this.container.style.gap = '20px';    // かな表示の条件付きHTML - プロフェッショナル補助UI設計
     const kanaDisplayHTML = this.config.showKanaDisplay ? `
       <div class="hybrid-kana-container" style="
         display: flex;
         align-items: center;
         justify-content: center;
-        min-height: 60px;
-        background: rgba(0,0,0,0.08);
-        border-radius: 8px;
-        padding: 15px;
-        font-size: 1.5rem;
-        font-weight: bold;
+        min-height: 50px;
+        background: rgba(0,0,0,0.06);
+        border-radius: 10px;
+        padding: 12px;
+        font-size: 1.4rem;
+        font-weight: 400;
         color: #d6cbb2;
-        text-shadow: 0 0 2px rgba(0,0,0,0.8);
-        letter-spacing: 0.04rem;
+        text-shadow: 0 0 3px rgba(0,0,0,0.6);
+        letter-spacing: 0.05em;
+        opacity: 0.85;
       "></div>
-    ` : '';
-
-    // DOM構築 - フォントはCSS側で管理
+    ` : '';// DOM構築 - 🎨 プロフェッショナルゲームUI視覚階層設計
     this.container.innerHTML = `
       <div class="hybrid-original-text" style="
         display: flex;
         align-items: center;
         justify-content: center;
-        min-height: 60px;
+        min-height: 70px;
         background: rgba(0,0,0,0.08);
-        border-radius: 8px;
-        padding: 15px;
-        font-size: 1.6rem;
-        font-weight: bold;
-        background: linear-gradient(to right, #c9a76f, #f8e6b0);
+        border-radius: 12px;
+        padding: 20px;
+        font-size: 2.2rem;
+        font-weight: 600;
+        background: linear-gradient(135deg, #c9a76f, #f8e6b0, #d4af37);
         -webkit-background-clip: text;
         -webkit-text-fill-color: transparent;
-        text-shadow: 0 0 6px rgba(255, 223, 128, 0.2);
-        letter-spacing: 0.04rem;
+        text-shadow: 0 0 8px rgba(255, 223, 128, 0.3);
+        letter-spacing: 0.02em;
+        line-height: 1.2;
       "></div>
       ${kanaDisplayHTML}
       <div class="hybrid-canvas-container" style="
         display: flex;
         align-items: center;
         justify-content: center;
-        min-height: 50px;
+        min-height: 60px;
         background: rgba(0,0,0,0.05);
-        border-radius: 8px;
-        padding: 15px;
+        border-radius: 12px;
+        padding: 20px;
       ">
         <canvas class="romaji-canvas hybrid-romaji-canvas" style="
           background: transparent;
-          border-radius: 4px;
+          border-radius: 8px;
         "></canvas>
       </div>
     `;
@@ -243,20 +242,17 @@ export class HybridTypingEngine {
     if (!this.romajiCanvas) return;
 
     this.ctx = this.romajiCanvas.getContext('2d');
-    if (!this.ctx) return;
-
-    // Canvas サイズ設定 - コンテナに合わせて動的調整
+    if (!this.ctx) return;    // Canvas サイズ設定 - プロフェッショナルゲーミング最適化
     const containerWidth = this.container?.offsetWidth || 800;
-    this.romajiCanvas.width = containerWidth - 60; // パディング考慮
-    this.romajiCanvas.height = 50; // 少し高さを抑えて日本語テキストとのバランス改善
+    this.romajiCanvas.width = containerWidth - 80; // より広いパディングで洗練された配置
+    this.romajiCanvas.height = 60; // ローマ字に十分な高さを確保
 
     // 高DPI対応とアンチエイリアス最適化
     const devicePixelRatio = window.devicePixelRatio || 1;
     this.romajiCanvas.width *= devicePixelRatio;
     this.romajiCanvas.height *= devicePixelRatio;
-    this.ctx.scale(devicePixelRatio, devicePixelRatio);
-    this.romajiCanvas.style.width = `${containerWidth - 60}px`;
-    this.romajiCanvas.style.height = '50px';
+    this.ctx.scale(devicePixelRatio, devicePixelRatio);    this.romajiCanvas.style.width = `${containerWidth - 80}px`;
+    this.romajiCanvas.style.height = '60px';
 
     // Canvas描画品質の向上
     this.ctx.imageSmoothingEnabled = true;
@@ -273,12 +269,13 @@ export class HybridTypingEngine {
       totalRomaji += char.patterns[0];
     });
 
-    if (totalRomaji.length === 0) return;    // 文字配置計算 - 🎨 日本語テキストに近い自然な間隔に調整
-    const canvasWidth = (this.container?.offsetWidth || 800) - 60;
-    // 文字幅を基準に読みやすい適度な間隔を計算
-    const baseCharWidth = 16; // 1.6rem フォントサイズでの平均的な文字幅
-    const letterSpacing = 3; // 適度な読みやすい間隔（約3px）
-    const charSpacing = baseCharWidth + letterSpacing;
+    if (totalRomaji.length === 0) return;    // 文字配置計算 - 🎨 プロフェッショナルゲーミングUI設計
+    const canvasWidth = (this.container?.offsetWidth || 800) - 80;
+    // 🎯 最適可読性理論: フォントサイズの10%間隔（1.8rem × 0.1 = 0.18rem ≈ 2.88px）
+    const baseFontSize = 28.8; // 1.8rem の実際のピクセル値
+    const optimalSpacing = baseFontSize * 0.1; // 10% - ゲーミング最適比率
+    const charWidth = baseFontSize * 0.6; // モノスペースフォントの文字幅推定
+    const charSpacing = charWidth + optimalSpacing;
     const totalTextWidth = totalRomaji.length * charSpacing;
     const startX = (canvasWidth - totalTextWidth) / 2;
 
@@ -286,9 +283,8 @@ export class HybridTypingEngine {
     for (let i = 0; i < totalRomaji.length; i++) {
       const char = totalRomaji[i];
       this.canvasChars.push(new CanvasRomajiChar(
-        char,
-        startX + (i * charSpacing) + charSpacing / 2,
-        25
+        char,        startX + (i * charSpacing) + charSpacing / 2,
+        30 // プロポーショナル縦位置調整
       ));
     }
   }
@@ -512,28 +508,26 @@ export class HybridTypingEngine {
    * 🚀 状態別文字グループ描画（シャドウ最適化）
    */
   private renderCharGroup(chars: CanvasRomajiChar[], state: 'inactive' | 'active' | 'completed'): void {
-    if (chars.length === 0 || !this.ctx) return;
-
-    // 状態に応じたスタイル設定（一度だけ）
+    if (chars.length === 0 || !this.ctx) return;    // 状態に応じたスタイル設定（プロフェッショナルゲーミング仕様）
     switch (state) {
       case 'active':
         this.ctx.fillStyle = CANVAS_FONT_CONFIG.activeColor;
-        this.ctx.shadowColor = '0 0 8px rgba(255, 235, 59, 0.8)';
-        this.ctx.shadowBlur = 4;
+        this.ctx.shadowColor = 'rgba(255, 215, 0, 0.9)';  // ゴールドグロー
+        this.ctx.shadowBlur = 8;
         this.ctx.shadowOffsetX = 0;
-        this.ctx.shadowOffsetY = 1;
+        this.ctx.shadowOffsetY = 2;
         break;
       case 'completed':
         this.ctx.fillStyle = CANVAS_FONT_CONFIG.completedColor;
-        this.ctx.shadowColor = '0 0 6px rgba(135, 206, 235, 0.6)';
-        this.ctx.shadowBlur = 4;
+        this.ctx.shadowColor = 'rgba(79, 195, 247, 0.7)'; // スカイブルーグロー
+        this.ctx.shadowBlur = 6;
         this.ctx.shadowOffsetX = 0;
         this.ctx.shadowOffsetY = 1;
         break;
       case 'inactive':
         this.ctx.fillStyle = CANVAS_FONT_CONFIG.inactiveColor;
-        this.ctx.shadowColor = '0 0 1px rgba(0,0,0,0.5)';
-        this.ctx.shadowBlur = 1;
+        this.ctx.shadowColor = 'rgba(0,0,0,0.4)';         // 控えめシャドウ
+        this.ctx.shadowBlur = 2;
         this.ctx.shadowOffsetX = 0;
         this.ctx.shadowOffsetY = 1;
         break;
