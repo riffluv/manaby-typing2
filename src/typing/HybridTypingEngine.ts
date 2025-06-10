@@ -25,12 +25,12 @@ interface HybridEngineConfig {
 const CANVAS_FONT_CONFIG = {
   fontFamily: '"Courier New", "Consolas", "Liberation Mono", monospace',
   fontSize: '1.6rem',
-  fontWeight: 'normal',
+  fontWeight: 'bold', // 🎨 太さ改善: normal → bold
   activeColor: '#ffeb3b',
   completedColor: '#87ceeb',
   inactiveColor: '#999',
-  // 🚀 フォント文字列を事前計算で高速化
-  fontString: 'normal 1.6rem "Courier New", "Consolas", "Liberation Mono", monospace'
+  // 🚀 フォント文字列を事前計算で高速化（太字版）
+  fontString: 'bold 1.6rem "Courier New", "Consolas", "Liberation Mono", monospace'
 } as const;
 
 /**
@@ -273,11 +273,12 @@ export class HybridTypingEngine {
       totalRomaji += char.patterns[0];
     });
 
-    if (totalRomaji.length === 0) return;
-
-    // 文字配置計算
+    if (totalRomaji.length === 0) return;    // 文字配置計算 - 🎨 日本語テキストに近い自然な間隔に調整
     const canvasWidth = (this.container?.offsetWidth || 800) - 60;
-    const charSpacing = Math.min(24, Math.max(16, canvasWidth / (totalRomaji.length + 2)));
+    // 文字幅を基準に読みやすい適度な間隔を計算
+    const baseCharWidth = 16; // 1.6rem フォントサイズでの平均的な文字幅
+    const letterSpacing = 3; // 適度な読みやすい間隔（約3px）
+    const charSpacing = baseCharWidth + letterSpacing;
     const totalTextWidth = totalRomaji.length * charSpacing;
     const startX = (canvasWidth - totalTextWidth) / 2;
 
