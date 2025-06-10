@@ -142,6 +142,10 @@ export class HybridTypingEngine {
     this.state.totalRomajiLength = typingChars.reduce((sum, char) => sum + char.patterns[0].length, 0);    this.setupHybridDOM();
     this.setupCanvasRomaji();
     this.setupKeyListener();
+    
+    // 🚀 音響システム事前初期化（最初のキー遅延を排除）
+    UltraFastAudioSystem.init();
+    
     this.renderCanvas();
   }
 
@@ -308,11 +312,11 @@ export class HybridTypingEngine {
       passive: false, 
       capture: true 
     });
-  }
-  /**
+  }  /**
    * 🚀 ZERO-LATENCY キー処理 - DirectTypingEngine2完全互換
    */
   private processKey(key: string): void {
+    // 🚀 初回キー時の音響コンテキスト復旧（最適化）
     if (this.state.keyCount === 0) {
       UltraFastAudioSystem.resumeAudioContext();
     }
@@ -332,6 +336,7 @@ export class HybridTypingEngine {
       const result = currentChar.typeBranching(key, nextChar);
 
       if (result.success) {
+        // 🚀 即座音声再生（遅延最小化）
         UltraFastAudioSystem.playClickSound();
 
         if (result.completeWithSingle) {
@@ -358,9 +363,9 @@ export class HybridTypingEngine {
         this.updateCanvasStates();
         this.renderCanvas();
         this.notifyProgress();
-        return;
-      } else {
+        return;      } else {
         this.state.mistakeCount++;
+        // 🚀 即座エラー音再生（遅延最小化）
         UltraFastAudioSystem.playErrorSound();
         
         // 🚀 即座Canvas更新
@@ -375,6 +380,7 @@ export class HybridTypingEngine {
     const isCorrect = currentChar.type(key);
 
     if (isCorrect) {
+      // 🚀 即座音声再生（遅延最小化）
       UltraFastAudioSystem.playClickSound();
 
       if (currentChar.completed) {
@@ -384,9 +390,9 @@ export class HybridTypingEngine {
           this.handleWordComplete();
           return;
         }
-      }
-    } else {
+      }    } else {
       this.state.mistakeCount++;
+      // 🚀 即座エラー音再生（遅延最小化）
       UltraFastAudioSystem.playErrorSound();
     }
 

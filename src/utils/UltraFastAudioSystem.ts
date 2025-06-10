@@ -126,21 +126,26 @@ class UltraFastAudioSystem {
     source.connect(this.ctx.destination);
     source.start();
   }
-
   // 🚀 パブリックAPI（typingmania-ref互換）
   static playClickSound(): void {
     if (!this.isReady) this.init();
-    this.playSound(this.clickBuffer);
+    if (this.isReady && this.clickBuffer) {
+      this.playSound(this.clickBuffer);
+    }
   }
 
   static playErrorSound(): void {
     if (!this.isReady) this.init();
-    this.playSound(this.errorBuffer);
+    if (this.isReady && this.errorBuffer) {
+      this.playSound(this.errorBuffer);
+    }
   }
 
   static playSuccessSound(): void {
     if (!this.isReady) this.init();
-    this.playSound(this.successBuffer);
+    if (this.isReady && this.successBuffer) {
+      this.playSound(this.successBuffer);
+    }
   }
 
   // 🚀 AudioContext復旧（必要時のみ）
