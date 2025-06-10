@@ -337,21 +337,17 @@ export class DirectTypingEngine2 {  private state: DirectEngineState;
           return;
         }
 
-        // 🚀 ZERO-LATENCY: DOM更新を非同期化
-        Promise.resolve().then(() => {
-          this.updateDisplay();
-          this.notifyProgress();
-        });
+        // 🚀 ZERO-LATENCY: DOM更新を即座実行
+        this.updateDisplay();
+        this.notifyProgress();
         return;
       } else {
         this.state.mistakeCount++;
         UltraFastAudioSystem.playErrorSound();
         
-        // 🚀 ZERO-LATENCY: DOM更新を非同期化
-        Promise.resolve().then(() => {
-          this.updateDisplay();
-          this.notifyProgress();
-        });
+        // 🚀 ZERO-LATENCY: DOM更新を即座実行
+        this.updateDisplay();
+        this.notifyProgress();
         return;
       }
     }    // 通常のタイピング処理
@@ -373,11 +369,9 @@ export class DirectTypingEngine2 {  private state: DirectEngineState;
       UltraFastAudioSystem.playErrorSound();
     }
 
-    // 🚀 ZERO-LATENCY: DOM更新を非同期化
-    Promise.resolve().then(() => {
-      this.updateDisplay();
-      this.notifyProgress();
-    });
+    // 🚀 ZERO-LATENCY: DOM更新を即座実行
+    this.updateDisplay();
+    this.notifyProgress();
   }/**
    * 表示更新
    */
