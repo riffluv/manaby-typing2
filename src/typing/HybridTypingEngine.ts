@@ -117,8 +117,7 @@ export class HybridTypingEngine {
 
   /**
    * 初期化 - DirectTypingEngine2と同じインターフェース
-   */
-  initialize(
+   */  initialize(
     container: HTMLElement,
     typingChars: TypingChar[],
     originalText: string,
@@ -131,7 +130,8 @@ export class HybridTypingEngine {
     this.state.typingChars = typingChars;
     this.originalText = originalText;
     this.state.currentIndex = 0;
-    this.state.startTime = Date.now();
+    // 🚀 修正: startTimeは最初のキー入力時に設定（DirectTypingEngine2と同様）
+    this.state.startTime = 0;
 
     // 全ローマ字長を計算
     this.state.totalRomajiLength = typingChars.reduce((sum, char) => sum + char.patterns[0].length, 0);    this.setupHybridDOM();
