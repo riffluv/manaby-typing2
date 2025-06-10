@@ -7,11 +7,20 @@
 
 export type BGMMode = 'lobby' | 'game' | 'result' | 'settings' | 'ranking' | 'silent';
 
-interface BGMTrack {
+export interface BGMTrack {
   mode: BGMMode;
   filename: string;
   volume: number;
   loop: boolean;
+}
+
+// BGMプレイヤーの状態型定義
+export interface BGMStatus {
+  isInitialized: boolean;
+  currentTrack: BGMTrack | null;
+  volume: number;
+  contextState: string;
+  isPlaying: boolean;
 }
 
 // BGM設定（後でMP3ファイルを追加時に更新）
@@ -77,15 +86,14 @@ class BGMPlayer {
     if (this.gainNode) {
       this.gainNode.gain.value = this.globalVolume;
     }
-  }
-
-  // 状態取得
-  static getStatus() {
+  }  // 状態取得
+  static getStatus(): BGMStatus {
     return {
       isInitialized: this.isInitialized,
       currentTrack: this.currentTrack,
       volume: this.globalVolume,
       contextState: this.bgmCtx?.state || 'none',
+      isPlaying: this.source !== null && this.currentTrack !== null, // 🔧 isPlayingプロパティを追加
     };
   }
 
