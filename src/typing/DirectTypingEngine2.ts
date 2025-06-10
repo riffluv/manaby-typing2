@@ -148,13 +148,11 @@ export class DirectTypingEngine2 {  private state: DirectEngineState;
       mistakeCount: 0,
       startTime: 0,
       totalRomajiLength: 0
-    };
-
-    if (customConfig) {
+    };    if (customConfig) {
       this.config = { ...this.config, ...customConfig };
     }
 
-    debug.log('🚀 DirectTypingEngine2 初期化完了');
+    // 🚀 DirectTypingEngine2 初期化完了
   }
   /**
    * 初期化
@@ -174,17 +172,11 @@ export class DirectTypingEngine2 {  private state: DirectEngineState;
     this.state.currentIndex = 0;
 
     // 全ローマ字長を計算
-    this.state.totalRomajiLength = typingChars.reduce((sum, char) => sum + char.patterns[0].length, 0);
-
-    this.setupDOM();
+    this.state.totalRomajiLength = typingChars.reduce((sum, char) => sum + char.patterns[0].length, 0);    this.setupDOM();
     this.setupKeyListener();
     this.updateDisplay();
 
-    debug.log('🚀 DirectTypingEngine2 初期化完了:', {
-      charCount: typingChars.length,
-      totalRomajiLength: this.state.totalRomajiLength,
-      originalText: this.originalText
-    });
+    // 🚀 DirectTypingEngine2 初期化完了
   }
   /**
    * DOM構築
@@ -304,15 +296,12 @@ export class DirectTypingEngine2 {  private state: DirectEngineState;
       e.stopPropagation();
 
       this.processKey(e.key);
-    };
-
-    document.addEventListener('keydown', this.keyHandler, { capture: true });
-    debug.log('🚀 DirectTypingEngine2 キーリスナー設定完了');
-  }
-
-  /**
+    };    document.addEventListener('keydown', this.keyHandler, { capture: true });
+    // 🚀 DirectTypingEngine2 キーリスナー設定完了
+  }/**
    * キー処理
-   */  private processKey(key: string): void {
+   */
+  private processKey(key: string): void {
     if (this.state.keyCount === 0) {
       UltraFastAudioSystem.resumeAudioContext();
     }
@@ -321,15 +310,13 @@ export class DirectTypingEngine2 {  private state: DirectEngineState;
       this.state.startTime = Date.now();
     }
 
-    this.state.keyCount++;    const currentChar = this.state.typingChars[this.state.currentIndex];
+    this.state.keyCount++;const currentChar = this.state.typingChars[this.state.currentIndex];
     if (!currentChar) return;
 
     // 「ん」の分岐状態処理
     if (currentChar.branchingState) {
       const nextChar = this.state.typingChars[this.state.currentIndex + 1];
-      const result = currentChar.typeBranching(key, nextChar);
-
-      if (result.success) {
+      const result = currentChar.typeBranching(key, nextChar);      if (result.success) {
         UltraFastAudioSystem.playClickSound();
 
         if (result.completeWithSingle) {
@@ -345,24 +332,29 @@ export class DirectTypingEngine2 {  private state: DirectEngineState;
         } else {
           // 'nn'パターン完了
           this.state.currentIndex++;
-        }
-
-        if (this.state.currentIndex >= this.state.typingChars.length) {
+        }        if (this.state.currentIndex >= this.state.typingChars.length) {
           this.handleWordComplete();
           return;
-        }        this.updateDisplay();
-        this.notifyProgress();
+        }
+
+        // 🚀 ZERO-LATENCY: DOM更新を非同期化
+        Promise.resolve().then(() => {
+          this.updateDisplay();
+          this.notifyProgress();
+        });
         return;
       } else {
         this.state.mistakeCount++;
         UltraFastAudioSystem.playErrorSound();
-        this.updateDisplay();
-        this.notifyProgress();
+        
+        // 🚀 ZERO-LATENCY: DOM更新を非同期化
+        Promise.resolve().then(() => {
+          this.updateDisplay();
+          this.notifyProgress();
+        });
         return;
       }
-    }
-
-    // 通常のタイピング処理
+    }    // 通常のタイピング処理
     const isCorrect = currentChar.type(key);
 
     if (isCorrect) {
@@ -379,8 +371,13 @@ export class DirectTypingEngine2 {  private state: DirectEngineState;
     } else {
       this.state.mistakeCount++;
       UltraFastAudioSystem.playErrorSound();
-    }    this.updateDisplay();
-    this.notifyProgress();
+    }
+
+    // 🚀 ZERO-LATENCY: DOM更新を非同期化
+    Promise.resolve().then(() => {
+      this.updateDisplay();
+      this.notifyProgress();
+    });
   }/**
    * 表示更新
    */
@@ -438,9 +435,10 @@ export class DirectTypingEngine2 {  private state: DirectEngineState;
       endTime: endTime,
       duration: elapsedTime,
       kpm: Math.round((this.state.keyCount / elapsedTime) * 60),
-      accuracy: (this.state.keyCount - this.state.mistakeCount) / this.state.keyCount,
-    };    this.onComplete?.(scoreLog);
-    debug.log('🚀 DirectTypingEngine2 単語完了:', scoreLog);
+      accuracy: (this.state.keyCount - this.state.mistakeCount) / this.state.keyCount,    };
+
+    this.onComplete?.(scoreLog);
+    // 🚀 DirectTypingEngine2 単語完了
   }
   /**
    * リセット
@@ -449,13 +447,11 @@ export class DirectTypingEngine2 {  private state: DirectEngineState;
     this.state.currentIndex = 0;
     this.state.keyCount = 0;
     this.state.mistakeCount = 0;
-    this.state.startTime = 0;
-
-    this.state.typingChars.forEach(char => char.reset());
+    this.state.startTime = 0;    this.state.typingChars.forEach(char => char.reset());
     
     this.updateDisplay();
     
-    debug.log('🚀 DirectTypingEngine2 リセット完了');
+    // 🚀 DirectTypingEngine2 リセット完了
   }
   /**
    * リソース解放
@@ -468,11 +464,11 @@ export class DirectTypingEngine2 {  private state: DirectEngineState;
     this.container = null;
     this.originalTextDisplay = null;
     this.kanaDisplay = null;
-    this.romajiContainer = null;
-    this.romajiChars = [];
+    this.romajiContainer = null;    this.romajiChars = [];
     this.onProgress = undefined;
     this.onComplete = undefined;
-      debug.log('🚀 DirectTypingEngine2 リソース解放完了');
+    
+    // 🚀 DirectTypingEngine2 リソース解放完了
   }
 
   /**

@@ -125,17 +125,19 @@ const SimpleUnifiedTypingGame: React.FC<{
       advanceToNextWord();
     }
   }, [completedCount, questionLimit, setGameStatus, advanceToNextWord]);
-
-  // Escキー処理 - メモ化
+  // Escキー処理 - DirectTypingEngine2との競合を回避
   useEffect(() => {
     const handleKeyDown = (e: KeyboardEvent) => {
+      // 🚀 遅延修正: タイピング処理中は介入しない（DirectTypingEngine2に優先権を譲る）
       if (e.key === 'Escape' && gameStatus === 'playing') {
+        e.stopImmediatePropagation(); // 他のリスナーをブロック
         handleGoMenu();
       }
     };
 
-    window.addEventListener('keydown', handleKeyDown, { capture: true, passive: false });
-    return () => window.removeEventListener('keydown', handleKeyDown, true);
+    // 🚀 遅延修正: capture: false でDirectTypingEngine2より後に実行
+    window.addEventListener('keydown', handleKeyDown, { capture: false, passive: false });
+    return () => window.removeEventListener('keydown', handleKeyDown, false);
   }, [gameStatus, handleGoMenu]);
 
   // メモ化されたレンダリング条件

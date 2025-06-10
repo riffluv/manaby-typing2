@@ -10,48 +10,25 @@ const enableTypingDebug = false; // 完全無効化で詰まり解消
 
 export const debug = {
   log: (...args: any[]) => {
-    if (isDevelopment && Math.random() < 0.1) { // 10%の確率でログ出力
-      // console.log('[DEBUG]', ...args); // sub-5ms optimization: デバッグログ除去
-    }
+    // 🚀 ZERO-LATENCY: デバッグログ完全無効化（パフォーマンス最優先）
   },
   
   warn: (...args: any[]) => {
-    if (isDevelopment) {
-      // console.warn('[DEBUG WARN]', ...args); // sub-5ms optimization: デバッグログ除去
-    }
+    // 🚀 ZERO-LATENCY: デバッグログ完全無効化（パフォーマンス最優先）
   },
-  
-  error: (...args: any[]) => {
-    if (isDevelopment) {
-      // console.error('[DEBUG ERROR]', ...args); // sub-5ms optimization: デバッグログ除去
-    }
+    error: (...args: any[]) => {
+    // 🚀 ZERO-LATENCY: デバッグログ完全無効化（パフォーマンス最優先）
   },
   
   performance: (label: string, fn: () => any) => {
-    if (isDevelopment) {
-      const start = performance.now();
-      const result = fn();
-      const end = performance.now();
-      // 重要な処理のみログ出力（1ms以上）
-      if (end - start > 1) {
-        // console.log(`[PERFORMANCE] ${label}: ${(end - start).toFixed(3)}ms`); // sub-5ms optimization: パフォーマンスログ除去
-      }
-      return result;
-    }
+    // 🚀 ZERO-LATENCY: パフォーマンス測定無効化、直接実行
     return fn();
-  },  
-  time: (label: string) => {
-    // 🚀 詰まり防止: time系ログも制限
-    if (isDevelopment && Math.random() < 0.05) { // 5%の確率
-      console.time(`[DEBUG TIME] ${label}`);
-    }
+  },  time: (label: string) => {
+    // 🚀 ZERO-LATENCY: time系ログ完全無効化
   },
   
   timeEnd: (label: string) => {
-    // 🚀 詰まり防止: timeEnd系ログも制限
-    if (isDevelopment && Math.random() < 0.05) { // 5%の確率
-      console.timeEnd(`[DEBUG TIME] ${label}`);
-    }
+    // 🚀 ZERO-LATENCY: timeEnd系ログ完全無効化
   },
   
   // 🚀 HyperTypingEngine用のタイピングデバッグ機能 (完全パフォーマンス最優先)
