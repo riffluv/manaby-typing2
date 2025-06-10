@@ -3,7 +3,6 @@ import type { GameScoreLog, PerWordScoreLog } from '@/types';
 import { useRankingModal } from '@/hooks/useRankingModal';
 import { useSceneNavigationStore } from '@/store/sceneNavigationStore';
 import { useGlobalShortcuts } from '@/hooks/useGlobalShortcuts';
-import RankingModal from './RankingModal';
 import styles from '@/styles/components/SimpleGameResultScreen.module.css';
 
 // sessionStorageのキー

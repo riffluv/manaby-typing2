@@ -204,7 +204,7 @@
   text-shadow: 0 0 12px rgba(150,180,255,0.3);
 }
 
-.modalInput {
+.modalContent .modalInput {
   padding: 0.6rem;
   font-size: 1rem;
   border: none;
@@ -212,6 +212,14 @@
   color: #eee;
   border-bottom: 1px solid rgba(255,255,255,0.2);
   outline: none;
+  text-align: center;
+  width: 100%;
+  box-sizing: border-box;
+}
+
+.modalContent .modalInput::placeholder {
+  text-align: center;
+  color: #aaa;
 }
 
 .modalInput:focus {
