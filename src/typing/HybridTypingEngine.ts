@@ -235,9 +235,7 @@ export class HybridTypingEngine {
     // TypingCharからひらがなを結合
     const kanaText = this.state.typingChars.map(char => char.kana).join('');
     this.kanaDisplay.textContent = kanaText;
-  }
-
-  /**
+  }  /**
    * Canvas ローマ字設定
    */
   private setupCanvasRomaji(): void {
@@ -248,45 +246,47 @@ export class HybridTypingEngine {
 
     // Canvas サイズ設定 - コンテナに合わせて動的調整
     const containerWidth = this.container?.offsetWidth || 800;
-    this.romajiCanvas.width = containerWidth - 30; // padding考慮
-    this.romajiCanvas.height = 60;
+    this.romajiCanvas.width = containerWidth - 60; // パディング考慮
+    this.romajiCanvas.height = 50; // 少し高さを抑えて日本語テキストとのバランス改善
 
-    // 高DPI対応
+    // 高DPI対応とアンチエイリアス最適化
     const devicePixelRatio = window.devicePixelRatio || 1;
     this.romajiCanvas.width *= devicePixelRatio;
     this.romajiCanvas.height *= devicePixelRatio;
     this.ctx.scale(devicePixelRatio, devicePixelRatio);
-    this.romajiCanvas.style.width = `${containerWidth - 30}px`;
-    this.romajiCanvas.style.height = '60px';
+    this.romajiCanvas.style.width = `${containerWidth - 60}px`;
+    this.romajiCanvas.style.height = '50px';
+
+    // Canvas描画品質の向上
+    this.ctx.imageSmoothingEnabled = true;
 
     this.createCanvasChars();
-  }
-
-  /**
+  }  /**
    * Canvas用ローマ字文字作成 - 個別フォーカス対応
    */
   private createCanvasChars(): void {
     this.canvasChars = [];
     let totalRomaji = '';
-    
-    // 全ローマ字文字列を構築
+      // 全ローマ字文字列を構築（データは既に小文字なので変換不要）
     this.state.typingChars.forEach(char => {
-      totalRomaji += char.patterns[0]; // 第一パターンを使用
+      debug.log(`🔍 TypingChar pattern[0]: "${char.patterns[0]}" (type: ${typeof char.patterns[0]})`);
+      totalRomaji += char.patterns[0]; // 元データが既に小文字
     });
 
-    if (totalRomaji.length === 0) return;
+    debug.log(`🔍 Total romaji string: "${totalRomaji}"`);
 
-    // 文字配置計算
-    const canvasWidth = (this.container?.offsetWidth || 800) - 30;
-    const charWidth = Math.min(30, canvasWidth / totalRomaji.length); // 動的文字幅
-    const startX = (canvasWidth - (totalRomaji.length * charWidth)) / 2;
-
-    // 各文字のCanvasオブジェクト作成
+    if (totalRomaji.length === 0) return;// 文字配置計算 - 日本語テキストと調和する間隔に調整
+    const canvasWidth = (this.container?.offsetWidth || 800) - 60; // パディング考慮
+    const charSpacing = Math.min(24, Math.max(16, canvasWidth / (totalRomaji.length + 2))); // 適切な文字間隔
+    const totalTextWidth = totalRomaji.length * charSpacing;
+    const startX = (canvasWidth - totalTextWidth) / 2; // 中央揃え開始位置（オフセット削除）    // 各文字のCanvasオブジェクト作成
     for (let i = 0; i < totalRomaji.length; i++) {
+      const char = totalRomaji[i];
+      debug.log(`🔍 Creating CanvasRomajiChar with character: "${char}"`);
       this.canvasChars.push(new CanvasRomajiChar(
-        totalRomaji[i],
-        startX + (i * charWidth) + charWidth / 2, // 中央揃え
-        30 // Y位置
+        char,
+        startX + (i * charSpacing) + charSpacing / 2, // 調整された間隔
+        25 // Y位置（Canvas高さ50pxに合わせて中央）
       ));
     }
 
@@ -314,33 +314,77 @@ export class HybridTypingEngine {
       capture: true 
     });
   }
-
   /**
-   * 🚀 ZERO-LATENCY キー処理 - DirectTypingEngine2互換
+   * 🚀 ZERO-LATENCY キー処理 - DirectTypingEngine2完全互換
    */
   private processKey(key: string): void {
-    if (this.state.currentIndex >= this.state.typingChars.length) return;
+    if (this.state.keyCount === 0) {
+      UltraFastAudioSystem.resumeAudioContext();
+    }
+
+    if (this.state.startTime === 0) {
+      this.state.startTime = Date.now();
+    }
+
+    this.state.keyCount++;
 
     const currentChar = this.state.typingChars[this.state.currentIndex];
-    
-    // 「ん」分岐処理対応
-    if (currentChar.kana === 'ん' && key.toLowerCase() === 'n') {
+    if (!currentChar) return;
+
+    // 「ん」の分岐状態処理 - DirectTypingEngine2完全再現
+    if (currentChar.branchingState) {
       const nextChar = this.state.typingChars[this.state.currentIndex + 1];
-      if (nextChar && this.canBranch(nextChar, key)) {
-        this.handleNBranching(key);
+      const result = currentChar.typeBranching(key, nextChar);
+
+      if (result.success) {
+        UltraFastAudioSystem.playClickSound();
+
+        if (result.completeWithSingle) {
+          // 'n'パターン: 「ん」完了後、次文字に継続
+          this.state.currentIndex++;
+
+          if (nextChar) {
+            const nextResult = nextChar.type(key);
+            if (nextResult && nextChar.completed) {
+              this.state.currentIndex++;
+            }
+          }
+        } else {
+          // 'nn'パターン完了
+          this.state.currentIndex++;
+        }
+
+        if (this.state.currentIndex >= this.state.typingChars.length) {
+          this.handleWordComplete();
+          return;
+        }
+
+        // 🚀 即座Canvas更新
+        this.updateCanvasStates();
+        this.renderCanvas();
+        this.notifyProgress();
+        return;
+      } else {
+        this.state.mistakeCount++;
+        UltraFastAudioSystem.playErrorSound();
+        
+        // 🚀 即座Canvas更新
+        this.updateCanvasStates();
+        this.renderCanvas();
+        this.notifyProgress();
         return;
       }
     }
 
+    // 通常のタイピング処理
     const isCorrect = currentChar.type(key);
-    this.state.keyCount++;
 
     if (isCorrect) {
       UltraFastAudioSystem.playClickSound();
-      
+
       if (currentChar.completed) {
         this.state.currentIndex++;
-        
+
         if (this.state.currentIndex >= this.state.typingChars.length) {
           this.handleWordComplete();
           return;
@@ -394,13 +438,11 @@ export class HybridTypingEngine {
   }
   /**
    * Canvas文字状態更新 - 個別フォーカス完全再現
-   */
-  private updateCanvasStates(): void {
+   */  private updateCanvasStates(): void {
     let romajiIndex = 0;
-    
-    for (let i = 0; i < this.state.typingChars.length; i++) {
+      for (let i = 0; i < this.state.typingChars.length; i++) {
       const char = this.state.typingChars[i];
-      const pattern = char.patterns[0];
+      const pattern = char.patterns[0]; // 元データが既に小文字なので変換不要
       
       for (let j = 0; j < pattern.length; j++) {
         if (romajiIndex >= this.canvasChars.length) break;
@@ -427,7 +469,6 @@ export class HybridTypingEngine {
       }
     }
   }
-
   /**
    * 🚀 超高速Canvas描画 - DirectTypingEngine2のフォーカス完全再現
    */
@@ -435,27 +476,33 @@ export class HybridTypingEngine {
     if (!this.ctx || !this.romajiCanvas) return;
 
     // Canvas クリア
-    this.ctx.clearRect(0, 0, this.romajiCanvas.width, this.romajiCanvas.height);
-
-    // フォント設定
+    this.ctx.clearRect(0, 0, this.romajiCanvas.width, this.romajiCanvas.height);    // フォント設定 - 日本語テキストと調和するスタイル
     this.ctx.font = `${this.config.fontWeight} ${this.config.fontSize} ${this.config.fontFamily}`;
     this.ctx.textAlign = 'center';
     this.ctx.textBaseline = 'middle';
+    this.ctx.letterSpacing = '0.02em'; // 文字間隔の微調整    // 各文字描画 - 個別フォーカス対応
+    this.canvasChars.forEach((char, index) => {
+      // シャドウ設定 - より洗練された影効果
+      const shadowColor = char.getShadow();
+      this.ctx!.shadowColor = shadowColor;
+      this.ctx!.shadowBlur = shadowColor !== '0 0 1px rgba(0,0,0,0.5)' ? 4 : 1;
+      this.ctx!.shadowOffsetX = 0;
+      this.ctx!.shadowOffsetY = 1;
 
-    // 各文字描画 - 個別フォーカス対応
-    this.canvasChars.forEach((char) => {
-      // シャドウ設定
-      this.ctx!.shadowColor = char.getShadow();
-      this.ctx!.shadowBlur = char.getShadow() !== '0 0 1px rgba(0,0,0,0.5)' ? 5 : 1;
-      
       // 文字色・描画
       this.ctx!.fillStyle = char.getColor();
+      
+      // デバッグ: 描画する文字を確認
+      debug.log(`🎨 Drawing character[${index}]: "${char.character}" at (${char.x}, ${char.y}) with color: ${char.getColor()}`);
+      
       this.ctx!.fillText(char.character, char.x, char.y);
     });
 
     // シャドウリセット
     this.ctx.shadowColor = 'transparent';
     this.ctx.shadowBlur = 0;
+    this.ctx.shadowOffsetX = 0;
+    this.ctx.shadowOffsetY = 0;
   }
 
   /**
