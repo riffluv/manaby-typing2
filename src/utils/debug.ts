@@ -10,14 +10,20 @@ const enableTypingDebug = false; // 完全無効化で詰まり解消
 
 export const debug = {
   log: (...args: any[]) => {
-    // 🚀 ZERO-LATENCY: デバッグログ完全無効化（パフォーマンス最優先）
+    if (isDevelopment) {
+      console.log('[DEBUG]', ...args);
+    }
   },
   
   warn: (...args: any[]) => {
-    // 🚀 ZERO-LATENCY: デバッグログ完全無効化（パフォーマンス最優先）
+    if (isDevelopment) {
+      console.warn('[DEBUG-WARN]', ...args);
+    }
   },
     error: (...args: any[]) => {
-    // 🚀 ZERO-LATENCY: デバッグログ完全無効化（パフォーマンス最優先）
+    if (isDevelopment) {
+      console.error('[DEBUG-ERROR]', ...args);
+    }
   },
   
   performance: (label: string, fn: () => any) => {

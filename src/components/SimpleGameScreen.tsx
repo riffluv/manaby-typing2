@@ -27,21 +27,15 @@ const SimpleGameScreen: React.FC<SimpleGameScreenProps> = React.memo(({
   const typingChars = React.useMemo(() => {
     if (!currentWord.hiragana) return [];
     return JapaneseConverter.convertToTypingChars(currentWord.hiragana);
-  }, [currentWord.hiragana]);
-
-  // HybridTypingEngine 設定 - showKanaDisplay を含む完全設定
+  }, [currentWord.hiragana]);  // HybridTypingEngine 設定 - 表示制御のみ（フォントは内部管理）
   const hybridTypingConfig = React.useMemo(() => ({
-    fontFamily: '"Cinzel", "Hiragino Kaku Gothic Pro", "Meiryo", serif',
-    fontSize: '1.6rem',
-    fontWeight: 'bold',
-    backgroundColor: 'transparent', // game.html の backdrop-filter を活用
-  }), []);
-
+    showKanaDisplay,
+  }), [showKanaDisplay]);
   const { containerRef } = useHybridTyping({
     word: currentWord,
     typingChars,
     onWordComplete,
-    config: hybridTypingConfig
+    config: { showKanaDisplay }
   });
   return (
     <div className={styles.gameScreen}>

@@ -11,18 +11,25 @@
 import { TypingChar, type DisplayInfo } from './TypingChar';
 import type { KanaDisplay, PerWordScoreLog, TypingWord } from '@/types';
 import UltraFastAudioSystem from '@/utils/UltraFastAudioSystem';
-import { debug } from '../utils/debug';
 
 /**
- * ハイブリッドエンジン設定
+ * ハイブリッドエンジン設定 - 表示制御のみ
  */
 interface HybridEngineConfig {
-  fontFamily: string;
-  fontSize: string;
-  fontWeight: string;
-  backgroundColor: string;
-  showKanaDisplay: boolean;
+  showKanaDisplay?: boolean;
 }
+
+/**
+ * Canvas用フォント設定 - 内部管理（ベストプラクティス）
+ */
+const CANVAS_FONT_CONFIG = {
+  fontFamily: '"Courier New", "Consolas", "Liberation Mono", monospace',
+  fontSize: '1.6rem',
+  fontWeight: 'normal',
+  activeColor: '#ffeb3b',
+  completedColor: '#87ceeb',
+  inactiveColor: '#999'
+} as const;
 
 /**
  * Canvas用ローマ字文字クラス - 個別フォーカス対応
@@ -43,12 +50,11 @@ class CanvasRomajiChar {
     this.state = newState;
     return true; // 更新された
   }
-
   getColor(): string {
     switch (this.state) {
-      case 'active': return '#ffeb3b';     // 黄色：現在フォーカス位置
-      case 'completed': return '#87ceeb';  // 青色：完了済み
-      default: return '#999';              // グレー：未入力
+      case 'active': return CANVAS_FONT_CONFIG.activeColor;
+      case 'completed': return CANVAS_FONT_CONFIG.completedColor;
+      default: return CANVAS_FONT_CONFIG.inactiveColor;
     }
   }
 
@@ -91,16 +97,9 @@ export class HybridTypingEngine {
   private onComplete?: (scoreLog: PerWordScoreLog) => void;
   private keyHandler?: (e: KeyboardEvent) => void;
   private originalText: string = '';
+  private config: HybridEngineConfig;
 
-  private config: HybridEngineConfig = {
-    fontFamily: '"Courier New", "Consolas", monospace',
-    fontSize: '1.2rem',
-    fontWeight: 'bold',
-    backgroundColor: 'transparent',
-    showKanaDisplay: false
-  };
-
-  constructor(customConfig?: Partial<HybridEngineConfig>) {
+  constructor(customConfig: HybridEngineConfig = {}) {
     this.state = {
       typingChars: [],
       currentIndex: 0,
@@ -110,11 +109,10 @@ export class HybridTypingEngine {
       totalRomajiLength: 0
     };
 
-    if (customConfig) {
-      this.config = { ...this.config, ...customConfig };
-    }
-
-    debug.log('🚀 HybridTypingEngine initialized');
+    this.config = {
+      showKanaDisplay: false,
+      ...customConfig
+    };
   }
 
   /**
@@ -136,24 +134,18 @@ export class HybridTypingEngine {
     this.state.startTime = Date.now();
 
     // 全ローマ字長を計算
-    this.state.totalRomajiLength = typingChars.reduce((sum, char) => sum + char.patterns[0].length, 0);
-
-    this.setupHybridDOM();
+    this.state.totalRomajiLength = typingChars.reduce((sum, char) => sum + char.patterns[0].length, 0);    this.setupHybridDOM();
     this.setupCanvasRomaji();
     this.setupKeyListener();
     this.renderCanvas();
-
-    debug.log('🚀 HybridTypingEngine initialization complete');
   }
 
   /**
    * ハイブリッドDOM構築 - 原文・ひらがなはDOM、ローマ字のみCanvas
-   */
-  private setupHybridDOM(): void {
+   */  private setupHybridDOM(): void {
     if (!this.container) return;
 
-    // 既存の設定に合わせたスタイル
-    this.container.style.backgroundColor = this.config.backgroundColor;
+    // 基本スタイル設定
     this.container.style.padding = '20px';
     this.container.style.borderRadius = '8px';
     this.container.style.minHeight = '120px';
@@ -171,14 +163,15 @@ export class HybridTypingEngine {
         background: rgba(0,0,0,0.08);
         border-radius: 8px;
         padding: 15px;
-        font-family: ${this.config.fontFamily};
         font-size: 1.5rem;
         font-weight: bold;
         color: #d6cbb2;
         text-shadow: 0 0 2px rgba(0,0,0,0.8);
         letter-spacing: 0.04rem;
       "></div>
-    ` : '';    // DOM構築 - SimpleGameScreenスタイル完全継承
+    ` : '';
+
+    // DOM構築 - フォントはCSS側で管理
     this.container.innerHTML = `
       <div class="hybrid-original-text" style="
         display: flex;
@@ -188,7 +181,6 @@ export class HybridTypingEngine {
         background: rgba(0,0,0,0.08);
         border-radius: 8px;
         padding: 15px;
-        font-family: ${this.config.fontFamily};
         font-size: 1.6rem;
         font-weight: bold;
         background: linear-gradient(to right, #c9a76f, #f8e6b0);
@@ -207,7 +199,7 @@ export class HybridTypingEngine {
         border-radius: 8px;
         padding: 15px;
       ">
-        <canvas class="romaji-canvas" style="
+        <canvas class="romaji-canvas hybrid-romaji-canvas" style="
           background: transparent;
           border-radius: 4px;
         "></canvas>
@@ -263,34 +255,32 @@ export class HybridTypingEngine {
     this.createCanvasChars();
   }  /**
    * Canvas用ローマ字文字作成 - 個別フォーカス対応
-   */
-  private createCanvasChars(): void {
+   */  private createCanvasChars(): void {
     this.canvasChars = [];
     let totalRomaji = '';
-      // 全ローマ字文字列を構築（データは既に小文字なので変換不要）
+    
+    // 全ローマ字文字列を構築
     this.state.typingChars.forEach(char => {
-      debug.log(`🔍 TypingChar pattern[0]: "${char.patterns[0]}" (type: ${typeof char.patterns[0]})`);
-      totalRomaji += char.patterns[0]; // 元データが既に小文字
+      totalRomaji += char.patterns[0];
     });
 
-    debug.log(`🔍 Total romaji string: "${totalRomaji}"`);
+    if (totalRomaji.length === 0) return;
 
-    if (totalRomaji.length === 0) return;// 文字配置計算 - 日本語テキストと調和する間隔に調整
-    const canvasWidth = (this.container?.offsetWidth || 800) - 60; // パディング考慮
-    const charSpacing = Math.min(24, Math.max(16, canvasWidth / (totalRomaji.length + 2))); // 適切な文字間隔
+    // 文字配置計算
+    const canvasWidth = (this.container?.offsetWidth || 800) - 60;
+    const charSpacing = Math.min(24, Math.max(16, canvasWidth / (totalRomaji.length + 2)));
     const totalTextWidth = totalRomaji.length * charSpacing;
-    const startX = (canvasWidth - totalTextWidth) / 2; // 中央揃え開始位置（オフセット削除）    // 各文字のCanvasオブジェクト作成
+    const startX = (canvasWidth - totalTextWidth) / 2;
+
+    // 各文字のCanvasオブジェクト作成
     for (let i = 0; i < totalRomaji.length; i++) {
       const char = totalRomaji[i];
-      debug.log(`🔍 Creating CanvasRomajiChar with character: "${char}"`);
       this.canvasChars.push(new CanvasRomajiChar(
         char,
-        startX + (i * charSpacing) + charSpacing / 2, // 調整された間隔
-        25 // Y位置（Canvas高さ50pxに合わせて中央）
+        startX + (i * charSpacing) + charSpacing / 2,
+        25
       ));
     }
-
-    debug.log(`Canvas chars created: ${this.canvasChars.length} characters`);
   }
 
   /**
@@ -471,30 +461,27 @@ export class HybridTypingEngine {
   }
   /**
    * 🚀 超高速Canvas描画 - DirectTypingEngine2のフォーカス完全再現
-   */
-  private renderCanvas(): void {
+   */  private renderCanvas(): void {
     if (!this.ctx || !this.romajiCanvas) return;
 
     // Canvas クリア
-    this.ctx.clearRect(0, 0, this.romajiCanvas.width, this.romajiCanvas.height);    // フォント設定 - 日本語テキストと調和するスタイル
-    this.ctx.font = `${this.config.fontWeight} ${this.config.fontSize} ${this.config.fontFamily}`;
+    this.ctx.clearRect(0, 0, this.romajiCanvas.width, this.romajiCanvas.height);
+
+    // フォント設定 - 内部定数使用
+    const fontString = `${CANVAS_FONT_CONFIG.fontWeight} ${CANVAS_FONT_CONFIG.fontSize} ${CANVAS_FONT_CONFIG.fontFamily}`;
+    this.ctx.font = fontString;
     this.ctx.textAlign = 'center';
     this.ctx.textBaseline = 'middle';
-    this.ctx.letterSpacing = '0.02em'; // 文字間隔の微調整    // 各文字描画 - 個別フォーカス対応
-    this.canvasChars.forEach((char, index) => {
-      // シャドウ設定 - より洗練された影効果
+
+    // 各文字描画
+    this.canvasChars.forEach(char => {
       const shadowColor = char.getShadow();
       this.ctx!.shadowColor = shadowColor;
       this.ctx!.shadowBlur = shadowColor !== '0 0 1px rgba(0,0,0,0.5)' ? 4 : 1;
       this.ctx!.shadowOffsetX = 0;
       this.ctx!.shadowOffsetY = 1;
 
-      // 文字色・描画
       this.ctx!.fillStyle = char.getColor();
-      
-      // デバッグ: 描画する文字を確認
-      debug.log(`🎨 Drawing character[${index}]: "${char.character}" at (${char.x}, ${char.y}) with color: ${char.getColor()}`);
-      
       this.ctx!.fillText(char.character, char.x, char.y);
     });
 

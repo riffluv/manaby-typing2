@@ -5,10 +5,7 @@ import { TypingWord, PerWordScoreLog } from '@/types';
 import { useSettingsStore } from '@/store/useSettingsStore';
 
 export interface HybridTypingHookConfig {
-  fontFamily?: string;
-  fontSize?: string;
-  fontWeight?: string;
-  backgroundColor?: string;
+  showKanaDisplay?: boolean;
 }
 
 export interface UseHybridTypingProps {
@@ -39,15 +36,9 @@ export function useHybridTyping({
     // 前のエンジンをクリーンアップ
     if (engineRef.current) {
       engineRef.current.cleanup();
-    }
-
-    // 新しいハイブリッドエンジンを作成
+    }    // 新しいハイブリッドエンジンを作成
     const engine = new HybridTypingEngine({
-      fontFamily: config.fontFamily || 'inherit',
-      fontSize: config.fontSize || '2rem',
-      fontWeight: config.fontWeight || 'bold',
-      backgroundColor: config.backgroundColor || 'transparent',
-      showKanaDisplay: showKanaDisplay,
+      showKanaDisplay: config.showKanaDisplay ?? showKanaDisplay,
     });
 
     // 原文を設定（漢字入りのテキスト）
@@ -69,7 +60,7 @@ export function useHybridTyping({
         engineRef.current = null;
       }
     };
-  }, [word, typingChars, onWordComplete, config, showKanaDisplay]);
+  }, [word, typingChars, onWordComplete, config.showKanaDisplay, showKanaDisplay]);
 
   // リセット関数
   const reset = useCallback(() => {
