@@ -25,196 +25,82 @@ const BGM_TRACKS: Record<BGMMode, BGMTrack | null> = {
 };
 
 class BGMPlayer {
-  private currentAudio: HTMLAudioElement | null = null;
-  private currentMode: BGMMode = 'silent';
-  private isInitialized = false;
-  private fadeInterval: NodeJS.Timeout | null = null;
-  private globalVolume = 0.5; // マスター音量
-  private performanceDebugMode = false; // パフォーマンス調査モード
+  // BGM専用AudioContext（効果音とは完全分離）
+  private static bgmCtx: AudioContext | null = null;
+  private static gainNode: GainNode | null = null;
+  private static source: AudioBufferSourceNode | null = null;
+  private static currentTrack: BGMTrack | null = null;
+  private static isInitialized = false;
+  private static globalVolume = 0.5;
 
-  constructor() {
-    this.initialize();
-  }
-  private async initialize() {
-    if (this.isInitialized) return;
-    
+  // BGM用AudioContext初期化
+  private static async initContext() {
+    if (this.bgmCtx) return;
+    // @ts-ignore - webkitAudioContext for Safari compatibility
+    this.bgmCtx = new (window.AudioContext || window.webkitAudioContext)();
+    this.gainNode = this.bgmCtx.createGain();
+    this.gainNode.gain.value = this.globalVolume;
+    this.gainNode.connect(this.bgmCtx.destination);
     this.isInitialized = true;
   }
 
-  /**
-   * 🔍 パフォーマンス調査: BGM処理無効化
-   */
-  setPerformanceDebugMode(enabled: boolean): void {
-    this.performanceDebugMode = enabled;    if (enabled) {
-      // console.log('[BGMPlayer] 🔍 パフォーマンス調査モード: BGM処理を無効化'); // sub-5ms optimization
-      this.stop(); // 既存のBGMを停止
-    }
-  }
-  /**
-   * BGMモード切り替え（フェード付き） - シンプル版
-   */
-  async switchMode(mode: BGMMode): Promise<void> {
-    // パフォーマンス調査モードの場合は何もしない
-    if (this.performanceDebugMode) {
-      return;
-    }
-
-    if (this.currentMode === mode) {
-      return;
-    }
-    
-    const track = BGM_TRACKS[mode];
-    
-    // 無音モードまたはトラック未設定の場合
-    if (!track) {
-      await this.stop();
-      this.currentMode = mode;
-      return;
-    }
-
-    // 現在の音楽をフェードアウト
-    if (this.currentAudio && !this.currentAudio.paused) {
-      await this.fadeOut();
-    }
-
-    // 新しい音楽を開始
-    await this.playTrack(track);
-    this.currentMode = mode;
-  }  /**
-   * 指定トラックを再生 - シンプル版
-   */
-  private async playTrack(track: BGMTrack): Promise<void> {
-    try {
-      // パフォーマンス調査モードの場合は何もしない
-      if (this.performanceDebugMode) {
-        return;
-      }
-
-      // 新しいAudioオブジェクト作成
-      this.currentAudio = new Audio(`/sounds/bgm/${track.filename}`);
-      this.currentAudio.loop = track.loop;
-      this.currentAudio.volume = 0; // フェードイン開始のため0から
-      
-      // 音楽ロード完了を待機
-      await new Promise((resolve, reject) => {
-        if (!this.currentAudio) return reject('Audio not created');
-        
-        this.currentAudio.addEventListener('canplaythrough', resolve, { once: true });
-        this.currentAudio.addEventListener('error', reject, { once: true });
-        this.currentAudio.load();
-      });
-
-      // 再生開始
-      await this.currentAudio.play();
-      // フェードイン
-      await this.fadeIn(track.volume * this.globalVolume);
-      
-    } catch (error) {
-      console.warn(`[BGMPlayer] ⚠️ BGM再生エラー: ${track.filename}`, error);
-    }
+  // BGM再生（MP3ファイルをWebAudioで）
+  static async play(track: BGMTrack) {
+    await this.initContext();
+    this.stop();
+    this.currentTrack = track;
+    // fetch & decode
+    const response = await fetch(`/sounds/bgm/${track.filename}`);
+    const arrayBuffer = await response.arrayBuffer();
+    const audioBuffer = await this.bgmCtx!.decodeAudioData(arrayBuffer);
+    const source = this.bgmCtx!.createBufferSource();
+    source.buffer = audioBuffer;
+    source.loop = track.loop;
+    source.connect(this.gainNode!);
+    source.start();
+    this.source = source;
   }
 
-  /**
-   * フェードイン
-   */
-  private async fadeIn(targetVolume: number): Promise<void> {
-    return new Promise((resolve) => {
-      if (!this.currentAudio) return resolve();
-      
-      this.clearFadeInterval();
-      let volume = 0;
-      const step = targetVolume / 20; // 20ステップで目標音量に
-      
-      this.fadeInterval = setInterval(() => {
-        if (!this.currentAudio) {
-          this.clearFadeInterval();
-          return resolve();
-        }
-        
-        volume += step;
-        if (volume >= targetVolume) {
-          this.currentAudio.volume = targetVolume;
-          this.clearFadeInterval();
-          resolve();
-        } else {
-          this.currentAudio.volume = volume;
-        }
-      }, 50); // 50ms間隔
-    });
-  }
-
-  /**
-   * フェードアウト
-   */
-  private async fadeOut(): Promise<void> {
-    return new Promise((resolve) => {
-      if (!this.currentAudio) return resolve();
-      
-      this.clearFadeInterval();
-      const startVolume = this.currentAudio.volume;
-      const step = startVolume / 20;
-      
-      this.fadeInterval = setInterval(() => {
-        if (!this.currentAudio) {
-          this.clearFadeInterval();
-          return resolve();
-        }
-        
-        this.currentAudio.volume -= step;
-        if (this.currentAudio.volume <= 0) {
-          this.currentAudio.volume = 0;
-          this.clearFadeInterval();
-          resolve();
-        }
-      }, 50);
-    });
-  }
-
-  /**
-   * BGM停止
-   */
-  async stop(): Promise<void> {
-    if (this.currentAudio) {
-      await this.fadeOut();
-      this.currentAudio.pause();      this.currentAudio = null;
+  // BGM停止
+  static stop() {
+    if (this.source) {
+      try { this.source.stop(); } catch {}
+      this.source.disconnect();
+      this.source = null;
     }
-    this.currentMode = 'silent';
+    this.currentTrack = null;
   }
 
-  /**
-   * マスター音量設定
-   */
-  setGlobalVolume(volume: number): void {
+  // 音量設定
+  static setVolume(volume: number) {
     this.globalVolume = Math.max(0, Math.min(1, volume));
-    
-    if (this.currentAudio && this.currentMode !== 'silent') {
-      const track = BGM_TRACKS[this.currentMode];
-      if (track) {        this.currentAudio.volume = track.volume * this.globalVolume;
-      }
+    if (this.gainNode) {
+      this.gainNode.gain.value = this.globalVolume;
     }
   }
-  /**
-   * 現在の状態取得 - パフォーマンス情報付き
-   */
-  getStatus() {
+
+  // 状態取得
+  static getStatus() {
     return {
-      currentMode: this.currentMode,
-      isPlaying: this.currentAudio && !this.currentAudio.paused,
+      isInitialized: this.isInitialized,
+      currentTrack: this.currentTrack,
       volume: this.globalVolume,
-      trackConfigured: !!BGM_TRACKS[this.currentMode],
-      performanceDebugMode: this.performanceDebugMode
+      contextState: this.bgmCtx?.state || 'none',
     };
   }
 
-  private clearFadeInterval(): void {
-    if (this.fadeInterval) {
-      clearInterval(this.fadeInterval);
-      this.fadeInterval = null;
+  // BGMモード切り替え（従来互換API）
+  static async switchMode(mode: BGMMode) {
+    const track = BGM_TRACKS[mode];
+    if (!track) {
+      this.stop();
+      return;
     }
+    await this.play(track);
   }
 }
 
-// グローバルシングルトンインスタンス
-export const globalBGMPlayer = new BGMPlayer();
+// グローバルシングルトンインスタンス（従来互換）
+export const globalBGMPlayer = BGMPlayer;
 
 export default BGMPlayer;
