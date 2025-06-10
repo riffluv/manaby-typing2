@@ -28,7 +28,9 @@ const CANVAS_FONT_CONFIG = {
   fontWeight: 'normal',
   activeColor: '#ffeb3b',
   completedColor: '#87ceeb',
-  inactiveColor: '#999'
+  inactiveColor: '#999',
+  // 🚀 フォント文字列を事前計算で高速化
+  fontString: 'normal 1.6rem "Courier New", "Consolas", "Liberation Mono", monospace'
 } as const;
 
 /**
@@ -43,12 +45,15 @@ class CanvasRomajiChar {
     public x: number,
     public y: number
   ) {}
-
   setState(newState: 'inactive' | 'active' | 'completed'): boolean {
     if (this.lastState === newState) return false; // 重複更新防止
     this.lastState = newState;
     this.state = newState;
     return true; // 更新された
+  }
+  
+  getState(): 'inactive' | 'active' | 'completed' {
+    return this.state;
   }
   getColor(): string {
     switch (this.state) {
@@ -425,12 +430,12 @@ export class HybridTypingEngine {
     this.updateCanvasStates();
     this.renderCanvas();
     this.notifyProgress();
-  }
-  /**
-   * Canvas文字状態更新 - 個別フォーカス完全再現
+  }  /**
+   * Canvas文字状態更新 - 🚀 差分更新最適化
    */  private updateCanvasStates(): void {
     let romajiIndex = 0;
-      for (let i = 0; i < this.state.typingChars.length; i++) {
+    
+    for (let i = 0; i < this.state.typingChars.length; i++) {
       const char = this.state.typingChars[i];
       const pattern = char.patterns[0]; // 元データが既に小文字なので変換不要
       
@@ -453,43 +458,84 @@ export class HybridTypingEngine {
           newState = 'inactive';
         }
         
-        // 状態更新
+        // 🚀 状態更新（差分更新で最適化）
         this.canvasChars[romajiIndex].setState(newState);
         romajiIndex++;
       }
     }
-  }
-  /**
-   * 🚀 超高速Canvas描画 - DirectTypingEngine2のフォーカス完全再現
+  }/**
+   * 🚀 超高速Canvas描画 - シャドウ最適化版
    */  private renderCanvas(): void {
     if (!this.ctx || !this.romajiCanvas) return;
 
     // Canvas クリア
     this.ctx.clearRect(0, 0, this.romajiCanvas.width, this.romajiCanvas.height);
 
-    // フォント設定 - 内部定数使用
-    const fontString = `${CANVAS_FONT_CONFIG.fontWeight} ${CANVAS_FONT_CONFIG.fontSize} ${CANVAS_FONT_CONFIG.fontFamily}`;
-    this.ctx.font = fontString;
+    // 🚀 フォント設定最適化 - 事前計算済み文字列使用
+    this.ctx.font = CANVAS_FONT_CONFIG.fontString;
     this.ctx.textAlign = 'center';
     this.ctx.textBaseline = 'middle';
 
-    // 各文字描画
-    this.canvasChars.forEach(char => {
-      const shadowColor = char.getShadow();
-      this.ctx!.shadowColor = shadowColor;
-      this.ctx!.shadowBlur = shadowColor !== '0 0 1px rgba(0,0,0,0.5)' ? 4 : 1;
-      this.ctx!.shadowOffsetX = 0;
-      this.ctx!.shadowOffsetY = 1;
+    // 🚀 シャドウ状態ごとにグループ化して描画（最適化）
+    const charsByState = {
+      active: [] as CanvasRomajiChar[],
+      completed: [] as CanvasRomajiChar[],
+      inactive: [] as CanvasRomajiChar[]
+    };
 
-      this.ctx!.fillStyle = char.getColor();
-      this.ctx!.fillText(char.character, char.x, char.y);
+    // 状態別に分類
+    this.canvasChars.forEach(char => {
+      const state = char.getState();
+      charsByState[state].push(char);
     });
+
+    // 状態ごとにまとめて描画（シャドウ設定を最小化）
+    this.renderCharGroup(charsByState.inactive, 'inactive');
+    this.renderCharGroup(charsByState.completed, 'completed');
+    this.renderCharGroup(charsByState.active, 'active');
 
     // シャドウリセット
     this.ctx.shadowColor = 'transparent';
     this.ctx.shadowBlur = 0;
     this.ctx.shadowOffsetX = 0;
     this.ctx.shadowOffsetY = 0;
+  }
+
+  /**
+   * 🚀 状態別文字グループ描画（シャドウ最適化）
+   */
+  private renderCharGroup(chars: CanvasRomajiChar[], state: 'inactive' | 'active' | 'completed'): void {
+    if (chars.length === 0 || !this.ctx) return;
+
+    // 状態に応じたスタイル設定（一度だけ）
+    switch (state) {
+      case 'active':
+        this.ctx.fillStyle = CANVAS_FONT_CONFIG.activeColor;
+        this.ctx.shadowColor = '0 0 8px rgba(255, 235, 59, 0.8)';
+        this.ctx.shadowBlur = 4;
+        this.ctx.shadowOffsetX = 0;
+        this.ctx.shadowOffsetY = 1;
+        break;
+      case 'completed':
+        this.ctx.fillStyle = CANVAS_FONT_CONFIG.completedColor;
+        this.ctx.shadowColor = '0 0 6px rgba(135, 206, 235, 0.6)';
+        this.ctx.shadowBlur = 4;
+        this.ctx.shadowOffsetX = 0;
+        this.ctx.shadowOffsetY = 1;
+        break;
+      case 'inactive':
+        this.ctx.fillStyle = CANVAS_FONT_CONFIG.inactiveColor;
+        this.ctx.shadowColor = '0 0 1px rgba(0,0,0,0.5)';
+        this.ctx.shadowBlur = 1;
+        this.ctx.shadowOffsetX = 0;
+        this.ctx.shadowOffsetY = 1;
+        break;
+    }
+
+    // 同じ状態の文字をまとめて描画
+    chars.forEach(char => {
+      this.ctx!.fillText(char.character, char.x, char.y);
+    });
   }
 
   /**
