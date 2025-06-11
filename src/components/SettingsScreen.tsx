@@ -160,9 +160,8 @@ const SettingsScreen: React.FC = React.memo(() => {
             </div>
           </div>
         </section>        {/* Navigation Buttons */}
-        <nav className={styles.system__buttons}>
-          <button className={styles.system__button} onClick={goBack}>
-            Back
+        <nav className={styles.system__buttons}>          <button className={styles.system__button} onClick={goBack}>
+            BACK
           </button>
         </nav>
       </main>

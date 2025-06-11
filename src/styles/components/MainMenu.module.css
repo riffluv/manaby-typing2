@@ -756,7 +756,7 @@
 /* =========================================================================
    Mode Select Modal - ELDEN RING NIGHTREIGN風
    ========================================================================== */
-/* Modal base */
+/* Modal base - Enhanced ELDEN RING NIGHTREIGN style */
 .modal {
   /* Position: Fixed fullscreen overlay */
   position: fixed;
@@ -770,19 +770,29 @@
   /* Layer: Above main menu */
   z-index: var(--z-index-modal-overlay, 2000);
   
-  /* Background: Dark overlay */
-  background: rgba(0, 0, 0, 0.9);
+  /* Background: Dark overlay with enhanced atmosphere */
+  background: radial-gradient(
+    circle at center,
+    rgba(0, 0, 0, 0.85),
+    rgba(0, 0, 0, 0.95)
+  );
   backdrop-filter: blur(8px);
   
   /* Animation */
   animation: modalFadeIn 0.5s ease-out forwards;
   
-  /* Typography: Inherit from parent */
-  font-family: var(--font-family-game, 'Cinzel', serif);
-  color: var(--color-gaming-text-primary, #e0e0e0);
+  /* Typography: ELDEN RING font */
+  font-family: var(--font-eldenring-title, 'Cinzel', serif);
+  color: var(--color-eldenring-text-primary, #e0e0e0);
   
   /* Performance: GPU optimization */
   will-change: opacity, transform;
+  
+  /* Add subtle floating particles effect */
+  background-attachment: fixed;
+  background-image:
+    radial-gradient(circle at center, rgba(0, 0, 0, 0.85), rgba(0, 0, 0, 0.95)),
+    url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='400' height='400' viewBox='0 0 800 800'%3E%3Cg fill='none' stroke='%23163B59' stroke-width='1'%3E%3Cpath d='M769 229L1037 260.9M927 880L731 737 520 660 309 538 40 599 295 764 126.5 879.5 40 599-197 493 102 382-31 229 126.5 79.5-69-63'/%3E%3Cpath d='M-31 229L237 261 390 382 603 493 308.5 537.5 101.5 381.5M370 905L295 764'/%3E%3Cpath d='M520 660L578 842 731 737 840 599 603 493 520 660 295 764 309 538 390 382 539 269 769 229 577.5 41.5 370 105 295 -36 126.5 79.5 237 261 102 382 40 599 -69 737 127 880'/%3E%3Cpath d='M520-140L578.5 42.5 731-63M603 493L539 269 237 261 370 105M902 382L539 269M390 382L102 382'/%3E%3Cpath d='M-222 42L126.5 79.5 370 105 539 269 577.5 41.5 927 80 769 229 902 382 603 493 731 737M295-36L577.5 41.5M578 842L295 764M40-201L127 80M102 382L-261 269'/%3E%3C/g%3E%3Cg fill='%230A1020'%3E%3Ccircle cx='769' cy='229' r='5'/%3E%3Ccircle cx='539' cy='269' r='5'/%3E%3Ccircle cx='603' cy='493' r='5'/%3E%3Ccircle cx='731' cy='737' r='5'/%3E%3Ccircle cx='520' cy='660' r='5'/%3E%3Ccircle cx='309' cy='538' r='5'/%3E%3Ccircle cx='295' cy='764' r='5'/%3E%3Ccircle cx='40' cy='599' r='5'/%3E%3Ccircle cx='102' cy='382' r='5'/%3E%3Ccircle cx='127' cy='80' r='5'/%3E%3Ccircle cx='370' cy='105' r='5'/%3E%3Ccircle cx='578' cy='42' r='5'/%3E%3Ccircle cx='237' cy='261' r='5'/%3E%3Ccircle cx='390' cy='382' r='5'/%3E%3C/g%3E%3C/svg%3E");
 }
 
 /* Modal active state */
@@ -814,15 +824,17 @@
   width: min(90vw, 800px);
   height: min(80vh, 600px);
   
-  /* Visual: Gaming theme styling - ELDEN RING風 */
+  /* Visual: Gaming theme styling - ELDEN RING NIGHTREIGN風 */
   background: linear-gradient(135deg, 
-    rgba(10, 16, 32, 0.95), 
-    rgba(5, 8, 16, 0.95)
+    var(--color-eldenring-bg-tertiary, rgba(16, 24, 48, 0.98)), 
+    var(--color-eldenring-bg-primary, rgba(5, 10, 20, 0.99))
   );
-  border: 1px solid rgba(163, 216, 255, 0.3);
+  border: 2px solid rgba(163, 216, 255, 0.3);
   border-radius: var(--border-radius-sm, 4px);
   box-shadow: 
-    0 20px 40px rgba(0, 0, 0, 0.8),
+    0 20px 40px rgba(0, 0, 0, 0.9),
+    0 0 30px rgba(163, 216, 255, 0.15),
+    0 0 50px rgba(163, 216, 255, 0.05),
     inset 0 1px 0 rgba(255, 255, 255, 0.05);
   
   /* Animation */
@@ -830,6 +842,34 @@
   
   /* Overflow: Hidden for clean edges */
   overflow: hidden;
+  
+  /* Enhanced NIGHTREIGN style border with pseudo-element glow */
+  position: relative;
+  
+  /* Add inner shine effect */
+  background-attachment: fixed;
+  background-image: 
+    linear-gradient(135deg, 
+      var(--color-eldenring-bg-tertiary, rgba(16, 24, 48, 0.98)), 
+      var(--color-eldenring-bg-primary, rgba(5, 10, 20, 0.99))
+    ),
+    radial-gradient(
+      ellipse at top right,
+      rgba(163, 216, 255, 0.2) 0%, 
+      rgba(10, 16, 32, 0) 60%
+    );
+}
+
+/* Add subtle border glow effect */
+.modal__content::before {
+  content: '';
+  position: absolute;
+  inset: -1px;
+  background: transparent;
+  border-radius: inherit;
+  z-index: -1;
+  box-shadow: 0 0 15px 2px rgba(163, 216, 255, 0.15);
+  pointer-events: none;
 }
 
 /* Modal sidebar (mode list) */
@@ -838,14 +878,42 @@
   flex: 0 0 250px;
   padding: var(--spacing-lg, 1.5rem);
   
-  /* Background: Slightly darker */
-  background: rgba(0, 0, 0, 0.3);
-  border-right: 1px solid rgba(163, 216, 255, 0.15);
+  /* Background: Slightly darker with gradient */
+  background: 
+    linear-gradient(to right,
+      rgba(0, 0, 0, 0.5),
+      rgba(0, 0, 0, 0.3)
+    );
+  border-right: 1px solid rgba(163, 216, 255, 0.25);
+  
+  /* Add subtle blue glow to the right border */
+  box-shadow: inset -3px 0 6px -3px rgba(163, 216, 255, 0.15);
   
   /* Layout: Vertical stack */
   display: flex;
   flex-direction: column;
   gap: var(--spacing-md, 1rem);
+  
+  /* Add slight texture */
+  position: relative;
+  overflow: hidden;
+}
+
+/* Add subtle animated overlay to sidebar */
+.modal__sidebar::after {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: 
+    radial-gradient(
+      circle at 30% 20%,
+      rgba(163, 216, 255, 0.03) 0%,
+      transparent 60%
+    );
+  pointer-events: none;
 }
 
 /* Mode option buttons */
@@ -860,41 +928,95 @@
   width: 100%;
   padding: var(--spacing-md, 1rem);
   text-align: left;
+  position: relative;
   
-  /* Typography: Menu item */
+  /* Typography: Menu item - ELDEN RING font */
   font-size: var(--font-size-base, 1rem);
-  font-family: var(--font-family-game, 'Cinzel', serif);
-  font-weight: 400;
-  letter-spacing: 0.1rem;
+  font-family: var(--font-eldenring-title, 'Cinzel', serif);
+  font-weight: 500;
+  letter-spacing: var(--letter-spacing-eldenring-menu, 0.15rem);
   
   /* Color: Primary text */
-  color: var(--color-gaming-text-primary, #ccc);
+  color: var(--color-eldenring-text-secondary, #b0b0b0);
   
-  /* Border: Bottom only */
+  /* Border: Bottom only with faded effect */
   border-bottom: 1px solid rgba(163, 216, 255, 0.1);
   
-  /* Transition: Smooth hover */
-  transition: all var(--duration-fast, 0.3s) var(--easing-smooth, ease);
+  /* Subtle text shadow for all options */
+  text-shadow: 0 0 4px rgba(163, 216, 255, 0.1);
+  
+  /* Transition: Smooth hover with multiple properties */
+  transition: 
+    color var(--eldenring-animation-fast, 0.3s) var(--eldenring-easing-smooth),
+    background-color var(--eldenring-animation-fast, 0.3s) var(--eldenring-easing-smooth),
+    text-shadow var(--eldenring-animation-fast, 0.3s) var(--eldenring-easing-smooth),
+    transform var(--eldenring-animation-fast, 0.3s) var(--eldenring-easing-smooth);
 }
 
-/* Mode option hover state */
+/* Mode option hover state - Enhanced NIGHTREIGN style */
 .modal__option:hover,
 .modal__option:focus {
-  background: rgba(163, 216, 255, 0.05);
+  background: rgba(163, 216, 255, 0.07);
   color: #ffffff;
-  text-shadow: 0 0 8px rgba(163, 216, 255, 0.6);
+  text-shadow: 
+    0 0 6px rgba(163, 216, 255, 0.6),
+    0 0 12px rgba(163, 216, 255, 0.2);
   outline: none;
+  transform: translateX(2px);
 }
 
-/* Mode option selected state */
+/* Hover effect for the option button */
+.modal__option::after {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 0;
+  height: 100%;
+  background: linear-gradient(to right, 
+    rgba(163, 216, 255, 0.1), 
+    transparent
+  );
+  transition: width 0.3s ease;
+  pointer-events: none;
+}
+
+.modal__option:hover::after,
+.modal__option:focus::after {
+  width: 100%;
+}
+
+/* Mode option selected state - Enhanced ELDEN RING NIGHTREIGN style */
 .modal__option--selected {
-  background: rgba(163, 216, 255, 0.1);
-  color: #a3d8ff;
-  text-shadow: 0 0 8px rgba(163, 216, 255, 0.4);
-  border-left: 2px solid #a3d8ff;
+  background: rgba(163, 216, 255, 0.15);
+  color: var(--color-nightreign-blue-light, #a3d8ff);
+  text-shadow: 
+    0 0 8px rgba(163, 216, 255, 0.6),
+    0 0 16px rgba(163, 216, 255, 0.3);
+  border-left: 2px solid var(--color-nightreign-blue-light, #a3d8ff);
   
   /* Layout: Add left padding */
   padding-left: calc(var(--spacing-md, 1rem) - 2px);
+  
+  /* Selected option gets slight glow effect */
+  box-shadow: inset 0 0 8px rgba(163, 216, 255, 0.1);
+  
+  /* Add subtle pulsating effect */
+  animation: eldenring-option-pulse 3s infinite alternate ease-in-out;
+}
+
+/* Pulsating effect keyframes */
+@keyframes eldenring-option-pulse {
+  from {
+    text-shadow: 
+      0 0 8px rgba(163, 216, 255, 0.5),
+      0 0 16px rgba(163, 216, 255, 0.2);
+  }
+  to {
+    text-shadow: 
+      0 0 10px rgba(163, 216, 255, 0.7),
+      0 0 20px rgba(163, 216, 255, 0.3);
+  }
 }
 
 /* Modal main content */
@@ -916,74 +1038,180 @@
   font-family: var(--font-family-primary, 'Noto Sans JP', sans-serif);
   line-height: 1.6;
   
-  /* Color: Muted text */
-  color: var(--color-gaming-text-secondary, #b0b0b0);
+  /* Color: Improved text with subtle glow */
+  color: var(--color-eldenring-text-primary, #e0e0e0);
+  text-shadow: 0 0 8px rgba(163, 216, 255, 0.1);
   
   /* Spacing: Push away from bottom button */
   margin-bottom: auto;
   padding-bottom: var(--spacing-lg, 1.5rem);
+  
+  /* Visual enhancement */
+  position: relative;
+  border-left: 2px solid rgba(163, 216, 255, 0.1);
+  padding-left: var(--spacing-md, 1rem);
+  
+  /* Animation: Fade in and slight move */
+  animation: eldenring-description-reveal 0.8s ease-out forwards;
+  animation-delay: 0.2s;
+  opacity: 0;
+  transform: translateY(10px);
 }
 
-/* Modal close button */
+/* Description reveal animation */
+@keyframes eldenring-description-reveal {
+  from {
+    opacity: 0;
+    transform: translateY(10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* Modal close button - Enhanced ELDEN RING NIGHTREIGN style */
 .modal__close {
-  /* Layout: Self-align */
+  /* Layout: Self-align with improved positioning */
   align-self: flex-end;
   margin-top: var(--spacing-lg, 1.5rem);
+  position: relative;
   
-  /* Style: ELDEN RING風ボタン */
-  background: rgba(163, 216, 255, 0.05);
-  border: 1px solid rgba(163, 216, 255, 0.2);
+  /* Style: ELDEN RING NIGHTREIGN風ボタン */
+  background: rgba(16, 24, 48, 0.6);
+  border: 1px solid rgba(163, 216, 255, 0.3);
   border-radius: var(--border-radius-sm, 4px);
   padding: var(--spacing-sm, 0.5rem) var(--spacing-lg, 1.5rem);
   
-  /* Typography: Button text */
-  font-size: var(--font-size-base, 1rem);
-  font-family: var(--font-family-game, 'Cinzel', serif);
-  font-weight: 400;
-  letter-spacing: 0.1rem;
+  /* Add subtle gradient */
+  background-image: linear-gradient(
+    to bottom,
+    rgba(163, 216, 255, 0.15),
+    rgba(10, 16, 32, 0.15)
+  );
   
-  /* Color: Button text */
-  color: #a3d8ff;
+  /* Typography: Button text - ELDEN RING font */
+  font-size: var(--font-size-base, 1rem);
+  font-family: var(--font-eldenring-title, 'Cinzel', serif);
+  font-weight: 500;
+  letter-spacing: var(--letter-spacing-eldenring-menu, 0.15rem);
+  
+  /* Color: Button text with slight glow */
+  color: var(--color-nightreign-blue-light, #a3d8ff);
+  text-shadow: 0 0 6px rgba(163, 216, 255, 0.3);
   
   /* Interactive: Cursor */
   cursor: pointer;
   
-  /* Transition: Smooth hover */
-  transition: all var(--duration-fast, 0.3s) var(--easing-smooth, ease);
+  /* Add box shadow */
+  box-shadow: 
+    0 3px 6px rgba(0, 0, 0, 0.3),
+    inset 0 1px rgba(255, 255, 255, 0.1);
+  
+  /* Transition: Smooth hover with multiple properties */
+  transition: 
+    all var(--eldenring-animation-fast, 0.3s) var(--eldenring-easing-smooth),
+    transform 0.2s ease-out,
+    box-shadow 0.2s ease-out;
 }
 
-/* Modal close button hover state */
+/* Add light effect behind the button */
+.modal__close::before {
+  content: '';
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: 80%;
+  height: 80%;
+  background: transparent;
+  border-radius: inherit;
+  filter: blur(12px);
+  transform: translate(-50%, -50%);
+  z-index: -1;
+  box-shadow: 0 0 15px rgba(163, 216, 255, 0.15);
+  opacity: 0.5;
+  transition: opacity 0.3s ease;
+}
+
+/* Modal close button hover state - Enhanced effects */
 .modal__close:hover,
 .modal__close:focus {
-  background: rgba(163, 216, 255, 0.1);
+  background: rgba(16, 24, 48, 0.8);
+  background-image: linear-gradient(
+    to bottom,
+    rgba(163, 216, 255, 0.2),
+    rgba(10, 16, 32, 0.2)
+  );
   color: #ffffff;
-  text-shadow: 0 0 8px rgba(163, 216, 255, 0.6);
-  border-color: rgba(163, 216, 255, 0.4);
-  box-shadow: 0 0 15px rgba(163, 216, 255, 0.2);
+  text-shadow: 
+    0 0 8px rgba(163, 216, 255, 0.6),
+    0 0 16px rgba(163, 216, 255, 0.3);
+  border-color: rgba(163, 216, 255, 0.5);
+  box-shadow: 
+    0 6px 12px rgba(0, 0, 0, 0.3),
+    0 0 20px rgba(163, 216, 255, 0.2),
+    inset 0 1px rgba(255, 255, 255, 0.15);
   outline: none;
+  transform: translateY(-1px);
+}
+
+.modal__close:hover::before,
+.modal__close:focus::before {
+  opacity: 0.8;
+}
+
+/* Active state for the button */
+.modal__close:active {
+  transform: translateY(1px);
+  box-shadow: 
+    0 2px 4px rgba(0, 0, 0, 0.4),
+    inset 0 1px rgba(255, 255, 255, 0.05);
 }
 
 /* =========================================================================
-   Modal Animations
+   Modal Animations - Enhanced ELDEN RING NIGHTREIGN style
    ========================================================================== */
 
 @keyframes modalFadeIn {
   0% {
     opacity: 0;
+    backdrop-filter: blur(0);
+  }
+  50% {
+    backdrop-filter: blur(4px);
   }
   100% {
     opacity: 1;
+    backdrop-filter: blur(8px);
   }
 }
 
 @keyframes modalScaleIn {
   0% {
     opacity: 0;
-    transform: scale(0.95);
+    transform: scale(0.96);
+    filter: brightness(1.5) blur(3px);
+  }
+  50% {
+    filter: brightness(1.2) blur(1px);
   }
   100% {
     opacity: 1;
     transform: scale(1);
+    filter: brightness(1) blur(0);
+  }
+}
+
+/* Pulse glow effect for borders */
+@keyframes borderGlowPulse {
+  0% {
+    box-shadow: 0 0 5px rgba(163, 216, 255, 0.3);
+  }
+  50% {
+    box-shadow: 0 0 15px rgba(163, 216, 255, 0.5);
+  }
+  100% {
+    box-shadow: 0 0 5px rgba(163, 216, 255, 0.3);
   }
 }
 
@@ -995,12 +1223,14 @@
   .modal__content {
     flex-direction: column;
     height: 90vh;
+    width: 95vw;
+    max-height: 700px;
   }
   
   .modal__sidebar {
     flex: 0 0 auto;
     border-right: none;
-    border-bottom: 1px solid rgba(163, 216, 255, 0.15);
+    border-bottom: 2px solid rgba(163, 216, 255, 0.25);
   }
   
   .mainMenu__title {
