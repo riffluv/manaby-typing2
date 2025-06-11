@@ -25,15 +25,15 @@
   --color-nightreign-blue-light: #a3d8ff;
   --color-nightreign-blue-mid: #709fc7;
   --color-nightreign-blue-dark: #4a6a8c;
-  
-  /* Layout: Full screen container */
+    /* Layout: Full screen container */
   width: 100%;
   height: 100vh;
   min-height: 100vh;
   display: flex;
   flex-direction: column;
-  justify-content: center;
+  justify-content: flex-start;
   align-items: center;
+  padding-top: clamp(5vh, 15vh, 20vh);
   
   /* Background: ELDEN RING風ナイトスカイ背景 - コードのみで再現 */
   background: 
@@ -140,6 +140,7 @@
   /* Layout: Responsive container */
   width: min(90vw, 960px);
   max-width: var(--container-lg, 960px);
+  margin-bottom: clamp(30vh, 40vh, 50vh); /* キーボード表示用の下部スペースを確保 */
   
   /* Visual: ELDEN RING風スタイリング - 暗く洗練された半透明コンテナ */
   background: rgba(15, 20, 30, 0.85);
@@ -148,7 +149,7 @@
   
   /* Effects: ELDEN RING風エフェクト - エレガントな半透明と微妙なボックスシャドウ */
   backdrop-filter: blur(10px);
-  box-shadow: 
+  box-shadow:
     0 10px 30px rgba(0, 0, 0, 0.4),
     0 0 15px rgba(112, 159, 199, 0.1),
     inset 0 1px 0 rgba(255, 255, 255, 0.05);
@@ -393,17 +394,13 @@
 /* Mobile optimization */
 @media (width < 768px) {
   .gameScreen {
-    padding: clamp(0.5rem, 6vh, 2rem) var(--spacing-sm, 0.5rem);
-  }
-  
-  .gameTitle {
-    font-size: clamp(1.5rem, 7vw, 2.2rem);
-    margin-bottom: 1.5rem;
+    padding: clamp(3vh, 10vh, 15vh) var(--spacing-sm, 0.5rem) 0;
   }
   
   .typingArea {
     width: 95vw;
     padding: clamp(1rem, 3vw, 1.5rem);
+    margin-bottom: clamp(25vh, 30vh, 35vh); /* モバイルではキーボード表示スペースを調整 */
   }
   
   .promptBox__jp {
@@ -424,12 +421,13 @@
 /* Tablet optimization */
 @media (768px <= width < 1024px) {
   .gameScreen {
-    padding: clamp(1rem, 10vh, 3rem) var(--spacing-md, 1rem);
+    padding: clamp(4vh, 12vh, 15vh) var(--spacing-md, 1rem) 0;
   }
   
   .typingArea {
     width: min(85vw, 800px);
     padding: clamp(1.5rem, 4vw, 2rem);
+    margin-bottom: clamp(25vh, 35vh, 40vh); /* タブレットではキーボード表示スペースを調整 */
   }
   
   .promptBox__jp {
@@ -448,17 +446,13 @@
 /* Desktop optimization */
 @media (width >= 1024px) {
   .gameScreen {
-    padding: clamp(2rem, 12vh, 4rem) var(--spacing-lg, 1.5rem);
-  }
-  
-  .gameTitle {
-    font-size: clamp(2.5rem, 5vw, 3.5rem);
-    margin-bottom: 2.5rem;
+    padding: clamp(5vh, 15vh, 20vh) var(--spacing-lg, 1.5rem) 0;
   }
   
   .typingArea {
     width: min(80vw, 960px);
     padding: clamp(2rem, 4vw, 2.5rem);
+    margin-bottom: clamp(30vh, 40vh, 50vh); /* デスクトップではキーボード表示スペースを広く確保 */
   }
   
   .promptBox__jp {
@@ -477,12 +471,13 @@
 /* Large screen optimization */
 @media (width >= 1440px) {
   .gameScreen {
-    padding: clamp(3rem, 15vh, 5rem) var(--spacing-xl, 2rem);
+    padding: clamp(5vh, 18vh, 22vh) var(--spacing-xl, 2rem) 0;
   }
   
   .typingArea {
     max-width: 1200px;
     padding: 3rem;
+    margin-bottom: clamp(35vh, 45vh, 55vh); /* 大画面ではさらに広いキーボード表示スペース */
   }
   
   .promptBox__jp {
@@ -526,13 +521,6 @@
     display: none; /* 高コントラストモードでは装飾的な星空効果を非表示 */
   }
   
-  .gameTitle {
-    background: none;
-    color: #ffffff;
-    -webkit-text-fill-color: #ffffff;
-    text-shadow: none;
-    animation: none;
-  }
   
   .promptBox__jp {
     background: none;
@@ -597,40 +585,4 @@
   outline-offset: 4px;
 }
 
-.gameTitle {
-  /* Typography: ELDEN RING風の大きな表示テキスト */
-  font-size: clamp(1.8rem, 8vw, 3.5rem);
-  font-family: 'Cinzel', serif;
-  font-weight: 700;
-  letter-spacing: 0.15em;
-  line-height: 1.2;
-  text-transform: uppercase;
-  margin-bottom: 2rem;
-  
-  /* Visual: ELDEN RING風の金色グラデーション効果 */
-  background: linear-gradient(
-    to bottom,
-    var(--color-eldenring-gold-light) 0%,
-    var(--color-eldenring-gold-mid) 50%,
-    var(--color-eldenring-gold-dark) 100%
-  );
-  background-clip: text;
-  -webkit-background-clip: text;
-  -webkit-text-fill-color: transparent;
-  
-  /* Effects: ELDEN RING風のエレガントな発光効果 */
-  filter: drop-shadow(0 0 2px rgba(201, 167, 111, 0.6));
-  text-shadow: 0 0 12px rgba(248, 230, 176, 0.4);
-  
-  /* アニメーション: 微妙な呼吸するような効果 */
-  animation: textGlow 4s infinite alternate ease-in-out;
-  will-change: filter, text-shadow;
-  
-  /* Performance: Text optimization */
-  text-rendering: optimizeLegibility;
-  -webkit-font-smoothing: antialiased;
-  
-  /* 位置調整 */
-  position: relative;
-  z-index: 10;
-}
+/* .gameTitle クラスはTYPING CHALLENGEテキスト削除に伴い削除 */

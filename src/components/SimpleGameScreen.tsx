@@ -36,10 +36,8 @@ const SimpleGameScreen: React.FC<SimpleGameScreenProps> = React.memo(({
     typingChars,
     onWordComplete,
     config: { showKanaDisplay }
-  });
-  return (
+  });  return (
     <div className={styles.gameScreen}>
-      <div className={styles.gameTitle}>TYPING CHALLENGE</div>
       <div className={styles.typingArea}>        {/* HybridTypingEngine による完全管理 - 原文（DOM）、ひらがな（DOM）、ローマ字（Canvas）の3段階表示 */}
         <div 
           ref={containerRef}
