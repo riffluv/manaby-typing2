@@ -1,12 +1,31 @@
 /* ==========================================================================
-   SimpleGameScreen - CSS-Design-Best-Practices.md完全準拠版
+   SimpleGameScreen - ELDEN RING NIGHTREIGN風 CSS-Design-Best-Practices.md完全準拠版
    - デザイントークン駆動設計
    - BEM記法統一
    - モダンCSS機能活用
-   - ゲーミングUI完全対応
+   - ELDEN RING NIGHTREIGN風ゲーミングUI完全対応
+   ========================================================================== */
+
+/* ==========================================================================
+   Import Design Tokens
+   ========================================================================== */
+@import url('https://fonts.googleapis.com/css2?family=Cinzel:wght@400;700&display=swap');
+
+/* ==========================================================================
+   Game Screen Container - BEM Block
    ========================================================================== */
 
 .gameScreen {
+  /* ELDEN RING テーマカラー */
+  --color-eldenring-gold-light: #f8e6b0;
+  --color-eldenring-gold-mid: #c9a76f;
+  --color-eldenring-gold-dark: #9c7e5c;
+  
+  /* NIGHTREIGN テーマカラー */
+  --color-nightreign-blue-light: #a3d8ff;
+  --color-nightreign-blue-mid: #709fc7;
+  --color-nightreign-blue-dark: #4a6a8c;
+  
   /* Layout: Full screen container */
   width: 100%;
   height: 100vh;
@@ -16,14 +35,20 @@
   justify-content: center;
   align-items: center;
   
-  /* Background: Gaming theme with design tokens */
-  background: var(--color-game-bg-radial, radial-gradient(ellipse at center, #0a0f1b, #000000));
+  /* Background: ELDEN RING風ナイトスカイ背景 - コードのみで再現 */
+  background: 
+    radial-gradient(ellipse at center, rgba(10, 20, 38, 0.95) 0%, rgba(2, 4, 8, 0.98) 70%),
+    linear-gradient(180deg, rgba(15, 25, 50, 0.2) 0%, rgba(5, 10, 20, 0.2) 100%);
   
-  /* Typography: Gaming font family */
-  font-family: var(--font-family-game, 'Cinzel', serif);
+  /* Typography: ELDEN RING風フォント */
+  font-family: 'Cinzel', serif;
   font-size: var(--font-size-base, 1rem);
-  color: var(--color-gaming-text-primary, #e0e0e0);
+  color: rgba(224, 224, 224, 0.9);
   line-height: 1.5;
+  
+  /* 星空と輝きを作る背景効果 */
+  position: relative;
+  overflow: hidden;
   
   /* Position: Fixed for game control */
   position: fixed;
@@ -40,8 +65,68 @@
   
   /* Reset: Box model */
   margin: 0;
-  overflow: hidden;
   box-sizing: border-box;
+}
+
+/* 星空効果を作る疑似要素 - ELDEN RING NIGHTREIGN風の星空背景 */
+.gameScreen::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  width: 100%;
+  height: 100%;
+  background-image: 
+    radial-gradient(1px 1px at 10% 10%, rgba(255, 255, 255, 0.3) 50%, transparent 100%),
+    radial-gradient(1px 1px at 20% 20%, rgba(255, 255, 255, 0.2) 50%, transparent 100%),
+    radial-gradient(1px 1px at 30% 30%, rgba(255, 255, 255, 0.3) 50%, transparent 100%),
+    radial-gradient(1px 1px at 40% 40%, rgba(255, 255, 255, 0.2) 50%, transparent 100%),
+    radial-gradient(1px 1px at 50% 50%, rgba(255, 255, 255, 0.3) 50%, transparent 100%),
+    radial-gradient(1px 1px at 60% 60%, rgba(255, 255, 255, 0.2) 50%, transparent 100%),
+    radial-gradient(1px 1px at 70% 70%, rgba(255, 255, 255, 0.3) 50%, transparent 100%),
+    radial-gradient(1px 1px at 80% 80%, rgba(255, 255, 255, 0.2) 50%, transparent 100%),
+    radial-gradient(2px 2px at 90% 90%, rgba(255, 255, 255, 0.3) 50%, transparent 100%);
+  background-size: 150% 150%;
+  opacity: 0.5;
+  z-index: -1;
+  animation: starsTwinkle 10s infinite alternate ease-in-out;
+  pointer-events: none;
+}
+
+/* エルデンリング風の光芒を作る疑似要素 */
+.gameScreen::after {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  width: 100%;
+  height: 100%;
+  background: 
+    radial-gradient(
+      ellipse at 50% 30%, 
+      rgba(30, 50, 100, 0.15) 0%, 
+      rgba(10, 20, 40, 0.05) 40%, 
+      transparent 70%
+    ),
+    radial-gradient(
+      circle at 70% 60%, 
+      rgba(20, 40, 80, 0.1) 0%, 
+      transparent 50%
+    ),
+    radial-gradient(
+      circle at 30% 70%, 
+      rgba(30, 60, 100, 0.08) 0%, 
+      transparent 40%
+    );
+  z-index: -1;
+  opacity: 0.7;
+  animation: pulse 8s ease-in-out infinite alternate;
+  pointer-events: none;
+  background-blend-mode: screen;
 }
 
 /* Reset for all child elements */
@@ -56,48 +141,88 @@
   width: min(90vw, 960px);
   max-width: var(--container-lg, 960px);
   
-  /* Visual: Gaming theme styling with design tokens */
-  background: rgba(20, 20, 25, 0.85);
-  border: 1px solid rgba(255, 255, 255, 0.1);
-  border-radius: var(--border-radius-lg, 12px);
+  /* Visual: ELDEN RING風スタイリング - 暗く洗練された半透明コンテナ */
+  background: rgba(15, 20, 30, 0.85);
+  border: 1px solid rgba(201, 167, 111, 0.25);
+  border-radius: 8px;
   
-  /* Effects: Glass morphism */
-  backdrop-filter: blur(8px);
+  /* Effects: ELDEN RING風エフェクト - エレガントな半透明と微妙なボックスシャドウ */
+  backdrop-filter: blur(10px);
   box-shadow: 
-    0 8px 32px rgba(0, 0, 0, 0.3),
-    0 0 20px rgba(100, 180, 255, 0.1),
-    inset 0 1px 0 rgba(255, 255, 255, 0.1);
-    /* Layout: Internal spacing */
-  padding: clamp(1.5rem, 4vw, 2.5rem);
+    0 10px 30px rgba(0, 0, 0, 0.4),
+    0 0 15px rgba(112, 159, 199, 0.1),
+    inset 0 1px 0 rgba(255, 255, 255, 0.05);
+  
+  /* Layout: Internal spacing */
+  padding: clamp(2rem, 5vw, 2.8rem);
   text-align: center;
+  position: relative;
   
-  /* 🚀 Rich transition ready - smooth entry animation removed for future implementation */
+  /* エルデンリング風の装飾的なボーダーライン */
+  outline: 1px solid rgba(163, 216, 255, 0.08);
+  outline-offset: -8px;
   
-  /* Performance: Optimize rendering */
+  /* パフォーマンス: 最適化されたレンダリング */
   will-change: contents;
   contain: layout style;
+  
+  /* 星空エフェクトを作る疑似要素 */
+  position: relative;
+  overflow: hidden;
+  z-index: 1;
+  
+  /* ELDEN RING NIGHTREIGNスタイルの疑似要素 - 輝く星空の追加 */
+  &::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    z-index: -1;
+    background-image: 
+      radial-gradient(1px 1px at 10% 10%, rgba(255, 255, 255, 0.3) 50%, transparent 100%),
+      radial-gradient(1px 1px at 20% 20%, rgba(255, 255, 255, 0.2) 50%, transparent 100%),
+      radial-gradient(1px 1px at 30% 30%, rgba(255, 255, 255, 0.3) 50%, transparent 100%),
+      radial-gradient(1px 1px at 40% 40%, rgba(255, 255, 255, 0.2) 50%, transparent 100%),
+      radial-gradient(1px 1px at 50% 50%, rgba(255, 255, 255, 0.3) 50%, transparent 100%),
+      radial-gradient(1px 1px at 60% 60%, rgba(255, 255, 255, 0.2) 50%, transparent 100%),
+      radial-gradient(1px 1px at 70% 70%, rgba(255, 255, 255, 0.3) 50%, transparent 100%),
+      radial-gradient(1px 1px at 80% 80%, rgba(255, 255, 255, 0.2) 50%, transparent 100%),
+      radial-gradient(2px 2px at 90% 90%, rgba(255, 255, 255, 0.3) 50%, transparent 100%);
+    background-size: 150% 150%;
+    opacity: 0.3;
+    animation: starsTwinkle 8s infinite ease-in-out;
+  }
 }
 
 .promptBox__jp {
-  /* Typography: Large display text with design tokens */
-  font-size: var(--font-size-2xl, clamp(1.4rem, 4vw, 1.8rem));
-  font-family: var(--font-family-game, 'Cinzel', serif);
+  /* Typography: ELDEN RING風の大きな表示テキスト */
+  font-size: clamp(1.6rem, 5vw, 2rem);
+  font-family: 'Cinzel', serif;
   font-weight: 700;
-  letter-spacing: 0.05rem;
+  letter-spacing: 0.08em;
   line-height: 1.6;
+  margin-bottom: 1.8rem;
   
-  /* Visual: Gold gradient effect */
+  /* Visual: ELDEN RING風の金色グラデーション効果 */
   background: linear-gradient(
-    to right, 
-    var(--color-gaming-text-accent, #c9a76f), 
-    #f8e6b0
+    to bottom,
+    var(--color-eldenring-gold-light) 0%,
+    var(--color-eldenring-gold-mid) 50%,
+    var(--color-eldenring-gold-dark) 100%
   );
   background-clip: text;
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
   
-  /* Effects: Glow shadow */
-  text-shadow: 0 0 8px rgba(255, 223, 128, 0.3);
+  /* Effects: ELDEN RING風のエレガントな発光効果 */
+  filter: drop-shadow(0 0 2px rgba(201, 167, 111, 0.5));
+  text-shadow: 0 0 10px rgba(248, 230, 176, 0.3);
+  
+  /* アニメーション: 微妙な呼吸するような効果 */
+  animation: textGlow 4s infinite alternate ease-in-out;
+  will-change: filter, text-shadow;
   
   /* Spacing: Bottom margin */
   margin-bottom: var(--spacing-lg, 1.5rem);
@@ -108,49 +233,62 @@
 }
 
 .promptBox__kana {
-  /* Typography: Medium display text with design tokens */
+  /* Typography: ELDEN RING風の中間サイズテキスト */
   font-size: var(--font-size-xl, clamp(1.2rem, 3.5vw, 1.5rem));
-  font-family: var(--font-family-game, 'Cinzel', serif);
+  font-family: 'Cinzel', serif;
   font-weight: 500;
-  letter-spacing: 0.04rem;
+  letter-spacing: 0.06em;
   line-height: 1.6;
   
-  /* Color: Muted accent */
-  color: var(--color-gaming-text-muted, #d6cbb2);
+  /* Visual: NIGHTREIGN風の青白いグラデーション効果 */
+  background: linear-gradient(
+    to bottom,
+    rgba(224, 224, 224, 0.95) 0%,
+    var(--color-nightreign-blue-light) 60%,
+    var(--color-nightreign-blue-mid) 100%
+  );
+  background-clip: text;
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
   
-  /* Effects: Subtle glow */
-  text-shadow: 0 0 4px rgba(214, 203, 178, 0.2);
+  /* Effects: 微妙な発光効果 */
+  filter: drop-shadow(0 0 1px rgba(163, 216, 255, 0.5));
+  text-shadow: 0 0 5px rgba(163, 216, 255, 0.2);
   
-  /* Spacing: Bottom margin */
+  /* Spacing: 下部マージン */
   margin-bottom: var(--spacing-lg, 1.5rem);
   
-  /* Performance: Text optimization */
+  /* Performance: テキストの最適化 */
   text-rendering: optimizeLegibility;
   -webkit-font-smoothing: antialiased;
 }
 
 .promptBox__roma {
-  /* Typography: Interactive text display with design tokens */
+  /* Typography: ELDEN RING NIGHTREIGNスタイルのインタラクティブテキスト */
   font-size: var(--font-size-xl, clamp(1.3rem, 3.5vw, 1.6rem));
-  font-family: var(--font-family-game, 'Cinzel', serif);
+  font-family: 'Cinzel', serif;
   font-weight: 600;
-  letter-spacing: 0.04rem;
+  letter-spacing: 0.06em;
   line-height: 1.6;
   
-  /* Layout: Flexible container for HybridTyping */
+  /* Layout: HybridTypingのためのフレックスコンテナ */
   display: flex !important;
   align-items: center !important;
   justify-content: center !important;
   flex-wrap: wrap !important;
-  gap: 2px !important;
+  gap: 3px !important; /* 文字間のスペースを少し広げる */
   
-  /* Reset: Override HybridTyping defaults */
+  /* Reset: HybridTypingのデフォルトをオーバーライド */
   padding: 0 !important;
   background: transparent !important;
   border-radius: 0 !important;
   min-height: auto !important;
   
-  /* Spacing: Bottom margin */
+  /* スタイル: ELDEN RINGスタイルのエレガントな効果 */
+  color: var(--color-nightreign-blue-light); /* NIGHTREIGNの青っぽいテキスト */
+  text-shadow: 0 0 6px rgba(163, 216, 255, 0.2); /* 青い発光効果 */
+  
+  /* スペーシング: 下部マージン */
   margin-bottom: var(--spacing-md, 1rem);
   
   /* Performance: Text optimization */
@@ -163,54 +301,88 @@
    ========================================================================== */
 
 .typed {
-  color: var(--color-game-typed, #a3d8ff);
-  opacity: 0.8;
+  /* 入力済み文字: NIGHTREIGN風の青色効果 */
+  color: var(--color-nightreign-blue-light, #a3d8ff);
+  opacity: 0.9;
+  text-shadow: 0 0 4px rgba(163, 216, 255, 0.3);
   transition: color var(--duration-fast, 0.15s) var(--easing-smooth, ease);
 }
 
 .focus {
-  color: var(--color-game-focus, #ffe18d);
-  background: rgba(255, 225, 141, 0.1);
+  /* 現在の文字: ELDEN RING風の金色効果 */
+  color: var(--color-eldenring-gold-light, #f8e6b0);
+  background: rgba(201, 167, 111, 0.12);
   border-radius: var(--border-radius-xs, 2px);
   padding: 2px 4px;
   margin: 0 1px;
   animation: focusPulse 1.5s infinite alternate;
   transition: all var(--duration-fast, 0.15s) var(--easing-smooth, ease);
+  filter: drop-shadow(0 0 2px rgba(248, 230, 176, 0.4));
 }
 
 .remaining {
-  color: var(--color-game-remaining, #9c7e5c);
+  /* 未入力文字: ELDEN RING風の暗い金色効果 */
+  color: var(--color-eldenring-gold-dark, #9c7e5c);
   opacity: 0.7;
   transition: color var(--duration-fast, 0.15s) var(--easing-smooth, ease);
 }
 
 /* ==========================================================================
-   Animations - Custom Properties
+   Animations - ELDEN RING NIGHTREIGN風エフェクト
    ========================================================================== */
 
-/* 🚀 Rich transition ready - typing area fade animation removed for future implementation */
-/*
-@keyframes typingAreaFadeIn {
-  from {
-    opacity: 0;
-    transform: translateY(20px) scale(0.98);
+/* テキスト発光アニメーション - タイトルと説明用 */
+@keyframes textGlow {
+  0% {
+    filter: drop-shadow(0 0 2px rgba(201, 167, 111, 0.5));
+    text-shadow: 0 0 8px rgba(248, 230, 176, 0.2);
   }
-  to {
-    opacity: 1;
-    transform: translateY(0) scale(1);
+  100% {
+    filter: drop-shadow(0 0 3px rgba(201, 167, 111, 0.7));
+    text-shadow: 0 0 12px rgba(248, 230, 176, 0.4);
   }
 }
-*/
 
-/* Gameplay UI animation - kept for UX */
+/* ゲームプレイUIアニメーション - フォーカス要素用 */
 @keyframes focusPulse {
   from {
-    background: rgba(255, 225, 141, 0.1);
-    box-shadow: 0 0 4px rgba(255, 225, 141, 0.2);
+    background: rgba(201, 167, 111, 0.08);
+    box-shadow: 0 0 4px rgba(248, 230, 176, 0.1);
+    filter: drop-shadow(0 0 1px rgba(248, 230, 176, 0.3));
   }
   to {
-    background: rgba(255, 225, 141, 0.2);
-    box-shadow: 0 0 8px rgba(255, 225, 141, 0.4);
+    background: rgba(201, 167, 111, 0.15);
+    box-shadow: 0 0 8px rgba(248, 230, 176, 0.2);
+    filter: drop-shadow(0 0 2px rgba(248, 230, 176, 0.5));
+  }
+}
+
+/* 背景星空効果アニメーション */
+@keyframes starsTwinkle {
+  0% {
+    opacity: 0.3;
+  }
+  50% {
+    opacity: 0.6;
+  }
+  100% {
+    opacity: 0.3;
+  }
+}
+
+/* パルスアニメーション - 背景発光効果用 */
+@keyframes pulse {
+  0% {
+    opacity: 0.5;
+    background-position: 0% 0%;
+  }
+  50% {
+    opacity: 0.7;
+    background-position: 25% 25%;
+  }
+  100% {
+    opacity: 0.5;
+    background-position: 0% 0%;
   }
 }
 
@@ -222,6 +394,11 @@
 @media (width < 768px) {
   .gameScreen {
     padding: clamp(0.5rem, 6vh, 2rem) var(--spacing-sm, 0.5rem);
+  }
+  
+  .gameTitle {
+    font-size: clamp(1.5rem, 7vw, 2.2rem);
+    margin-bottom: 1.5rem;
   }
   
   .typingArea {
@@ -274,6 +451,11 @@
     padding: clamp(2rem, 12vh, 4rem) var(--spacing-lg, 1.5rem);
   }
   
+  .gameTitle {
+    font-size: clamp(2.5rem, 5vw, 3.5rem);
+    margin-bottom: 2.5rem;
+  }
+  
   .typingArea {
     width: min(80vw, 960px);
     padding: clamp(2rem, 4vw, 2.5rem);
@@ -320,11 +502,16 @@
    Accessibility - WCAG 2.1 Compliance
    ========================================================================== */
 
-/* High contrast support */
+/* High contrast support - アクセシビリティ対応 */
 @media (prefers-contrast: high) {
   .gameScreen {
     background: #000000;
     color: #ffffff;
+  }
+  
+  .gameScreen::before,
+  .gameScreen::after {
+    display: none; /* 高コントラストモードでは装飾的な星空効果を非表示 */
   }
   
   .typingArea {
@@ -332,6 +519,19 @@
     color: #000000;
     border: 2px solid #000000;
     box-shadow: none;
+    backdrop-filter: none;
+  }
+  
+  .typingArea::before {
+    display: none; /* 高コントラストモードでは装飾的な星空効果を非表示 */
+  }
+  
+  .gameTitle {
+    background: none;
+    color: #ffffff;
+    -webkit-text-fill-color: #ffffff;
+    text-shadow: none;
+    animation: none;
   }
   
   .promptBox__jp {
@@ -339,9 +539,16 @@
     color: #000000;
     -webkit-text-fill-color: #000000;
     text-shadow: none;
+    animation: none;
   }
   
-  .promptBox__kana,
+  .promptBox__kana {
+    background: none;
+    color: #000000;
+    -webkit-text-fill-color: #000000;
+    text-shadow: none;
+  }
+  
   .promptBox__roma {
     color: #000000;
     text-shadow: none;
@@ -354,6 +561,7 @@
   .focus {
     color: #ff6600;
     background: #ffff00;
+    animation: none;
   }
   
   .remaining {
@@ -387,4 +595,42 @@
 .typingArea:focus-within {
   outline: 2px solid var(--color-gaming-text-accent, #ffd88a);
   outline-offset: 4px;
+}
+
+.gameTitle {
+  /* Typography: ELDEN RING風の大きな表示テキスト */
+  font-size: clamp(1.8rem, 8vw, 3.5rem);
+  font-family: 'Cinzel', serif;
+  font-weight: 700;
+  letter-spacing: 0.15em;
+  line-height: 1.2;
+  text-transform: uppercase;
+  margin-bottom: 2rem;
+  
+  /* Visual: ELDEN RING風の金色グラデーション効果 */
+  background: linear-gradient(
+    to bottom,
+    var(--color-eldenring-gold-light) 0%,
+    var(--color-eldenring-gold-mid) 50%,
+    var(--color-eldenring-gold-dark) 100%
+  );
+  background-clip: text;
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  
+  /* Effects: ELDEN RING風のエレガントな発光効果 */
+  filter: drop-shadow(0 0 2px rgba(201, 167, 111, 0.6));
+  text-shadow: 0 0 12px rgba(248, 230, 176, 0.4);
+  
+  /* アニメーション: 微妙な呼吸するような効果 */
+  animation: textGlow 4s infinite alternate ease-in-out;
+  will-change: filter, text-shadow;
+  
+  /* Performance: Text optimization */
+  text-rendering: optimizeLegibility;
+  -webkit-font-smoothing: antialiased;
+  
+  /* 位置調整 */
+  position: relative;
+  z-index: 10;
 }

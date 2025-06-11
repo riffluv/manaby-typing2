@@ -14,7 +14,7 @@ export type SimpleGameScreenProps = {
  * - 1段目: 日本語原文表示（漢字入り・DOM）
  * - 2段目: ひらがな表示（設定で切り替え可能・DOM）
  * - 3段目: ローマ字表示（個別フォーカス機能付き・Canvas）
- * - game.htmlの backdrop-filter & gradient 完全適用
+ * - ELDEN RING NIGHTREIGN風デザイン完全適用
  * - ローマ字のみCanvasで1-3ms超高速レスポンス実現
  */
 const SimpleGameScreen: React.FC<SimpleGameScreenProps> = React.memo(({ 
@@ -39,6 +39,7 @@ const SimpleGameScreen: React.FC<SimpleGameScreenProps> = React.memo(({
   });
   return (
     <div className={styles.gameScreen}>
+      <div className={styles.gameTitle}>TYPING CHALLENGE</div>
       <div className={styles.typingArea}>        {/* HybridTypingEngine による完全管理 - 原文（DOM）、ひらがな（DOM）、ローマ字（Canvas）の3段階表示 */}
         <div 
           ref={containerRef}
