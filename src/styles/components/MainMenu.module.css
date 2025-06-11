@@ -366,9 +366,8 @@
   /* Background: Dark overlay */
   background: rgba(0, 0, 0, 0.9);
   backdrop-filter: blur(8px);
-  
-  /* Animation: Fade in */
-  animation: modalFadeIn var(--duration-normal, 0.3s) var(--easing-smooth, ease);
+    /* 🚀 Rich transition ready - modal fade animation removed for future implementation */
+  /* animation: modalFadeIn var(--duration-normal, 0.3s) var(--easing-smooth, ease); */
   
   /* Typography: Inherit from parent */
   font-family: var(--font-family-game, 'Cinzel', serif);
@@ -417,9 +416,8 @@
   box-shadow: 
     0 20px 40px rgba(0, 0, 0, 0.8),
     inset 0 1px 0 rgba(255, 255, 255, 0.1);
-  
-  /* Animation: Scale in */
-  animation: modalScaleIn var(--duration-normal, 0.3s) var(--easing-smooth, ease);
+    /* 🚀 Rich transition ready - modal scale animation removed for future implementation */
+  /* animation: modalScaleIn var(--duration-normal, 0.3s) var(--easing-smooth, ease); */
   
   /* Overflow: Hidden for clean edges */
   overflow: hidden;
@@ -649,7 +647,8 @@
   }
 }
 
-/* Modal-specific animations */
+/* 🚀 Rich transition ready - modal animations removed for future implementation */
+/*
 @keyframes modalFadeIn {
   from {
     opacity: 0;
@@ -671,6 +670,7 @@
     transform: scale(1) translateY(0);
   }
 }
+*/
 
 /* ==========================================================================
    Responsive Design - 2025 Modern Approach
@@ -815,14 +815,17 @@
   .mainMenu__navItem:focus::before {
     animation: none;
   }
-  
-  /* Disable modal animations */
+    /* Disable modal animations */
   .modal {
-    animation: none;
+    /* animation: none; */
+    /* Placeholder for future rich transition implementation */
+    opacity: 1;
   }
   
   .modal__content {
-    animation: none;
+    /* animation: none; */
+    /* Placeholder for future rich transition implementation */
+    transform: none;
   }
   
   .modal__option {

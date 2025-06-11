@@ -207,15 +207,20 @@
   justify-content: center;
   align-items: center;
   z-index: 2000;
+  
+  /* 🚀 修正: モーダルの正しい初期状態を復元 */
   opacity: 0;
   visibility: hidden;
-  transition: all 0.3s ease;
+  /* 🚀 Rich transition ready - modal fade animation removed for future implementation */
+  /* transition: all 0.3s ease; */
 }
 
 .modalActive {
+  /* 🚀 修正: modalActiveの時のみ表示 */
   opacity: 1;
   visibility: visible;
-  animation: modalFadeIn 0.3s ease forwards;
+  /* 🚀 Rich transition ready - modal active animation removed for future implementation */
+  /* animation: modalFadeIn 0.3s ease forwards; */
 }
 
 .modalContent {
@@ -226,15 +231,20 @@
   min-width: min(400px, 90vw);
   max-width: 500px;
   backdrop-filter: blur(12px);
-  box-shadow: 0 20px 40px rgba(0, 0, 0, 0.6);
-  transform: scale(0.8) translateY(30px);
-  transition: all 0.3s ease;
+  box-shadow: 0 20px 40px rgba(0, 0, 0, 0.6);  /* 🚀 Rich transition ready - modal slide animation removed for future implementation */
+  /* transform: scale(0.8) translateY(30px); */
+  /* transition: all 0.3s ease; */
+  /* Placeholder for future rich transition implementation */
+  transform: scale(1) translateY(0);
   text-align: center;
 }
 
 .modalActive .modalContent {
+  /* 🚀 Rich transition ready - modal content animation removed for future implementation */
+  /* transform: scale(1) translateY(0); */
+  /* animation: modalSlideIn 0.3s ease forwards; */
+  /* Placeholder for future rich transition implementation */
   transform: scale(1) translateY(0);
-  animation: modalSlideIn 0.3s ease forwards;
 }
 
 .modalTitle {
@@ -343,7 +353,8 @@
   border-radius: 4px;
 }
 
-/* Modal Animations */
+/* 🚀 Rich transition ready - Modal Animations removed for future implementation */
+/*
 @keyframes modalFadeIn {
   from {
     opacity: 0;
@@ -365,6 +376,7 @@
     opacity: 1;
   }
 }
+*/
 
 /* Score Stats Fix */
 .statItem {
@@ -502,16 +514,19 @@
   .resultButton:hover {
     transform: none;
   }
-  
-  .modalOverlay,
+    .modalOverlay,
   .modalContent,
   .modalButton {
-    transition: none;
-    animation: none;
+    /* transition: none; */
+    /* animation: none; */
+    /* Placeholder for future rich transition implementation */
+    transform: none;
   }
   
   .modalActive .modalContent {
-    transform: none;
-    animation: none;
+    /* transform: none; */
+    /* animation: none; */
+    /* Placeholder for future rich transition implementation */
+    transform: scale(1) translateY(0);
   }
 }

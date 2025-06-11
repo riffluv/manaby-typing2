@@ -138,17 +138,20 @@ const SimpleGameResultScreen: React.FC<SimpleGameResultScreenProps> = React.memo
         handleGoRanking();
       },
     },
-    {
-      key: 'Enter',
-      handler: (e) => {
-        if (modalState.show) return; // モーダルが開いている場合は無視
-        if (currentScore && !isScoreRegistered) {
-          e.preventDefault();
-          handleOpenRankingModal();
-        }
-      },
-    },
-  ], [handleGoMenu, handleGoRanking, handleRetry, currentScore, isScoreRegistered, modalState.show, handleOpenRankingModal, onRetry]);return (
+    // 🚀 修正: Enterキーでの自動モーダル開放を無効化
+    // リザルト画面では手動でRegisterボタンをクリックしてもらう
+    // {
+    //   key: 'Enter',
+    //   handler: (e) => {
+    //     if (modalState.show) return; // モーダルが開いている場合は無視
+    //     if (currentScore && !isScoreRegistered) {
+    //       e.preventDefault();
+    //       handleOpenRankingModal();
+    //     }
+    //   },
+    // },
+  ], [handleGoMenu, handleGoRanking, handleRetry, modalState.show, onRetry]);
+  return (
     <div className={styles.resultScreen}>
       <div className={styles.result}>
         <div className={styles.resultTitle}>RESULT</div>        {/* スコア表示 */}

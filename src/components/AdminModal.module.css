@@ -30,9 +30,10 @@
   /* Performance: GPU optimization */
   will-change: var(--will-change-opacity, opacity);
   contain: layout style;
-  
-  /* Animation: Smooth entry */
-  animation: adminModalFadeIn var(--duration-normal, 0.3s) var(--easing-smooth, ease);
+    /* 🚀 Rich transition ready - admin modal fade animation removed for future implementation */
+  /* animation: adminModalFadeIn var(--duration-normal, 0.3s) var(--easing-smooth, ease); */
+  /* Placeholder for future rich transition implementation */
+  opacity: 1;
 }
 
 /* ==========================================================================
@@ -88,9 +89,11 @@
   /* Typography: Gaming font */
   font-family: var(--font-family-game, 'Cinzel', serif);
   color: var(--color-gaming-text-primary, #e0e0e0);
-  
-  /* Animation: Smooth entry */
-  animation: adminModalSlideIn var(--duration-normal, 0.3s) var(--easing-spring, cubic-bezier(0.175, 0.885, 0.32, 1.275));
+    /* 🚀 Rich transition ready - admin modal slide animation removed for future implementation */
+  /* animation: adminModalSlideIn var(--duration-normal, 0.3s) var(--easing-spring, cubic-bezier(0.175, 0.885, 0.32, 1.275)); */
+  /* Placeholder for future rich transition implementation */
+  transform: translateY(0) scale(1);
+  opacity: 1;
 }
 
 /* ==========================================================================
@@ -397,7 +400,12 @@
   font-size: var(--font-size-base, 16px);
   color: #22c55e;
   text-align: center;
-  animation: adminStatusFadeIn 0.3s ease-out;
+  /* 🚀 Rich transition ready - admin status animation removed for future implementation */
+  /* animation: adminStatusFadeIn 0.3s ease-out; */
+  /* Placeholder for future rich transition implementation */
+  opacity: 1;
+  transform: translateY(0);
+  scale: 1;
 }
 
 /* ==========================================================================
@@ -411,7 +419,10 @@
   display: flex;
   align-items: center;
   justify-content: center;
-  animation: adminModalFadeIn 0.2s ease-out;
+  /* 🚀 Rich transition ready - confirm modal fade animation removed for future implementation */
+  /* animation: adminModalFadeIn 0.2s ease-out; */
+  /* Placeholder for future rich transition implementation */
+  opacity: 1;
 }
 
 .confirmModal__overlay {
@@ -432,7 +443,12 @@
   box-shadow: 
     0 0 30px rgba(212, 175, 55, 0.3),
     inset 0 1px 0 rgba(229, 204, 170, 0.1);
-  animation: confirmModalSlideIn 0.2s ease-out;
+  /* 🚀 Rich transition ready - confirm modal slide animation removed for future implementation */
+  /* animation: confirmModalSlideIn 0.2s ease-out; */
+  /* Placeholder for future rich transition implementation */
+  opacity: 1;
+  transform: translateY(0) scale(1);
+  backdrop-filter: blur(8px);
 }
 
 .confirmModal__title {
@@ -517,6 +533,8 @@
    Animations - CSS Custom Properties
    ========================================================================== */
 
+/* 🚀 Rich transition ready - Admin Modal Animations removed for future implementation */
+/*
 @keyframes adminModalFadeIn {
   from {
     opacity: 0;
@@ -567,7 +585,6 @@
   }
 }
 
-/* Gaming glow animation */
 @keyframes adminModalGlow {
   0%, 100% {
     box-shadow: 
@@ -582,6 +599,7 @@
       inset 0 1px 0 rgba(255, 255, 255, 0.15);
   }
 }
+*/
 
 /* ==========================================================================
    Responsive Design - 2025 Modern Approach
@@ -734,8 +752,11 @@
   .adminModal__overlay,
   .adminModal__container,
   .confirmModal__container {
-    animation: none;
-    transition: none;
+    /* animation: none; */
+    /* transition: none; */
+    /* Placeholder for future rich transition implementation */
+    opacity: 1;
+    transform: none;
   }
 
   .adminModal__closeButton,
@@ -751,12 +772,16 @@
   }
 
   .adminModal__container {
-    animation: none;
+    /* animation: none; */
+    /* Placeholder for future rich transition implementation */
+    opacity: 1;
   }
 
   /* Disable glow animations */
   .adminModal__container {
-    animation: none;
+    /* animation: none; */
+    /* Placeholder for future rich transition implementation */
+    opacity: 1;
   }
 }
 
@@ -833,15 +858,21 @@
 
 /* Dynamic glow effect for active modals */
 .adminModal--active .adminModal__container {
-  animation: 
+  /* 🚀 Rich transition ready - glow animation removed for future implementation */
+  /* animation: 
     adminModalSlideIn var(--duration-normal, 0.3s) var(--easing-spring, cubic-bezier(0.175, 0.885, 0.32, 1.275)),
-    adminModalGlow 3s ease-in-out infinite;
+    adminModalGlow 3s ease-in-out infinite; */
+  /* Placeholder for future rich transition implementation */
+  opacity: 1;
+  transform: translateY(0) scale(1);
 }
 
 /* Enhanced hover states for gaming feel */
 .adminModal__button:hover:not(:disabled) {
   will-change: transform, box-shadow;
-  animation: none; /* Stop glow during interaction */
+  /* animation: none; */ /* Stop glow during interaction */
+  /* Placeholder for future rich transition implementation */
+  transform: translateY(-2px);
 }
 
 .confirmModal__confirmButton:hover:not(:disabled) {

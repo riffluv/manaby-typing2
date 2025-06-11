@@ -44,9 +44,11 @@
            env(safe-area-inset-right, var(--spacing-md, 1rem))
            env(safe-area-inset-bottom, var(--spacing-md, 1rem)) 
            env(safe-area-inset-left, var(--spacing-md, 1rem));
-  
-  /* Animation: Smooth entry */
-  animation: commonModalOverlayFadeIn var(--duration-normal, 0.3s) var(--easing-smooth, ease);
+    /* 🚀 Rich transition ready - common modal overlay animation removed for future implementation */
+  /* animation: commonModalOverlayFadeIn var(--duration-normal, 0.3s) var(--easing-smooth, ease); */
+  /* Placeholder for future rich transition implementation */
+  opacity: 1;
+  backdrop-filter: blur(12px);
   
   /* Performance: Scroll optimization */
   overflow-y: auto;
@@ -89,9 +91,11 @@
   /* Scroll: Overflow handling */
   overflow-y: auto;
   -webkit-overflow-scrolling: touch;
-  
-  /* Animation: Smooth entry */
-  animation: commonModalContainerSlideIn var(--duration-normal, 0.3s) var(--easing-spring, cubic-bezier(0.175, 0.885, 0.32, 1.275));
+    /* 🚀 Rich transition ready - common modal container animation removed for future implementation */
+  /* animation: commonModalContainerSlideIn var(--duration-normal, 0.3s) var(--easing-spring, cubic-bezier(0.175, 0.885, 0.32, 1.275)); */
+  /* Placeholder for future rich transition implementation */
+  opacity: 1;
+  transform: translateY(0) scale(1);
   
   /* Typography: Gaming font */
   font-family: var(--font-family-game, 'Cinzel', serif);
@@ -238,6 +242,8 @@
    Animations - CSS Custom Properties
    ========================================================================== */
 
+/* 🚀 Rich transition ready - Common Modal Animations removed for future implementation */
+/*
 @keyframes commonModalOverlayFadeIn {
   from {
     opacity: 0;
@@ -259,6 +265,7 @@
     transform: translateY(0) scale(1);
   }
 }
+*/
 
 /* ==========================================================================
    Responsive Design - 2025 Modern Approach
@@ -333,8 +340,11 @@
   .commonModal__overlay,
   .commonModal__container,
   .commonModal__closeButton {
-    animation: none;
-    transition: none;
+    /* animation: none; */
+    /* transition: none; */
+    /* Placeholder for future rich transition implementation */
+    opacity: 1;
+    transform: none;
   }
   
   .commonModal__closeButton:hover,
@@ -362,7 +372,10 @@
   align-items: center;
   justify-content: center;
   z-index: var(--z-index-modal, 1000);
-  animation: modalOverlayFadeIn var(--transition-normal, 0.3s) ease-out;
+  /* 🚀 Rich transition ready - legacy modal overlay animation removed for future implementation */
+  /* animation: modalOverlayFadeIn var(--transition-normal, 0.3s) ease-out; */
+  /* Placeholder for future rich transition implementation */
+  opacity: 1;
 }
 
 /* @deprecated Use .commonModal__container instead */
@@ -377,7 +390,11 @@
   position: relative;
   padding: var(--spacing-xl, 2rem);
   margin: var(--spacing-lg, 1.5rem);
-  animation: modalContainerSlideIn var(--transition-normal, 0.3s) ease-out;
+  /* 🚀 Rich transition ready - legacy modal container animation removed for future implementation */
+  /* animation: modalContainerSlideIn var(--transition-normal, 0.3s) ease-out; */
+  /* Placeholder for future rich transition implementation */
+  opacity: 1;
+  transform: translateY(0) scale(1);
 }
 
 /* @deprecated Use .commonModal__closeButton instead */
@@ -424,6 +441,8 @@
    アニメーション
    ========================================================================== */
 
+/* 🚀 Rich transition ready - Legacy Modal Animations removed for future implementation */
+/*
 @keyframes modalOverlayFadeIn {
   from {
     opacity: 0;
@@ -443,6 +462,7 @@
     transform: translateY(0) scale(1);
   }
 }
+*/
 
 /* ==========================================================================
    レスポンシブ対応
