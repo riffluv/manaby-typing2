@@ -325,96 +325,90 @@
   
   /* Spacing */
   margin-bottom: clamp(var(--spacing-md, 1rem), 2vh, var(--spacing-lg, 2rem));
+  
+  /* アニメーション: 順番に表示 */
+  opacity: 0;
+  animation: fadeUpElements 1s ease-out forwards;
+  animation-delay: 0.5s;
+  will-change: opacity, transform;
+  contain: layout style;
 }
 
 .ranking__pageBtn {
-  /* Spacing: Button padding */
-  padding: var(--spacing-sm, 0.4rem) var(--spacing-md, 1rem);
-  
-  /* Typography: Small button */
-  font-size: var(--font-size-sm, 0.9rem);
+  /* タイポグラフィ: メニュー項目 - ELDEN RING風 */
+  font-size: 1rem;
   font-family: 'Cinzel', serif;
-  font-weight: 600;
-  letter-spacing: 0.05em;
+  font-weight: 400;
+  line-height: 1.2;
+  letter-spacing: 0.15rem;
+  text-transform: uppercase;
   
-  /* Color: Secondary button */
-  color: var(--color-nightreign-blue-light);
-  background: rgba(10, 20, 40, 0.7);
-  border: 1px solid rgba(163, 216, 255, 0.3);
+  /* カラー: ELDEN RING風の青白いテキスト */
+  color: rgba(204, 224, 255, 0.8);
   
-  /* Style: Rounded corners */
-  border-radius: var(--border-radius-sm, 4px);
-  
-  /* Interactive: Cursor */
+  /* リセット: ボタンスタイリング */
+  background: none;
+  border: none;
+  padding: 0.5rem 1.8rem;
+  margin: 0;
+  outline: none;
   cursor: pointer;
   
-  /* エフェクト */
-  text-shadow: 0 0 5px rgba(0, 0, 0, 0.4);
-  box-shadow: 0 0 8px rgba(163, 216, 255, 0.1);
-  
-  /* Transition: Smooth hover */
-  transition: all var(--duration-fast, 0.3s) var(--easing-smooth, ease);
-  
-  /* 装飾用の位置指定 */
+  /* ポジション: 疑似要素用 */
   position: relative;
-  overflow: hidden;
+  
+  /* トランジション: スムーズなホバー */
+  transition: all 0.3s ease;
 }
 
 .ranking__pageBtn:hover,
 .ranking__pageBtn:focus {
-  background: rgba(163, 216, 255, 0.1);
   color: #ffffff;
-  border-color: rgba(163, 216, 255, 0.5);
-  box-shadow: 0 0 15px rgba(163, 216, 255, 0.3);
+  text-shadow: 
+    0 0 10px rgba(163, 216, 255, 0.8),
+    0 0 20px rgba(163, 216, 255, 0.4);
+  transform: scale(1.05);
+  letter-spacing: 0.18rem;
   outline: none;
 }
 
-/* 装飾線要素 - 左側 */
-.ranking__pageBtn::before {
-  content: '';
-  position: absolute;
-  top: 50%;
-  left: -25px;
-  width: 15px;
-  height: 1px;
-  background: linear-gradient(
-    to right,
-    transparent,
-    rgba(163, 216, 255, 0.3) 30%,
-    rgba(163, 216, 255, 0.7) 100%
-  );
-  opacity: 0;
-  transform: translateY(-50%);
-  transition: all 0.3s ease;
-}
-
-/* 装飾線要素 - 右側 */
-.ranking__pageBtn::after {
-  content: '';
-  position: absolute;
-  top: 50%;
-  right: -25px;
-  width: 15px;
-  height: 1px;
-  background: linear-gradient(
-    to left,
-    transparent,
-    rgba(163, 216, 255, 0.3) 30%,
-    rgba(163, 216, 255, 0.7) 100%
-  );
-  opacity: 0;
-  transform: translateY(-50%);
-  transition: all 0.3s ease;
-}
-
-/* ホバー時に装飾線を表示 */
+/* 装飾線 - 左 */
 .ranking__pageBtn:hover::before,
-.ranking__pageBtn:focus::before,
+.ranking__pageBtn:focus::before {
+  content: '';
+  position: absolute;
+  top: 50%;
+  left: -30px;
+  transform: translateY(-50%);
+  width: 20px;
+  height: 1px;
+  background: linear-gradient(
+    to right, 
+    transparent, 
+    rgba(163, 216, 255, 0.3),
+    #a3d8ff,
+    #ffffff
+  );
+  animation: lineGrow 0.3s ease-out forwards;
+}
+
+/* 装飾線 - 右 */
 .ranking__pageBtn:hover::after,
 .ranking__pageBtn:focus::after {
-  opacity: 1;
-  left: -15px;
-  right: -15px;
+  content: '';
+  position: absolute;
+  top: 50%;
+  right: -30px;
+  transform: translateY(-50%);
+  width: 20px;
+  height: 1px;
+  background: linear-gradient(
+    to left, 
+    transparent, 
+    rgba(163, 216, 255, 0.3),
+    #a3d8ff,
+    #ffffff
+  );
   animation: lineGrow 0.3s ease-out forwards;
 }
 
@@ -428,96 +422,90 @@
   justify-content: center;
   gap: clamp(var(--spacing-md, 1rem), 4vw, var(--spacing-lg, 2rem));
   flex-wrap: wrap;
+  
+  /* アニメーション: 順番に表示 */
+  opacity: 0;
+  animation: fadeUpElements 1s ease-out forwards;
+  animation-delay: 0.7s;
+  will-change: opacity, transform;
+  contain: layout style;
 }
 
 .button {
-  /* Spacing: Button padding */
-  padding: var(--spacing-sm, 0.5rem) var(--spacing-lg, 2rem);
-  
-  /* Typography: Base button */
-  font-size: var(--font-size-base, 1rem);
+  /* タイポグラフィ: メニュー項目 - ELDEN RING風 */
+  font-size: 1.2rem;
   font-family: 'Cinzel', serif;
-  font-weight: 600;
-  letter-spacing: 0.1em;
+  font-weight: 400;
+  line-height: 1.2;
+  letter-spacing: 0.15rem;
+  text-transform: uppercase;
   
-  /* Color: Primary button - NIGHTREIGN風 */
-  color: var(--color-nightreign-blue-light);
-  background: rgba(10, 20, 40, 0.7);
-  border: 1px solid rgba(163, 216, 255, 0.3);
+  /* カラー: ELDEN RING風の青白いテキスト */
+  color: rgba(204, 224, 255, 0.8);
   
-  /* Style: Rounded corners */
-  border-radius: var(--border-radius-sm, 4px);
-  
-  /* Interactive: Cursor */
+  /* リセット: ボタンスタイリング */
+  background: none;
+  border: none;
+  padding: 0.6rem 2.5rem;
+  margin: 0;
+  outline: none;
   cursor: pointer;
   
-  /* Effects: Subtle shadow and glow */
-  text-shadow: 0 0 3px rgba(0, 0, 0, 0.4);
-  box-shadow: 0 0 8px rgba(163, 216, 255, 0.1);
-  
-  /* Transition: Smooth hover */
-  transition: all var(--duration-normal, 0.25s) var(--easing-smooth, ease);
-  
-  /* 装飾用の位置指定 */
+  /* ポジション: 疑似要素用 */
   position: relative;
-  overflow: hidden;
+  
+  /* トランジション: スムーズなホバー */
+  transition: all 0.3s ease;
 }
 
 .button:hover,
 .button:focus {
-  background: rgba(163, 216, 255, 0.1);
-  border-color: rgba(163, 216, 255, 0.5);
   color: #ffffff;
-  box-shadow: 0 0 15px rgba(163, 216, 255, 0.3);
+  text-shadow: 
+    0 0 10px rgba(163, 216, 255, 0.8),
+    0 0 20px rgba(163, 216, 255, 0.4);
+  transform: scale(1.05);
+  letter-spacing: 0.2rem;
   outline: none;
 }
 
-/* 装飾線要素 - 左側 */
-.button::before {
-  content: '';
-  position: absolute;
-  top: 50%;
-  left: -35px;
-  width: 20px;
-  height: 1px;
-  background: linear-gradient(
-    to right,
-    transparent,
-    rgba(163, 216, 255, 0.3) 30%,
-    rgba(163, 216, 255, 0.7) 100%
-  );
-  opacity: 0;
-  transform: translateY(-50%);
-  transition: all 0.3s ease;
-}
-
-/* 装飾線要素 - 右側 */
-.button::after {
-  content: '';
-  position: absolute;
-  top: 50%;
-  right: -35px;
-  width: 20px;
-  height: 1px;
-  background: linear-gradient(
-    to left,
-    transparent,
-    rgba(163, 216, 255, 0.3) 30%,
-    rgba(163, 216, 255, 0.7) 100%
-  );
-  opacity: 0;
-  transform: translateY(-50%);
-  transition: all 0.3s ease;
-}
-
-/* ホバー時に装飾線を表示 */
+/* 装飾線 - 左 */
 .button:hover::before,
-.button:focus::before,
+.button:focus::before {
+  content: '';
+  position: absolute;
+  top: 50%;
+  left: -40px;
+  transform: translateY(-50%);
+  width: 30px;
+  height: 1px;
+  background: linear-gradient(
+    to right, 
+    transparent, 
+    rgba(163, 216, 255, 0.3),
+    #a3d8ff,
+    #ffffff
+  );
+  animation: lineGrow 0.3s ease-out forwards;
+}
+
+/* 装飾線 - 右 */
 .button:hover::after,
 .button:focus::after {
-  opacity: 1;
-  left: -25px;
-  right: -25px;
+  content: '';
+  position: absolute;
+  top: 50%;
+  right: -40px;
+  transform: translateY(-50%);
+  width: 30px;
+  height: 1px;
+  background: linear-gradient(
+    to left, 
+    transparent, 
+    rgba(163, 216, 255, 0.3),
+    #a3d8ff,
+    #ffffff
+  );
   animation: lineGrow 0.3s ease-out forwards;
 }
 
@@ -633,15 +621,16 @@
   .ranking__pagination {
     gap: var(--spacing-sm, 0.5rem);
   }
-  
-  .ranking__pageBtn {
-    padding: var(--spacing-xs, 0.3rem) var(--spacing-sm, 0.8rem);
-    font-size: var(--font-size-xs, 0.8rem);
+    .ranking__pageBtn {
+    padding: 0.4rem 1.5rem;
+    font-size: var(--font-size-sm, 0.85rem);
+    letter-spacing: 0.1rem;
   }
   
   .button {
-    padding: var(--spacing-sm, 0.4rem) var(--spacing-md, 1.5rem);
-    font-size: var(--font-size-sm, 0.9rem);
+    padding: 0.5rem 2rem;
+    font-size: var(--font-size-base, 0.95rem);
+    letter-spacing: 0.1rem;
   }
   
   .ranking__pageBtn:hover::before,
@@ -655,6 +644,13 @@
     left: -25px;
     right: -25px;
     width: 20px;
+  }
+  
+  .ranking__pageBtn:hover,
+  .ranking__pageBtn:focus,
+  .button:hover,
+  .button:focus {
+    letter-spacing: 0.12rem;
   }
   
   @keyframes lineGrow {
@@ -714,10 +710,12 @@
   .ranking__title,
   .ranking__table,
   .ranking__buttons,
+  .ranking__pagination,
   .ranking__pageBtn,
   .button {
     animation: none !important;
     transition: none !important;
+    opacity: 1 !important;
   }
   
   .ranking::before,
@@ -725,10 +723,14 @@
     animation: none !important;
   }
   
-  .ranking__pageBtn::before,
-  .ranking__pageBtn::after,
-  .button::before,
-  .button::after,
+  .ranking__pageBtn:hover,
+  .ranking__pageBtn:focus,
+  .button:hover,
+  .button:focus {
+    transform: none !important;
+    letter-spacing: 0.15rem !important;
+  }
+  
   .ranking__pageBtn:hover::before,
   .ranking__pageBtn:hover::after,
   .ranking__pageBtn:focus::before,
@@ -783,8 +785,7 @@
     color: #000000;
     text-shadow: none;
   }
-  
-  .ranking__pageBtn,
+    .ranking__pageBtn,
   .button {
     color: #ffffff;
     background: #000000;
@@ -798,12 +799,18 @@
   .button:focus {
     background: #333333;
     color: #ffff00;
+    transform: none;
+    letter-spacing: 0.15rem;
   }
   
-  .ranking__pageBtn::before,
-  .ranking__pageBtn::after,
-  .button::before,
-  .button::after {
+  .ranking__pageBtn:hover::before,
+  .ranking__pageBtn:hover::after,
+  .ranking__pageBtn:focus::before,
+  .ranking__pageBtn:focus::after,
+  .button:hover::before,
+  .button:hover::after,
+  .button:focus::before,
+  .button:focus::after {
     display: none;
   }
 }
