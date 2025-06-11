@@ -20,13 +20,20 @@
   width: 100%;
   height: 100vh;
   min-height: 100vh;
-    /* Background: ELDEN RING風ナイトスカイ背景 */
-  background: radial-gradient(ellipse at center, #0a1020 0%, #000000 100%);
-  background-image: url('/images/textures/night-sky.jpg');
-  background-size: cover;
-  background-position: center center;
-  background-repeat: no-repeat;
-  background-blend-mode: multiply;
+  /* Background: ELDEN RING風ナイトスカイ背景 - コードのみで再現 */
+  background: 
+    radial-gradient(ellipse at center, rgba(10, 20, 38, 0.95) 0%, rgba(2, 4, 8, 0.98) 70%),
+    linear-gradient(180deg, rgba(15, 25, 50, 0.2) 0%, rgba(5, 10, 20, 0.2) 100%),
+    repeating-linear-gradient(
+      45deg, 
+      rgba(10, 15, 25, 0.1) 0%, 
+      rgba(10, 15, 25, 0.05) 2%,
+      transparent 2%,
+      transparent 4%
+    );
+  background-blend-mode: normal, overlay, color;
+  position: relative;
+  overflow: hidden;
   
   /* Typography: Primary font */
   font-family: var(--font-family-game, 'Cinzel', serif);
@@ -87,10 +94,10 @@
   z-index: 1;
   
   /* Animation */
-  animation: fadeUpElements 1s ease-out forwards;
-  animation-delay: 0.5s;
+  animation: fadeUpElements 1.2s ease-out forwards;
+  animation-delay: 0.3s;
   opacity: 0;
-  transform: translateY(20px);
+  transform: translateY(30px);
 }
 
 /* ==========================================================================
@@ -98,42 +105,63 @@
    ========================================================================== */
 
 .mainMenu__title {
-  /* Typography: Large title */
+  /* Typography: Large title - ELDEN RING風 */
   font-size: var(--font-size-game-title, clamp(2.5rem, 6vw, 3.5rem));
   font-family: var(--font-family-game, 'Cinzel', serif);
   font-weight: 700;
-  letter-spacing: 0.3rem;
+  letter-spacing: 0.4rem;
   
-  /* Visual: Gold gradient - ELDEN RING風 */
-  background: linear-gradient(to bottom, #f8e6b0 20%, #c9a76f 40%, #f8e6b0 60%, #c9a76f 80%);
+  /* Visual: ELDEN RING風の金色の質感 */
+  background: linear-gradient(
+    to bottom,
+    #f8e6b0 0%,    /* 明るい金 - 最上部 */
+    #c9a76f 30%,   /* 中間色 */
+    #f8e6b0 45%,   /* 明るい金 - ハイライト */
+    #c9a76f 55%,   /* 中間色 */
+    #9c7e5c 80%,   /* 暗い金 */
+    #c9a76f 100%   /* 中間色 - 最下部 */
+  );
   background-clip: text;
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
   
-  /* Effects: Glow */
+  /* Effects: ELDEN RINGスタイルのグローエフェクト */
+  filter: drop-shadow(0 0 2px rgba(255, 223, 128, 0.8));
   text-shadow: 
     0 0 10px rgba(255, 223, 128, 0.4),
     0 0 20px rgba(255, 223, 128, 0.2);
   
   /* Spacing */
   margin: 0;
-  padding-bottom: 0.5rem;
+  padding-bottom: 0.2rem;
   
   /* Animation */
   animation: titleGlow 3s infinite alternate ease-in-out;
 }
 
 .mainMenu__subtitle {
-  /* Typography: Extra large subtitle */
+  /* Typography: Extra large subtitle - NIGHTREIGN風 */
   font-size: var(--font-size-game-subtitle, clamp(4rem, 10vw, 6rem));
   font-family: var(--font-family-game, 'Cinzel', serif);
   font-weight: 700;
   letter-spacing: 0.8rem;
   
-  /* Color: 青白い光沢 - NIGHTREIGN風 */
-  color: #a3d8ff;
+  /* Color: NIGHTREIGN風の青白い氷の質感 */
+  background: linear-gradient(
+    to bottom,
+    #ffffff 0%,    /* 純白 - 最上部 */
+    #a3d8ff 20%,   /* 明るい青 */
+    #ffffff 40%,   /* 純白 - ハイライト */
+    #a3d8ff 60%,   /* 明るい青 */
+    #709fc7 80%,   /* 中間色の青 */
+    #4a6a8c 100%   /* 暗い青 - 最下部 */
+  );
+  background-clip: text;
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
   
-  /* Effects: Glow */
+  /* Effects: NIGHTREIGNスタイルのフロスト/アイスエフェクト */
+  filter: drop-shadow(0 0 3px rgba(163, 216, 255, 0.8));
   text-shadow: 
     0 0 15px rgba(163, 216, 255, 0.6),
     0 0 30px rgba(163, 216, 255, 0.3);
@@ -157,24 +185,29 @@
   align-items: center;
   
   /* Spacing */
-  margin-top: 2rem;
+  margin-top: 2.5rem;
+  
+  /* Animation: 順番に表示 */
+  opacity: 0;
+  animation: fadeUpElements 1s ease-out forwards;
+  animation-delay: 0.7s;
 }
 
 .mainMenu__navItem {
-  /* Typography: Menu item */
+  /* Typography: Menu item - ELDEN RING風 */
   font-size: var(--font-size-lg, 1.4rem);
   font-family: var(--font-family-game, 'Cinzel', serif);
   font-weight: 400;
   line-height: 1.2;
   letter-spacing: 0.15rem;
   
-  /* Color: 青白いテキスト - Elden Ring風 */
-  color: #cce0ff;
+  /* Color: ELDEN RING風の青白いテキスト */
+  color: rgba(204, 224, 255, 0.8);
   
   /* Reset: Button styling */
   background: none;
   border: none;
-  padding: 0.5rem 2rem;
+  padding: 0.6rem 2.5rem;
   margin: 0;
   outline: none;
   text-decoration: none;
@@ -186,7 +219,7 @@
   position: relative;
   
   /* Transition: Smooth hover */
-  transition: all var(--duration-fast, 0.3s) var(--easing-smooth, ease);
+  transition: all 0.3s ease;
 }
 
 /* Navigation item hover state */
@@ -197,43 +230,60 @@
     0 0 10px rgba(163, 216, 255, 0.8),
     0 0 20px rgba(163, 216, 255, 0.4);
   transform: scale(1.05);
+  letter-spacing: 0.2rem;
   outline: none;
 }
 
-/* Navigation item decorative line */
+/* Navigation item decorative line - left */
 .mainMenu__navItem:hover::before,
 .mainMenu__navItem:focus::before {
   content: '';
   position: absolute;
   top: 50%;
-  left: -30px;
+  left: -40px;
   transform: translateY(-50%);
-  width: 20px;
+  width: 30px;
   height: 1px;
   background: linear-gradient(
     to right, 
     transparent, 
+    rgba(163, 216, 255, 0.3),
     #a3d8ff,
     #ffffff
   );
+  animation: lineGrow 0.3s ease-out forwards;
 }
 
-/* Navigation item decorative line (right side) */
+/* Navigation item decorative line - right */
 .mainMenu__navItem:hover::after,
 .mainMenu__navItem:focus::after {
   content: '';
   position: absolute;
   top: 50%;
-  right: -30px;
+  right: -40px;
   transform: translateY(-50%);
-  width: 20px;
+  width: 30px;
   height: 1px;
   background: linear-gradient(
     to left, 
     transparent, 
+    rgba(163, 216, 255, 0.3),
     #a3d8ff,
     #ffffff
   );
+  animation: lineGrow 0.3s ease-out forwards;
+}
+
+/* Line growth animation */
+@keyframes lineGrow {
+  0% {
+    width: 0;
+    opacity: 0;
+  }
+  100% {
+    width: 30px;
+    opacity: 1;
+  }
 }
 
 /* ==========================================================================
@@ -359,11 +409,19 @@
     text-shadow: 
       0 0 10px rgba(255, 223, 128, 0.4),
       0 0 20px rgba(255, 223, 128, 0.2);
+    filter: drop-shadow(0 0 2px rgba(255, 223, 128, 0.6));
+  }
+  50% {
+    text-shadow: 
+      0 0 12px rgba(255, 223, 128, 0.5),
+      0 0 25px rgba(255, 223, 128, 0.25);
+    filter: drop-shadow(0 0 3px rgba(255, 223, 128, 0.7));
   }
   100% {
     text-shadow: 
       0 0 15px rgba(255, 223, 128, 0.6),
       0 0 30px rgba(255, 223, 128, 0.3);
+    filter: drop-shadow(0 0 4px rgba(255, 223, 128, 0.8));
   }
 }
 
@@ -372,11 +430,19 @@
     text-shadow: 
       0 0 15px rgba(163, 216, 255, 0.5),
       0 0 30px rgba(163, 216, 255, 0.2);
+    filter: drop-shadow(0 0 2px rgba(163, 216, 255, 0.7));
+  }
+  50% {
+    text-shadow: 
+      0 0 18px rgba(163, 216, 255, 0.6),
+      0 0 35px rgba(163, 216, 255, 0.3);
+    filter: drop-shadow(0 0 3px rgba(163, 216, 255, 0.8));
   }
   100% {
     text-shadow: 
       0 0 20px rgba(163, 216, 255, 0.7),
       0 0 40px rgba(163, 216, 255, 0.4);
+    filter: drop-shadow(0 0 4px rgba(163, 216, 255, 0.9));
   }
 }
 
@@ -971,5 +1037,192 @@
     flex-direction: column;
     gap: 0.5rem;
     align-items: center;
+  }
+}
+
+/* ==========================================================================
+   ELDEN RING風 背景エフェクト強化 - コードのみで完全実装
+   ========================================================================== */
+
+/* 基本背景 */
+.mainMenu {
+  /* 既存のレイアウトプロパティは維持 */
+  background: 
+    radial-gradient(ellipse at center, rgba(10, 20, 38, 0.95) 0%, rgba(2, 4, 8, 0.98) 70%),
+    linear-gradient(180deg, rgba(15, 25, 50, 0.2) 0%, rgba(5, 10, 20, 0.2) 100%),
+    repeating-linear-gradient(
+      45deg, 
+      rgba(10, 15, 25, 0.1) 0%, 
+      rgba(10, 15, 25, 0.05) 2%,
+      transparent 2%,
+      transparent 4%
+    );
+  background-blend-mode: normal, overlay, color;
+  position: relative;
+  overflow: hidden;
+}
+
+/* 星屑のような小さな点を作る疑似要素 */
+.mainMenu::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  width: 100%;
+  height: 100%;
+  background-image: 
+    radial-gradient(1px 1px at 10% 10%, rgba(255, 255, 255, 0.3) 50%, transparent 100%),
+    radial-gradient(1px 1px at 20% 20%, rgba(255, 255, 255, 0.2) 50%, transparent 100%),
+    radial-gradient(2px 2px at 30% 30%, rgba(255, 255, 255, 0.3) 50%, transparent 100%),
+    radial-gradient(1px 1px at 40% 40%, rgba(255, 255, 255, 0.2) 50%, transparent 100%),
+    radial-gradient(2px 2px at 50% 50%, rgba(255, 255, 255, 0.3) 50%, transparent 100%),
+    radial-gradient(1px 1px at 60% 60%, rgba(255, 255, 255, 0.2) 50%, transparent 100%),
+    radial-gradient(1px 1px at 70% 70%, rgba(255, 255, 255, 0.3) 50%, transparent 100%),
+    radial-gradient(1px 1px at 80% 80%, rgba(255, 255, 255, 0.2) 50%, transparent 100%),
+    radial-gradient(2px 2px at 90% 90%, rgba(255, 255, 255, 0.3) 50%, transparent 100%),
+    radial-gradient(1px 1px at 15% 55%, rgba(255, 255, 255, 0.3) 50%, transparent 100%),
+    radial-gradient(2px 2px at 35% 75%, rgba(255, 255, 255, 0.2) 50%, transparent 100%),
+    radial-gradient(1px 1px at 65% 25%, rgba(255, 255, 255, 0.3) 50%, transparent 100%),
+    radial-gradient(1px 1px at 85% 45%, rgba(255, 255, 255, 0.2) 50%, transparent 100%);
+  background-size: 150% 150%;
+  opacity: 0.5;
+  z-index: 0;
+  animation: starsMovement 120s linear infinite;
+  pointer-events: none;
+}
+
+/* ELDEN RING風の光芒を作る疑似要素 */
+.mainMenu::after {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  width: 100%;
+  height: 100%;
+  background: 
+    radial-gradient(
+      ellipse at 50% 30%, 
+      rgba(30, 50, 100, 0.15) 0%, 
+      rgba(10, 20, 40, 0.05) 40%, 
+      transparent 70%
+    ),
+    radial-gradient(
+      circle at 70% 60%, 
+      rgba(20, 40, 80, 0.1) 0%, 
+      transparent 50%
+    ),
+    radial-gradient(
+      circle at 30% 70%, 
+      rgba(30, 60, 100, 0.08) 0%, 
+      transparent 40%
+    );
+  z-index: 0;
+  opacity: 0.7;
+  animation: pulse 8s ease-in-out infinite alternate;
+  pointer-events: none;
+  background-blend-mode: screen;
+}
+
+/* アニメーション: きらめき効果 - 星の動き */
+@keyframes starsMovement {
+  0% {
+    background-position: 0% 0%;
+    opacity: 0.4;
+  }
+  25% {
+    opacity: 0.5;
+  }
+  50% {
+    background-position: 100% 50%;
+    opacity: 0.6;
+  }
+  75% {
+    opacity: 0.5;
+  }
+  100% {
+    background-position: 0% 100%;
+    opacity: 0.4;
+  }
+}
+
+/* アニメーション: 脈動する光芒 */
+@keyframes pulse {
+  0% {
+    opacity: 0.5;
+    background-position: 0% 0%;
+  }
+  50% {
+    opacity: 0.7;
+    background-position: 30% 30%;
+  }
+  100% {
+    opacity: 0.5;
+    background-position: 0% 0%;
+  }
+}
+
+/* メインコンテナの表示アニメーション強化 */
+.mainMenu__container {
+  animation: fadeUpElements 1.2s ease-out forwards;
+  animation-delay: 0.3s;
+  opacity: 0;
+  transform: translateY(30px);
+}
+
+/* タイトルアニメーションの強化 */
+@keyframes titleGlow {
+  0% {
+    text-shadow: 
+      0 0 10px rgba(255, 223, 128, 0.4),
+      0 0 20px rgba(255, 223, 128, 0.2);
+    filter: drop-shadow(0 0 2px rgba(255, 223, 128, 0.6));
+  }
+  50% {
+    text-shadow: 
+      0 0 12px rgba(255, 223, 128, 0.5),
+      0 0 25px rgba(255, 223, 128, 0.25);
+    filter: drop-shadow(0 0 3px rgba(255, 223, 128, 0.7));
+  }
+  100% {
+    text-shadow: 
+      0 0 15px rgba(255, 223, 128, 0.6),
+      0 0 30px rgba(255, 223, 128, 0.3);
+    filter: drop-shadow(0 0 4px rgba(255, 223, 128, 0.8));
+  }
+}
+
+/* サブタイトルアニメーションの強化 */
+@keyframes subtitleGlow {
+  0% {
+    text-shadow: 
+      0 0 15px rgba(163, 216, 255, 0.5),
+      0 0 30px rgba(163, 216, 255, 0.2);
+    filter: drop-shadow(0 0 2px rgba(163, 216, 255, 0.7));
+  }
+  50% {
+    text-shadow: 
+      0 0 18px rgba(163, 216, 255, 0.6),
+      0 0 35px rgba(163, 216, 255, 0.3);
+    filter: drop-shadow(0 0 3px rgba(163, 216, 255, 0.8));
+  }
+  100% {
+    text-shadow: 
+      0 0 20px rgba(163, 216, 255, 0.7),
+      0 0 40px rgba(163, 216, 255, 0.4);
+    filter: drop-shadow(0 0 4px rgba(163, 216, 255, 0.9));
+  }
+}
+
+/* フレームレート最適化（パフォーマンス考慮） */
+@media (prefers-reduced-motion) {
+  .mainMenu::before {
+    animation: none;
+  }
+  .mainMenu::after {
+    animation: none;
   }
 }
