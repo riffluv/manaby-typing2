@@ -1,29 +1,69 @@
 /* ==========================================================================
-   RankingScreen - CSS-Design-Best-Practices.md完全準拠版
+   RankingScreen - ELDEN RING NIGHTREIGN風 CSS-Design-Best-Practices.md完全準拠版
    - デザイントークン駆動設計
    - BEM記法統一
    - モダンCSS機能活用
    - Elden Ring風デザイン保持
+   - アニメーション・視覚効果の強化
    ========================================================================== */
 
 /* ==========================================================================
    Import Design Tokens
    ========================================================================== */
+@import url('https://fonts.googleapis.com/css2?family=Cinzel:wght@400;700&display=swap');
 
 /* メインコンテナ - BEM Block */
 .ranking {
+  /* ELDEN RING テーマカラー */
+  --color-eldenring-gold-light: #f8e6b0;
+  --color-eldenring-gold-mid: #c9a76f;
+  --color-eldenring-gold-dark: #9c7e5c;
+  
+  /* NIGHTREIGN テーマカラー */
+  --color-nightreign-blue-light: #a3d8ff;
+  --color-nightreign-blue-mid: #709fc7;
+  --color-nightreign-blue-dark: #4a6a8c;
+
+  /* 背景カラー */
+  --color-bg-dark: #0a0f1b;
+  --color-bg-darker: #050a14;
+  --color-bg-darkest: #020408;
+  
+  /* テキストカラー */
+  --color-text-primary: #e0e0e0;
+  --color-text-secondary: #b0b0b0;
+  
+  /* アクセントカラー */
+  --color-accent-gold: var(--color-eldenring-gold-mid);
+  --color-accent-blue: var(--color-nightreign-blue-mid);
+  
+  /* スペーシング */
+  --spacing-xs: 0.5rem;
+  --spacing-sm: 1rem;
+  --spacing-md: 1.5rem;
+  --spacing-lg: 2rem;
+  --spacing-xl: 3rem;
+  
+  /* パフォーマンス最適化 */
+  --gpu-animation-trigger: translateZ(0);
+
   /* Layout: Full screen container */
   width: 100%;
   height: 100vh;
   min-height: 100vh;
   
-  /* Background: Gaming theme */
-  background: var(--color-game-bg-radial, radial-gradient(ellipse at center, #0a0f1b, #000));
+  /* モダンビューポート単位対応 */
+  height: 100dvh;
+  
+  /* Background: ELDEN RING風ナイトスカイ背景 */
+  background: 
+    radial-gradient(ellipse at center, rgba(10, 20, 38, 0.95) 0%, rgba(2, 4, 8, 0.98) 70%),
+    linear-gradient(180deg, rgba(15, 25, 50, 0.2) 0%, rgba(5, 10, 20, 0.2) 100%);
   
   /* Typography: Primary font */
-  font-family: var(--font-family-game, 'Cinzel', serif);
+  font-family: 'Cinzel', serif;
   font-size: var(--font-size-base, 1rem);
-  color: var(--color-gaming-text-primary, #ccc);
+  color: var(--color-text-primary);
   
   /* Layout: Flexbox center */
   display: flex;
@@ -46,6 +86,77 @@
   box-sizing: border-box;
   overflow: hidden;
   margin: 0;
+  
+  /* アニメーション */
+  animation: fadeInBackground 1.2s ease-out forwards;
+  
+  /* 疑似要素用位置指定 */
+  position: relative;
+}
+
+/* 星空効果を作る疑似要素 */
+.ranking::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  width: 100%;
+  height: 100%;
+  background-image: 
+    radial-gradient(1px 1px at 10% 10%, rgba(255, 255, 255, 0.3) 50%, transparent 100%),
+    radial-gradient(1px 1px at 20% 20%, rgba(255, 255, 255, 0.2) 50%, transparent 100%),
+    radial-gradient(2px 2px at 30% 30%, rgba(255, 255, 255, 0.3) 50%, transparent 100%),
+    radial-gradient(1px 1px at 40% 40%, rgba(255, 255, 255, 0.2) 50%, transparent 100%),
+    radial-gradient(2px 2px at 50% 50%, rgba(255, 255, 255, 0.3) 50%, transparent 100%),
+    radial-gradient(1px 1px at 60% 60%, rgba(255, 255, 255, 0.2) 50%, transparent 100%),
+    radial-gradient(1px 1px at 70% 70%, rgba(255, 255, 255, 0.3) 50%, transparent 100%),
+    radial-gradient(1px 1px at 80% 80%, rgba(255, 255, 255, 0.2) 50%, transparent 100%),
+    radial-gradient(2px 2px at 90% 90%, rgba(255, 255, 255, 0.3) 50%, transparent 100%);
+  background-size: 150% 150%;
+  opacity: 0.5;
+  z-index: 0;
+  animation: starsMovement 120s linear infinite;
+  pointer-events: none;
+  will-change: background-position, opacity;
+  contain: paint;
+}
+
+/* ELDEN RING風の光芒を作る疑似要素 */
+.ranking::after {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  width: 100%;
+  height: 100%;
+  background: 
+    radial-gradient(
+      ellipse at 50% 30%, 
+      rgba(30, 50, 100, 0.15) 0%, 
+      rgba(10, 20, 40, 0.05) 40%, 
+      transparent 70%
+    ),
+    radial-gradient(
+      circle at 70% 60%, 
+      rgba(20, 40, 80, 0.1) 0%, 
+      transparent 50%
+    ),
+    radial-gradient(
+      circle at 30% 70%, 
+      rgba(30, 60, 100, 0.08) 0%, 
+      transparent 40%
+    );
+  z-index: 0;
+  opacity: 0.7;
+  animation: pulse 8s ease-in-out infinite alternate;
+  pointer-events: none;
+  background-blend-mode: screen;
+  will-change: opacity, background-position;
+  contain: paint;
 }
 
 /* ==========================================================================
@@ -76,6 +187,11 @@
   width: 100%;
   max-width: var(--container-lg, 960px);
   text-align: center;
+  position: relative;
+  z-index: 1;
+  animation: fadeUpElements 1s ease-out forwards;
+  will-change: opacity, transform;
+  contain: layout style;
 }
 
 /* ==========================================================================
@@ -83,21 +199,42 @@
    ========================================================================== */
 
 .ranking__title {
-  /* Typography: Large title */
-  font-size: var(--font-size-game-title, clamp(2rem, 5vw, 2.6rem));
-  font-family: var(--font-family-game, 'Cinzel', serif);
+  /* タイポグラフィ: 大きいタイトル - ELDEN RING風 */
+  font-size: clamp(2.5rem, 8vw, 4rem);
+  font-family: 'Cinzel', serif;
   font-weight: 700;
-  letter-spacing: 0.2rem;
+  letter-spacing: 0.4rem;
+  text-transform: uppercase;
   
-  /* Color: Gaming accent */
-  color: var(--color-gaming-text-accent, #e5ccaa);
+  /* カラー: ELDEN RING風の金色の質感 */
+  background: linear-gradient(
+    to bottom,
+    var(--color-eldenring-gold-light) 0%,    /* 明るい金 - 最上部 */
+    var(--color-eldenring-gold-mid) 30%,   /* 中間色 */
+    var(--color-eldenring-gold-light) 45%,   /* 明るい金 - ハイライト */
+    var(--color-eldenring-gold-mid) 55%,   /* 中間色 */
+    var(--color-eldenring-gold-dark) 80%,   /* 暗い金 */
+    var(--color-eldenring-gold-mid) 100%   /* 中間色 - 最下部 */
+  );
+  background-clip: text;
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
   
-  /* Effects: Glow */
-  text-shadow: 0 0 8px rgba(255, 220, 150, 0.3);
+  /* エフェクト: ELDEN RINGスタイルのグローエフェクト */
+  filter: drop-shadow(0 0 2px rgba(255, 223, 128, 0.8));
+  text-shadow: 
+    0 0 10px rgba(255, 223, 128, 0.4),
+    0 0 20px rgba(255, 223, 128, 0.2);
   
   /* Spacing */
   margin-bottom: clamp(var(--spacing-md, 1.5rem), 4vh, var(--spacing-xl, 3rem));
   margin-top: 0;
+  
+  /* アニメーション */
+  animation: titleGlow 3s infinite alternate ease-in-out;
+  
+  /* パフォーマンス最適化 */
+  will-change: filter, text-shadow;
 }
 
 /* ==========================================================================
@@ -114,6 +251,16 @@
   
   /* Performance */
   contain: layout style;
+  
+  /* 背景効果 */
+  position: relative;
+  background: rgba(10, 15, 30, 0.5);
+  backdrop-filter: blur(5px);
+  border-radius: 8px;
+  border: 1px solid rgba(var(--color-nightreign-blue-light), 0.1);
+  box-shadow: 
+    0 5px 15px rgba(0, 0, 0, 0.3),
+    inset 0 0 30px rgba(var(--color-nightreign-blue-light), 0.05);
 }
 
 .ranking__table th,
@@ -130,16 +277,40 @@
 
 .ranking__table th {
   /* Color: Accent header */
-  color: var(--color-gaming-text-secondary, #c8b78d);
+  color: var(--color-eldenring-gold-light);
   font-weight: bold;
+  text-transform: uppercase;
+  letter-spacing: 0.1rem;
   
   /* Effects: Subtle glow */
-  text-shadow: 0 0 5px rgba(255, 255, 255, 0.05);
+  text-shadow: 0 0 8px rgba(255, 223, 128, 0.2);
 }
 
 .ranking__table td {
   /* Color: Primary text */
-  color: var(--color-gaming-text-primary, #eee);
+  color: var(--color-text-primary);
+}
+
+/* ランキング表の行ホバー効果 */
+.ranking__table tr:hover td {
+  background: rgba(163, 216, 255, 0.05);
+  transition: background 0.3s ease;
+}
+
+/* 1位〜3位のスタイリング特別対応 */
+.ranking__table tr:nth-child(1) td {
+  color: var(--color-eldenring-gold-light);
+  text-shadow: 0 0 5px rgba(255, 223, 128, 0.3);
+}
+
+.ranking__table tr:nth-child(2) td {
+  color: rgba(220, 220, 220, 0.9);
+  text-shadow: 0 0 5px rgba(255, 255, 255, 0.2);
+}
+
+.ranking__table tr:nth-child(3) td {
+  color: var(--color-eldenring-gold-dark);
+  text-shadow: 0 0 5px rgba(156, 126, 92, 0.2);
 }
 
 /* ==========================================================================
@@ -162,12 +333,14 @@
   
   /* Typography: Small button */
   font-size: var(--font-size-sm, 0.9rem);
-  font-family: var(--font-family-game, 'Cinzel', serif);
+  font-family: 'Cinzel', serif;
+  font-weight: 600;
+  letter-spacing: 0.05em;
   
   /* Color: Secondary button */
-  color: var(--color-gaming-text-secondary, #cce0ff);
-  background: rgba(255, 255, 255, 0.02);
-  border: 1px solid rgba(255, 255, 255, 0.05);
+  color: var(--color-nightreign-blue-light);
+  background: rgba(10, 20, 40, 0.7);
+  border: 1px solid rgba(163, 216, 255, 0.3);
   
   /* Style: Rounded corners */
   border-radius: var(--border-radius-sm, 4px);
@@ -175,15 +348,74 @@
   /* Interactive: Cursor */
   cursor: pointer;
   
+  /* エフェクト */
+  text-shadow: 0 0 5px rgba(0, 0, 0, 0.4);
+  box-shadow: 0 0 8px rgba(163, 216, 255, 0.1);
+  
   /* Transition: Smooth hover */
   transition: all var(--duration-fast, 0.3s) var(--easing-smooth, ease);
+  
+  /* 装飾用の位置指定 */
+  position: relative;
+  overflow: hidden;
 }
 
 .ranking__pageBtn:hover,
 .ranking__pageBtn:focus {
-  background: rgba(100, 180, 255, 0.05);
-  border-color: rgba(100, 180, 255, 0.2);
+  background: rgba(163, 216, 255, 0.1);
+  color: #ffffff;
+  border-color: rgba(163, 216, 255, 0.5);
+  box-shadow: 0 0 15px rgba(163, 216, 255, 0.3);
   outline: none;
+}
+
+/* 装飾線要素 - 左側 */
+.ranking__pageBtn::before {
+  content: '';
+  position: absolute;
+  top: 50%;
+  left: -25px;
+  width: 15px;
+  height: 1px;
+  background: linear-gradient(
+    to right,
+    transparent,
+    rgba(163, 216, 255, 0.3) 30%,
+    rgba(163, 216, 255, 0.7) 100%
+  );
+  opacity: 0;
+  transform: translateY(-50%);
+  transition: all 0.3s ease;
+}
+
+/* 装飾線要素 - 右側 */
+.ranking__pageBtn::after {
+  content: '';
+  position: absolute;
+  top: 50%;
+  right: -25px;
+  width: 15px;
+  height: 1px;
+  background: linear-gradient(
+    to left,
+    transparent,
+    rgba(163, 216, 255, 0.3) 30%,
+    rgba(163, 216, 255, 0.7) 100%
+  );
+  opacity: 0;
+  transform: translateY(-50%);
+  transition: all 0.3s ease;
+}
+
+/* ホバー時に装飾線を表示 */
+.ranking__pageBtn:hover::before,
+.ranking__pageBtn:focus::before,
+.ranking__pageBtn:hover::after,
+.ranking__pageBtn:focus::after {
+  opacity: 1;
+  left: -15px;
+  right: -15px;
+  animation: lineGrow 0.3s ease-out forwards;
 }
 
 /* ==========================================================================
@@ -204,12 +436,14 @@
   
   /* Typography: Base button */
   font-size: var(--font-size-base, 1rem);
-  font-family: var(--font-family-game, 'Cinzel', serif);
+  font-family: 'Cinzel', serif;
+  font-weight: 600;
+  letter-spacing: 0.1em;
   
-  /* Color: Primary button */
-  color: var(--color-gaming-text-secondary, #cce0ff);
-  background: rgba(255, 255, 255, 0.02);
-  border: 1px solid rgba(200, 200, 255, 0.1);
+  /* Color: Primary button - NIGHTREIGN風 */
+  color: var(--color-nightreign-blue-light);
+  background: rgba(10, 20, 40, 0.7);
+  border: 1px solid rgba(163, 216, 255, 0.3);
   
   /* Style: Rounded corners */
   border-radius: var(--border-radius-sm, 4px);
@@ -219,27 +453,177 @@
   
   /* Effects: Subtle shadow and glow */
   text-shadow: 0 0 3px rgba(0, 0, 0, 0.4);
-  box-shadow: 0 0 8px rgba(150, 180, 255, 0.1);
+  box-shadow: 0 0 8px rgba(163, 216, 255, 0.1);
   
   /* Transition: Smooth hover */
   transition: all var(--duration-normal, 0.25s) var(--easing-smooth, ease);
+  
+  /* 装飾用の位置指定 */
+  position: relative;
+  overflow: hidden;
 }
 
 .button:hover,
 .button:focus {
-  background: rgba(180, 220, 255, 0.05);
-  border-color: rgba(150, 180, 255, 0.3);
-  color: var(--color-gaming-text-accent, #fff);
-  box-shadow: 0 0 12px rgba(120, 180, 255, 0.2);
+  background: rgba(163, 216, 255, 0.1);
+  border-color: rgba(163, 216, 255, 0.5);
+  color: #ffffff;
+  box-shadow: 0 0 15px rgba(163, 216, 255, 0.3);
   outline: none;
+}
+
+/* 装飾線要素 - 左側 */
+.button::before {
+  content: '';
+  position: absolute;
+  top: 50%;
+  left: -35px;
+  width: 20px;
+  height: 1px;
+  background: linear-gradient(
+    to right,
+    transparent,
+    rgba(163, 216, 255, 0.3) 30%,
+    rgba(163, 216, 255, 0.7) 100%
+  );
+  opacity: 0;
+  transform: translateY(-50%);
+  transition: all 0.3s ease;
+}
+
+/* 装飾線要素 - 右側 */
+.button::after {
+  content: '';
+  position: absolute;
+  top: 50%;
+  right: -35px;
+  width: 20px;
+  height: 1px;
+  background: linear-gradient(
+    to left,
+    transparent,
+    rgba(163, 216, 255, 0.3) 30%,
+    rgba(163, 216, 255, 0.7) 100%
+  );
+  opacity: 0;
+  transform: translateY(-50%);
+  transition: all 0.3s ease;
+}
+
+/* ホバー時に装飾線を表示 */
+.button:hover::before,
+.button:focus::before,
+.button:hover::after,
+.button:focus::after {
+  opacity: 1;
+  left: -25px;
+  right: -25px;
+  animation: lineGrow 0.3s ease-out forwards;
+}
+
+/* ==========================================================================
+   Animations - Keyframes
+   ========================================================================== */
+
+@keyframes fadeInBackground {
+  0% {
+    opacity: 0;
+  }
+  100% {
+    opacity: 1;
+  }
+}
+
+@keyframes fadeUpElements {
+  0% {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  100% {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes titleGlow {
+  0% {
+    filter: drop-shadow(0 0 2px rgba(255, 223, 128, 0.7));
+    text-shadow: 
+      0 0 10px rgba(255, 223, 128, 0.3),
+      0 0 20px rgba(255, 223, 128, 0.2);
+  }
+  100% {
+    filter: drop-shadow(0 0 3px rgba(255, 223, 128, 0.9));
+    text-shadow: 
+      0 0 15px rgba(255, 223, 128, 0.5),
+      0 0 30px rgba(255, 223, 128, 0.3);
+  }
+}
+
+@keyframes pulse {
+  0% {
+    opacity: 0.6;
+  }
+  100% {
+    opacity: 0.8;
+  }
+}
+
+@keyframes starsMovement {
+  0% {
+    opacity: 0.4;
+    background-position: 0% 0%;
+  }
+  50% {
+    opacity: 0.5;
+    background-position: 30% 30%;
+  }
+  100% {
+    opacity: 0.4;
+    background-position: 0% 0%;
+  }
+}
+
+@keyframes pulseGlow {
+  0% {
+    box-shadow: 0 0 15px rgba(163, 216, 255, 0.2);
+  }
+  100% {
+    box-shadow: 0 0 25px rgba(163, 216, 255, 0.4);
+  }
+}
+
+@keyframes lineGrow {
+  0% {
+    width: 0;
+    opacity: 0;
+  }
+  100% {
+    width: 30px;
+    opacity: 1;
+  }
 }
 
 /* ==========================================================================
    Responsive Design - 2025 Modern Approach
    ========================================================================== */
 
-/* Mobile optimization */
-@media (max-width: 768px) {
+/* モバイル最適化 */
+@media (width < 768px) {
+  .ranking {
+    padding-top: 10vh;
+  }
+  
+  .ranking__container {
+    width: 95vw;
+  }
+  
+  .ranking__title {
+    font-size: clamp(2rem, 6vw, 2.5rem);
+    margin-bottom: var(--spacing-md);
+    letter-spacing: 0.2rem;
+  }
+  
   .ranking__table th,
   .ranking__table td {
     padding: 0.6rem 0.3rem;
@@ -259,6 +643,57 @@
     padding: var(--spacing-sm, 0.4rem) var(--spacing-md, 1.5rem);
     font-size: var(--font-size-sm, 0.9rem);
   }
+  
+  .ranking__pageBtn:hover::before,
+  .ranking__pageBtn:focus::before,
+  .ranking__pageBtn:hover::after,
+  .ranking__pageBtn:focus::after,
+  .button:hover::before,
+  .button:focus::before,
+  .button:hover::after,
+  .button:focus::after {
+    left: -25px;
+    right: -25px;
+    width: 20px;
+  }
+  
+  @keyframes lineGrow {
+    0% {
+      width: 0;
+      opacity: 0;
+    }
+    100% {
+      width: 20px;
+      opacity: 1;
+    }
+  }
+}
+
+/* タブレット最適化 */
+@media (768px <= width < 1024px) {
+  .ranking__title {
+    font-size: clamp(2.5rem, 7vw, 3rem);
+  }
+  
+  .ranking__table {
+    width: 95%;
+    margin-left: auto;
+    margin-right: auto;
+  }
+}
+
+/* デスクトップ最適化 */
+@media (width >= 1024px) {
+  .ranking__buttons {
+    flex-direction: row;
+    justify-content: center;
+  }
+  
+  .ranking__table {
+    width: 90%;
+    margin-left: auto;
+    margin-right: auto;
+  }
 }
 
 /* ==========================================================================
@@ -268,15 +703,43 @@
 /* Focus visible indicators */
 .ranking__pageBtn:focus-visible,
 .button:focus-visible {
-  outline: 2px solid var(--color-gaming-text-accent, #ffd88a);
+  outline: 2px solid var(--color-eldenring-gold-light);
   outline-offset: 2px;
 }
 
 /* Reduced motion support */
 @media (prefers-reduced-motion: reduce) {
+  .ranking,
+  .ranking__container,
+  .ranking__title,
+  .ranking__table,
+  .ranking__buttons,
   .ranking__pageBtn,
   .button {
-    transition: none;
+    animation: none !important;
+    transition: none !important;
+  }
+  
+  .ranking::before,
+  .ranking::after {
+    animation: none !important;
+  }
+  
+  .ranking__pageBtn::before,
+  .ranking__pageBtn::after,
+  .button::before,
+  .button::after,
+  .ranking__pageBtn:hover::before,
+  .ranking__pageBtn:hover::after,
+  .ranking__pageBtn:focus::before,
+  .ranking__pageBtn:focus::after,
+  .button:hover::before,
+  .button:hover::after,
+  .button:focus::before,
+  .button:focus::after {
+    animation: none !important;
+    opacity: 1;
+    width: 20px;
   }
 }
 
@@ -286,20 +749,47 @@
     background: #000000;
   }
   
+  .ranking::before,
+  .ranking::after {
+    display: none;
+  }
+  
   .ranking__title {
+    background: none;
+    color: #ffffff;
+    -webkit-text-fill-color: #ffffff;
+    text-shadow: none;
+  }
+  
+  .ranking__table {
+    background: #ffffff;
+    color: #000000;
+    border: 2px solid #000000;
+  }
+  
+  .ranking__table th {
+    background: #000000;
     color: #ffffff;
   }
   
-  .ranking__table th,
   .ranking__table td {
-    color: #ffffff;
-    border-color: #ffffff;
+    color: #000000;
+    border-color: #000000;
+  }
+  
+  .ranking__table tr:nth-child(1) td,
+  .ranking__table tr:nth-child(2) td,
+  .ranking__table tr:nth-child(3) td {
+    color: #000000;
+    text-shadow: none;
   }
   
   .ranking__pageBtn,
   .button {
     color: #ffffff;
-    border-color: #ffffff;
+    background: #000000;
+    border: 2px solid #ffffff;
+    text-shadow: none;
   }
   
   .ranking__pageBtn:hover,
@@ -308,5 +798,12 @@
   .button:focus {
     background: #333333;
     color: #ffff00;
+  }
+  
+  .ranking__pageBtn::before,
+  .ranking__pageBtn::after,
+  .button::before,
+  .button::after {
+    display: none;
   }
 }
