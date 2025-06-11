@@ -3,6 +3,8 @@ import { useTypingGameStore, useQuestionCount } from '@/store/typingGameStore';
 import { useSceneNavigationStore } from '@/store/sceneNavigationStore';
 import { useGlobalShortcuts } from '@/hooks/useGlobalShortcuts';
 import styles from '@/styles/components/MainMenu.module.css';
+// ELDEN RING NIGHTREIGNスタイル用のトークンをインポート
+import '@/styles/components/elden-ring-tokens.css';
 import { deleteRankingEntriesByMode } from '@/lib/rankingManaby2';
 import CommonModal from './common/CommonModal';
 import CommonButton from './common/CommonButton';

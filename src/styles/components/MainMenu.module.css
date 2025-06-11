@@ -1,9 +1,9 @@
 /* ==========================================================================
-   MainMenu - CSS-Design-Best-Practices.md完全準拠版
+   MainMenu - CSS-Design-Best-Practices.md完全準拠版 - ELDEN RING NIGHTREIGN風
    - デザイントークン駆動設計
    - BEM記法統一
    - モダンCSS機能活用
-   - Elden Ring風デザイン保持
+   - ELDEN RING NIGHTREIGN風デザイン実装
    ========================================================================== */
 
 /* ==========================================================================
@@ -20,9 +20,13 @@
   width: 100%;
   height: 100vh;
   min-height: 100vh;
-  
-  /* Background: Gaming theme */
-  background: var(--color-game-bg-radial, radial-gradient(ellipse at center, #0a0f1b, #000000));
+    /* Background: ELDEN RING風ナイトスカイ背景 */
+  background: radial-gradient(ellipse at center, #0a1020 0%, #000000 100%);
+  background-image: url('/images/textures/night-sky.jpg');
+  background-size: cover;
+  background-position: center center;
+  background-repeat: no-repeat;
+  background-blend-mode: multiply;
   
   /* Typography: Primary font */
   font-family: var(--font-family-game, 'Cinzel', serif);
@@ -42,10 +46,12 @@
   
   /* Position: Fixed fullscreen */
   position: fixed;
-  top: 0;  left: 0;
+  top: 0;  
+  left: 0;
   z-index: var(--z-index-modal, 1000);
   
-  /* 🚀 Rich transition ready - fade in animation removed for future implementation */
+  /* Animation */
+  animation: fadeInBackground 1.5s ease-out forwards;
   
   /* Reset: Box model */
   margin: 0;
@@ -77,9 +83,14 @@
   text-align: center;
   
   /* Position: Relative for children */
-  position: relative;  z-index: 1;
+  position: relative;  
+  z-index: 1;
   
-  /* 🚀 Rich transition ready - fade up animation removed for future implementation */
+  /* Animation */
+  animation: fadeUpElements 1s ease-out forwards;
+  animation-delay: 0.5s;
+  opacity: 0;
+  transform: translateY(20px);
 }
 
 /* ==========================================================================
@@ -88,39 +99,50 @@
 
 .mainMenu__title {
   /* Typography: Large title */
-  font-size: var(--font-size-game-title, clamp(2.5rem, 6vw, 3rem));
+  font-size: var(--font-size-game-title, clamp(2.5rem, 6vw, 3.5rem));
   font-family: var(--font-family-game, 'Cinzel', serif);
   font-weight: 700;
   letter-spacing: 0.3rem;
   
-  /* Visual: Gold gradient */
-  background: linear-gradient(to right, var(--color-brand-secondary, #c9a76f), #f8e6b0);
+  /* Visual: Gold gradient - ELDEN RING風 */
+  background: linear-gradient(to bottom, #f8e6b0 20%, #c9a76f 40%, #f8e6b0 60%, #c9a76f 80%);
   background-clip: text;
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
   
   /* Effects: Glow */
-  text-shadow: 0 0 6px rgba(255, 223, 128, 0.3);
+  text-shadow: 
+    0 0 10px rgba(255, 223, 128, 0.4),
+    0 0 20px rgba(255, 223, 128, 0.2);
   
   /* Spacing */
   margin: 0;
+  padding-bottom: 0.5rem;
+  
+  /* Animation */
+  animation: titleGlow 3s infinite alternate ease-in-out;
 }
 
 .mainMenu__subtitle {
   /* Typography: Extra large subtitle */
-  font-size: var(--font-size-game-subtitle, clamp(3rem, 8vw, 5rem));
+  font-size: var(--font-size-game-subtitle, clamp(4rem, 10vw, 6rem));
   font-family: var(--font-family-game, 'Cinzel', serif);
   font-weight: 700;
-  letter-spacing: 0.6rem;
+  letter-spacing: 0.8rem;
   
-  /* Color: Gaming accent */
-  color: var(--color-gaming-text-accent, #ffd88a);
+  /* Color: 青白い光沢 - NIGHTREIGN風 */
+  color: #a3d8ff;
   
   /* Effects: Glow */
-  text-shadow: 0 0 12px rgba(212, 175, 55, 0.25);
+  text-shadow: 
+    0 0 15px rgba(163, 216, 255, 0.6),
+    0 0 30px rgba(163, 216, 255, 0.3);
   
   /* Spacing */
-  margin: var(--spacing-md, 1rem) 0 var(--spacing-xl, 2rem);
+  margin: var(--spacing-sm, 0.5rem) 0 var(--spacing-xl, 3rem);
+  
+  /* Animation */
+  animation: subtitleGlow 4s infinite alternate ease-in-out;
 }
 
 /* ==========================================================================
@@ -131,26 +153,28 @@
   /* Layout: Vertical stack */
   display: flex;
   flex-direction: column;
-  gap: var(--spacing-game-md, 1.2rem);
+  gap: var(--spacing-game-md, 1.5rem);
   align-items: center;
-    /* 🚀 Rich transition ready - fade up animation removed for future implementation */
+  
+  /* Spacing */
+  margin-top: 2rem;
 }
 
 .mainMenu__navItem {
   /* Typography: Menu item */
   font-size: var(--font-size-lg, 1.4rem);
   font-family: var(--font-family-game, 'Cinzel', serif);
-  font-weight: 700;
+  font-weight: 400;
   line-height: 1.2;
-  letter-spacing: 0.05rem;
+  letter-spacing: 0.15rem;
   
-  /* Color: Primary text */
-  color: var(--color-gaming-text-primary, #ccc);
+  /* Color: 青白いテキスト - Elden Ring風 */
+  color: #cce0ff;
   
   /* Reset: Button styling */
   background: none;
   border: none;
-  padding: 0;
+  padding: 0.5rem 2rem;
   margin: 0;
   outline: none;
   text-decoration: none;
@@ -168,7 +192,11 @@
 /* Navigation item hover state */
 .mainMenu__navItem:hover,
 .mainMenu__navItem:focus {
-  color: var(--color-gaming-text-accent, #ffd88a);
+  color: #ffffff;
+  text-shadow: 
+    0 0 10px rgba(163, 216, 255, 0.8),
+    0 0 20px rgba(163, 216, 255, 0.4);
+  transform: scale(1.05);
   outline: none;
 }
 
@@ -178,17 +206,34 @@
   content: '';
   position: absolute;
   top: 50%;
-  left: -60px;
+  left: -30px;
   transform: translateY(-50%);
-  width: 120px;
+  width: 20px;
   height: 1px;
   background: linear-gradient(
     to right, 
     transparent, 
-    var(--color-gaming-text-accent, #ffd88a), 
-    transparent
+    #a3d8ff,
+    #ffffff
   );
-  animation: pulse var(--duration-slow, 2s) infinite var(--easing-smooth, ease-in-out);
+}
+
+/* Navigation item decorative line (right side) */
+.mainMenu__navItem:hover::after,
+.mainMenu__navItem:focus::after {
+  content: '';
+  position: absolute;
+  top: 50%;
+  right: -30px;
+  transform: translateY(-50%);
+  width: 20px;
+  height: 1px;
+  background: linear-gradient(
+    to left, 
+    transparent, 
+    #a3d8ff,
+    #ffffff
+  );
 }
 
 /* ==========================================================================
@@ -197,16 +242,17 @@
 
 .mainMenu__selectedMode {
   /* Spacing */
-  margin-top: var(--spacing-lg, 2rem);
+  margin-top: var(--spacing-lg, 3rem);
   
   /* Typography: Small italic */
   font-size: var(--font-size-base, 1rem);
   font-family: var(--font-family-game, 'Cinzel', serif);
-  font-weight: 700;
+  font-weight: 400;
   font-style: italic;
   
   /* Color: Muted */
-  color: var(--color-gaming-text-muted, #a99);
+  color: var(--color-gaming-text-muted, #889);
+  opacity: 0.7;
 }
 
 /* ==========================================================================
@@ -231,12 +277,13 @@
   letter-spacing: 0.05rem;
   
   /* Color: Accent */
-  color: var(--color-gaming-text-accent, #ffd88a);
+  color: #a3d8ff;
+  opacity: 0.8;
   
   /* Effects: Glow */
   text-shadow: 
     0 0 3px #000, 
-    0 0 6px rgba(212, 175, 55, 0.4);
+    0 0 6px rgba(163, 216, 255, 0.4);
 }
 
 .mainMenu__footer {
@@ -256,10 +303,11 @@
   /* Typography: Extra small */
   font-size: var(--font-size-xs, 0.7rem);
   font-family: var(--font-family-game, 'Cinzel', serif);
-  font-weight: 700;
+  font-weight: 400;
   
   /* Color: Muted */
-  color: var(--color-gaming-text-muted, #777);
+  color: var(--color-gaming-text-muted, #667);
+  opacity: 0.7;
 }
 
 /* Footer copyright text */
@@ -269,9 +317,6 @@
   font-family: inherit;
   font-weight: inherit;
   color: inherit;
-  
-  /* Effects: Subtle glow */
-  text-shadow: 0 0 2px rgba(119, 119, 119, 0.5);
 }
 
 /* Footer version text */
@@ -282,395 +327,73 @@
   font-weight: inherit;
   
   /* Color: Slightly brighter */
-  color: var(--color-gaming-text-secondary, #b0b0b0);
-  
-  /* Effects: Subtle glow */
-  text-shadow: 0 0 2px rgba(176, 176, 176, 0.5);
+  color: var(--color-gaming-text-secondary, #999);
 }
 
 /* ==========================================================================
-   Error Display - BEM Element
+   Animations - ELDEN RING風
    ========================================================================== */
 
-.mainMenu__error {
-  /* Position: Top center */
-  position: absolute;
-  top: var(--spacing-md, 20px);
-  left: 50%;
-  transform: translateX(-50%);
-  
-  /* Size: Responsive width */
-  max-width: 80%;
-  
-  /* Style: Error box */
-  background: rgba(255, 50, 50, 0.1);
-  border: 1px solid rgba(255, 100, 100, 0.3);
-  border-radius: var(--border-radius-md, 8px);
-  
-  /* Typography: Small */
-  font-size: var(--font-size-sm, 0.9rem);
-  font-family: var(--font-family-game, 'Cinzel', serif);
-  text-align: center;
-  
-  /* Color: Error */
-  color: var(--color-error-light, #ffaaaa);
-  
-  /* Spacing */
-  padding: var(--spacing-sm, 0.8rem) var(--spacing-md, 1.5rem);
-}
-
-/* ==========================================================================
-   Modal Base - BEM Block
-   ========================================================================== */
-
-.mainMenu__modal {
-  /* Position: Fixed overlay */
-  position: fixed;
-  inset: 0;
-  
-  /* Layout: Center content */
-  display: none;
-  justify-content: center;
-  align-items: center;
-  
-  /* Layer: Above main menu */
-  z-index: var(--z-index-modal-overlay, 2000);
-  
-  /* Background: Dark overlay */
-  background: rgba(0, 0, 0, 0.8);
-}
-
-/* Modal visible state */
-.mainMenu__modal--visible {
-  display: flex;
-}
-
-/* ==========================================================================
-   Mode Select Modal - Complete Implementation
-   ========================================================================== */
-
-/* Modal base */
-.modal {
-  /* Position: Fixed fullscreen overlay */
-  position: fixed;
-  inset: 0;
-  
-  /* Layout: Center content */
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  
-  /* Layer: Above main menu */
-  z-index: var(--z-index-modal-overlay, 2000);
-  
-  /* Background: Dark overlay */
-  background: rgba(0, 0, 0, 0.9);
-  backdrop-filter: blur(8px);
-    /* 🚀 Rich transition ready - modal fade animation removed for future implementation */
-  /* animation: modalFadeIn var(--duration-normal, 0.3s) var(--easing-smooth, ease); */
-  
-  /* Typography: Inherit from parent */
-  font-family: var(--font-family-game, 'Cinzel', serif);
-  color: var(--color-gaming-text-primary, #e0e0e0);
-  
-  /* Performance: GPU optimization */
-  will-change: opacity, transform;
-}
-
-/* Modal active state */
-.modal--active {
-  opacity: 1;
-}
-
-/* Modal overlay background */
-.modal__overlay {
-  /* Position: Cover full modal */
-  position: absolute;
-  inset: 0;
-  
-  /* Interaction: Click to close */
-  cursor: pointer;
-  
-  /* Background: Transparent (handled by parent) */
-  background: transparent;
-}
-
-/* Modal content container */
-.modal__content {
-  /* Position: Above overlay */
-  position: relative;
-  z-index: 1;
-  
-  /* Layout: Two-column layout */
-  display: flex;
-  width: min(90vw, 800px);
-  height: min(80vh, 600px);
-  
-  /* Visual: Gaming theme styling */
-  background: linear-gradient(135deg, 
-    rgba(20, 30, 40, 0.95), 
-    rgba(10, 15, 25, 0.95)
-  );
-  border: 2px solid var(--color-gaming-border-accent, #c9a76f);
-  border-radius: var(--border-radius-lg, 12px);
-  box-shadow: 
-    0 20px 40px rgba(0, 0, 0, 0.8),
-    inset 0 1px 0 rgba(255, 255, 255, 0.1);
-    /* 🚀 Rich transition ready - modal scale animation removed for future implementation */
-  /* animation: modalScaleIn var(--duration-normal, 0.3s) var(--easing-smooth, ease); */
-  
-  /* Overflow: Hidden for clean edges */
-  overflow: hidden;
-}
-
-/* Modal sidebar (mode list) */
-.modal__sidebar {
-  /* Layout: Fixed width sidebar */
-  flex: 0 0 250px;
-  padding: var(--spacing-lg, 1.5rem);
-  
-  /* Background: Slightly darker */
-  background: rgba(0, 0, 0, 0.3);
-  border-right: 1px solid rgba(201, 167, 111, 0.3);
-  
-  /* Layout: Vertical stack */
-  display: flex;
-  flex-direction: column;
-  gap: var(--spacing-sm, 0.5rem);
-}
-
-/* Mode option buttons */
-.modal__option {
-  /* Reset: Button styles */
-  border: none;
-  outline: none;
-  background: none;
-  cursor: pointer;
-  
-  /* Layout: Full width */
-  width: 100%;
-  padding: var(--spacing-md, 1rem) var(--spacing-lg, 1.5rem);
-  text-align: left;
-  
-  /* Typography: Gaming style */
-  font-family: var(--font-family-game, 'Cinzel', serif);
-  font-size: var(--font-size-base, 1rem);
-  font-weight: 500;
-  color: var(--color-gaming-text-secondary, #b0b0b0);
-  letter-spacing: 0.05em;
-  
-  /* Visual: Subtle background */
-  background: rgba(255, 255, 255, 0.05);
-  border: 1px solid transparent;
-  border-radius: var(--border-radius-sm, 4px);
-  
-  /* Animation: Smooth transitions */
-  transition: all var(--duration-fast, 0.2s) var(--easing-smooth, ease);
-  
-  /* Position: Relative for pseudo-elements */
-  position: relative;
-  overflow: hidden;
-}
-
-/* Mode option hover state */
-.modal__option:hover {
-  color: var(--color-gaming-text-accent, #ffd88a);
-  background: rgba(201, 167, 111, 0.1);
-  border-color: rgba(201, 167, 111, 0.3);
-  transform: translateX(4px);
-}
-
-/* Mode option focus state */
-.modal__option:focus-visible {
-  outline: 2px solid var(--color-gaming-text-accent, #ffd88a);
-  outline-offset: 2px;
-}
-
-/* Mode option selected state */
-.modal__option--selected {
-  color: var(--color-gaming-text-accent, #ffd88a);
-  background: linear-gradient(135deg, 
-    rgba(201, 167, 111, 0.2), 
-    rgba(255, 216, 138, 0.1)
-  );
-  border-color: var(--color-gaming-border-accent, #c9a76f);
-  
-  /* Visual: Glow effect */
-  box-shadow: 
-    0 0 20px rgba(201, 167, 111, 0.3),
-    inset 0 1px 0 rgba(255, 255, 255, 0.1);
-}
-
-/* Selected option pseudo-element */
-.modal__option--selected::before {
-  content: '';
-  position: absolute;
-  left: 0;
-  top: 0;
-  width: 4px;
-  height: 100%;
-  background: linear-gradient(to bottom, 
-    var(--color-gaming-text-accent, #ffd88a), 
-    var(--color-gaming-border-accent, #c9a76f)
-  );
-}
-
-/* Modal main content area */
-.modal__main {
-  /* Layout: Flexible main area */
-  flex: 1;
-  padding: var(--spacing-lg, 1.5rem);
-  
-  /* Layout: Vertical stack */
-  display: flex;
-  flex-direction: column;
-  justify-content: space-between;
-  
-  /* Text: Center alignment */
-  text-align: center;
-}
-
-/* Mode description text */
-.modal__description {
-  /* Layout: Main content area */
-  flex: 1;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  
-  /* Typography: Description text */
-  font-size: var(--font-size-lg, 1.2rem);
-  line-height: 1.6;
-  color: var(--color-gaming-text-primary, #e0e0e0);
-  
-  /* Spacing: Comfortable padding */
-  padding: var(--spacing-xl, 2rem) var(--spacing-lg, 1.5rem);
-  
-  /* Visual: Subtle background */
-  background: rgba(255, 255, 255, 0.02);
-  border-radius: var(--border-radius-sm, 4px);
-  border: 1px solid rgba(255, 255, 255, 0.05);
-}
-
-/* Modal close button */
-.modal__close {
-  /* Reset: Button styles */
-  border: none;
-  outline: none;
-  cursor: pointer;
-  
-  /* Layout: Self-contained */
-  align-self: center;
-  padding: var(--spacing-md, 1rem) var(--spacing-xl, 2rem);
-  margin-top: var(--spacing-lg, 1.5rem);
-  
-  /* Typography: Gaming style */
-  font-family: var(--font-family-game, 'Cinzel', serif);
-  font-size: var(--font-size-base, 1rem);
-  font-weight: 600;
-  color: var(--color-gaming-text-secondary, #b0b0b0);
-  letter-spacing: 0.1em;
-  text-transform: uppercase;
-  
-  /* Visual: Button styling */
-  background: linear-gradient(135deg, 
-    rgba(201, 167, 111, 0.1), 
-    rgba(255, 216, 138, 0.05)
-  );
-  border: 1px solid rgba(201, 167, 111, 0.3);
-  border-radius: var(--border-radius-sm, 4px);
-  
-  /* Animation: Smooth transitions */
-  transition: all var(--duration-fast, 0.2s) var(--easing-smooth, ease);
-}
-
-/* Close button hover state */
-.modal__close:hover {
-  color: var(--color-gaming-text-accent, #ffd88a);
-  background: linear-gradient(135deg, 
-    rgba(201, 167, 111, 0.2), 
-    rgba(255, 216, 138, 0.1)
-  );
-  border-color: var(--color-gaming-border-accent, #c9a76f);
-  transform: translateY(-2px);
-  box-shadow: 0 4px 12px rgba(201, 167, 111, 0.3);
-}
-
-/* Close button focus state */
-.modal__close:focus-visible {
-  outline: 2px solid var(--color-gaming-text-accent, #ffd88a);
-  outline-offset: 2px;
-}
-
-/* Close button active state */
-.modal__close:active {
-  transform: translateY(0);
-  box-shadow: 0 2px 6px rgba(201, 167, 111, 0.2);
-}
-
-/* ==========================================================================
-   Animations - Custom Properties
-   ========================================================================== */
-
-/* 🚀 Rich transition ready - screen transition animations removed for future implementation */
-/*
-@keyframes fadeIn {
-  from {
+@keyframes fadeInBackground {
+  0% {
     opacity: 0;
-    transform: translateY(-20px);
   }
-  to {
+  100% {
+    opacity: 1;
+  }
+}
+
+@keyframes fadeUpElements {
+  0% {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  100% {
     opacity: 1;
     transform: translateY(0);
   }
 }
 
-@keyframes fadeUp {
-  from {
-    opacity: 0;
-    transform: translateY(30px);
+@keyframes titleGlow {
+  0% {
+    text-shadow: 
+      0 0 10px rgba(255, 223, 128, 0.4),
+      0 0 20px rgba(255, 223, 128, 0.2);
   }
-  to {
-    opacity: 1;
-    transform: translateY(0);
-  }
-}
-*/
-
-/* UI Element animations - kept for UX */
-@keyframes pulse {
-  0%, 100% {
-    opacity: 0.7;
-  }
-  50% {
-    opacity: 1;
+  100% {
+    text-shadow: 
+      0 0 15px rgba(255, 223, 128, 0.6),
+      0 0 30px rgba(255, 223, 128, 0.3);
   }
 }
 
-/* 🚀 Rich transition ready - modal animations removed for future implementation */
-/*
-@keyframes modalFadeIn {
-  from {
-    opacity: 0;
-    backdrop-filter: blur(0px);
+@keyframes subtitleGlow {
+  0% {
+    text-shadow: 
+      0 0 15px rgba(163, 216, 255, 0.5),
+      0 0 30px rgba(163, 216, 255, 0.2);
   }
-  to {
-    opacity: 1;
-    backdrop-filter: blur(8px);
+  100% {
+    text-shadow: 
+      0 0 20px rgba(163, 216, 255, 0.7),
+      0 0 40px rgba(163, 216, 255, 0.4);
   }
 }
 
-@keyframes modalScaleIn {
-  from {
-    opacity: 0;
-    transform: scale(0.9) translateY(-20px);
+/* Loading state for button */
+.mainMenu__navItem--loading {
+  animation: loadingPulse 1.5s infinite alternate ease-in-out;
+  cursor: wait;
+}
+
+@keyframes loadingPulse {
+  0% {
+    opacity: 0.6;
   }
-  to {
+  100% {
     opacity: 1;
-    transform: scale(1) translateY(0);
   }
 }
-*/
 
 /* ==========================================================================
    Responsive Design - 2025 Modern Approach
@@ -900,5 +623,353 @@
   .modal__close:focus {
     color: #ffff00;
     background: #333333;
+  }
+}
+
+/* ==========================================================================
+   Error Display - BEM Element
+   ========================================================================== */
+
+.mainMenu__error {
+  /* Position: Top center */
+  position: absolute;
+  top: var(--spacing-md, 20px);
+  left: 50%;
+  transform: translateX(-50%);
+  
+  /* Size: Responsive width */
+  max-width: 80%;
+  
+  /* Style: Error box - ELDEN RING風 */
+  background: rgba(100, 0, 0, 0.3);
+  border: 1px solid rgba(255, 100, 100, 0.3);
+  border-radius: var(--border-radius-sm, 4px);
+  
+  /* Typography: Small */
+  font-size: var(--font-size-sm, 0.9rem);
+  font-family: var(--font-family-game, 'Cinzel', serif);
+  text-align: center;
+  
+  /* Color: Error */
+  color: #ff9999;
+  
+  /* Spacing */
+  padding: var(--spacing-sm, 0.8rem) var(--spacing-md, 1.5rem);
+  
+  /* Effects */
+  box-shadow: 0 0 10px rgba(255, 0, 0, 0.2);
+}
+
+/* ==========================================================================
+   Modal Base - BEM Block - ELDEN RING風
+   ========================================================================== */
+
+.mainMenu__modal {
+  /* Position: Fixed overlay */
+  position: fixed;
+  inset: 0;
+  
+  /* Layout: Center content */
+  display: none;
+  justify-content: center;
+  align-items: center;
+  
+  /* Layer: Above main menu */
+  z-index: var(--z-index-modal-overlay, 2000);
+  
+  /* Background: Dark overlay */
+  background: rgba(0, 0, 0, 0.85);
+  backdrop-filter: blur(4px);
+}
+
+/* Modal visible state */
+.mainMenu__modal--visible {
+  display: flex;
+}
+
+/* =========================================================================
+   Mode Select Modal - ELDEN RING NIGHTREIGN風
+   ========================================================================== */
+/* Modal base */
+.modal {
+  /* Position: Fixed fullscreen overlay */
+  position: fixed;
+  inset: 0;
+  
+  /* Layout: Center content */
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  
+  /* Layer: Above main menu */
+  z-index: var(--z-index-modal-overlay, 2000);
+  
+  /* Background: Dark overlay */
+  background: rgba(0, 0, 0, 0.9);
+  backdrop-filter: blur(8px);
+  
+  /* Animation */
+  animation: modalFadeIn 0.5s ease-out forwards;
+  
+  /* Typography: Inherit from parent */
+  font-family: var(--font-family-game, 'Cinzel', serif);
+  color: var(--color-gaming-text-primary, #e0e0e0);
+  
+  /* Performance: GPU optimization */
+  will-change: opacity, transform;
+}
+
+/* Modal active state */
+.modal--active {
+  opacity: 1;
+}
+
+/* Modal overlay background */
+.modal__overlay {
+  /* Position: Cover full modal */
+  position: absolute;
+  inset: 0;
+  
+  /* Interaction: Click to close */
+  cursor: pointer;
+  
+  /* Background: Transparent (handled by parent) */
+  background: transparent;
+}
+
+/* Modal content container */
+.modal__content {
+  /* Position: Above overlay */
+  position: relative;
+  z-index: 1;
+  
+  /* Layout: Two-column layout */
+  display: flex;
+  width: min(90vw, 800px);
+  height: min(80vh, 600px);
+  
+  /* Visual: Gaming theme styling - ELDEN RING風 */
+  background: linear-gradient(135deg, 
+    rgba(10, 16, 32, 0.95), 
+    rgba(5, 8, 16, 0.95)
+  );
+  border: 1px solid rgba(163, 216, 255, 0.3);
+  border-radius: var(--border-radius-sm, 4px);
+  box-shadow: 
+    0 20px 40px rgba(0, 0, 0, 0.8),
+    inset 0 1px 0 rgba(255, 255, 255, 0.05);
+  
+  /* Animation */
+  animation: modalScaleIn 0.5s ease-out forwards;
+  
+  /* Overflow: Hidden for clean edges */
+  overflow: hidden;
+}
+
+/* Modal sidebar (mode list) */
+.modal__sidebar {
+  /* Layout: Fixed width sidebar */
+  flex: 0 0 250px;
+  padding: var(--spacing-lg, 1.5rem);
+  
+  /* Background: Slightly darker */
+  background: rgba(0, 0, 0, 0.3);
+  border-right: 1px solid rgba(163, 216, 255, 0.15);
+  
+  /* Layout: Vertical stack */
+  display: flex;
+  flex-direction: column;
+  gap: var(--spacing-md, 1rem);
+}
+
+/* Mode option buttons */
+.modal__option {
+  /* Reset: Button styles */
+  border: none;
+  outline: none;
+  background: none;
+  cursor: pointer;
+  
+  /* Layout: Full width */
+  width: 100%;
+  padding: var(--spacing-md, 1rem);
+  text-align: left;
+  
+  /* Typography: Menu item */
+  font-size: var(--font-size-base, 1rem);
+  font-family: var(--font-family-game, 'Cinzel', serif);
+  font-weight: 400;
+  letter-spacing: 0.1rem;
+  
+  /* Color: Primary text */
+  color: var(--color-gaming-text-primary, #ccc);
+  
+  /* Border: Bottom only */
+  border-bottom: 1px solid rgba(163, 216, 255, 0.1);
+  
+  /* Transition: Smooth hover */
+  transition: all var(--duration-fast, 0.3s) var(--easing-smooth, ease);
+}
+
+/* Mode option hover state */
+.modal__option:hover,
+.modal__option:focus {
+  background: rgba(163, 216, 255, 0.05);
+  color: #ffffff;
+  text-shadow: 0 0 8px rgba(163, 216, 255, 0.6);
+  outline: none;
+}
+
+/* Mode option selected state */
+.modal__option--selected {
+  background: rgba(163, 216, 255, 0.1);
+  color: #a3d8ff;
+  text-shadow: 0 0 8px rgba(163, 216, 255, 0.4);
+  border-left: 2px solid #a3d8ff;
+  
+  /* Layout: Add left padding */
+  padding-left: calc(var(--spacing-md, 1rem) - 2px);
+}
+
+/* Modal main content */
+.modal__main {
+  /* Layout: Flexible content area */
+  flex: 1;
+  padding: var(--spacing-lg, 1.5rem);
+  
+  /* Layout: Content position */
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+}
+
+/* Modal description text */
+.modal__description {
+  /* Typography: Description text */
+  font-size: var(--font-size-base, 1rem);
+  font-family: var(--font-family-primary, 'Noto Sans JP', sans-serif);
+  line-height: 1.6;
+  
+  /* Color: Muted text */
+  color: var(--color-gaming-text-secondary, #b0b0b0);
+  
+  /* Spacing: Push away from bottom button */
+  margin-bottom: auto;
+  padding-bottom: var(--spacing-lg, 1.5rem);
+}
+
+/* Modal close button */
+.modal__close {
+  /* Layout: Self-align */
+  align-self: flex-end;
+  margin-top: var(--spacing-lg, 1.5rem);
+  
+  /* Style: ELDEN RING風ボタン */
+  background: rgba(163, 216, 255, 0.05);
+  border: 1px solid rgba(163, 216, 255, 0.2);
+  border-radius: var(--border-radius-sm, 4px);
+  padding: var(--spacing-sm, 0.5rem) var(--spacing-lg, 1.5rem);
+  
+  /* Typography: Button text */
+  font-size: var(--font-size-base, 1rem);
+  font-family: var(--font-family-game, 'Cinzel', serif);
+  font-weight: 400;
+  letter-spacing: 0.1rem;
+  
+  /* Color: Button text */
+  color: #a3d8ff;
+  
+  /* Interactive: Cursor */
+  cursor: pointer;
+  
+  /* Transition: Smooth hover */
+  transition: all var(--duration-fast, 0.3s) var(--easing-smooth, ease);
+}
+
+/* Modal close button hover state */
+.modal__close:hover,
+.modal__close:focus {
+  background: rgba(163, 216, 255, 0.1);
+  color: #ffffff;
+  text-shadow: 0 0 8px rgba(163, 216, 255, 0.6);
+  border-color: rgba(163, 216, 255, 0.4);
+  box-shadow: 0 0 15px rgba(163, 216, 255, 0.2);
+  outline: none;
+}
+
+/* =========================================================================
+   Modal Animations
+   ========================================================================== */
+
+@keyframes modalFadeIn {
+  0% {
+    opacity: 0;
+  }
+  100% {
+    opacity: 1;
+  }
+}
+
+@keyframes modalScaleIn {
+  0% {
+    opacity: 0;
+    transform: scale(0.95);
+  }
+  100% {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+
+/* =========================================================================
+   Responsive Design - Elden Ring風
+   ========================================================================== */
+
+@media (max-width: 768px) {
+  .modal__content {
+    flex-direction: column;
+    height: 90vh;
+  }
+  
+  .modal__sidebar {
+    flex: 0 0 auto;
+    border-right: none;
+    border-bottom: 1px solid rgba(163, 216, 255, 0.15);
+  }
+  
+  .mainMenu__title {
+    font-size: clamp(2rem, 8vw, 3rem);
+  }
+  
+  .mainMenu__subtitle {
+    font-size: clamp(2.5rem, 12vw, 4rem);
+    letter-spacing: 0.5rem;
+  }
+  
+  .mainMenu__navItem {
+    font-size: 1.2rem;
+  }
+}
+
+/* モバイル向け追加調整 */
+@media (max-width: 480px) {
+  .mainMenu__title {
+    font-size: clamp(1.8rem, 7vw, 2.5rem);
+    letter-spacing: 0.2rem;
+  }
+  
+  .mainMenu__subtitle {
+    font-size: clamp(2.2rem, 10vw, 3.5rem);
+    letter-spacing: 0.3rem;
+  }
+  
+  .mainMenu__navItem {
+    font-size: 1.1rem;
+  }
+  
+  .mainMenu__shortcut {
+    flex-direction: column;
+    gap: 0.5rem;
+    align-items: center;
   }
 }

@@ -1,0 +1,99 @@
+/* ==========================================================================
+   ELDEN RING NIGHTREIGN風デザイントークン
+   - ELDEN RING NIGHTREIGNスタイルのカスタムプロパティ
+   - CSS-Design-Best-Practices.mdに準拠
+   - BEM記法との互換性を確保
+   ========================================================================== */
+
+:root {
+  /* ===== カラーパレット - ELDEN RING NIGHTREIGN風 ===== */
+  
+  /* 背景カラー */
+  --color-eldenring-bg-primary: #050a14;
+  --color-eldenring-bg-secondary: #0a1020;
+  --color-eldenring-bg-tertiary: #101830;
+  
+  /* グラデーション */
+  --color-eldenring-bg-gradient: radial-gradient(ellipse at center, #0a1020 0%, #000000 100%);
+  
+  /* ゴールドカラー (ELDEN RING) */
+  --color-eldenring-gold-light: #f8e6b0;
+  --color-eldenring-gold-base: #c9a76f;
+  --color-eldenring-gold-dark: #9c7e5c;
+  --color-eldenring-gold-gradient: linear-gradient(to bottom, #f8e6b0 20%, #c9a76f 40%, #f8e6b0 60%, #c9a76f 80%);
+  
+  /* ブルーカラー (NIGHTREIGN) */
+  --color-nightreign-blue-light: #a3d8ff;
+  --color-nightreign-blue-base: #709fc7;
+  --color-nightreign-blue-dark: #4a6a8c;
+  --color-nightreign-blue-gradient: linear-gradient(to bottom, #a3d8ff 10%, #709fc7 50%, #a3d8ff 90%);
+  
+  /* テキストカラー */
+  --color-eldenring-text-primary: #e0e0e0;
+  --color-eldenring-text-secondary: #b0b0b0;
+  --color-eldenring-text-muted: #707070;
+  
+  /* ===== エフェクト - ELDEN RING NIGHTREIGN風 ===== */
+  
+  /* シャドウエフェクト */
+  --shadow-eldenring-title: 
+    0 0 10px rgba(255, 223, 128, 0.4),
+    0 0 20px rgba(255, 223, 128, 0.2);
+    
+  --shadow-nightreign-subtitle: 
+    0 0 15px rgba(163, 216, 255, 0.6),
+    0 0 30px rgba(163, 216, 255, 0.3);
+    
+  --shadow-eldenring-button: 
+    0 0 8px rgba(163, 216, 255, 0.2),
+    0 0 16px rgba(163, 216, 255, 0.1);
+    
+  /* ボーダースタイル */
+  --border-eldenring-gold: 1px solid rgba(201, 167, 111, 0.3);
+  --border-nightreign-blue: 1px solid rgba(163, 216, 255, 0.2);
+  
+  /* ===== アニメーション - ELDEN RING NIGHTREIGN風 ===== */
+  
+  /* アニメーション時間 */
+  --eldenring-animation-slow: 4s;
+  --eldenring-animation-normal: 2s;
+  --eldenring-animation-fast: 0.3s;
+  
+  /* イージング */
+  --eldenring-easing-smooth: cubic-bezier(0.4, 0.0, 0.2, 1);
+  
+  /* ===== タイポグラフィ - ELDEN RING NIGHTREIGN風 ===== */
+  
+  /* フォント */
+  --font-eldenring-title: 'Cinzel', serif;
+  
+  /* フォントサイズ（Responsive） */
+  --font-size-eldenring-title: clamp(2.5rem, 6vw, 3.5rem);
+  --font-size-nightreign-subtitle: clamp(4rem, 10vw, 6rem);
+  --font-size-eldenring-menu: clamp(1.2rem, 4vw, 1.4rem);
+  
+  /* レタースペーシング */
+  --letter-spacing-eldenring-title: 0.3rem;
+  --letter-spacing-nightreign-subtitle: 0.8rem;
+  --letter-spacing-eldenring-menu: 0.15rem;
+}
+
+/* モバイル向けの調整 */
+@media (max-width: 768px) {
+  :root {
+    --font-size-eldenring-title: clamp(2rem, 8vw, 3rem);
+    --font-size-nightreign-subtitle: clamp(2.5rem, 12vw, 4rem);
+    --letter-spacing-nightreign-subtitle: 0.5rem;
+    --letter-spacing-eldenring-title: 0.2rem;
+  }
+}
+
+/* スモールモバイル向けの調整 */
+@media (max-width: 480px) {
+  :root {
+    --font-size-eldenring-title: clamp(1.8rem, 7vw, 2.5rem);
+    --font-size-nightreign-subtitle: clamp(2.2rem, 10vw, 3.5rem);
+    --letter-spacing-eldenring-title: 0.15rem;
+    --letter-spacing-nightreign-subtitle: 0.3rem;
+  }
+}
