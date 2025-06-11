@@ -1,360 +1,516 @@
-/* SimpleGameResultScreen - result2.html完全一致CSS */
-
-/* ==========================================================================
-   Main Result Screen Container
-   ========================================================================== */
+/* SimpleGameResultScreen - CSS-Design-Best-Practices.md準拠版 */
 
 .resultScreen {
-  /* result2.html完全一致 */
-  width: 100vw;
+  width: 100%;
   height: 100vh;
-  background: radial-gradient(ellipse at center, #0a0f1b, #000);
-  font-family: 'Cinzel', serif;
-  overflow: hidden;
-  color: #e0e0e0;
-    /* Flexbox layout - Best Practice Position */
   display: flex;
   flex-direction: column;
   justify-content: flex-start;
   align-items: center;
-  position: relative;
-  
-  /* Result Screen Optimal Position */
-  padding-top: 15vh; /* Base: Mobile-first - same as typing screen */
-  
-  /* Reset */
+  background: radial-gradient(ellipse at center, #0a0f1b, #000000);
+  font-family: 'Cinzel', serif;
+  color: #e0e0e0;
+  position: fixed;
+  top: 0;
+  left: 0;
+  z-index: 1000;
+  padding-top: 15vh;
   margin: 0;
-  padding: 0;
   box-sizing: border-box;
+  overflow: hidden;
+  animation: resultScreenFadeIn 2s ease;
 }
-
-/* ==========================================================================
-   Main Content Container
-   ========================================================================== */
 
 .result {
-  /* result2.html完全一致 */
   text-align: center;
-  animation: fadeIn 2s ease;
+  width: min(90vw, 800px);
+  animation: resultContainerSlideUp 2s ease;
 }
-
-/* アニメーション定義 */
-@keyframes fadeIn {
-  from { opacity: 0; transform: translateY(-20px); }
-  to { opacity: 1; transform: translateY(0); }
-}
-
-/* ==========================================================================
-   Result Title
-   ========================================================================== */
 
 .resultTitle {
-  /* result2.html完全一致 */
-  font-size: 2.8rem;
-  color: #d6e4ff;
+  font-size: clamp(2rem, 8vw, 3rem);
+  font-weight: 700;
   letter-spacing: 0.2rem;
-  text-shadow: 0 0 14px rgba(150,180,255,0.4);
+  background: linear-gradient(to right, #c9a76f, #f8e6b0);
+  background-clip: text;
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  text-shadow: 0 0 12px rgba(255, 223, 128, 0.4);
   margin-bottom: 2rem;
 }
 
-/* ==========================================================================
-   Score Statistics Grid
-   ========================================================================== */
-
 .resultStats {
-  /* result2.html完全一致 */
   display: grid;
-  grid-template-columns: auto auto;
-  gap: 1.2rem 4rem;
-  font-size: 1.2rem;
-  margin-bottom: 2.5rem;
+  grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+  gap: 1.5rem;
+  margin-bottom: 2rem;
 }
 
-.statItem {
-  /* result2.html完全一致 */
-  display: flex;
-  justify-content: space-between;
-  width: 220px;
-  padding: 0.3rem 0;
-  border-bottom: 1px solid rgba(255,255,255,0.06);
+.resultStat {
+  background: rgba(20, 20, 25, 0.7);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: 8px;
+  backdrop-filter: blur(4px);
+  padding: 1.5rem;
+  text-align: center;
 }
 
-.statLabel {
-  color: #bbb;
+.resultStatLabel {
+  font-size: 0.9rem;
+  color: #b0b0b0;
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  margin-bottom: 0.5rem;
 }
 
-.statValue {
-  font-weight: bold;
-  color: #fff;
+.resultStatValue {
+  font-size: 1.5rem;
+  font-weight: 700;
+  color: #ffd88a;
+  text-shadow: 0 0 6px rgba(255, 216, 138, 0.3);
 }
-
-/* ==========================================================================
-   Button Container
-   ========================================================================== */
 
 .resultButtons {
-  /* result2.html完全一致 */
   display: flex;
-  gap: 2rem;
-  flex-wrap: wrap;
-  justify-content: center;
+  flex-direction: column;
+  gap: 1rem;
+  align-items: center;
+  margin-top: 2rem;
 }
 
-/* ==========================================================================
-   Result Buttons
-   ========================================================================== */
-
 .resultButton {
-  /* result2.html完全一致 */
-  padding: 0.5rem 2rem;
-  border: 1px solid rgba(200, 200, 255, 0.1);
-  background: rgba(255, 255, 255, 0.02);
-  color: #cce0ff;
-  border-radius: 4px;
-  font-size: 1rem;
+  border: none;
+  outline: none;
   cursor: pointer;
-  text-shadow: 0 0 3px rgba(0,0,0,0.4);
-  box-shadow: 0 0 8px rgba(150,180,255,0.1);
-  transition: all 0.25s ease;
+  padding: 1rem 2rem;
+  min-width: 200px;
+  font-family: 'Cinzel', serif;
+  font-size: 1rem;
+  font-weight: 600;
+  color: #b0b0b0;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  background: linear-gradient(135deg, rgba(255, 255, 255, 0.05), rgba(255, 255, 255, 0.02));
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: 4px;
+  transition: all 0.2s ease;
 }
 
 .resultButton:hover {
-  background: rgba(180, 220, 255, 0.05);
-  border-color: rgba(150, 180, 255, 0.3);
-  color: #fff;
-  box-shadow: 0 0 12px rgba(120,180,255,0.2);
+  color: #ffd88a;
+  background: linear-gradient(135deg, rgba(255, 216, 138, 0.1), rgba(255, 216, 138, 0.05));
+  border-color: rgba(255, 216, 138, 0.3);
+  transform: translateY(-2px);
+  box-shadow: 0 4px 16px rgba(255, 216, 138, 0.2);
 }
 
-/* ==========================================================================
-   Score Calculating State
-   ========================================================================== */
-
-.scoreCalculating {
-  margin-bottom: 2rem;
-  padding: 1rem;
-  border: 1px solid rgba(255,255,255,0.1);
-  border-radius: 4px;
-  text-align: center;
-  color: #d0e8ff;
-  background: rgba(255, 255, 255, 0.02);
+.resultButton:focus-visible {
+  outline: 2px solid #ffd88a;
+  outline-offset: 2px;
 }
 
-.scoreCalculating .message {
-  font-size: 1rem;
-  margin-bottom: 1rem;
-  font-weight: normal;
-  color: #d0e8ff;
+/* Animations */
+@keyframes resultScreenFadeIn {
+  from { opacity: 0; }
+  to { opacity: 1; }
 }
 
-.scoreCalculating .button {
-  background: rgba(255, 255, 255, 0.02);
-  color: #cce0ff;
-  border: 1px solid rgba(200, 200, 255, 0.1);
-  padding: 0.5rem 1.5rem;
-  border-radius: 4px;
-  cursor: pointer;
-  font-size: 1rem;
-  transition: all 0.25s ease;
-}
-
-.scoreCalculating .button:hover {
-  background: rgba(180, 220, 255, 0.05);
-  border-color: rgba(150, 180, 255, 0.3);
-  color: #fff;
-}
-
-/* ==========================================================================
-   Modal Overlay (result2.html match)
-   ========================================================================== */
-
-.modalOverlay {
-  /* result2.html完全一致 */
-  position: fixed;
-  inset: 0;
-  display: none;
-  justify-content: center;
-  align-items: center;
-  z-index: 1000;
-  background: rgba(5, 10, 20, 0.9);
-  backdrop-filter: blur(6px);
-}
-
-.modalActive {
-  display: flex;
-}
-
-.modalContent {
-  /* result2.html完全一致 */
-  position: relative;
-  background: linear-gradient(to right, rgba(20,25,40,0.95), rgba(10,10,20,0.9));
-  padding: 2rem 3rem;
-  border-radius: 12px;
-  border: 1px solid rgba(255,255,255,0.1);
-  box-shadow: 0 0 30px rgba(120,180,255,0.1);
-  width: 420px;
-  display: flex;
-  flex-direction: column;
-  gap: 1.4rem;
-}
-
-.modalTitle {
-  font-size: 1.6rem;
-  color: #d6e4ff;
-  text-align: center;
-  text-shadow: 0 0 12px rgba(150,180,255,0.3);
-}
-
-.modalContent .modalInput {
-  padding: 0.6rem;
-  font-size: 1rem;
-  border: none;
-  background: #000;
-  color: #eee;
-  border-bottom: 1px solid rgba(255,255,255,0.2);
-  outline: none;
-  text-align: center;
-  width: 100%;
-  box-sizing: border-box;
-}
-
-.modalContent .modalInput::placeholder {
-  text-align: center;
-  color: #aaa;
-}
-
-.modalInput:focus {
-  border-color: #88ccff;
-}
-
-.modalActions {
-  display: flex;
-  gap: 1rem;
-  justify-content: center;
-}
-
-.modalButton {
-  align-self: center;
-  padding: 0.4rem 1.8rem;
-  font-size: 1rem;
-  background: rgba(255,255,255,0.02);
-  border: 1px solid rgba(255,255,255,0.1);
-  color: #b8cfe7;
-  border-radius: 4px;
-  cursor: pointer;
-  transition: all 0.3s ease;
-}
-
-.modalButton:hover {
-  background: rgba(200, 220, 255, 0.05);
-  color: #fff;
-  border-color: rgba(180,220,255,0.2);
-}
-
-.modalButton:disabled {
-  opacity: 0.6;
-  cursor: not-allowed;
-}
-
-.modalButtonSecondary {
-  background: transparent;
-  color: #aaa;
-  border-color: rgba(255,255,255,0.1);
-}
-
-.modalButtonSecondary:hover {
-  background: rgba(255, 255, 255, 0.05);
-  color: #fff;
-}
-
-.modalError {
-  color: #ff6b6b;
-  margin-top: 0.5rem;
-  font-size: 0.9rem;
-  text-align: center;
-}
-
-.modalSuccess {
-  color: #51cf66;
-  margin-top: 0.5rem;
-  font-size: 0.9rem;
-  text-align: center;
-}
-
-/* ==========================================================================
-   Responsive Design
-   ========================================================================== */
-
-/* リザルト画面 - ベストプラクティス位置調整 */
-
-/* タブレット: 中央より少し上の位置 */
-@media (min-width: 768px) {
-  .resultScreen {
-    padding-top: 18vh; /* タブレット最適位置 */
+@keyframes resultContainerSlideUp {
+  from {
+    opacity: 0;
+    transform: translateY(30px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
   }
 }
 
-/* デスクトップ: リザルト画面黄金比位置 */
-@media (min-width: 1024px) {
+/* Responsive Design */
+@media (max-width: 768px) {
   .resultScreen {
-    padding-top: 22vh; /* デスクトップ最適位置 */
+    padding-top: 10vh;
+    padding-left: 0.5rem;
+    padding-right: 0.5rem;
   }
-}
-
-/* 大画面: 視線負担軽減 */
-@media (min-width: 1440px) {
-  .resultScreen {
-    padding-top: 25vh; /* 大画面での最適位置 */
-  }
-}
-
-/* 縦画面モバイル: コンパクト配置 */
-@media (max-width: 767px) and (orientation: portrait) {
-  .resultScreen {
-    padding-top: 12vh; /* モバイル縦画面 */
-  }
-}
-
-/* 横画面モバイル/タブレット: 中央寄り */
-@media (max-height: 600px) and (orientation: landscape) {
-  .resultScreen {
-    padding-top: 8vh; /* 横画面での最適化 */
-  }
-}
-
-/* モバイル専用レイアウト調整 */
-@media screen and (max-width: 767px) {
-  .resultScreen {
-    padding-left: 1rem;
-    padding-right: 1rem;
+  
+  .result {
+    width: 95vw;
   }
   
   .resultTitle {
-    font-size: 2rem;
-    letter-spacing: 0.1rem;
+    font-size: clamp(1.5rem, 8vw, 2rem);
     margin-bottom: 1.5rem;
   }
   
   .resultStats {
     grid-template-columns: 1fr;
     gap: 1rem;
-    margin-bottom: 1.5rem;
   }
   
+  .resultStat {
+    padding: 1rem;
+  }
+  
+  .resultButton {
+    min-width: 180px;
+    padding: 0.75rem 1.5rem;
+    font-size: 0.9rem;
+  }
+}
+
+@media (min-width: 1024px) {
   .resultButtons {
-    gap: 1rem;
+    flex-direction: row;
+    justify-content: center;
+  }
+}
+
+/* Accessibility */
+@media (prefers-contrast: high) {
+  .resultScreen {
+    background: #000000;
+    color: #ffffff;
+  }
+  
+  .resultTitle {
+    background: none;
+    color: #ffffff;
+    -webkit-text-fill-color: #ffffff;
+    text-shadow: none;
+  }
+  
+  .resultStat {
+    background: #ffffff;
+    color: #000000;
+    border: 2px solid #000000;
+  }
+  
+  .resultButton {
+    background: #ffffff;
+    color: #000000;
+    border: 2px solid #000000;
+  }
+}
+
+/* Modal Styles - CSS-Design-Best-Practices.md準拠 */
+.modalOverlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(0, 0, 0, 0.8);
+  backdrop-filter: blur(8px);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 2000;
+  opacity: 0;
+  visibility: hidden;
+  transition: all 0.3s ease;
+}
+
+.modalActive {
+  opacity: 1;
+  visibility: visible;
+  animation: modalFadeIn 0.3s ease forwards;
+}
+
+.modalContent {
+  background: linear-gradient(135deg, rgba(20, 20, 25, 0.95), rgba(10, 10, 15, 0.95));
+  border: 1px solid rgba(255, 216, 138, 0.3);
+  border-radius: 12px;
+  padding: 2rem;
+  min-width: min(400px, 90vw);
+  max-width: 500px;
+  backdrop-filter: blur(12px);
+  box-shadow: 0 20px 40px rgba(0, 0, 0, 0.6);
+  transform: scale(0.8) translateY(30px);
+  transition: all 0.3s ease;
+  text-align: center;
+}
+
+.modalActive .modalContent {
+  transform: scale(1) translateY(0);
+  animation: modalSlideIn 0.3s ease forwards;
+}
+
+.modalTitle {
+  font-family: 'Cinzel', serif;
+  font-size: 1.5rem;
+  font-weight: 700;
+  color: var(--color-gaming-text-accent, #ffd88a);
+  text-shadow: 0 0 8px rgba(255, 216, 138, 0.4);
+  margin-bottom: 1.5rem;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+}
+
+.modalInput {
+  width: 100%;
+  padding: 0.75rem 1rem;
+  font-family: var(--font-family-game, 'Cinzel'), serif;
+  font-size: 1rem;
+  color: var(--color-gaming-text-primary, #e0e0e0);
+  background: rgba(255, 255, 255, 0.05);
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  border-radius: 6px;
+  outline: none;
+  transition: all 0.2s ease;
+  margin-bottom: 1.5rem;
+  box-sizing: border-box;
+}
+
+.modalInput:focus {
+  border-color: var(--color-gaming-accent, #ffd88a);
+  box-shadow: 0 0 0 2px rgba(255, 216, 138, 0.2);
+  background: rgba(255, 255, 255, 0.08);
+}
+
+.modalInput::placeholder {
+  color: rgba(224, 224, 224, 0.5);
+}
+
+.modalActions {
+  display: flex;
+  gap: 1rem;
+  justify-content: center;
+  flex-wrap: wrap;
+}
+
+.modalButton {
+  border: none;
+  outline: none;
+  cursor: pointer;
+  padding: 0.75rem 1.5rem;
+  min-width: 120px;
+  font-family: var(--font-family-game, 'Cinzel'), serif;
+  font-size: 0.9rem;
+  font-weight: 600;
+  color: var(--color-gaming-text-primary, #e0e0e0);
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+  background: linear-gradient(135deg, rgba(255, 216, 138, 0.2), rgba(255, 216, 138, 0.1));
+  border: 1px solid rgba(255, 216, 138, 0.3);
+  border-radius: 6px;
+  transition: all 0.2s ease;
+}
+
+.modalButton:hover:not(:disabled) {
+  background: linear-gradient(135deg, rgba(255, 216, 138, 0.3), rgba(255, 216, 138, 0.15));
+  border-color: rgba(255, 216, 138, 0.5);
+  transform: translateY(-1px);
+  box-shadow: 0 4px 12px rgba(255, 216, 138, 0.2);
+}
+
+.modalButton:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+  transform: none;
+}
+
+.modalButtonSecondary {
+  background: linear-gradient(135deg, rgba(255, 255, 255, 0.1), rgba(255, 255, 255, 0.05));
+  border-color: rgba(255, 255, 255, 0.2);
+  color: rgba(224, 224, 224, 0.8);
+}
+
+.modalButtonSecondary:hover:not(:disabled) {
+  background: linear-gradient(135deg, rgba(255, 255, 255, 0.15), rgba(255, 255, 255, 0.08));
+  border-color: rgba(255, 255, 255, 0.3);
+  color: var(--color-gaming-text-primary, #e0e0e0);
+}
+
+.modalError {
+  color: var(--color-gaming-danger, #ff6b6b);
+  font-size: 0.9rem;
+  margin-top: 1rem;
+  padding: 0.5rem;
+  background: rgba(255, 107, 107, 0.1);
+  border: 1px solid rgba(255, 107, 107, 0.3);
+  border-radius: 4px;
+}
+
+.modalSuccess {
+  color: var(--color-gaming-success, #4ecdc4);
+  font-size: 0.9rem;
+  margin-top: 1rem;
+  padding: 0.5rem;
+  background: rgba(78, 205, 196, 0.1);
+  border: 1px solid rgba(78, 205, 196, 0.3);
+  border-radius: 4px;
+}
+
+/* Modal Animations */
+@keyframes modalFadeIn {
+  from {
+    opacity: 0;
+    visibility: hidden;
+  }
+  to {
+    opacity: 1;
+    visibility: visible;
+  }
+}
+
+@keyframes modalSlideIn {
+  from {
+    transform: scale(0.8) translateY(30px);
+    opacity: 0;
+  }
+  to {
+    transform: scale(1) translateY(0);
+    opacity: 1;
+  }
+}
+
+/* Score Stats Fix */
+.statItem {
+  background: rgba(20, 20, 25, 0.7);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: 8px;
+  backdrop-filter: blur(4px);
+  padding: 1.5rem;
+  text-align: center;
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+.statLabel {
+  font-size: 0.9rem;
+  color: #b0b0b0;
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+}
+
+.statValue {
+  font-size: 1.5rem;
+  font-weight: 700;
+  color: #ffd88a;
+  text-shadow: 0 0 6px rgba(255, 216, 138, 0.3);
+}
+
+.scoreCalculating {
+  text-align: center;
+  margin: 2rem 0;
+}
+
+.message {
+  font-size: 1.1rem;
+  color: var(--color-gaming-text-secondary, #b0b0b0);
+  margin-bottom: 1rem;
+}
+
+.button {
+  border: none;
+  outline: none;
+  cursor: pointer;
+  padding: 0.75rem 1.5rem;
+  font-family: var(--font-family-game, 'Cinzel'), serif;
+  font-size: 0.9rem;
+  font-weight: 600;
+  color: var(--color-gaming-text-primary, #e0e0e0);
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+  background: linear-gradient(135deg, rgba(255, 216, 138, 0.2), rgba(255, 216, 138, 0.1));
+  border: 1px solid rgba(255, 216, 138, 0.3);
+  border-radius: 6px;
+  transition: all 0.2s ease;
+}
+
+.button:hover {
+  background: linear-gradient(135deg, rgba(255, 216, 138, 0.3), rgba(255, 216, 138, 0.15));
+  border-color: rgba(255, 216, 138, 0.5);
+  transform: translateY(-1px);
+  box-shadow: 0 4px 12px rgba(255, 216, 138, 0.2);
+}
+
+/* Responsive Design for Modal */
+@media (max-width: 768px) {
+  .modalContent {
+    padding: 1.5rem;
+    min-width: 90vw;
+    margin: 1rem;
+  }
+  
+  .modalTitle {
+    font-size: 1.3rem;
+    margin-bottom: 1rem;
+  }
+  
+  .modalActions {
     flex-direction: column;
     align-items: center;
   }
   
-  .resultButton {
-    padding: 0.6rem 1.5rem;
-    font-size: 0.9rem;
+  .modalButton {
     min-width: 150px;
+    width: 100%;
+    max-width: 200px;
+  }
+}
+
+/* Accessibility for Modal */
+@media (prefers-contrast: high) {
+  .modalOverlay {
+    background: rgba(0, 0, 0, 0.9);
   }
   
   .modalContent {
-    width: 90%;
-    max-width: 350px;
-    padding: 1.5rem;
+    background: #ffffff;
+    color: #000000;
+    border: 3px solid #000000;
+  }
+  
+  .modalTitle {
+    color: #000000;
+    text-shadow: none;
+  }
+  
+  .modalInput {
+    background: #ffffff;
+    color: #000000;
+    border: 2px solid #000000;
+  }
+  
+  .modalButton {
+    background: #000000;
+    color: #ffffff;
+    border: 2px solid #000000;
+  }
+  
+  .modalButtonSecondary {
+    background: #ffffff;
+    color: #000000;
+    border: 2px solid #000000;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .resultScreen,
+  .result {
+    animation: none;
+  }
+  
+  .resultButton {
+    transition: none;
+  }
+  
+  .resultButton:hover {
+    transform: none;
+  }
+  
+  .modalOverlay,
+  .modalContent,
+  .modalButton {
+    transition: none;
+    animation: none;
+  }
+  
+  .modalActive .modalContent {
+    transform: none;
+    animation: none;
   }
 }

@@ -2,7 +2,7 @@ import React, { useState, useCallback, useMemo, useEffect, useRef } from 'react'
 import { useTypingGameStore, useQuestionCount } from '@/store/typingGameStore';
 import { useSceneNavigationStore } from '@/store/sceneNavigationStore';
 import { useGlobalShortcuts } from '@/hooks/useGlobalShortcuts';
-import styles from './MainMenu.eldenring.bem.module.css';
+import styles from '@/styles/components/MainMenu.module.css';
 import { deleteRankingEntriesByMode } from '@/lib/rankingManaby2';
 import CommonModal from './common/CommonModal';
 import CommonButton from './common/CommonButton';
@@ -218,15 +218,15 @@ const MainMenu: React.FC<MainMenuProps> = React.memo(({ onStart, onRetry, onRank
           Mode: {selectedModeDisplay}
         </div>
       </div>      {/* ショートカットキー表示（index.htmlスタイル完全再現） */}
-      <div className={styles.shortcut}>
+      <div className={styles.mainMenu__shortcut}>
         <span>[Space] Start</span>
         <span>[Alt+R] Rank</span>
       </div>
 
       {/* フッター（index.htmlスタイル完全再現） */}
-      <div className={styles.footer}>
-        <div className={styles.footer__copyright}>&copy;2025 manaby Omiya Studio</div>
-        <div className={styles.footer__version}>ver. 0.9.3 (Beta)</div>
+      <div className={styles.mainMenu__footer}>
+        <div className={styles.mainMenu__footer__copyright}>&copy;2025 manaby Omiya Studio</div>
+        <div className={styles.mainMenu__footer__version}>ver. 0.9.3 (Beta)</div>
       </div>
 
       {/* エラー表示 */}

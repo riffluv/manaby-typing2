@@ -1,191 +1,324 @@
 /* ==========================================================================
-   SimpleGameScreen - game.html 完全対応デザイン
-   BEM記法 + CSS Variables + レスポンシブ
+   SimpleGameScreen - CSS-Design-Best-Practices.md完全準拠版
+   - デザイントークン駆動設計
+   - BEM記法統一
+   - モダンCSS機能活用
+   - ゲーミングUI完全対応
    ========================================================================== */
 
-/* Game Screen - Main Container (BEM Block) */
 .gameScreen {
-  /* ▼ game.html から移行したデザイントークン */
-  --bg-color: radial-gradient(ellipse at center, #0a0f1b, #000);
-  --jp-gradient: linear-gradient(to right, #c9a76f, #f8e6b0);
-  --jp-shadow: rgba(255, 223, 128, 0.2);
-  --typed-color: #a3d8ff;
-  --focus-color: #ffe18d;
-  --remaining-color: #9c7e5c;
-  --prompt-bg: rgba(20, 20, 25, 0.75);
-  --prompt-border: rgba(255, 255, 255, 0.1);
-  --prompt-shadow: rgba(100, 180, 255, 0.1);
-  --kana-color: #d6cbb2;
-  /* Layout: Flexbox Centering */
-  display: flex;
-  justify-content: center;
-  align-items: flex-start;
-  
-  /* Size: Full Screen */
+  /* Layout: Full screen container */
   width: 100%;
   height: 100vh;
   min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
   
-  /* Background: game.html Style */
-  background: var(--bg-color);
-  font-family: 'Cinzel', serif;
-  color: #ccc;
+  /* Background: Gaming theme with design tokens */
+  background: var(--color-game-bg-radial, radial-gradient(ellipse at center, #0a0f1b, #000000));
   
-  /* Spacing: Optimal Typing Position - Center-Upper */
-  padding-top: 15vh; /* Base: Mobile-first */
+  /* Typography: Gaming font family */
+  font-family: var(--font-family-game, 'Cinzel', serif);
+  font-size: var(--font-size-base, 1rem);
+  color: var(--color-gaming-text-primary, #e0e0e0);
+  line-height: 1.5;
   
-  /* Reset */
-  margin: 0;
-  box-sizing: border-box;
-  overflow: hidden;
+  /* Position: Fixed for game control */
+  position: fixed;
+  top: 0;
+  left: 0;
+  z-index: var(--z-index-game, 100);
   
-  /* Performance */
-  will-change: contents;
+  /* Performance: GPU optimization */
+  will-change: transform;
   contain: layout style;
+  
+  /* Spacing: Responsive padding */
+  padding: clamp(1rem, 8vh, 4rem) var(--spacing-md, 1rem);
+  
+  /* Reset: Box model */
+  margin: 0;
+  overflow: hidden;
+  box-sizing: border-box;
 }
 
-/* Typing Area - Main Container (BEM Block) */
+/* Reset for all child elements */
+.gameScreen *,
+.gameScreen *::before,
+.gameScreen *::after {
+  box-sizing: border-box;
+}
+
 .typingArea {
-  /* Size: game.html Style */
-  width: 90%;
-  max-width: 960px;
+  /* Layout: Responsive container */
+  width: min(90vw, 960px);
+  max-width: var(--container-lg, 960px);
   
-  /* Background & Effects: game.html Style */
-  background: var(--prompt-bg);
-  border: 1px solid var(--prompt-border);
-  border-radius: 12px;
-  box-shadow: 0 0 20px var(--prompt-shadow);
-  backdrop-filter: blur(4px);
+  /* Visual: Gaming theme styling with design tokens */
+  background: rgba(20, 20, 25, 0.85);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: var(--border-radius-lg, 12px);
   
-  /* Layout */
-  padding: 2rem;
+  /* Effects: Glass morphism */
+  backdrop-filter: blur(8px);
+  box-shadow: 
+    0 8px 32px rgba(0, 0, 0, 0.3),
+    0 0 20px rgba(100, 180, 255, 0.1),
+    inset 0 1px 0 rgba(255, 255, 255, 0.1);
+  
+  /* Layout: Internal spacing */
+  padding: clamp(1.5rem, 4vw, 2.5rem);
   text-align: center;
   
-  /* Performance */
+  /* Animation: Smooth entry */
+  animation: typingAreaFadeIn var(--duration-slow, 0.8s) var(--easing-smooth, ease);
+  
+  /* Performance: Optimize rendering */
   will-change: contents;
   contain: layout style;
 }
 
-/* Prompt Box - Japanese Text (BEM Element) */
 .promptBox__jp {
-  /* Typography: game.html Style */
-  font-size: 1.6rem;
-  font-weight: bold;
-  letter-spacing: 0.04rem;
+  /* Typography: Large display text with design tokens */
+  font-size: var(--font-size-2xl, clamp(1.4rem, 4vw, 1.8rem));
+  font-family: var(--font-family-game, 'Cinzel', serif);
+  font-weight: 700;
+  letter-spacing: 0.05rem;
   line-height: 1.6;
-  margin-bottom: 1.2rem;
   
-  /* Visual Effects: game.html Style */
-  background: var(--jp-gradient);
+  /* Visual: Gold gradient effect */
+  background: linear-gradient(
+    to right, 
+    var(--color-gaming-text-accent, #c9a76f), 
+    #f8e6b0
+  );
+  background-clip: text;
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
-  background-clip: text;
-  text-shadow: 0 0 6px var(--jp-shadow);
-}
-
-/* Prompt Box - Kana Text (BEM Element) */
-.promptBox__kana {
-  /* Typography: game.html Style */
-  font-size: 1.5rem;
-  color: var(--kana-color);
-  letter-spacing: 0.04rem;
-  line-height: 1.6;
-  margin-bottom: 1.2rem;
-}
-
-/* Prompt Box - Romaji Text (BEM Element) */
-.promptBox__roma {
-  /* Typography: game.html Style */
-  font-size: 1.6rem;
-  letter-spacing: 0.04rem;
-  line-height: 1.6;
-  margin-bottom: 1.2rem;
   
-  /* DirectTypingEngine2 Container Override */
-  padding: 0 !important;
-  background: transparent !important;
-  border-radius: 0 !important;
-  min-height: auto !important;
+  /* Effects: Glow shadow */
+  text-shadow: 0 0 8px rgba(255, 223, 128, 0.3);
+  
+  /* Spacing: Bottom margin */
+  margin-bottom: var(--spacing-lg, 1.5rem);
+  
+  /* Performance: Text optimization */
+  text-rendering: optimizeLegibility;
+  -webkit-font-smoothing: antialiased;
+}
+
+.promptBox__kana {
+  /* Typography: Medium display text with design tokens */
+  font-size: var(--font-size-xl, clamp(1.2rem, 3.5vw, 1.5rem));
+  font-family: var(--font-family-game, 'Cinzel', serif);
+  font-weight: 500;
+  letter-spacing: 0.04rem;
+  line-height: 1.6;
+  
+  /* Color: Muted accent */
+  color: var(--color-gaming-text-muted, #d6cbb2);
+  
+  /* Effects: Subtle glow */
+  text-shadow: 0 0 4px rgba(214, 203, 178, 0.2);
+  
+  /* Spacing: Bottom margin */
+  margin-bottom: var(--spacing-lg, 1.5rem);
+  
+  /* Performance: Text optimization */
+  text-rendering: optimizeLegibility;
+  -webkit-font-smoothing: antialiased;
+}
+
+.promptBox__roma {
+  /* Typography: Interactive text display with design tokens */
+  font-size: var(--font-size-xl, clamp(1.3rem, 3.5vw, 1.6rem));
+  font-family: var(--font-family-game, 'Cinzel', serif);
+  font-weight: 600;
+  letter-spacing: 0.04rem;
+  line-height: 1.6;
+  
+  /* Layout: Flexible container for HybridTyping */
   display: flex !important;
   align-items: center !important;
   justify-content: center !important;
   flex-wrap: wrap !important;
   gap: 2px !important;
-}
-
-/* DirectTypingEngine2 内部要素スタイル調整 */
-.promptBox__roma :global(.direct-typing-romaji-container) {
+  
+  /* Reset: Override HybridTyping defaults */
+  padding: 0 !important;
   background: transparent !important;
   border-radius: 0 !important;
-  padding: 0 !important;
   min-height: auto !important;
+  
+  /* Spacing: Bottom margin */
+  margin-bottom: var(--spacing-md, 1rem);
+  
+  /* Performance: Text optimization */
+  text-rendering: optimizeLegibility;
+  -webkit-font-smoothing: antialiased;
 }
 
-/* Typing States - game.html Style (BEM Modifiers) */
+/* ==========================================================================
+   Typing State Modifiers - BEM Modifiers
+   ========================================================================== */
+
 .typed {
-  color: var(--typed-color);
+  color: var(--color-game-typed, #a3d8ff);
+  opacity: 0.8;
+  transition: color var(--duration-fast, 0.15s) var(--easing-smooth, ease);
 }
 
 .focus {
-  color: var(--focus-color);
+  color: var(--color-game-focus, #ffe18d);
+  background: rgba(255, 225, 141, 0.1);
+  border-radius: var(--border-radius-xs, 2px);
+  padding: 2px 4px;
+  margin: 0 1px;
+  animation: focusPulse 1.5s infinite alternate;
+  transition: all var(--duration-fast, 0.15s) var(--easing-smooth, ease);
 }
 
 .remaining {
-  color: var(--remaining-color);
+  color: var(--color-game-remaining, #9c7e5c);
+  opacity: 0.7;
+  transition: color var(--duration-fast, 0.15s) var(--easing-smooth, ease);
 }
 
 /* ==========================================================================
-   レスポンシブ対応 - game.html スタイル準拠
+   Animations - Custom Properties
    ========================================================================== */
 
-@media (max-width: 768px) {
-  .gameScreen {
-    padding-top: 8vh;
+@keyframes typingAreaFadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(20px) scale(0.98);
   }
-  
-  .typingArea {
-    width: 95%;
-    padding: 1.5rem;
-  }
-    .promptBox__jp {
-    font-size: 1.4rem;
-  }
-  
-  .promptBox__kana {
-    font-size: 1.3rem;
-  }
-  
-  .promptBox__roma {
-    font-size: 1.4rem;
+  to {
+    opacity: 1;
+    transform: translateY(0) scale(1);
   }
 }
 
-@media (max-width: 480px) {
-  .gameScreen {
-    padding-top: 6vh;
+@keyframes focusPulse {
+  from {
+    background: rgba(255, 225, 141, 0.1);
+    box-shadow: 0 0 4px rgba(255, 225, 141, 0.2);
   }
-  
-  .typingArea {
-    padding: 1rem;
-  }
-    .promptBox__jp {
-    font-size: 1.2rem;
-  }
-  
-  .promptBox__kana {
-    font-size: 1.1rem;
-  }
-  
-  .promptBox__roma {
-    font-size: 1.2rem;
+  to {
+    background: rgba(255, 225, 141, 0.2);
+    box-shadow: 0 0 8px rgba(255, 225, 141, 0.4);
   }
 }
 
 /* ==========================================================================
-   アクセシビリティ対応 - game.html スタイル準拠
+   Responsive Design - 2025 Modern Approach
    ========================================================================== */
 
-/* 高コントラストモード */
+/* Mobile optimization */
+@media (width < 768px) {
+  .gameScreen {
+    padding: clamp(0.5rem, 6vh, 2rem) var(--spacing-sm, 0.5rem);
+  }
+  
+  .typingArea {
+    width: 95vw;
+    padding: clamp(1rem, 3vw, 1.5rem);
+  }
+  
+  .promptBox__jp {
+    font-size: clamp(1.2rem, 5vw, 1.4rem);
+    margin-bottom: var(--spacing-md, 1rem);
+  }
+  
+  .promptBox__kana {
+    font-size: clamp(1.1rem, 4.5vw, 1.3rem);
+    margin-bottom: var(--spacing-md, 1rem);
+  }
+  
+  .promptBox__roma {
+    font-size: clamp(1.2rem, 4.5vw, 1.4rem);
+  }
+}
+
+/* Tablet optimization */
+@media (768px <= width < 1024px) {
+  .gameScreen {
+    padding: clamp(1rem, 10vh, 3rem) var(--spacing-md, 1rem);
+  }
+  
+  .typingArea {
+    width: min(85vw, 800px);
+    padding: clamp(1.5rem, 4vw, 2rem);
+  }
+  
+  .promptBox__jp {
+    font-size: clamp(1.5rem, 4vw, 1.7rem);
+  }
+  
+  .promptBox__kana {
+    font-size: clamp(1.3rem, 3.5vw, 1.5rem);
+  }
+  
+  .promptBox__roma {
+    font-size: clamp(1.4rem, 3.5vw, 1.6rem);
+  }
+}
+
+/* Desktop optimization */
+@media (width >= 1024px) {
+  .gameScreen {
+    padding: clamp(2rem, 12vh, 4rem) var(--spacing-lg, 1.5rem);
+  }
+  
+  .typingArea {
+    width: min(80vw, 960px);
+    padding: clamp(2rem, 4vw, 2.5rem);
+  }
+  
+  .promptBox__jp {
+    font-size: clamp(1.6rem, 3vw, 1.8rem);
+  }
+  
+  .promptBox__kana {
+    font-size: clamp(1.4rem, 2.5vw, 1.5rem);
+  }
+  
+  .promptBox__roma {
+    font-size: clamp(1.5rem, 2.5vw, 1.6rem);
+  }
+}
+
+/* Large screen optimization */
+@media (width >= 1440px) {
+  .gameScreen {
+    padding: clamp(3rem, 15vh, 5rem) var(--spacing-xl, 2rem);
+  }
+  
+  .typingArea {
+    max-width: 1200px;
+    padding: 3rem;
+  }
+  
+  .promptBox__jp {
+    font-size: 2rem;
+  }
+  
+  .promptBox__kana {
+    font-size: 1.6rem;
+  }
+  
+  .promptBox__roma {
+    font-size: 1.8rem;
+  }
+}
+
+/* ==========================================================================
+   Accessibility - WCAG 2.1 Compliance
+   ========================================================================== */
+
+/* High contrast support */
 @media (prefers-contrast: high) {
   .gameScreen {
     background: #000000;
@@ -196,13 +329,14 @@
     background: #ffffff;
     color: #000000;
     border: 2px solid #000000;
+    box-shadow: none;
   }
   
   .promptBox__jp {
-    color: #000000;
-    text-shadow: none;
     background: none;
+    color: #000000;
     -webkit-text-fill-color: #000000;
+    text-shadow: none;
   }
   
   .promptBox__kana,
@@ -210,86 +344,45 @@
     color: #000000;
     text-shadow: none;
   }
+  
+  .typed {
+    color: #0066cc;
+  }
+  
+  .focus {
+    color: #ff6600;
+    background: #ffff00;
+  }
+  
+  .remaining {
+    color: #666666;
+  }
 }
 
-/* モーション軽減 */
+/* Reduced motion support */
 @media (prefers-reduced-motion: reduce) {
   .gameScreen,
-  .typingArea,
-  .promptBox__jp,
-  .promptBox__kana,
-  .promptBox__roma {
-    transition: none;
-    animation: none;
-    will-change: auto;
-  }
-}
-
-/* ==========================================================================
-   レスポンシブ位置調整 - タイピングゲームベストプラクティス
-   ========================================================================== */
-
-/* タブレット: 中央より少し上の位置 */
-@media (min-width: 768px) {
-  .gameScreen {
-    padding-top: 18vh; /* タブレット最適位置 */
-  }
-}
-
-/* デスクトップ: タイピングゲーム黄金比位置 */
-@media (min-width: 1024px) {
-  .gameScreen {
-    padding-top: 22vh; /* デスクトップ最適位置（40-45vh域） */
-  }
-}
-
-/* 大画面: 視線負担軽減 */
-@media (min-width: 1440px) {
-  .gameScreen {
-    padding-top: 25vh; /* 大画面での最適位置 */
-  }
-}
-
-/* 縦画面モバイル: コンパクト配置 */
-@media (max-width: 767px) and (orientation: portrait) {
-  .gameScreen {
-    padding-top: 12vh; /* モバイル縦画面 */
-  }
-}
-
-/* 横画面モバイル/タブレット: 中央寄り */
-@media (max-height: 600px) and (orientation: landscape) {
-  .gameScreen {
-    padding-top: 8vh; /* 横画面での最適化 */
-  }
-}
-
-/* ==========================================================================
-   印刷スタイル - game.html スタイル準拠
-   ========================================================================== */
-@media print {
-  .gameScreen {
-    background: white;
-    color: black;
-    height: auto;
-    min-height: 100vh;
-  }
-  
   .typingArea {
-    background: white;
-    background-image: none;
-    border: 1px solid black;
-    box-shadow: none;
-    backdrop-filter: none;
-    page-break-inside: avoid;
+    animation: none;
   }
   
-  .promptBox__jp,
-  .promptBox__kana,
-  .promptBox__roma {
-    color: black;
-    text-shadow: none;
-    background: none;
-    -webkit-text-fill-color: black;
+  .focus {
+    animation: none;
   }
+  
+  .typed,
+  .focus,
+  .remaining {
+    transition: none;
+  }
+}
+
+/* Focus management */
+.gameScreen:focus {
+  outline: none;
+}
+
+.typingArea:focus-within {
+  outline: 2px solid var(--color-gaming-text-accent, #ffd88a);
+  outline-offset: 4px;
 }

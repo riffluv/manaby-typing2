@@ -27,6 +27,11 @@
   --duration-screen-transition: var(--duration-slow);
   --duration-score-animation: var(--duration-slower);
 
+  /* Easing Aliases */
+  --easing-smooth: var(--timing-smooth);
+  --easing-bounce: var(--timing-bounce);
+  --easing-sharp: var(--timing-sharp);
+
   /* Common Animation Presets */
   --animation-fade-in: opacity var(--duration-normal) var(--timing-ease-out);
   --animation-fade-out: opacity var(--duration-fast) var(--timing-ease-in);

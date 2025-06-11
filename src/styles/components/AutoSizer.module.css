@@ -1,6 +1,87 @@
-/* AutoSizer.module.css */
+/* ==========================================================================
+   AutoSizer Component - CSS-Design-Best-Practices.md完全準拠版
+   - 自動サイズ調整ユーティリティ
+   - パフォーマンス最適化
+   - コンテナクエリ対応
+   ========================================================================== */
 
+/* ==========================================================================
+   AutoSizer Container - BEM Block
+   ========================================================================== */
+
+.autoSizer {
+  /* Layout: Full dimensions */
+  width: 100%;
+  height: 100%;
+  
+  /* Performance: Layout containment */
+  contain: layout style;
+  
+  /* Container Queries: Enable container queries */
+  container: auto-sizer / inline-size;
+  
+  /* Reset: Box model */
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+  
+  /* Positioning: Relative for child positioning */
+  position: relative;
+  
+  /* Overflow: Prevent layout shift */
+  overflow: hidden;
+}
+
+/* ==========================================================================
+   Legacy Support (Deprecated - Use .autoSizer instead)
+   ========================================================================== */
+
+/* @deprecated Use .autoSizer instead */
 .container {
   width: 100%;
   height: 100%;
+  contain: layout style;
+}
+
+/* ==========================================================================
+   Container Query Utilities
+   ========================================================================== */
+
+/* Small container queries */
+@container auto-sizer (inline-size < 320px) {
+  .autoSizer {
+    /* Adjust for very small containers */
+    font-size: var(--font-size-xs, 0.75rem);
+  }
+}
+
+/* Medium container queries */
+@container auto-sizer (320px <= inline-size < 768px) {
+  .autoSizer {
+    /* Standard mobile container */
+    font-size: var(--font-size-sm, 0.875rem);
+  }
+}
+
+/* Large container queries */
+@container auto-sizer (inline-size >= 768px) {
+  .autoSizer {
+    /* Desktop container */
+    font-size: var(--font-size-base, 1rem);
+  }
+}
+
+/* ==========================================================================
+   Performance Optimizations
+   ========================================================================== */
+
+/* GPU acceleration for smooth resizing */
+.autoSizer {
+  transform: translateZ(0);
+  will-change: auto;
+}
+
+/* Disable will-change when not actively resizing */
+.autoSizer:not(:hover):not(:focus-within) {
+  will-change: auto;
 }

@@ -2,7 +2,7 @@ import React, { useCallback } from 'react';
 import { useSettingsStore } from '@/store/useSettingsStore';
 import { useSceneNavigationStore } from '@/store/sceneNavigationStore';
 import { useGlobalShortcuts } from '@/hooks/useGlobalShortcuts';
-import styles from './SettingsScreen.module.css';
+import styles from '@/styles/components/SettingsScreen.module.css';
 
 const SettingsScreen: React.FC = React.memo(() => {
   const { goBack } = useSceneNavigationStore();

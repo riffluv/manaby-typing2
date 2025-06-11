@@ -1,20 +1,143 @@
-/* HybridTypingEngine Canvas専用スタイル */
+/* ==========================================================================
+   HybridTypingEngine - CSS-Design-Best-Practices.md完全準拠版
+   - Canvas描画専用最適化
+   - デザイントークン駆動設計
+   - BEM記法統一
+   ========================================================================== */
+
+/* ==========================================================================
+   Canvas Typography - BEM Elements
+   ========================================================================== */
+
+.hybridTypingEngine__romajiCanvas {
+  /* Typography: Monospace font for typing accuracy */
+  font-family: var(--font-family-mono, "Courier New", "Consolas", "Liberation Mono", monospace) !important;
+  font-weight: var(--font-weight-normal, 400) !important;
+  font-size: var(--font-size-game-text, 1.25rem) !important;
+  text-transform: none !important;
+  font-variant: normal !important;
+  
+  /* Performance: Canvas rendering optimization */
+  will-change: contents;
+  contain: layout style paint;
+}
+
+/* ==========================================================================
+   Text Display Elements - BEM Elements  
+   ========================================================================== */
+
+.hybridTypingEngine__originalText,
+.hybridTypingEngine__kanaContainer {
+  /* Typography: Inherit parent font styling */
+  font-family: var(--font-family-game, 'Cinzel', serif);
+  font-size: var(--font-size-game-text, 1.25rem);
+  color: var(--color-gaming-text-primary, #e0e0e0);
+  line-height: var(--line-height-relaxed, 1.6);
+  
+  /* Performance: Text rendering optimization */
+  text-rendering: optimizeLegibility;
+  -webkit-font-smoothing: antialiased;
+}
+
+/* ==========================================================================
+   Canvas Container - BEM Block
+   ========================================================================== */
+
+.hybridTypingEngine__canvasContainer {
+  /* Performance: Canvas drawing optimization */
+  will-change: contents;
+  contain: layout style paint;
+  
+  /* Layer: GPU acceleration */
+  transform: translateZ(0);
+  
+  /* Layout: Container for canvas element */
+  position: relative;
+  display: block;
+  
+  /* Accessibility: Focus management */
+  outline: none;
+}
+
+.hybridTypingEngine__canvasContainer:focus-within {
+  outline: 2px solid var(--color-gaming-accent, #ffd88a);
+  outline-offset: 2px;
+}
+
+/* ==========================================================================
+   Legacy Class Support (Deprecated - Use BEM classes above)
+   ========================================================================== */
+
+/* @deprecated Use .hybridTypingEngine__romajiCanvas instead */
 .hybrid-romaji-canvas {
-  font-family: "Courier New", "Consolas", "Liberation Mono", monospace !important;
-  font-weight: normal !important;
+  font-family: var(--font-family-mono, "Courier New", "Consolas", "Liberation Mono", monospace) !important;
+  font-weight: var(--font-weight-normal, 400) !important;
   text-transform: none !important;
   font-variant: normal !important;
 }
 
-/* 原文・かな表示のフォント継承防止 */
+/* @deprecated Use .hybridTypingEngine__originalText, .hybridTypingEngine__kanaContainer instead */
 .hybrid-original-text,
 .hybrid-kana-container {
-  font-family: inherit;
+  font-family: var(--font-family-game, 'Cinzel', serif);
 }
 
-/* Canvas container の最適化 */
+/* @deprecated Use .hybridTypingEngine__canvasContainer instead */
 .hybrid-canvas-container {
-  /* Canvas描画パフォーマンス最適化 */
   will-change: contents;
   contain: layout style;
+}
+
+/* ==========================================================================
+   Responsive Design - Canvas Optimization
+   ========================================================================== */
+
+/* Mobile optimization */
+@media (width < 768px) {
+  .hybridTypingEngine__romajiCanvas {
+    font-size: var(--font-size-base, 1rem) !important;
+  }
+  
+  .hybridTypingEngine__originalText,
+  .hybridTypingEngine__kanaContainer {
+    font-size: var(--font-size-base, 1rem);
+  }
+}
+
+/* Tablet optimization */
+@media (768px <= width < 1024px) {
+  .hybridTypingEngine__romajiCanvas {
+    font-size: var(--font-size-lg, 1.125rem) !important;
+  }
+  
+  .hybridTypingEngine__originalText,
+  .hybridTypingEngine__kanaContainer {
+    font-size: var(--font-size-lg, 1.125rem);
+  }
+}
+
+/* ==========================================================================
+   Accessibility Support
+   ========================================================================== */
+
+/* High contrast support */
+@media (prefers-contrast: high) {
+  .hybridTypingEngine__romajiCanvas {
+    color: #ffffff !important;
+    background: #000000 !important;
+  }
+  
+  .hybridTypingEngine__originalText,
+  .hybridTypingEngine__kanaContainer {
+    color: #ffffff;
+    text-shadow: none;
+  }
+}
+
+/* Reduced motion support */
+@media (prefers-reduced-motion: reduce) {
+  .hybridTypingEngine__canvasContainer {
+    will-change: auto;
+    transform: none;
+  }
 }

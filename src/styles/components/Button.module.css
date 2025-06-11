@@ -1,53 +1,329 @@
 /* ==========================================================================
-   Button Component - Production Level
+   Button Component - CSS-Design-Best-Practices.md完全準拠版
+   - デザイントークン駆動設計
+   - BEM記法統一
+   - ゲーミングUI対応
+   - アクセシビリティ完全対応
+   ========================================================================== */
+
+/* ==========================================================================
+   Button Base - BEM Block
    ========================================================================== */
 
 .button {
-  /* Base styles */
+  /* Layout: Flex alignment */
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  gap: var(--spacing-2);
+  gap: var(--spacing-2, 0.5rem);
   
-  /* Typography */
-  font-family: var(--font-family-primary);
-  font-weight: var(--font-weight-semibold);
-  font-size: var(--font-size-base);
-  letter-spacing: var(--letter-spacing-wide);
+  /* Typography: Gaming theme */
+  font-family: var(--font-family-game, 'Cinzel', serif);
+  font-weight: var(--font-weight-semibold, 600);
+  font-size: var(--font-size-game-ui, 1rem);
+  letter-spacing: var(--letter-spacing-wide, 0.05em);
   text-transform: uppercase;
   line-height: 1;
+  color: var(--color-gaming-text-primary, #e0e0e0);
   
-  /* Layout */
-  padding: var(--spacing-3) var(--spacing-6);
-  border-radius: var(--radius-base);
-  border: 1px solid transparent;
+  /* Layout: Touch-friendly sizing */
+  padding: var(--spacing-3, 0.75rem) var(--spacing-6, 1.5rem);
+  min-height: var(--touch-target-min, 44px);
+  border-radius: var(--radius-base, 0.375rem);
+  border: 1px solid var(--color-border-primary, rgba(255, 255, 255, 0.1));
   
-  /* Interaction */
+  /* Background: Gaming theme */
+  background: linear-gradient(135deg, 
+    var(--color-gaming-bg-secondary, rgba(255, 255, 255, 0.05)), 
+    var(--color-gaming-bg-surface, rgba(255, 255, 255, 0.03))
+  );
+  
+  /* Effects: Glass morphism */
+  backdrop-filter: blur(8px);
+  box-shadow: 
+    inset 0 1px 0 rgba(255, 255, 255, 0.1),
+    0 2px 8px rgba(0, 0, 0, 0.2);
+  
+  /* Interaction: Smooth transitions */
   cursor: pointer;
-  transition: all var(--transition-base);
+  transition: all var(--transition-base, 0.25s ease);
   outline: none;
   
-  /* Prevent text selection */
+  /* Performance: GPU acceleration */
+  will-change: var(--will-change-transform, transform);
+  contain: layout style;
+  
+  /* Accessibility: User interaction */
   user-select: none;
   -webkit-user-select: none;
-}
-
-.button:disabled {
-  opacity: var(--color-interactive-disabled);
-  cursor: not-allowed;
-  pointer-events: none;
+  -webkit-tap-highlight-color: transparent;
 }
 
 /* ==========================================================================
-   Button Variants
+   Button States - BEM Modifiers
    ========================================================================== */
 
-/* Primary */
+.button:hover:not(:disabled) {
+  border-color: var(--color-gaming-accent, #ffd88a);
+  color: var(--color-gaming-text-accent, #ffd88a);
+  background: linear-gradient(135deg, 
+    rgba(255, 216, 138, 0.15), 
+    rgba(255, 216, 138, 0.08)
+  );
+  box-shadow: 
+    inset 0 1px 0 rgba(255, 255, 255, 0.2),
+    0 4px 16px rgba(255, 216, 138, 0.2),
+    0 0 12px rgba(255, 216, 138, 0.1);
+  transform: translateY(-2px);
+}
+
+.button:active:not(:disabled) {
+  transform: translateY(0);
+  box-shadow: 
+    inset 0 1px 0 rgba(255, 255, 255, 0.1),
+    0 2px 8px rgba(0, 0, 0, 0.3);
+}
+
+.button:focus-visible {
+  outline: 2px solid var(--color-gaming-accent, #ffd88a);
+  outline-offset: 2px;
+}
+
+.button:disabled,
+.button--disabled {
+  opacity: var(--opacity-disabled, 0.5);
+  cursor: not-allowed;
+  pointer-events: none;
+  transform: none;
+}
+
+/* ==========================================================================
+   Button Variants - BEM Modifiers
+   ========================================================================== */
+
+/* Primary Accent Button */
 .button--primary {
-  background: var(--color-bg-surface);
-  border-color: var(--color-border-primary);
-  color: var(--color-text-primary);
-  box-shadow: inset 0 0 0 rgba(255, 255, 255, 0.05);
+  background: linear-gradient(135deg, 
+    var(--color-gaming-accent, #ffd88a), 
+    var(--color-brand-secondary, #c9a76f)
+  );
+  border-color: var(--color-gaming-accent, #ffd88a);
+  color: var(--color-neutral-900, #111827);
+  text-shadow: 0 1px 2px rgba(0, 0, 0, 0.1);
+}
+
+.button--primary:hover:not(:disabled) {
+  background: linear-gradient(135deg, 
+    #ffe6b3, 
+    #d4af7f
+  );
+  box-shadow: 
+    0 4px 20px rgba(255, 216, 138, 0.4),
+    0 0 16px rgba(255, 216, 138, 0.3);
+  transform: translateY(-2px);
+}
+
+/* Ghost/Secondary Button */
+.button--ghost {
+  background: rgba(0, 0, 0, 0.3);
+  border-color: rgba(255, 255, 255, 0.3);
+  color: var(--color-gaming-text-secondary, #b8cfe7);
+}
+
+.button--ghost:hover:not(:disabled) {
+  border-color: var(--color-gaming-accent, #ffd88a);
+  color: var(--color-gaming-text-accent, #ffd88a);
+  background: rgba(255, 216, 138, 0.1);
+  box-shadow: 0 4px 16px rgba(255, 216, 138, 0.15);
+}
+
+/* Danger Button */
+.button--danger {
+  background: linear-gradient(135deg, 
+    var(--color-gaming-danger, #ff6b6b), 
+    #e55555
+  );
+  border-color: var(--color-gaming-danger, #ff6b6b);
+  color: #ffffff;
+}
+
+.button--danger:hover:not(:disabled) {
+  background: linear-gradient(135deg, #ff8080, #f06666);
+  box-shadow: 0 4px 16px rgba(255, 107, 107, 0.3);
+}
+
+/* ==========================================================================
+   Button Sizes - BEM Modifiers
+   ========================================================================== */
+
+.button--sm {
+  padding: var(--spacing-2, 0.5rem) var(--spacing-4, 1rem);
+  font-size: var(--font-size-sm, 0.875rem);
+  min-height: auto;
+}
+
+.button--lg {
+  padding: var(--spacing-4, 1rem) var(--spacing-8, 2rem);
+  font-size: var(--font-size-lg, 1.125rem);
+  min-height: var(--touch-target-min, 48px);
+}
+
+.button--xl {
+  padding: var(--spacing-5, 1.25rem) var(--spacing-10, 2.5rem);
+  font-size: var(--font-size-xl, 1.25rem);
+  min-height: var(--touch-target-min, 52px);
+}
+
+.button--full {
+  width: 100%;
+}
+
+/* ==========================================================================
+   Button with Icon - BEM Elements
+   ========================================================================== */
+
+.button__icon {
+  width: 1em;
+  height: 1em;
+  flex-shrink: 0;
+  transition: transform var(--transition-fast, 0.15s) ease;
+}
+
+.button:hover .button__icon {
+  transform: scale(1.1);
+}
+
+.button--iconOnly {
+  padding: var(--spacing-3, 0.75rem);
+  aspect-ratio: 1;
+  min-width: var(--touch-target-min, 44px);
+}
+
+.button--iconOnly.button--sm {
+  padding: var(--spacing-2, 0.5rem);
+  min-width: 32px;
+}
+
+.button--iconOnly.button--lg {
+  padding: var(--spacing-4, 1rem);
+  min-width: 48px;
+}
+
+/* ==========================================================================
+   Button Loading State - BEM Modifier
+   ========================================================================== */
+
+.button--loading {
+  position: relative;
+  color: transparent;
+  pointer-events: none;
+}
+
+.button--loading::after {
+  content: '';
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: 1em;
+  height: 1em;
+  margin: -0.5em 0 0 -0.5em;
+  border: 2px solid currentColor;
+  border-radius: 50%;
+  border-top-color: transparent;
+  animation: buttonSpin var(--duration-slow, 1s) linear infinite;
+}
+
+@keyframes buttonSpin {
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+/* ==========================================================================
+   Responsive Design - 2025 Modern Approach
+   ========================================================================== */
+
+/* Mobile optimization */
+@media (width < 768px) {
+  .button {
+    padding: var(--spacing-3, 0.75rem) var(--spacing-5, 1.25rem);
+    font-size: var(--font-size-sm, 0.875rem);
+  }
+  
+  .button--lg {
+    padding: var(--spacing-3, 0.75rem) var(--spacing-6, 1.5rem);
+    font-size: var(--font-size-base, 1rem);
+  }
+  
+  .button--xl {
+    padding: var(--spacing-4, 1rem) var(--spacing-8, 2rem);
+    font-size: var(--font-size-lg, 1.125rem);
+  }
+}
+
+/* Tablet optimization */
+@media (768px <= width < 1024px) {
+  .button {
+    font-size: var(--font-size-base, 1rem);
+  }
+}
+
+/* ==========================================================================
+   Accessibility Support - WCAG 2.1 Compliance
+   ========================================================================== */
+
+/* High contrast mode */
+@media (prefers-contrast: high) {
+  .button {
+    border-width: 2px;
+    background: #ffffff;
+    color: #000000;
+    border-color: #000000;
+  }
+  
+  .button--primary {
+    background: #000000;
+    color: #ffffff;
+    border-color: #ffffff;
+  }
+  
+  .button:hover:not(:disabled) {
+    background: #000000;
+    color: #ffffff;
+    border-color: #ffffff;
+  }
+}
+
+/* Reduced motion support */
+@media (prefers-reduced-motion: reduce) {
+  .button,
+  .button__icon {
+    transition: none;
+    animation: none;
+  }
+  
+  .button:hover:not(:disabled) {
+    transform: none;
+  }
+  
+  .button--loading::after {
+    animation: none;
+  }
+}
+
+/* Force colors mode */
+@media (forced-colors: active) {
+  .button {
+    background: ButtonFace;
+    color: ButtonText;
+    border-color: ButtonText;
+  }
+  
+  .button:hover:not(:disabled) {
+    background: Highlight;
+    color: HighlightText;
+    border-color: HighlightText;
+  }
 }
 
 .button--primary:hover:not(:disabled) {

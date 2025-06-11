@@ -1,54 +1,405 @@
 /* ==========================================================================
-   CommonModal - BEM Design System Integration
-   共通モーダルコンポーネント用スタイル（BEM対応版）
+   CommonModal - CSS-Design-Best-Practices.md完全準拠版
+   - デザイントークン駆動設計
+   - BEM記法統一
+   - ゲーミングテーマ対応
+   - 共通モーダルシステム
    ========================================================================== */
 
-/* 
-   注意: design-system.cssのBEMクラスとCSS変数を優先的に使用してください
-   コンポーネント固有のスタイルは最小限に抑制
-*/
+/* ==========================================================================
+   Modal Base - BEM Block
+   ========================================================================== */
 
-.modal {
-  /* モーダルのベースクラス */
+.commonModal {
+  /* Container: Modal system root */
+  position: fixed;
+  inset: 0;
+  z-index: var(--z-index-modal, 1000);
+  
+  /* Performance: GPU optimization */
+  will-change: var(--will-change-opacity, opacity);
+  contain: layout style;
 }
 
+/* ==========================================================================
+   Modal Overlay - BEM Element
+   ========================================================================== */
+
+.commonModal__overlay {
+  /* Position: Full screen overlay */
+  position: fixed;
+  inset: 0;
+  
+  /* Background: Gaming theme overlay */
+  background: var(--color-gaming-bg-overlay, rgba(5, 10, 20, 0.92));
+  backdrop-filter: blur(12px);
+  
+  /* Layout: Center modal content */
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  
+  /* Spacing: Safe area for mobile */
+  padding: env(safe-area-inset-top, var(--spacing-md, 1rem)) 
+           env(safe-area-inset-right, var(--spacing-md, 1rem))
+           env(safe-area-inset-bottom, var(--spacing-md, 1rem)) 
+           env(safe-area-inset-left, var(--spacing-md, 1rem));
+  
+  /* Animation: Smooth entry */
+  animation: commonModalOverlayFadeIn var(--duration-normal, 0.3s) var(--easing-smooth, ease);
+  
+  /* Performance: Scroll optimization */
+  overflow-y: auto;
+  -webkit-overflow-scrolling: touch;
+}
+
+/* ==========================================================================
+   Modal Container - BEM Element
+   ========================================================================== */
+
+.commonModal__container {
+  /* Background: Gaming glass effect */
+  background: linear-gradient(135deg, 
+    var(--color-gaming-bg-surface, rgba(20, 20, 25, 0.95)), 
+    var(--color-gaming-bg-secondary, rgba(10, 10, 15, 0.95))
+  );
+  
+  /* Border: Gaming accent */
+  border: 1px solid var(--color-border-accent, rgba(255, 216, 138, 0.3));
+  border-radius: var(--radius-lg, 0.75rem);
+  
+  /* Effects: Glass morphism */
+  backdrop-filter: blur(16px);
+  box-shadow: 
+    0 20px 40px rgba(0, 0, 0, 0.6),
+    0 0 20px rgba(255, 216, 138, 0.1),
+    inset 0 1px 0 rgba(255, 255, 255, 0.1);
+  
+  /* Layout: Responsive sizing */
+  width: min(90vw, 600px);
+  max-height: min(90vh, 800px);
+  
+  /* Spacing: Internal padding */
+  padding: clamp(var(--spacing-lg, 1.5rem), 4vw, var(--spacing-xl, 2rem));
+  margin: var(--spacing-md, 1rem);
+  
+  /* Position: Relative for close button */
+  position: relative;
+  
+  /* Scroll: Overflow handling */
+  overflow-y: auto;
+  -webkit-overflow-scrolling: touch;
+  
+  /* Animation: Smooth entry */
+  animation: commonModalContainerSlideIn var(--duration-normal, 0.3s) var(--easing-spring, cubic-bezier(0.175, 0.885, 0.32, 1.275));
+  
+  /* Typography: Gaming font */
+  font-family: var(--font-family-game, 'Cinzel', serif);
+  color: var(--color-gaming-text-primary, #e0e0e0);
+}
+
+/* ==========================================================================
+   Modal Header - BEM Element
+   ========================================================================== */
+
+.commonModal__header {
+  /* Layout: Header section */
+  margin-bottom: var(--spacing-lg, 1.5rem);
+  padding-bottom: var(--spacing-md, 1rem);
+  border-bottom: 1px solid var(--color-border-secondary, rgba(255, 255, 255, 0.1));
+}
+
+.commonModal__title {
+  /* Typography: Modal title */
+  font-family: var(--font-family-game, 'Cinzel', serif);
+  font-size: var(--font-size-game-title, clamp(1.5rem, 4vw, 2rem));
+  font-weight: var(--font-weight-bold, 700);
+  color: var(--color-gaming-text-accent, #ffd88a);
+  text-shadow: 0 0 8px rgba(255, 216, 138, 0.4);
+  margin: 0;
+  text-align: center;
+  letter-spacing: var(--letter-spacing-wide, 0.05em);
+  text-transform: uppercase;
+}
+
+/* ==========================================================================
+   Modal Content - BEM Element
+   ========================================================================== */
+
+.commonModal__content {
+  /* Layout: Content area */
+  margin-bottom: var(--spacing-lg, 1.5rem);
+  
+  /* Typography: Content text */
+  font-size: var(--font-size-base, 1rem);
+  line-height: var(--line-height-relaxed, 1.6);
+  color: var(--color-gaming-text-primary, #e0e0e0);
+}
+
+/* ==========================================================================
+   Modal Footer - BEM Element
+   ========================================================================== */
+
+.commonModal__footer {
+  /* Layout: Button area */
+  display: flex;
+  gap: var(--spacing-md, 1rem);
+  justify-content: center;
+  flex-wrap: wrap;
+  
+  /* Spacing: Top margin */
+  margin-top: var(--spacing-lg, 1.5rem);
+  padding-top: var(--spacing-md, 1rem);
+  border-top: 1px solid var(--color-border-secondary, rgba(255, 255, 255, 0.1));
+}
+
+/* ==========================================================================
+   Close Button - BEM Element
+   ========================================================================== */
+
+.commonModal__closeButton {
+  /* Position: Top-right corner */
+  position: absolute;
+  top: var(--spacing-md, 1rem);
+  right: var(--spacing-md, 1rem);
+  
+  /* Reset: Button styling */
+  background: none;
+  border: none;
+  padding: var(--spacing-2, 0.5rem);
+  
+  /* Layout: Icon button */
+  width: var(--touch-target-min, 44px);
+  height: var(--touch-target-min, 44px);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: var(--radius-sm, 0.25rem);
+  
+  /* Typography: Close icon */
+  font-size: var(--font-size-xl, 1.25rem);
+  font-weight: var(--font-weight-bold, 700);
+  color: var(--color-gaming-text-muted, #9ca3af);
+  
+  /* Interaction: Cursor and transitions */
+  cursor: pointer;
+  transition: all var(--transition-fast, 0.15s) ease;
+  
+  /* Effects: Hover background */
+  background: rgba(255, 255, 255, 0.05);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.commonModal__closeButton:hover {
+  background: rgba(255, 216, 138, 0.1);
+  border-color: var(--color-gaming-accent, #ffd88a);
+  color: var(--color-gaming-text-accent, #ffd88a);
+  transform: scale(1.05);
+}
+
+.commonModal__closeButton:focus-visible {
+  outline: 2px solid var(--color-gaming-accent, #ffd88a);
+  outline-offset: 2px;
+}
+
+.commonModal__closeButton:active {
+  transform: scale(0.95);
+}
+
+/* ==========================================================================
+   Modal States - BEM Modifiers
+   ========================================================================== */
+
+.commonModal--large {
+  .commonModal__container {
+    width: min(95vw, 900px);
+    max-height: min(95vh, 1000px);
+  }
+}
+
+.commonModal--small {
+  .commonModal__container {
+    width: min(80vw, 400px);
+    max-height: min(80vh, 500px);
+  }
+}
+
+.commonModal--fullscreen {
+  .commonModal__container {
+    width: 100vw;
+    height: 100vh;
+    max-height: 100vh;
+    margin: 0;
+    border-radius: 0;
+  }
+}
+
+/* ==========================================================================
+   Animations - CSS Custom Properties
+   ========================================================================== */
+
+@keyframes commonModalOverlayFadeIn {
+  from {
+    opacity: 0;
+    backdrop-filter: blur(0px);
+  }
+  to {
+    opacity: 1;
+    backdrop-filter: blur(12px);
+  }
+}
+
+@keyframes commonModalContainerSlideIn {
+  from {
+    opacity: 0;
+    transform: translateY(30px) scale(0.95);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+}
+
+/* ==========================================================================
+   Responsive Design - 2025 Modern Approach
+   ========================================================================== */
+
+/* Mobile optimization */
+@media (width < 768px) {
+  .commonModal__container {
+    width: 95vw;
+    margin: var(--spacing-sm, 0.5rem);
+    padding: var(--spacing-lg, 1.5rem);
+    max-height: 95vh;
+  }
+  
+  .commonModal__title {
+    font-size: var(--font-size-xl, 1.25rem);
+  }
+  
+  .commonModal__footer {
+    flex-direction: column;
+    align-items: center;
+  }
+}
+
+/* Very small screens */
+@media (width < 480px) {
+  .commonModal__container {
+    width: 98vw;
+    margin: var(--spacing-xs, 0.25rem);
+    padding: var(--spacing-md, 1rem);
+    max-height: 98vh;
+  }
+  
+  .commonModal__closeButton {
+    top: var(--spacing-sm, 0.5rem);
+    right: var(--spacing-sm, 0.5rem);
+    width: 36px;
+    height: 36px;
+  }
+}
+
+/* ==========================================================================
+   Accessibility Support - WCAG 2.1 Compliance
+   ========================================================================== */
+
+/* High contrast mode */
+@media (prefers-contrast: high) {
+  .commonModal__overlay {
+    background: rgba(0, 0, 0, 0.9);
+  }
+  
+  .commonModal__container {
+    background: #ffffff;
+    color: #000000;
+    border: 3px solid #000000;
+  }
+  
+  .commonModal__title {
+    color: #000000;
+    text-shadow: none;
+  }
+  
+  .commonModal__closeButton {
+    background: #ffffff;
+    color: #000000;
+    border: 2px solid #000000;
+  }
+}
+
+/* Reduced motion support */
+@media (prefers-reduced-motion: reduce) {
+  .commonModal__overlay,
+  .commonModal__container,
+  .commonModal__closeButton {
+    animation: none;
+    transition: none;
+  }
+  
+  .commonModal__closeButton:hover,
+  .commonModal__closeButton:active {
+    transform: none;
+  }
+}
+
+/* Focus trap for modal */
+.commonModal {
+  isolation: isolate;
+}
+
+/* ==========================================================================
+   Legacy Support (Deprecated - Use BEM classes above)
+   ========================================================================== */
+
+/* @deprecated Use .commonModal__overlay instead */
 .modal__overlay {
   position: fixed;
-  top: 0;
-  left: 0;
-  right: 0;
-  bottom: 0;
+  inset: 0;
   background: rgba(0, 0, 0, 0.7);
   backdrop-filter: blur(8px);
   display: flex;
   align-items: center;
   justify-content: center;
-  z-index: var(--z-index-modal);
-  animation: modalOverlayFadeIn var(--transition-normal) ease-out;
+  z-index: var(--z-index-modal, 1000);
+  animation: modalOverlayFadeIn var(--transition-normal, 0.3s) ease-out;
 }
 
+/* @deprecated Use .commonModal__container instead */
 .modal__container {
-  background: var(--color-bg-surface);
-  border: 1px solid var(--color-border-primary);
-  border-radius: var(--border-radius-lg);
-  box-shadow: var(--shadow-xl);
+  background: var(--color-gaming-bg-surface, rgba(255, 255, 255, 0.05));
+  border: 1px solid var(--color-border-primary, rgba(255, 255, 255, 0.1));
+  border-radius: var(--radius-lg, 0.75rem);
+  box-shadow: 0 20px 40px rgba(0, 0, 0, 0.4);
   max-width: 90vw;
   max-height: 90vh;
   overflow: auto;
   position: relative;
-  padding: var(--spacing-xl);
-  margin: var(--spacing-lg);
-  animation: modalContainerSlideIn var(--transition-normal) ease-out;
+  padding: var(--spacing-xl, 2rem);
+  margin: var(--spacing-lg, 1.5rem);
+  animation: modalContainerSlideIn var(--transition-normal, 0.3s) ease-out;
+}
+
+/* @deprecated Use .commonModal__closeButton instead */
+.modal__closeButton {
+  position: absolute;
+  top: var(--spacing-md, 1rem);
+  right: var(--spacing-md, 1rem);
+  background: none;
+  border: none;
+  font-size: var(--font-size-xl, 1.25rem);
+  color: var(--color-gaming-text-muted, #9ca3af);
+  cursor: pointer;
+  width: 32px;
+  height: 32px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: var(--radius-sm, 0.25rem);
+  transition: all var(--transition-fast, 0.15s);
 }
 
 .modal__closeButton {
-  position: absolute;
-  top: var(--spacing-md);
-  right: var(--spacing-md);
-  background: none;
-  border: none;
-  font-size: var(--font-size-xl);
-  color: var(--color-text-muted);
   cursor: pointer;
   width: 32px;
   height: 32px;

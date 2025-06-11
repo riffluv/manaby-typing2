@@ -1,5 +1,193 @@
-/* RPGTransitionSystem.module.css */
+/* ==========================================================================
+   RPGTransitionSystem - CSS-Design-Best-Practices.md完全準拠版
+   - デザイントークン駆動設計
+   - BEM記法統一
+   - ゲーミングテーマトランジション
+   - パフォーマンス最適化
+   ========================================================================== */
 
+/* ==========================================================================
+   Transition Container - BEM Block
+   ========================================================================== */
+
+.rpgTransition {
+  /* Layout: Full screen overlay */
+  position: fixed;
+  inset: 0;
+  width: 100%;
+  height: 100vh;
+  
+  /* Layer: Above all content */
+  z-index: var(--z-index-overlay, 1300);
+  
+  /* Background: Gaming theme */
+  background: var(--color-game-bg-radial, radial-gradient(ellipse at center, #0a0f1b, #000));
+  
+  /* Scroll: Controlled overflow */
+  overflow: auto;
+  -webkit-overflow-scrolling: touch;
+  
+  /* Performance: GPU acceleration */
+  will-change: var(--will-change-transform, transform);
+  contain: layout style paint;
+  transform: translateZ(0);
+  
+  /* Animation: Smooth entry */
+  animation: rpgTransitionFadeIn var(--duration-slow, 0.8s) var(--easing-smooth, ease);
+}
+
+/* ==========================================================================
+   Transition Content - BEM Element
+   ========================================================================== */
+
+.rpgTransition__content {
+  /* Layout: Centered content */
+  width: 100%;
+  height: 100%;
+  min-height: 100vh;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  
+  /* Spacing: Safe area for mobile */
+  padding: env(safe-area-inset-top, 0) env(safe-area-inset-right, 0) 
+           env(safe-area-inset-bottom, 0) env(safe-area-inset-left, 0);
+  
+  /* Typography: Gaming font inheritance */
+  font-family: var(--font-family-game, 'Cinzel', serif);
+  color: var(--color-gaming-text-primary, #e0e0e0);
+  
+  /* Performance: Content optimization */
+  contain: layout style;
+}
+
+/* ==========================================================================
+   Transition States - BEM Modifiers
+   ========================================================================== */
+
+.rpgTransition--entering {
+  animation: rpgTransitionSlideIn var(--duration-normal, 0.6s) var(--easing-spring, cubic-bezier(0.175, 0.885, 0.32, 1.275));
+}
+
+.rpgTransition--exiting {
+  animation: rpgTransitionSlideOut var(--duration-normal, 0.6s) var(--easing-smooth, ease);
+}
+
+.rpgTransition--loading {
+  cursor: wait;
+}
+
+/* ==========================================================================
+   Animations - CSS Custom Properties
+   ========================================================================== */
+
+@keyframes rpgTransitionFadeIn {
+  from {
+    opacity: 0;
+    backdrop-filter: blur(0px);
+  }
+  to {
+    opacity: 1;
+    backdrop-filter: blur(8px);
+  }
+}
+
+@keyframes rpgTransitionSlideIn {
+  from {
+    opacity: 0;
+    transform: translateY(30px) scale(0.95);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+}
+
+@keyframes rpgTransitionSlideOut {
+  from {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+  to {
+    opacity: 0;
+    transform: translateY(-30px) scale(0.95);
+  }
+}
+
+/* ==========================================================================
+   Responsive Design - 2025 Modern Approach
+   ========================================================================== */
+
+/* Mobile optimization */
+@media (width < 768px) {
+  .rpgTransition {
+    overflow-y: auto;
+    overflow-x: hidden;
+  }
+  
+  .rpgTransition__content {
+    min-height: 100vh;
+    min-height: 100dvh; /* Dynamic viewport height */
+    padding: var(--spacing-md, 1rem);
+  }
+}
+
+/* Tablet optimization */
+@media (768px <= width < 1024px) {
+  .rpgTransition__content {
+    padding: var(--spacing-lg, 1.5rem);
+  }
+}
+
+/* Desktop optimization */
+@media (width >= 1024px) {
+  .rpgTransition__content {
+    padding: var(--spacing-xl, 2rem);
+  }
+}
+
+/* ==========================================================================
+   Accessibility Support - WCAG 2.1 Compliance
+   ========================================================================== */
+
+/* High contrast mode */
+@media (prefers-contrast: high) {
+  .rpgTransition {
+    background: #000000;
+  }
+  
+  .rpgTransition__content {
+    color: #ffffff;
+    outline: 2px solid #ffffff;
+    outline-offset: -2px;
+  }
+}
+
+/* Reduced motion support */
+@media (prefers-reduced-motion: reduce) {
+  .rpgTransition,
+  .rpgTransition--entering,
+  .rpgTransition--exiting {
+    animation: none;
+    transition: none;
+  }
+  
+  .rpgTransition {
+    will-change: auto;
+    transform: none;
+  }
+}
+
+/* Focus management */
+.rpgTransition:focus-within {
+  outline: none;
+}
+
+/* ==========================================================================
+   Legacy Class Support (Deprecated - Use BEM classes above)
+   ========================================================================== */
+
+/* @deprecated Use .rpgTransition instead */
 .transitionContainer {
   width: 100%;
   height: 100%;
@@ -9,34 +197,14 @@
   right: 0;
   bottom: 0;
   overflow: auto;
-  z-index: var(--z-index-modal);
+  z-index: var(--z-index-modal, 1000);
 }
 
-.transitionContent {  width: 100%;
+/* @deprecated Use .rpgTransition__content instead */
+.transitionContent {
+  width: 100%;
   height: 100%;
   display: flex;
   justify-content: center;
   align-items: center;
-}
-
-/* Responsive design */
-@media (max-width: 768px) {
-  .transitionContainer {
-    overflow-y: auto;
-    overflow-x: hidden;
-  }
-}
-
-/* High contrast mode */
-@media (prefers-contrast: high) {
-  .transitionContent {
-    outline: 2px solid var(--border-primary);
-  }
-}
-
-/* Accessibility */
-@media (prefers-reduced-motion: reduce) {
-  .transitionContainer {
-    animation: none;
-  }
 }

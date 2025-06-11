@@ -1,623 +1,629 @@
 /* ==========================================================================
-   MainMenu - BEM設計 + レスポンシブ対応
+   MainMenu - CSS-Design-Best-Practices.md完全準拠版
+   - デザイントークン駆動設計
+   - BEM記法統一
+   - モダンCSS機能活用
+   - Elden Ring風デザイン保持
+   ========================================================================== */
+
+/* ==========================================================================
+   Import Design Tokens
+   ========================================================================== */
+@import url('https://fonts.googleapis.com/css2?family=Cinzel:wght@400;700&display=swap');
+
+/* ==========================================================================
+   Main Menu Container - BEM Block
    ========================================================================== */
 
 .mainMenu {
   /* Layout: Full screen container */
   width: 100%;
+  height: 100vh;
   min-height: 100vh;
   
-  /* Layout: Modern Grid */
-  display: grid;
-  place-items: center;
-  position: relative;
+  /* Background: Gaming theme */
+  background: var(--color-game-bg-radial, radial-gradient(ellipse at center, #0a0f1b, #000000));
   
-  /* Background: Enhanced */
-  background: var(--color-bg-primary, radial-gradient(ellipse at center, #0a0f1b, #000));
+  /* Typography: Primary font */
+  font-family: var(--font-family-game, 'Cinzel', serif);
+  font-size: var(--font-size-base, 1rem);
+  color: var(--color-gaming-text-primary, #e0e0e0);
+  line-height: 1.5;
   
-  /* Performance: GPU最適化 */
-  overflow: hidden;
-  will-change: contents;
+  /* Layout: Flexbox center */
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  
+  /* Performance: GPU optimization */
+  will-change: transform;
   contain: layout style;
   
-  /* Animation: Modern Transition */
-  animation: fadeIn var(--duration-slow, 0.6s) var(--easing-smooth, ease);
-}
-
-/* ==========================================================================
-   Menu Container - BEM準拠
-   ========================================================================== */
-
-.mainMenu__container {
-  /* Layout: Flex with gap */
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  gap: var(--spacing-lg, 1.5rem);
-  
-  /* Size: Responsive */
-  max-inline-size: min(90vw, 800px);
-  inline-size: 100%;
-  
-  /* Spacing: Fluid padding */
-  padding-inline: var(--spacing-md, 1rem);
-  padding-block: var(--spacing-xl, 2rem);
-}
-
-/* ==========================================================================
-   Logo and Title
-   ========================================================================== */
-
-.mainMenu__logo {
-  max-width: min(400px, 80vw);
-  height: auto;
-  margin-bottom: var(--spacing-4);
-  filter: drop-shadow(0 0 20px rgba(255, 200, 120, 0.3));
-  animation: logoGlow 3s ease-in-out infinite alternate;
-}
-
-.mainMenu__title {
-  font-size: clamp(2rem, 5vw, 4rem);
-  color: var(--color-accent-primary);
-  text-align: center;
-  letter-spacing: 0.2rem;
-  text-shadow: 0 0 20px rgba(255, 200, 120, 0.4);
-  margin-bottom: var(--spacing-6);
-  font-weight: var(--font-weight-bold);
-  text-transform: uppercase;
-}
-
-/* ==========================================================================
-   Menu Buttons
-   ========================================================================== */
-
-.mainMenu__buttonGroup {
-  display: flex;
-  flex-direction: column;
-  gap: var(--spacing-4);
-  align-items: center;
-  width: 100%;
-  max-width: 400px;
-}
-
-.mainMenu__button {
-  width: 100%;
-  padding: var(--spacing-4) var(--spacing-6);
-  background: var(--color-bg-surface);
-  border: 1px solid var(--color-border-primary);
-  color: var(--color-text-primary);
-  border-radius: var(--radius-md);
-  font-size: var(--font-size-lg);
-  font-weight: var(--font-weight-medium);
-  text-transform: uppercase;
-  letter-spacing: 0.1em;
-  cursor: pointer;
-  transition: var(--transition-fast);
-  text-align: center;
-  position: relative;
-  overflow: hidden;
-}
-
-.mainMenu__button:hover {
-  border-color: var(--color-text-accent);
-  color: var(--color-text-accent);
-  background: var(--color-interactive-hover);
-  box-shadow: 0 0 20px rgba(255, 216, 138, 0.3);
-  transform: translateY(-2px);
-}
-
-.mainMenu__button:active {
-  transform: translateY(0);
-}
-
-.mainMenu__button--primary {
-  background: var(--color-accent-primary);
-  color: var(--color-bg-primary);
-  border-color: var(--color-accent-primary);
-}
-
-.mainMenu__button--primary:hover {
-  background: var(--color-accent-secondary);
-  border-color: var(--color-accent-secondary);
-  color: var(--color-bg-primary);
-}
-
-.mainMenu__button--disabled {
-  opacity: 0.5;
-  cursor: not-allowed;
-  pointer-events: none;
-}
-
-/* ==========================================================================
-   Mode Selection
-   ========================================================================== */
-
-.mainMenu__modeSection {
-  display: flex;
-  flex-direction: column;
-  gap: var(--spacing-3);
-  align-items: center;
-  margin-top: var(--spacing-4);
-}
-
-.mainMenu__modeLabel {
-  font-size: var(--font-size-sm);
-  color: var(--color-text-secondary);
-  text-transform: uppercase;
-  letter-spacing: 0.1em;
-  font-weight: var(--font-weight-medium);
-}
-
-.mainMenu__modeButtons {
-  display: flex;
-  gap: var(--spacing-2);
-  flex-wrap: wrap;
-  justify-content: center;
-}
-
-.mainMenu__modeButton {
-  padding: var(--spacing-2) var(--spacing-4);
-  background: var(--color-bg-surface);
-  border: 1px solid var(--color-border-secondary);
-  color: var(--color-text-secondary);
-  border-radius: var(--radius-sm);
-  font-size: var(--font-size-sm);
-  cursor: pointer;
-  transition: var(--transition-fast);
-  text-transform: capitalize;
-  font-weight: var(--font-weight-medium);
-}
-
-.mainMenu__modeButton:hover {
-  border-color: var(--color-text-accent);
-  color: var(--color-text-accent);
-}
-
-.mainMenu__modeButton--active {
-  border-color: var(--color-accent-primary);
-  color: var(--color-accent-primary);
-  background: rgba(201, 167, 111, 0.1);
-}
-
-/* ==========================================================================
-   Settings Modal
-   ========================================================================== */
-
-.mainMenu__modal {
+  /* Position: Fixed fullscreen */
   position: fixed;
   top: 0;
   left: 0;
-  right: 0;
-  bottom: 0;
-  background: rgba(0, 0, 0, 0.8);
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  z-index: var(--z-modal);
-  animation: fadeIn var(--transition-fast) ease;
+  z-index: var(--z-index-modal, 1000);
+  
+  /* Animation: Fade in */
+  animation: fadeIn var(--duration-slow, 2s) var(--easing-smooth, ease);
+  
+  /* Reset: Box model */
+  margin: 0;
+  padding: 0;
+  overflow: hidden;
 }
 
-.mainMenu__modalContent {
-  background: var(--color-bg-surface);
-  border: 1px solid var(--color-border-primary);
-  border-radius: var(--radius-lg);
-  padding: var(--spacing-8);
-  max-width: 90vw;
-  max-height: 90vh;
-  overflow-y: auto;
-  box-shadow: 0 20px 60px rgba(0, 0, 0, 0.5);
-  position: relative;
-}
-
-.mainMenu__modalTitle {
-  font-size: var(--font-size-xl);
-  font-weight: var(--font-weight-bold);
-  margin-bottom: var(--spacing-6);
-  color: var(--color-text-primary);
-  text-align: center;
-}
-
-.mainMenu__modalClose {
-  position: absolute;
-  top: var(--spacing-4);
-  right: var(--spacing-4);
-  background: none;
-  border: none;
-  color: var(--color-text-secondary);
-  font-size: var(--font-size-xl);
-  cursor: pointer;
-  padding: var(--spacing-2);
-  border-radius: var(--radius-sm);
-  transition: var(--transition-fast);
-}
-
-.mainMenu__modalClose:hover {
-  color: var(--color-text-primary);
-  background: var(--color-bg-primary);
+/* Reset for all child elements */
+.mainMenu *,
+.mainMenu *::before,
+.mainMenu *::after {
+  box-sizing: border-box;
 }
 
 /* ==========================================================================
-   Settings Controls
+   Main Container - BEM Element
    ========================================================================== */
 
-.mainMenu__settingsGroup {
-  display: flex;
-  flex-direction: column;
-  gap: var(--spacing-4);
-}
-
-.mainMenu__settingItem {
-  display: flex;
-  flex-direction: column;
-  gap: var(--spacing-2);
-}
-
-.mainMenu__settingLabel {
-  font-size: var(--font-size-base);
-  font-weight: var(--font-weight-medium);
-  color: var(--color-text-primary);
-}
-
-.mainMenu__settingDescription {
-  font-size: var(--font-size-sm);
-  color: var(--color-text-secondary);
-  line-height: var(--line-height-relaxed);
-}
-
-.mainMenu__checkbox {
-  display: flex;
-  align-items: center;
-  gap: var(--spacing-3);
-  cursor: pointer;
-  padding: var(--spacing-2);
-  border-radius: var(--radius-sm);
-  transition: var(--transition-fast);
-}
-
-.mainMenu__checkbox:hover {
-  background: rgba(255, 255, 255, 0.05);
-}
-
-.mainMenu__checkboxInput {
-  transform: scale(1.2);
-  accent-color: var(--color-accent-primary);
-}
-
-.mainMenu__checkboxText {
-  font-size: var(--font-size-base);
-  color: var(--color-text-primary);
-}
-
-/* ==========================================================================
-   Performance Info
-   ========================================================================== */
-
-.mainMenu__performanceInfo {
-  margin-top: var(--spacing-6);
-  padding: var(--spacing-4);
-  background: rgba(255, 255, 255, 0.02);
-  border-radius: var(--radius-md);
-  border: 1px solid var(--color-border-secondary);
-}
-
-.mainMenu__performanceTitle {
-  font-weight: var(--font-weight-bold);
-  margin-bottom: var(--spacing-2);
-  color: var(--color-text-primary);
-}
-
-.mainMenu__performanceItem {
-  font-size: var(--font-size-sm);
-  color: var(--color-text-secondary);
-  margin-bottom: var(--spacing-1);
-}
-
-/* ==========================================================================
-   Admin Panel
-   ========================================================================== */
-
-.mainMenu__adminPanel {
-  margin-top: var(--spacing-6);
-  padding: var(--spacing-4);
-  background: rgba(255, 200, 120, 0.05);
-  border: 1px solid var(--color-accent-primary);
-  border-radius: var(--radius-md);
-}
-
-.mainMenu__adminInput {
+.mainMenu__container {
+  /* Layout: Full container */
   width: 100%;
-  padding: var(--spacing-3);
-  background: var(--color-bg-surface);
-  border: 1px solid var(--color-border-primary);
-  color: var(--color-text-primary);
-  border-radius: var(--radius-sm);
-  font-size: var(--font-size-base);
-  margin-bottom: var(--spacing-3);
-}
-
-.mainMenu__adminInput:focus {
-  outline: none;
-  border-color: var(--color-accent-secondary);
-  box-shadow: 0 0 0 2px var(--color-interactive-hover);
-}
-
-.mainMenu__adminStatus {
-  font-size: var(--font-size-sm);
-  margin-top: var(--spacing-2);
-  padding: var(--spacing-2);
-  border-radius: var(--radius-sm);
-  text-align: center;
-}
-
-.mainMenu__adminStatus--success {
-  background: rgba(76, 175, 80, 0.1);
-  color: #4caf50;
-  border: 1px solid rgba(76, 175, 80, 0.3);
-}
-
-.mainMenu__adminStatus--error {
-  background: rgba(244, 67, 54, 0.1);
-  color: #f44336;
-  border: 1px solid rgba(244, 67, 54, 0.3);
-}
-
-/* ==========================================================================
-   Settings Modal Styles
-   ========================================================================== */
-
-.settingsModal__title {
-  font-size: var(--font-size-xl);
-  font-weight: var(--font-weight-bold);
-  margin-bottom: var(--spacing-4);
-  color: var(--color-text-primary);
-}
-
-.settingsModal__content {
+  height: 100%;
+  
+  /* Layout: Flexbox center */
   display: flex;
   flex-direction: column;
-  gap: var(--spacing-4);
-}
-
-.settingsModal__section {
-  font-size: var(--font-size-lg);
-  font-weight: var(--font-weight-bold);
-  color: var(--color-text-primary);
-  margin-bottom: var(--spacing-2);
-}
-
-.settingsModal__option {
-  display: flex;
+  justify-content: center;
   align-items: center;
-  gap: var(--spacing-2);
-  cursor: pointer;
-  padding: var(--spacing-2);
-  border-radius: var(--radius-sm);
-  transition: var(--transition-fast);
-}
-
-.settingsModal__option:hover {
-  background-color: var(--color-bg-hover);
-}
-
-.settingsModal__checkbox {
-  transform: scale(1.2);
-  cursor: pointer;
-}
-
-.settingsModal__optionText {
-  font-size: var(--font-size-base);
-  color: var(--color-text-primary);
-}
-
-.settingsModal__description {
-  font-size: var(--font-size-sm);
-  color: var(--color-text-secondary);
-  margin-left: var(--spacing-8);
-  line-height: 1.4;
-}
-
-.settingsModal__status {
-  padding: var(--spacing-4);
-  background-color: var(--color-bg-surface);
-  border-radius: var(--radius-md);
-  margin-top: var(--spacing-4);
-  border: 1px solid var(--color-border-primary);
-  transition: var(--transition-fast);
-}
-
-.settingsModal__status--optimized {
-  background-color: rgba(72, 187, 120, 0.1);
-  border-color: var(--color-success);
-}
-
-.settingsModal__statusTitle {
-  font-weight: var(--font-weight-bold);
-  margin-bottom: var(--spacing-2);
-  color: var(--color-text-primary);
-}
-
-.settingsModal__statusItem {
-  font-size: var(--font-size-sm);
-  color: var(--color-text-secondary);
-  margin-bottom: var(--spacing-1);
-}
-
-.settingsModal__actions {
-  margin-top: var(--spacing-4);
   text-align: center;
-}
-
-.settingsModal__saveButton {
-  padding: var(--spacing-3) var(--spacing-6);
-  font-size: var(--font-size-base);
-  background-color: var(--color-accent-primary);
-  color: var(--color-text-primary-inverted);
-  border: none;
-  border-radius: var(--radius-md);
-  cursor: pointer;
-  font-weight: var(--font-weight-medium);
-  transition: var(--transition-fast);
-  min-width: 120px;
-}
-
-.settingsModal__saveButton:hover {
-  background-color: var(--color-accent-primary-hover);
-  transform: translateY(-1px);
-  box-shadow: 0 4px 12px rgba(255, 200, 120, 0.3);
-}
-
-.settingsModal__saveButton:active {
-  transform: translateY(0);
+  
+  /* Position: Relative for children */
+  position: relative;
+  z-index: 1;
+  
+  /* Animation: Container fade up */
+  animation: fadeUp var(--duration-slow, 2s) var(--easing-smooth, ease-in-out);
 }
 
 /* ==========================================================================
-   Navigation Items and State Styles
+   Title Elements - BEM Elements
    ========================================================================== */
+
+.mainMenu__title {
+  /* Typography: Large title */
+  font-size: var(--font-size-game-title, clamp(2.5rem, 6vw, 3rem));
+  font-family: var(--font-family-game, 'Cinzel', serif);
+  font-weight: 700;
+  letter-spacing: 0.3rem;
+  
+  /* Visual: Gold gradient */
+  background: linear-gradient(to right, var(--color-brand-secondary, #c9a76f), #f8e6b0);
+  background-clip: text;
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  
+  /* Effects: Glow */
+  text-shadow: 0 0 6px rgba(255, 223, 128, 0.3);
+  
+  /* Spacing */
+  margin: 0;
+}
+
+.mainMenu__subtitle {
+  /* Typography: Extra large subtitle */
+  font-size: var(--font-size-game-subtitle, clamp(3rem, 8vw, 5rem));
+  font-family: var(--font-family-game, 'Cinzel', serif);
+  font-weight: 700;
+  letter-spacing: 0.6rem;
+  
+  /* Color: Gaming accent */
+  color: var(--color-gaming-text-accent, #ffd88a);
+  
+  /* Effects: Glow */
+  text-shadow: 0 0 12px rgba(212, 175, 55, 0.25);
+  
+  /* Spacing */
+  margin: var(--spacing-md, 1rem) 0 var(--spacing-xl, 2rem);
+}
+
+/* ==========================================================================
+   Navigation Menu - BEM Elements
+   ========================================================================== */
+
+.mainMenu__nav {
+  /* Layout: Vertical stack */
+  display: flex;
+  flex-direction: column;
+  gap: var(--spacing-game-md, 1.2rem);
+  align-items: center;
+  
+  /* Animation: Fade up */
+  animation: fadeUp var(--duration-slow, 2s) var(--easing-smooth, ease-in-out);
+}
 
 .mainMenu__navItem {
-  width: 100%;
-  padding: var(--spacing-4) var(--spacing-6);
-  background: var(--color-bg-surface);
-  border: 1px solid var(--color-border-primary);
-  color: var(--color-text-primary);
-  border-radius: var(--radius-md);
-  font-size: var(--font-size-lg);
-  font-weight: var(--font-weight-medium);
-  text-transform: uppercase;
-  letter-spacing: 0.1em;
+  /* Typography: Menu item */
+  font-size: var(--font-size-lg, 1.4rem);
+  font-family: var(--font-family-game, 'Cinzel', serif);
+  font-weight: 700;
+  line-height: 1.2;
+  letter-spacing: 0.05rem;
+  
+  /* Color: Primary text */
+  color: var(--color-gaming-text-primary, #ccc);
+  
+  /* Reset: Button styling */
+  background: none;
+  border: none;
+  padding: 0;
+  margin: 0;
+  outline: none;
+  text-decoration: none;
+  
+  /* Interactive: Cursor */
   cursor: pointer;
-  transition: var(--transition-fast);
+  
+  /* Position: For pseudo elements */
+  position: relative;
+  
+  /* Transition: Smooth hover */
+  transition: all var(--duration-fast, 0.3s) var(--easing-smooth, ease);
+}
+
+/* Navigation item hover state */
+.mainMenu__navItem:hover,
+.mainMenu__navItem:focus {
+  color: var(--color-gaming-text-accent, #ffd88a);
+  outline: none;
+}
+
+/* Navigation item decorative line */
+.mainMenu__navItem:hover::before,
+.mainMenu__navItem:focus::before {
+  content: '';
+  position: absolute;
+  top: 50%;
+  left: -60px;
+  transform: translateY(-50%);
+  width: 120px;
+  height: 1px;
+  background: linear-gradient(
+    to right, 
+    transparent, 
+    var(--color-gaming-text-accent, #ffd88a), 
+    transparent
+  );
+  animation: pulse var(--duration-slow, 2s) infinite var(--easing-smooth, ease-in-out);
+}
+
+/* ==========================================================================
+   Selected Mode Display - BEM Element
+   ========================================================================== */
+
+.mainMenu__selectedMode {
+  /* Spacing */
+  margin-top: var(--spacing-lg, 2rem);
+  
+  /* Typography: Small italic */
+  font-size: var(--font-size-base, 1rem);
+  font-family: var(--font-family-game, 'Cinzel', serif);
+  font-weight: 700;
+  font-style: italic;
+  
+  /* Color: Muted */
+  color: var(--color-gaming-text-muted, #a99);
+}
+
+/* ==========================================================================
+   Footer Elements - BEM Elements
+   ========================================================================== */
+
+.mainMenu__shortcut {
+  /* Position: Bottom center */
+  position: absolute;
+  bottom: var(--spacing-lg, 28px);
+  left: 50%;
+  transform: translateX(-50%);
+  
+  /* Layout: Horizontal */
+  display: flex;
+  gap: var(--spacing-lg, 2rem);
+  
+  /* Typography: Small */
+  font-size: var(--font-size-sm, 0.85rem);
+  font-family: var(--font-family-game, 'Cinzel', serif);
+  font-weight: bold;
+  letter-spacing: 0.05rem;
+  
+  /* Color: Accent */
+  color: var(--color-gaming-text-accent, #ffd88a);
+  
+  /* Effects: Glow */
+  text-shadow: 
+    0 0 3px #000, 
+    0 0 6px rgba(212, 175, 55, 0.4);
+}
+
+.mainMenu__footer {
+  /* Position: Bottom full width */
+  position: absolute;
+  bottom: var(--spacing-sm, 10px);
+  left: 0;
+  right: 0;
+  width: 100%;
+  
+  /* Layout: Space between */
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 0 var(--spacing-md, 20px);
+  
+  /* Typography: Extra small */
+  font-size: var(--font-size-xs, 0.7rem);
+  font-family: var(--font-family-game, 'Cinzel', serif);
+  font-weight: 700;
+  
+  /* Color: Muted */
+  color: var(--color-gaming-text-muted, #777);
+}
+
+/* Footer copyright text */
+.mainMenu__footer__copyright {
+  /* Typography: Inherit from parent */
+  font-size: inherit;
+  font-family: inherit;
+  font-weight: inherit;
+  color: inherit;
+  
+  /* Effects: Subtle glow */
+  text-shadow: 0 0 2px rgba(119, 119, 119, 0.5);
+}
+
+/* Footer version text */
+.mainMenu__footer__version {
+  /* Typography: Inherit from parent */
+  font-size: inherit;
+  font-family: inherit;
+  font-weight: inherit;
+  
+  /* Color: Slightly brighter */
+  color: var(--color-gaming-text-secondary, #b0b0b0);
+  
+  /* Effects: Subtle glow */
+  text-shadow: 0 0 2px rgba(176, 176, 176, 0.5);
+}
+
+/* ==========================================================================
+   Error Display - BEM Element
+   ========================================================================== */
+
+.mainMenu__error {
+  /* Position: Top center */
+  position: absolute;
+  top: var(--spacing-md, 20px);
+  left: 50%;
+  transform: translateX(-50%);
+  
+  /* Size: Responsive width */
+  max-width: 80%;
+  
+  /* Style: Error box */
+  background: rgba(255, 50, 50, 0.1);
+  border: 1px solid rgba(255, 100, 100, 0.3);
+  border-radius: var(--border-radius-md, 8px);
+  
+  /* Typography: Small */
+  font-size: var(--font-size-sm, 0.9rem);
+  font-family: var(--font-family-game, 'Cinzel', serif);
   text-align: center;
+  
+  /* Color: Error */
+  color: var(--color-error-light, #ffaaaa);
+  
+  /* Spacing */
+  padding: var(--spacing-sm, 0.8rem) var(--spacing-md, 1.5rem);
+}
+
+/* ==========================================================================
+   Modal Base - BEM Block
+   ========================================================================== */
+
+.mainMenu__modal {
+  /* Position: Fixed overlay */
+  position: fixed;
+  inset: 0;
+  
+  /* Layout: Center content */
+  display: none;
+  justify-content: center;
+  align-items: center;
+  
+  /* Layer: Above main menu */
+  z-index: var(--z-index-modal-overlay, 2000);
+  
+  /* Background: Dark overlay */
+  background: rgba(0, 0, 0, 0.8);
+}
+
+/* Modal visible state */
+.mainMenu__modal--visible {
+  display: flex;
+}
+
+/* ==========================================================================
+   Mode Select Modal - Complete Implementation
+   ========================================================================== */
+
+/* Modal base */
+.modal {
+  /* Position: Fixed fullscreen overlay */
+  position: fixed;
+  inset: 0;
+  
+  /* Layout: Center content */
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  
+  /* Layer: Above main menu */
+  z-index: var(--z-index-modal-overlay, 2000);
+  
+  /* Background: Dark overlay */
+  background: rgba(0, 0, 0, 0.9);
+  backdrop-filter: blur(8px);
+  
+  /* Animation: Fade in */
+  animation: modalFadeIn var(--duration-normal, 0.3s) var(--easing-smooth, ease);
+  
+  /* Typography: Inherit from parent */
+  font-family: var(--font-family-game, 'Cinzel', serif);
+  color: var(--color-gaming-text-primary, #e0e0e0);
+  
+  /* Performance: GPU optimization */
+  will-change: opacity, transform;
+}
+
+/* Modal active state */
+.modal--active {
+  opacity: 1;
+}
+
+/* Modal overlay background */
+.modal__overlay {
+  /* Position: Cover full modal */
+  position: absolute;
+  inset: 0;
+  
+  /* Interaction: Click to close */
+  cursor: pointer;
+  
+  /* Background: Transparent (handled by parent) */
+  background: transparent;
+}
+
+/* Modal content container */
+.modal__content {
+  /* Position: Above overlay */
+  position: relative;
+  z-index: 1;
+  
+  /* Layout: Two-column layout */
+  display: flex;
+  width: min(90vw, 800px);
+  height: min(80vh, 600px);
+  
+  /* Visual: Gaming theme styling */
+  background: linear-gradient(135deg, 
+    rgba(20, 30, 40, 0.95), 
+    rgba(10, 15, 25, 0.95)
+  );
+  border: 2px solid var(--color-gaming-border-accent, #c9a76f);
+  border-radius: var(--border-radius-lg, 12px);
+  box-shadow: 
+    0 20px 40px rgba(0, 0, 0, 0.8),
+    inset 0 1px 0 rgba(255, 255, 255, 0.1);
+  
+  /* Animation: Scale in */
+  animation: modalScaleIn var(--duration-normal, 0.3s) var(--easing-smooth, ease);
+  
+  /* Overflow: Hidden for clean edges */
+  overflow: hidden;
+}
+
+/* Modal sidebar (mode list) */
+.modal__sidebar {
+  /* Layout: Fixed width sidebar */
+  flex: 0 0 250px;
+  padding: var(--spacing-lg, 1.5rem);
+  
+  /* Background: Slightly darker */
+  background: rgba(0, 0, 0, 0.3);
+  border-right: 1px solid rgba(201, 167, 111, 0.3);
+  
+  /* Layout: Vertical stack */
+  display: flex;
+  flex-direction: column;
+  gap: var(--spacing-sm, 0.5rem);
+}
+
+/* Mode option buttons */
+.modal__option {
+  /* Reset: Button styles */
+  border: none;
+  outline: none;
+  background: none;
+  cursor: pointer;
+  
+  /* Layout: Full width */
+  width: 100%;
+  padding: var(--spacing-md, 1rem) var(--spacing-lg, 1.5rem);
+  text-align: left;
+  
+  /* Typography: Gaming style */
+  font-family: var(--font-family-game, 'Cinzel', serif);
+  font-size: var(--font-size-base, 1rem);
+  font-weight: 500;
+  color: var(--color-gaming-text-secondary, #b0b0b0);
+  letter-spacing: 0.05em;
+  
+  /* Visual: Subtle background */
+  background: rgba(255, 255, 255, 0.05);
+  border: 1px solid transparent;
+  border-radius: var(--border-radius-sm, 4px);
+  
+  /* Animation: Smooth transitions */
+  transition: all var(--duration-fast, 0.2s) var(--easing-smooth, ease);
+  
+  /* Position: Relative for pseudo-elements */
   position: relative;
   overflow: hidden;
 }
 
-.mainMenu__navItem:hover {
-  border-color: var(--color-accent-secondary);
-  color: var(--color-accent-secondary);
-  background: var(--color-interactive-hover);
-  box-shadow: 0 0 20px rgba(255, 215, 138, 0.3);
-  transform: translateY(-2px);
+/* Mode option hover state */
+.modal__option:hover {
+  color: var(--color-gaming-text-accent, #ffd88a);
+  background: rgba(201, 167, 111, 0.1);
+  border-color: rgba(201, 167, 111, 0.3);
+  transform: translateX(4px);
 }
 
-.mainMenu__navItem:active {
-  transform: translateY(0);
-}
-
-.mainMenu__navItem:focus {
-  outline: 2px solid var(--color-accent-primary);
+/* Mode option focus state */
+.modal__option:focus-visible {
+  outline: 2px solid var(--color-gaming-text-accent, #ffd88a);
   outline-offset: 2px;
 }
 
-/* Loading state */
-.mainMenu__navItem--loading {
-  opacity: 0.6;
-  pointer-events: none;
-  cursor: not-allowed;
+/* Mode option selected state */
+.modal__option--selected {
+  color: var(--color-gaming-text-accent, #ffd88a);
+  background: linear-gradient(135deg, 
+    rgba(201, 167, 111, 0.2), 
+    rgba(255, 216, 138, 0.1)
+  );
+  border-color: var(--color-gaming-border-accent, #c9a76f);
+  
+  /* Visual: Glow effect */
+  box-shadow: 
+    0 0 20px rgba(201, 167, 111, 0.3),
+    inset 0 1px 0 rgba(255, 255, 255, 0.1);
 }
 
-.mainMenu__navItem--loading::after {
+/* Selected option pseudo-element */
+.modal__option--selected::before {
   content: '';
   position: absolute;
-  top: 50%;
-  right: var(--spacing-4);
-  transform: translateY(-50%);
-  width: 16px;
-  height: 16px;
-  border: 2px solid transparent;
-  border-top: 2px solid var(--color-accent-primary);
-  border-radius: 50%;
-  animation: spin 1s linear infinite;
+  left: 0;
+  top: 0;
+  width: 4px;
+  height: 100%;
+  background: linear-gradient(to bottom, 
+    var(--color-gaming-text-accent, #ffd88a), 
+    var(--color-gaming-border-accent, #c9a76f)
+  );
 }
 
-/* Disabled state */
-.mainMenu__navItem--disabled {
-  opacity: 0.6;
-  pointer-events: none;
-  cursor: not-allowed;
-  background: var(--color-bg-secondary);
-  color: var(--color-text-disabled);
+/* Modal main content area */
+.modal__main {
+  /* Layout: Flexible main area */
+  flex: 1;
+  padding: var(--spacing-lg, 1.5rem);
+  
+  /* Layout: Vertical stack */
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  
+  /* Text: Center alignment */
+  text-align: center;
 }
 
-.mainMenu__navItem--disabled:hover {
-  transform: none;
-  box-shadow: none;
-  border-color: var(--color-border-primary);
-  background: var(--color-bg-secondary);
+/* Mode description text */
+.modal__description {
+  /* Layout: Main content area */
+  flex: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  
+  /* Typography: Description text */
+  font-size: var(--font-size-lg, 1.2rem);
+  line-height: 1.6;
+  color: var(--color-gaming-text-primary, #e0e0e0);
+  
+  /* Spacing: Comfortable padding */
+  padding: var(--spacing-xl, 2rem) var(--spacing-lg, 1.5rem);
+  
+  /* Visual: Subtle background */
+  background: rgba(255, 255, 255, 0.02);
+  border-radius: var(--border-radius-sm, 4px);
+  border: 1px solid rgba(255, 255, 255, 0.05);
 }
 
-@keyframes spin {
-  0% { transform: translateY(-50%) rotate(0deg); }
-  100% { transform: translateY(-50%) rotate(360deg); }
+/* Modal close button */
+.modal__close {
+  /* Reset: Button styles */
+  border: none;
+  outline: none;
+  cursor: pointer;
+  
+  /* Layout: Self-contained */
+  align-self: center;
+  padding: var(--spacing-md, 1rem) var(--spacing-xl, 2rem);
+  margin-top: var(--spacing-lg, 1.5rem);
+  
+  /* Typography: Gaming style */
+  font-family: var(--font-family-game, 'Cinzel', serif);
+  font-size: var(--font-size-base, 1rem);
+  font-weight: 600;
+  color: var(--color-gaming-text-secondary, #b0b0b0);
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  
+  /* Visual: Button styling */
+  background: linear-gradient(135deg, 
+    rgba(201, 167, 111, 0.1), 
+    rgba(255, 216, 138, 0.05)
+  );
+  border: 1px solid rgba(201, 167, 111, 0.3);
+  border-radius: var(--border-radius-sm, 4px);
+  
+  /* Animation: Smooth transitions */
+  transition: all var(--duration-fast, 0.2s) var(--easing-smooth, ease);
+}
+
+/* Close button hover state */
+.modal__close:hover {
+  color: var(--color-gaming-text-accent, #ffd88a);
+  background: linear-gradient(135deg, 
+    rgba(201, 167, 111, 0.2), 
+    rgba(255, 216, 138, 0.1)
+  );
+  border-color: var(--color-gaming-border-accent, #c9a76f);
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(201, 167, 111, 0.3);
+}
+
+/* Close button focus state */
+.modal__close:focus-visible {
+  outline: 2px solid var(--color-gaming-text-accent, #ffd88a);
+  outline-offset: 2px;
+}
+
+/* Close button active state */
+.modal__close:active {
+  transform: translateY(0);
+  box-shadow: 0 2px 6px rgba(201, 167, 111, 0.2);
 }
 
 /* ==========================================================================
-   Responsive Design
-   ========================================================================== */
-
-@media (max-width: 768px) {
-  .mainMenu__container {
-    gap: var(--spacing-4);
-    padding: var(--spacing-4);
-  }
-  
-  .mainMenu__title {
-    font-size: clamp(1.5rem, 8vw, 2.5rem);
-    margin-bottom: var(--spacing-4);
-  }
-  
-  .mainMenu__buttonGroup {
-    max-width: none;
-    width: 100%;
-  }
-  
-  .mainMenu__button {
-    padding: var(--spacing-3) var(--spacing-4);
-    font-size: var(--font-size-base);
-  }
-  
-  .mainMenu__modeButtons {
-    justify-content: center;
-  }
-  
-  .mainMenu__modeButton {
-    padding: var(--spacing-1) var(--spacing-3);
-    font-size: var(--font-size-xs);
-  }
-  
-  .mainMenu__modalContent {
-    margin: var(--spacing-4);
-    padding: var(--spacing-6);
-  }
-}
-
-@media (max-width: 480px) {
-  .mainMenu__logo {
-    max-width: 70vw;
-  }
-  
-  .mainMenu__title {
-    letter-spacing: 0.1rem;
-  }
-  
-  .mainMenu__button {
-    font-size: var(--font-size-sm);
-  }
-  
-  .mainMenu__modalContent {
-    margin: var(--spacing-2);
-    padding: var(--spacing-4);
-  }
-}
-
-/* ==========================================================================
-   Animations
+   Animations - Custom Properties
    ========================================================================== */
 
 @keyframes fadeIn {
   from {
     opacity: 0;
-    transform: translateY(20px);
+    transform: translateY(-20px);
   }
   to {
     opacity: 1;
@@ -625,39 +631,273 @@
   }
 }
 
-@keyframes logoGlow {
+@keyframes fadeUp {
   from {
-    filter: drop-shadow(0 0 20px rgba(255, 200, 120, 0.3));
+    opacity: 0;
+    transform: translateY(30px);
   }
   to {
-    filter: drop-shadow(0 0 30px rgba(255, 200, 120, 0.6));
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes pulse {
+  0%, 100% {
+    opacity: 0.7;
+  }
+  50% {
+    opacity: 1;
+  }
+}
+
+/* Modal-specific animations */
+@keyframes modalFadeIn {
+  from {
+    opacity: 0;
+    backdrop-filter: blur(0px);
+  }
+  to {
+    opacity: 1;
+    backdrop-filter: blur(8px);
+  }
+}
+
+@keyframes modalScaleIn {
+  from {
+    opacity: 0;
+    transform: scale(0.9) translateY(-20px);
+  }
+  to {
+    opacity: 1;
+    transform: scale(1) translateY(0);
   }
 }
 
 /* ==========================================================================
-   Loading States
+   Responsive Design - 2025 Modern Approach
    ========================================================================== */
 
-.mainMenu__loading {
-  position: relative;
-  pointer-events: none;
+/* Mobile optimization */
+@media (width < 768px) {
+  .mainMenu__title {
+    font-size: clamp(1.8rem, 8vw, 2.5rem);
+    letter-spacing: 0.2rem;
+  }
+  
+  .mainMenu__subtitle {
+    font-size: clamp(2rem, 10vw, 3.5rem);
+    letter-spacing: 0.4rem;
+    margin: var(--spacing-sm, 0.5rem) 0 var(--spacing-lg, 1.5rem);
+  }
+  
+  .mainMenu__navItem {
+    font-size: var(--font-size-base, 1.2rem);
+  }
+    .mainMenu__shortcut {
+    gap: var(--spacing-md, 1rem);
+    font-size: var(--font-size-xs, 0.75rem);
+    bottom: var(--spacing-md, 20px);
+  }
+  
+  .mainMenu__footer {
+    padding: 0 var(--spacing-sm, 10px);
+    font-size: var(--font-size-xs, 0.65rem);
+  }
+  
+  .mainMenu__footer__copyright,
+  .mainMenu__footer__version {
+    font-size: inherit;
+  }
+  
+  /* Modal mobile optimization */
+  .modal__content {
+    flex-direction: column;
+    width: 95vw;
+    height: 90vh;
+    max-width: none;
+  }
+  
+  .modal__sidebar {
+    flex: 0 0 auto;
+    border-right: none;
+    border-bottom: 1px solid rgba(201, 167, 111, 0.3);
+    padding: var(--spacing-md, 1rem);
+    
+    /* Horizontal scroll for options */
+    display: flex;
+    flex-direction: row;
+    overflow-x: auto;
+    gap: var(--spacing-xs, 0.25rem);
+  }
+  
+  .modal__option {
+    flex: 0 0 auto;
+    min-width: 120px;
+    text-align: center;
+    padding: var(--spacing-sm, 0.5rem) var(--spacing-md, 1rem);
+    font-size: var(--font-size-sm, 0.9rem);
+  }
+  
+  .modal__main {
+    padding: var(--spacing-md, 1rem);
+  }
+  
+  .modal__description {
+    font-size: var(--font-size-base, 1rem);
+    padding: var(--spacing-md, 1rem);
+  }
 }
 
-.mainMenu__loading::after {
-  content: '';
-  position: absolute;
-  top: 50%;
-  left: 50%;
-  width: 20px;
-  height: 20px;
-  margin: -10px 0 0 -10px;
-  border: 2px solid transparent;
-  border-top: 2px solid var(--color-accent-primary);
-  border-radius: 50%;
-  animation: spin 1s linear infinite;
+/* Tablet optimization */
+@media (768px <= width < 1024px) {
+  .mainMenu__title {
+    font-size: clamp(2.2rem, 6vw, 2.8rem);
+  }
+  
+  .mainMenu__subtitle {
+    font-size: clamp(3rem, 7vw, 4.5rem);
+  }
 }
 
-@keyframes spin {
-  0% { transform: rotate(0deg); }
-  100% { transform: rotate(360deg); }
+/* Large screen optimization */
+@media (width >= 1440px) {
+  .mainMenu__title {
+    font-size: 3.5rem;
+  }
+  
+  .mainMenu__subtitle {
+    font-size: 5.5rem;
+  }
+}
+
+/* High DPI optimization */
+@media (min-resolution: 192dpi) {
+  .mainMenu {
+    transform: scale(0.95);
+    transform-origin: top left;
+  }
+}
+
+/* ==========================================================================
+   Accessibility - WCAG 2.1 Compliance
+   ========================================================================== */
+
+/* Focus visible indicators */
+.mainMenu__navItem:focus-visible {
+  outline: 2px solid var(--color-gaming-text-accent, #ffd88a);
+  outline-offset: 4px;
+  border-radius: var(--border-radius-sm, 4px);
+}
+
+/* Modal focus management */
+.modal:focus {
+  outline: none;
+}
+
+.modal__option:focus-visible,
+.modal__close:focus-visible {
+  outline: 2px solid var(--color-gaming-text-accent, #ffd88a);
+  outline-offset: 2px;
+}
+
+/* Reduced motion support */
+@media (prefers-reduced-motion: reduce) {
+  .mainMenu,
+  .mainMenu__container,
+  .mainMenu__nav {
+    animation: none;
+  }
+  
+  .mainMenu__navItem {
+    transition: none;
+  }
+  
+  .mainMenu__navItem:hover::before,
+  .mainMenu__navItem:focus::before {
+    animation: none;
+  }
+  
+  /* Disable modal animations */
+  .modal {
+    animation: none;
+  }
+  
+  .modal__content {
+    animation: none;
+  }
+  
+  .modal__option {
+    transition: none;
+  }
+}
+
+/* High contrast support */
+@media (prefers-contrast: high) {
+  .mainMenu {
+    background: #000000;
+  }
+  
+  .mainMenu__title {
+    background: #ffffff;
+    background-clip: text;
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+  }
+  
+  .mainMenu__subtitle,
+  .mainMenu__navItem {
+    color: #ffffff;
+  }
+  
+  .mainMenu__navItem:hover,
+  .mainMenu__navItem:focus {
+    color: #ffff00;
+  }
+  
+  /* Modal high contrast */
+  .modal {
+    background: rgba(0, 0, 0, 0.95);
+  }
+  
+  .modal__content {
+    background: #000000;
+    border-color: #ffffff;
+  }
+  
+  .modal__option {
+    color: #ffffff;
+    background: #000000;
+    border-color: #ffffff;
+  }
+  
+  .modal__option:hover,
+  .modal__option:focus {
+    color: #ffff00;
+    background: #333333;
+  }
+  
+  .modal__option--selected {
+    color: #ffff00;
+    background: #333333;
+    border-color: #ffff00;
+  }
+  
+  .modal__description {
+    color: #ffffff;
+    background: #000000;
+    border-color: #ffffff;
+  }
+  
+  .modal__close {
+    color: #ffffff;
+    background: #000000;
+    border-color: #ffffff;
+  }
+  
+  .modal__close:hover,
+  .modal__close:focus {
+    color: #ffff00;
+    background: #333333;
+  }
 }

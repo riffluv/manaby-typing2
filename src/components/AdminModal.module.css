@@ -1,102 +1,225 @@
 /* ==========================================================================
-   AdminModal - 管理者パネルモーダル
-   admin.htmlのデザインを完全再現 + Design Tokens準拠
+   AdminModal - CSS-Design-Best-Practices.md完全準拠版
+   - デザイントークン駆動設計
+   - BEM記法統一
+   - ゲーミングテーマ管理者パネル
+   - 2025年最新技術対応
    ========================================================================== */
 
-/* Cinzelフォントのインポート */
-@import url('https://fonts.googleapis.com/css2?family=Cinzel:wght@400;600;700&display=swap');
-
 /* ==========================================================================
-   メイン管理者モーダル
+   Admin Modal Base - BEM Block
    ========================================================================== */
 
 .adminModal {
+  /* Position: Fixed overlay */
   position: fixed;
   inset: 0;
   z-index: var(--z-index-modal, 1000);
+  
+  /* Layout: Center modal */
   display: flex;
   align-items: center;
   justify-content: center;
-  animation: adminModalFadeIn 0.3s ease-out;
-}
-
-.adminModal__overlay {
-  position: absolute;
-  inset: 0;
-  background: radial-gradient(circle at center, #0a0f1b 0%, #000 100%);
-  backdrop-filter: blur(8px);
-}
-
-.adminModal__container {
-  position: relative;
-  width: 90%;
-  max-width: 600px;
-  max-height: 90vh;
-  background: radial-gradient(circle at top, #0a0f1b 0%, #000 100%);
-  border: 1px solid var(--color-gaming-accent, #d4af37);
-  border-radius: var(--border-radius-lg, 12px);
-  box-shadow: 
-    0 0 30px rgba(212, 175, 55, 0.3),
-    inset 0 1px 0 rgba(229, 204, 170, 0.1);
-  overflow: hidden;
-  animation: adminModalSlideIn 0.3s ease-out;
+  
+  /* Spacing: Safe area for mobile */
+  padding: env(safe-area-inset-top, var(--spacing-md, 1rem)) 
+           env(safe-area-inset-right, var(--spacing-md, 1rem))
+           env(safe-area-inset-bottom, var(--spacing-md, 1rem)) 
+           env(safe-area-inset-left, var(--spacing-md, 1rem));
+  
+  /* Performance: GPU optimization */
+  will-change: var(--will-change-opacity, opacity);
+  contain: layout style;
+  
+  /* Animation: Smooth entry */
+  animation: adminModalFadeIn var(--duration-normal, 0.3s) var(--easing-smooth, ease);
 }
 
 /* ==========================================================================
-   ヘッダー
+   Admin Modal Overlay - BEM Element
+   ========================================================================== */
+
+.adminModal__overlay {
+  /* Position: Full background */
+  position: absolute;
+  inset: 0;
+  
+  /* Background: Gaming overlay */
+  background: var(--color-gaming-bg-overlay, rgba(5, 10, 20, 0.95));
+  backdrop-filter: blur(12px);
+  
+  /* Performance: Layer optimization */
+  will-change: backdrop-filter;
+}
+
+/* ==========================================================================
+   Admin Modal Container - BEM Element
+   ========================================================================== */
+
+.adminModal__container {
+  /* Position: Relative for content */
+  position: relative;
+  z-index: 1;
+  
+  /* Layout: Responsive sizing */
+  width: min(90vw, 700px);
+  max-height: min(90vh, 900px);
+  
+  /* Background: Gaming theme */
+  background: linear-gradient(135deg, 
+    var(--color-gaming-bg-surface, rgba(20, 20, 25, 0.95)), 
+    var(--color-gaming-bg-secondary, rgba(10, 10, 15, 0.95))
+  );
+  
+  /* Border: Gaming accent */
+  border: 1px solid var(--color-gaming-accent, #ffd88a);
+  border-radius: var(--radius-lg, 0.75rem);
+  
+  /* Effects: Enhanced glass morphism */
+  backdrop-filter: blur(20px);
+  box-shadow: 
+    0 25px 50px rgba(0, 0, 0, 0.7),
+    0 0 30px rgba(255, 216, 138, 0.2),
+    inset 0 1px 0 rgba(255, 255, 255, 0.1);
+  
+  /* Scroll: Container overflow */
+  overflow: hidden;
+  
+  /* Typography: Gaming font */
+  font-family: var(--font-family-game, 'Cinzel', serif);
+  color: var(--color-gaming-text-primary, #e0e0e0);
+  
+  /* Animation: Smooth entry */
+  animation: adminModalSlideIn var(--duration-normal, 0.3s) var(--easing-spring, cubic-bezier(0.175, 0.885, 0.32, 1.275));
+}
+
+/* ==========================================================================
+   Admin Modal Header - BEM Element
    ========================================================================== */
 
 .adminModal__header {
+  /* Layout: Header bar */
   display: flex;
   align-items: center;
   justify-content: space-between;
-  padding: var(--spacing-6, 24px) var(--spacing-6, 24px) var(--spacing-4, 16px);
-  border-bottom: 1px solid rgba(212, 175, 55, 0.2);
-  background: linear-gradient(135deg, rgba(212, 175, 55, 0.1) 0%, transparent 100%);
+  
+  /* Spacing: Header padding */
+  padding: var(--spacing-6, 1.5rem) var(--spacing-6, 1.5rem) var(--spacing-4, 1rem);
+  
+  /* Background: Header distinction */
+  background: linear-gradient(135deg, 
+    rgba(255, 216, 138, 0.15), 
+    rgba(255, 216, 138, 0.05)
+  );
+  border-bottom: 1px solid rgba(255, 216, 138, 0.3);
+  
+  /* Effects: Header glow */
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.1);
 }
 
 .adminModal__title {
-  font-family: 'Cinzel', serif;
-  font-size: var(--font-size-2xl, 24px);
-  font-weight: 700;
-  color: var(--color-gaming-text-accent, #e5ccaa);
-  text-shadow: 0 0 10px rgba(229, 204, 170, 0.3);
-  letter-spacing: 0.1em;
+  /* Typography: Admin title */
+  font-family: var(--font-family-game, 'Cinzel', serif);
+  font-size: var(--font-size-game-title, clamp(1.5rem, 4vw, 2rem));
+  font-weight: var(--font-weight-bold, 700);
+  color: var(--color-gaming-text-accent, #ffd88a);
+  
+  /* Effects: Title glow */
+  text-shadow: 0 0 12px rgba(255, 216, 138, 0.4);
+  letter-spacing: var(--letter-spacing-wide, 0.1em);
+  text-transform: uppercase;
+  
+  /* Reset: Margin */
   margin: 0;
+  
+  /* Performance: Text rendering */
+  text-rendering: optimizeLegibility;
+  -webkit-font-smoothing: antialiased;
 }
 
 .adminModal__closeButton {
+  /* Reset: Button styling */
   background: none;
   border: none;
-  color: var(--color-gaming-text-muted, #c8b78d);
-  font-size: var(--font-size-2xl, 24px);
-  font-weight: bold;
-  cursor: pointer;
-  padding: var(--spacing-2, 8px);
+  padding: var(--spacing-2, 0.5rem);
+  
+  /* Layout: Touch-friendly */
+  width: var(--touch-target-min, 44px);
+  height: var(--touch-target-min, 44px);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: var(--radius-sm, 0.25rem);
+  
+  /* Typography: Close icon */
+  font-size: var(--font-size-xl, 1.25rem);
+  font-weight: var(--font-weight-bold, 700);
+  color: var(--color-gaming-text-muted, #9ca3af);
   line-height: 1;
-  transition: all 0.2s ease;
-  border-radius: var(--border-radius-sm, 4px);
+  
+  /* Interaction: Smooth transitions */
+  cursor: pointer;
+  transition: all var(--transition-fast, 0.15s) ease;
+  
+  /* Background: Subtle base */
+  background: rgba(255, 255, 255, 0.05);
+  border: 1px solid rgba(255, 255, 255, 0.1);
 }
 
 .adminModal__closeButton:hover {
-  color: var(--color-gaming-text-accent, #e5ccaa);
-  background: rgba(212, 175, 55, 0.1);
+  /* Effects: Hover glow */
+  color: var(--color-gaming-text-accent, #ffd88a);
+  background: rgba(255, 216, 138, 0.15);
+  border-color: var(--color-gaming-accent, #ffd88a);
   transform: scale(1.1);
+  
+  /* Glow effect */
+  box-shadow: 0 0 12px rgba(255, 216, 138, 0.3);
 }
 
-.adminModal__closeButton:focus {
-  outline: 2px solid var(--color-gaming-accent, #d4af37);
+.adminModal__closeButton:focus-visible {
+  outline: 2px solid var(--color-gaming-accent, #ffd88a);
   outline-offset: 2px;
 }
 
+.adminModal__closeButton:active {
+  transform: scale(0.95);
+}
+
 /* ==========================================================================
-   コンテンツエリア
+   Admin Modal Content - BEM Element
    ========================================================================== */
 
 .adminModal__content {
-  padding: var(--spacing-6, 24px);
+  /* Spacing: Content padding */
+  padding: var(--spacing-6, 1.5rem);
+  
+  /* Scroll: Content overflow */
   overflow-y: auto;
-  max-height: calc(90vh - 100px);
+  -webkit-overflow-scrolling: touch;
+  max-height: calc(90vh - 120px);
+  
+  /* Scrollbar styling */
+  scrollbar-width: thin;
+  scrollbar-color: var(--color-gaming-accent, #ffd88a) transparent;
+}
+
+.adminModal__content::-webkit-scrollbar {
+  width: 8px;
+}
+
+.adminModal__content::-webkit-scrollbar-track {
+  background: rgba(255, 255, 255, 0.05);
+  border-radius: 4px;
+}
+
+.adminModal__content::-webkit-scrollbar-thumb {
+  background: var(--color-gaming-accent, #ffd88a);
+  border-radius: 4px;
+}
+
+.adminModal__content::-webkit-scrollbar-thumb:hover {
+  background: var(--color-gaming-text-accent, #ffe6b3);
 }
 
 .adminModal__section {
@@ -390,125 +513,349 @@
 }
 
 /* ==========================================================================
-   アニメーション
+   /* ==========================================================================
+   Animations - CSS Custom Properties
    ========================================================================== */
 
 @keyframes adminModalFadeIn {
   from {
     opacity: 0;
+    backdrop-filter: blur(0px);
   }
   to {
     opacity: 1;
+    backdrop-filter: blur(12px);
   }
 }
 
 @keyframes adminModalSlideIn {
   from {
     opacity: 0;
-    transform: translateY(-20px) scale(0.95);
+    transform: translateY(-30px) scale(0.95);
+    filter: brightness(0.8);
   }
   to {
     opacity: 1;
     transform: translateY(0) scale(1);
+    filter: brightness(1);
   }
 }
 
 @keyframes confirmModalSlideIn {
   from {
     opacity: 0;
-    transform: translateY(-10px) scale(0.95);
+    transform: translateY(-20px) scale(0.9);
+    backdrop-filter: blur(0px);
   }
   to {
     opacity: 1;
     transform: translateY(0) scale(1);
+    backdrop-filter: blur(8px);
   }
 }
 
 @keyframes adminStatusFadeIn {
   from {
     opacity: 0;
-    transform: translateY(10px);
+    transform: translateY(15px);
+    scale: 0.95;
   }
   to {
     opacity: 1;
     transform: translateY(0);
+    scale: 1;
+  }
+}
+
+/* Gaming glow animation */
+@keyframes adminModalGlow {
+  0%, 100% {
+    box-shadow: 
+      0 25px 50px rgba(0, 0, 0, 0.7),
+      0 0 30px rgba(255, 216, 138, 0.2),
+      inset 0 1px 0 rgba(255, 255, 255, 0.1);
+  }
+  50% {
+    box-shadow: 
+      0 25px 50px rgba(0, 0, 0, 0.7),
+      0 0 40px rgba(255, 216, 138, 0.4),
+      inset 0 1px 0 rgba(255, 255, 255, 0.15);
   }
 }
 
 /* ==========================================================================
-   レスポンシブデザイン
+   Responsive Design - 2025 Modern Approach
    ========================================================================== */
 
-@media (max-width: 768px) {
+/* Container Queries - Modern responsive design */
+@container admin-modal (inline-size < 768px) {
   .adminModal__container {
-    width: 95%;
+    width: 95vw;
     max-height: 95vh;
-    margin: var(--spacing-2, 8px);
+    margin: var(--spacing-xs, 0.25rem);
+    padding: var(--spacing-lg, 1.5rem);
   }
 
   .adminModal__header {
-    padding: var(--spacing-4, 16px);
-  }
-
-  .adminModal__content {
-    padding: var(--spacing-4, 16px);
+    padding: var(--spacing-md, 1rem);
+    flex-direction: column;
+    text-align: center;
+    gap: var(--spacing-sm, 0.5rem);
   }
 
   .adminModal__title {
-    font-size: var(--font-size-xl, 20px);
+    font-size: var(--font-size-xl, clamp(1.25rem, 4vw, 1.5rem));
+  }
+
+  .adminModal__closeButton {
+    position: relative;
+    align-self: center;
+    margin-top: var(--spacing-sm, 0.5rem);
   }
 
   .adminModal__inputRow {
     flex-direction: column;
     align-items: stretch;
+    gap: var(--spacing-sm, 0.5rem);
   }
 
   .adminModal__button {
     width: 100%;
+    min-width: auto;
+  }
+}
+
+/* Small container optimization */
+@container admin-modal (inline-size < 480px) {
+  .adminModal__container {
+    width: 98vw;
+    margin: var(--spacing-xs, 0.25rem);
+    padding: var(--spacing-md, 1rem);
   }
 
-  .adminModal__dangerActions {
-    gap: var(--spacing-2, 8px);
+  .adminModal__content {
+    padding: var(--spacing-md, 1rem);
+  }
+
+  .adminModal__sectionTitle {
+    font-size: var(--font-size-base, 1rem);
+  }
+
+  .adminModal__dangerZone {
+    padding: var(--spacing-md, 1rem);
+    margin-top: var(--spacing-md, 1rem);
   }
 
   .confirmModal__container {
-    width: 95%;
-    padding: var(--spacing-6, 24px);
+    width: 95vw;
+    padding: var(--spacing-md, 1rem);
   }
 
   .confirmModal__actions {
     flex-direction: column;
-    gap: var(--spacing-3, 12px);
+    gap: var(--spacing-sm, 0.5rem);
   }
 
   .confirmModal__cancelButton,
   .confirmModal__confirmButton {
     width: 100%;
+    min-width: auto;
   }
 }
 
-@media (max-width: 480px) {
-  .adminModal__header {
-    padding: var(--spacing-3, 12px);
+/* Tablet optimization - Range syntax */
+@media (768px <= width < 1024px) {
+  .adminModal__container {
+    width: min(85vw, 650px);
+    max-height: 85vh;
+  }
+
+  .adminModal__inputRow {
+    gap: var(--spacing-md, 1rem);
+  }
+}
+
+/* Large screen optimization */
+@media (width >= 1024px) {
+  .adminModal__container {
+    width: min(75vw, 700px);
+    max-height: 80vh;
   }
 
   .adminModal__content {
-    padding: var(--spacing-3, 12px);
+    padding: var(--spacing-xl, 2rem);
+  }
+}
+
+/* ==========================================================================
+   Accessibility Support - WCAG 2.1 AA Compliance
+   ========================================================================== */
+
+/* High contrast mode */
+@media (prefers-contrast: high) {
+  .adminModal__overlay {
+    background: rgba(0, 0, 0, 0.95);
+    backdrop-filter: none;
+  }
+
+  .adminModal__container {
+    background: #ffffff;
+    color: #000000;
+    border: 3px solid #000000;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.5);
   }
 
   .adminModal__title {
-    font-size: var(--font-size-lg, 18px);
+    color: #000000;
+    text-shadow: none;
   }
 
-  .adminModal__sectionTitle {
-    font-size: var(--font-size-base, 16px);
+  .adminModal__closeButton {
+    background: #ffffff;
+    color: #000000;
+    border: 2px solid #000000;
   }
 
-  .adminModal__dangerZone {
-    padding: var(--spacing-4, 16px);
+  .adminModal__button {
+    background: #000000;
+    color: #ffffff;
+    border: 2px solid #000000;
   }
 
   .confirmModal__container {
-    padding: var(--spacing-4, 16px);
+    background: #ffffff;
+    color: #000000;
+    border: 3px solid #000000;
+  }
+}
+
+/* Reduced motion support */
+@media (prefers-reduced-motion: reduce) {
+  .adminModal__overlay,
+  .adminModal__container,
+  .confirmModal__container {
+    animation: none;
+    transition: none;
+  }
+
+  .adminModal__closeButton,
+  .adminModal__button,
+  .confirmModal__cancelButton,
+  .confirmModal__confirmButton {
+    transition: none;
+  }
+
+  .adminModal__closeButton:hover,
+  .adminModal__button:hover {
+    transform: none;
+  }
+
+  .adminModal__container {
+    animation: none;
+  }
+
+  /* Disable glow animations */
+  .adminModal__container {
+    animation: none;
+  }
+}
+
+/* Forced colors mode (Windows High Contrast) */
+@media (forced-colors: active) {
+  .adminModal__overlay {
+    background: Canvas;
+  }
+
+  .adminModal__container,
+  .confirmModal__container {
+    background: Canvas;
+    border: 1px solid ButtonText;
+    forced-color-adjust: none;
+  }
+
+  .adminModal__title {
+    color: ButtonText;
+  }
+
+  .adminModal__button,
+  .confirmModal__cancelButton,
+  .confirmModal__confirmButton {
+    background: ButtonFace;
+    color: ButtonText;
+    border: 1px solid ButtonText;
+  }
+}
+
+/* Focus management */
+.adminModal:focus-within {
+  outline: none;
+}
+
+.adminModal__container:focus {
+  outline: 2px solid var(--color-gaming-accent, #ffd88a);
+  outline-offset: 4px;
+}
+
+/* Enhanced focus indicators */
+.adminModal__input:focus-visible,
+.adminModal__button:focus-visible,
+.confirmModal__cancelButton:focus-visible,
+.confirmModal__confirmButton:focus-visible {
+  outline: 3px solid var(--color-gaming-accent, #ffd88a);
+  outline-offset: 2px;
+}
+
+/* ==========================================================================
+   Performance Optimizations
+   ========================================================================== */
+
+/* GPU acceleration for smooth animations */
+.adminModal__container,
+.confirmModal__container {
+  will-change: transform, opacity;
+  contain: layout style paint;
+}
+
+.adminModal__closeButton,
+.adminModal__button {
+  will-change: transform;
+}
+
+/* Improve scrolling performance */
+.adminModal__content {
+  contain: layout style;
+  overscroll-behavior: contain;
+}
+
+/* ==========================================================================
+   Gaming Theme Enhancements
+   ========================================================================== */
+
+/* Dynamic glow effect for active modals */
+.adminModal--active .adminModal__container {
+  animation: 
+    adminModalSlideIn var(--duration-normal, 0.3s) var(--easing-spring, cubic-bezier(0.175, 0.885, 0.32, 1.275)),
+    adminModalGlow 3s ease-in-out infinite;
+}
+
+/* Enhanced hover states for gaming feel */
+.adminModal__button:hover:not(:disabled) {
+  will-change: transform, box-shadow;
+  animation: none; /* Stop glow during interaction */
+}
+
+.confirmModal__confirmButton:hover:not(:disabled) {
+  will-change: transform, box-shadow;
+  filter: brightness(1.1) saturate(1.1);
+}
+
+/* ==========================================================================
+   Print Styles (Hide modals in print)
+   ========================================================================== */
+
+@media print {
+  .adminModal,
+  .confirmModal {
+    display: none !important;
   }
 }

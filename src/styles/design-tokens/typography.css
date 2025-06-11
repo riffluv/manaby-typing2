@@ -3,6 +3,7 @@
   /* Font Families */
   --font-family-primary: 'Noto Sans JP', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
   --font-family-monospace: 'SF Mono', 'Monaco', 'Cascadia Code', 'Roboto Mono', Consolas, 'Courier New', monospace;
+  --font-family-game: 'Cinzel', serif;
 
   /* Font Weights */
   --font-weight-normal: 400;
@@ -33,8 +34,8 @@
   --letter-spacing-wider: 0.05em;
 
   /* Game-specific Typography Tokens */
-  --font-size-game-title: var(--font-size-4xl);
-  --font-size-game-subtitle: var(--font-size-xl);
+  --font-size-game-title: clamp(2.5rem, 6vw, 4rem);
+  --font-size-game-subtitle: clamp(3rem, 8vw, 5rem);
   --font-size-score: var(--font-size-3xl);
   --font-size-button: var(--font-size-base);
   --font-size-ui-label: var(--font-size-sm);

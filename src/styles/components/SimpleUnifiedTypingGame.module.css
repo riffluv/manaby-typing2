@@ -1,5 +1,279 @@
-/* SimpleUnifiedTypingGame.module.css */
+/* ==========================================================================
+   SimpleUnifiedTypingGame - CSS-Design-Best-Practices.md完全準拠版
+   - デザイントークン駆動設計
+   - BEM記法統一
+   - ゲーミングUI統合管理
+   - 2025年最新技術対応
+   ========================================================================== */
 
+/* ==========================================================================
+   Game Container - BEM Block
+   ========================================================================== */
+
+.unifiedGame {
+  /* Layout: Full viewport container */
+  min-height: 100vh;
+  min-height: 100dvh; /* Dynamic viewport height */
+  width: 100%;
+  
+  /* Layout: Flex centering */
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  
+  /* Background: Gaming theme */
+  background: var(--color-game-bg-radial, radial-gradient(ellipse at center, #0a0f1b, #000));
+  
+  /* Typography: Gaming font */
+  font-family: var(--font-family-game, 'Cinzel', serif);
+  color: var(--color-gaming-text-primary, #e0e0e0);
+  
+  /* Performance: GPU optimization */
+  will-change: var(--will-change-transform, transform);
+  contain: layout style;
+  
+  /* Position: Relative for child positioning */
+  position: relative;
+  
+  /* Container Queries: Enable responsive behavior */
+  container: unified-game / inline-size;
+}
+
+/* ==========================================================================
+   Progress Indicator - BEM Element
+   ========================================================================== */
+
+.unifiedGame__progressIndicator {
+  /* Position: Fixed top-right overlay */
+  position: fixed;
+  top: var(--spacing-sm, 0.5rem);
+  right: var(--spacing-sm, 0.5rem);
+  
+  /* Typography: Gaming UI */
+  font-family: var(--font-family-game, 'Cinzel', serif);
+  font-size: var(--font-size-game-ui, 1rem);
+  font-weight: var(--font-weight-bold, 700);
+  color: var(--color-gaming-text-accent, #ffd88a);
+  
+  /* Background: Glass morphism */
+  background: var(--color-gaming-bg-overlay, rgba(5, 10, 20, 0.92));
+  backdrop-filter: blur(8px);
+  
+  /* Layout: Compact padding */
+  padding: var(--spacing-xs, 0.25rem) var(--spacing-sm, 0.5rem);
+  border-radius: var(--radius-sm, 0.25rem);
+  border: 1px solid var(--color-border-accent, rgba(255, 216, 138, 0.3));
+  
+  /* Effects: Subtle glow */
+  box-shadow: 
+    0 2px 8px rgba(0, 0, 0, 0.3),
+    0 0 8px rgba(255, 216, 138, 0.2);
+  text-shadow: 0 0 4px rgba(255, 216, 138, 0.3);
+  
+  /* Layer: Above game content */
+  z-index: var(--z-index-overlay, 1300);
+  
+  /* Interaction: Smooth transitions */
+  transition: all var(--transition-fast, 0.15s) ease;
+  
+  /* Performance: Text rendering */
+  text-rendering: optimizeLegibility;
+  -webkit-font-smoothing: antialiased;
+}
+
+.unifiedGame__progressIndicator:hover {
+  transform: translateY(-2px);
+  box-shadow: 
+    0 4px 16px rgba(0, 0, 0, 0.4),
+    0 0 12px rgba(255, 216, 138, 0.3);
+  border-color: var(--color-gaming-accent, #ffd88a);
+}
+
+/* ==========================================================================
+   Loading Screen - BEM Element
+   ========================================================================== */
+
+.unifiedGame__loadingScreen {
+  /* Layout: Full viewport centering */
+  min-height: 100vh;
+  min-height: 100dvh; /* Dynamic viewport height */
+  width: 100%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-direction: column;
+  gap: var(--spacing-lg, 1.5rem);
+  
+  /* Typography: Loading text */
+  font-family: var(--font-family-game, 'Cinzel', serif);
+  font-size: var(--font-size-xl, 1.25rem);
+  font-weight: var(--font-weight-medium, 500);
+  color: var(--color-gaming-text-secondary, #b8cfe7);
+  text-align: center;
+  
+  /* Effects: Text glow */
+  text-shadow: 0 0 4px rgba(184, 207, 231, 0.3);
+  
+  /* Spacing: Responsive padding */
+  padding: var(--spacing-lg, 1.5rem);
+}
+
+.unifiedGame__loadingScreen::after {
+  content: '';
+  display: block;
+  width: var(--spacing-5, 1.25rem);
+  height: var(--spacing-5, 1.25rem);
+  border: 2px solid var(--color-border-primary, rgba(255, 255, 255, 0.2));
+  border-top: 2px solid var(--color-gaming-accent, #ffd88a);
+  border-radius: 50%;
+  animation: unifiedGameSpinner var(--duration-slow, 1s) linear infinite;
+  
+  /* Performance: GPU acceleration */
+  will-change: var(--will-change-transform, transform);
+}
+
+/* ==========================================================================
+   Loading Animation
+   ========================================================================== */
+
+@keyframes unifiedGameSpinner {
+  from {
+    transform: rotate(0deg);
+  }
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+/* ==========================================================================
+   Game States - BEM Modifiers
+   ========================================================================== */
+
+.unifiedGame--playing {
+  cursor: none; /* Hide cursor during gameplay */
+}
+
+.unifiedGame--paused {
+  filter: blur(2px);
+  pointer-events: none;
+}
+
+.unifiedGame--completed {
+  animation: unifiedGameCompleted var(--duration-normal, 0.6s) ease;
+}
+
+@keyframes unifiedGameCompleted {
+  0%, 100% {
+    transform: scale(1);
+  }
+  50% {
+    transform: scale(1.02);
+  }
+}
+
+/* ==========================================================================
+   Container Queries - 2025 Modern Responsive
+   ========================================================================== */
+
+/* Small container */
+@container unified-game (inline-size < 640px) {
+  .unifiedGame__progressIndicator {
+    top: var(--spacing-xs, 0.25rem);
+    right: var(--spacing-xs, 0.25rem);
+    font-size: var(--font-size-sm, 0.875rem);
+    padding: var(--spacing-2xs, 0.125rem) var(--spacing-xs, 0.25rem);
+  }
+  
+  .unifiedGame__loadingScreen {
+    font-size: var(--font-size-lg, 1.125rem);
+    padding: var(--spacing-md, 1rem);
+  }
+}
+
+/* Medium container */
+@container unified-game (640px <= inline-size < 1024px) {
+  .unifiedGame__progressIndicator {
+    font-size: var(--font-size-base, 1rem);
+  }
+  
+  .unifiedGame__loadingScreen {
+    font-size: var(--font-size-xl, 1.25rem);
+  }
+}
+
+/* ==========================================================================
+   Responsive Design - Viewport-based Fallback
+   ========================================================================== */
+
+/* Mobile optimization */
+@media (width < 768px) {
+  .unifiedGame__progressIndicator {
+    top: var(--spacing-xs, 0.25rem);
+    right: var(--spacing-xs, 0.25rem);
+    font-size: var(--font-size-sm, 0.875rem);
+    padding: var(--spacing-2xs, 0.125rem) var(--spacing-xs, 0.25rem);
+  }
+  
+  .unifiedGame__loadingScreen {
+    font-size: var(--font-size-lg, 1.125rem);
+    padding: var(--spacing-md, 1rem);
+  }
+}
+
+/* High DPI optimization */
+@media (min-resolution: 1.25dppx) {
+  .unifiedGame__progressIndicator {
+    border-width: 0.5px;
+  }
+}
+
+/* ==========================================================================
+   Accessibility Support - WCAG 2.1 Compliance
+   ========================================================================== */
+
+/* High contrast mode */
+@media (prefers-contrast: high) {
+  .unifiedGame__progressIndicator {
+    background: #ffffff;
+    color: #000000;
+    border: 2px solid #000000;
+    text-shadow: none;
+  }
+  
+  .unifiedGame__loadingScreen {
+    color: #ffffff;
+    text-shadow: none;
+  }
+}
+
+/* Reduced motion support */
+@media (prefers-reduced-motion: reduce) {
+  .unifiedGame__loadingScreen::after,
+  .unifiedGame--completed {
+    animation: none;
+  }
+  
+  .unifiedGame__progressIndicator {
+    transition: none;
+  }
+  
+  .unifiedGame__progressIndicator:hover {
+    transform: none;
+  }
+}
+
+/* Focus management */
+.unifiedGame:focus-within .unifiedGame__progressIndicator {
+  opacity: 0.7;
+  transition: opacity var(--transition-fast, 0.15s) ease;
+}
+
+/* ==========================================================================
+   Legacy Class Support (Deprecated - Use BEM classes above)
+   ========================================================================== */
+
+/* @deprecated Use .unifiedGame instead */
 .gameContainer {
   min-height: 100vh;
   display: flex;
@@ -8,47 +282,33 @@
   align-items: center;
 }
 
+/* @deprecated Use .unifiedGame__progressIndicator instead */
 .progressIndicator {
   position: fixed;
-  top: var(--spacing-sm);
-  right: var(--spacing-sm);
-  font-size: var(--font-size-lg);
-  color: var(--text-primary);
-  background: var(--surface-overlay);
-  padding: var(--spacing-xs) var(--spacing-sm);
-  border-radius: var(--border-radius-sm);
-  border: 1px solid var(--border-primary);
+  top: var(--spacing-sm, 0.5rem);
+  right: var(--spacing-sm, 0.5rem);
+  font-size: var(--font-size-lg, 1.125rem);
+  color: var(--color-gaming-text-primary, #e0e0e0);
+  background: var(--color-gaming-bg-overlay, rgba(5, 10, 20, 0.92));
+  padding: var(--spacing-xs, 0.25rem) var(--spacing-sm, 0.5rem);
+  border-radius: var(--radius-sm, 0.25rem);
+  border: 1px solid var(--color-border-primary, rgba(255, 255, 255, 0.1));
   backdrop-filter: blur(4px);
-  font-weight: var(--font-weight-bold);
-  z-index: var(--z-index-overlay);
-  box-shadow: var(--shadow-sm);
-  transition: all 0.2s ease;
+  font-weight: var(--font-weight-bold, 700);
+  z-index: var(--z-index-overlay, 1300);
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
+  transition: all var(--transition-fast, 0.15s) ease;
 }
 
-.progressIndicator:hover {
-  transform: translateY(-1px);
-  box-shadow: var(--shadow-md);
-}
-
+/* @deprecated Use .unifiedGame__loadingScreen instead */
 .loadingScreen {
   min-height: 100vh;
   display: flex;
   justify-content: center;
   align-items: center;
-  font-size: var(--font-size-xl);
-  color: var(--text-secondary);
-  font-weight: var(--font-weight-medium);
-}
-
-.loadingScreen::after {
-  content: '';
-  display: inline-block;  width: 20px;
-  height: 20px;
-  margin-left: var(--spacing-xs);
-  border: 2px solid var(--border-primary);
-  border-top: 2px solid var(--color-gaming-text-accent);
-  border-radius: 50%;
-  animation: loading 1s linear infinite;
+  font-size: var(--font-size-xl, 1.25rem);
+  color: var(--color-gaming-text-secondary, #b8cfe7);
+  font-weight: var(--font-weight-medium, 500);
 }
 
 @keyframes loading {

@@ -1,143 +1,312 @@
 /* ==========================================================================
-   RankingScreen - シンプルリファクタリング版
-   現在の見た目を保ったまま、複雑性を削除
+   RankingScreen - CSS-Design-Best-Practices.md完全準拠版
+   - デザイントークン駆動設計
+   - BEM記法統一
+   - モダンCSS機能活用
+   - Elden Ring風デザイン保持
    ========================================================================== */
 
-/* メインコンテナ */
+/* ==========================================================================
+   Import Design Tokens
+   ========================================================================== */
+
+/* メインコンテナ - BEM Block */
 .ranking {
+  /* Layout: Full screen container */
   width: 100%;
   height: 100vh;
-  font-family: 'Cinzel', serif;
-  background: radial-gradient(ellipse at center, #0a0f1b, #000);
-  color: #ccc;
-  overflow: hidden;
+  min-height: 100vh;
+  
+  /* Background: Gaming theme */
+  background: var(--color-game-bg-radial, radial-gradient(ellipse at center, #0a0f1b, #000));
+  
+  /* Typography: Primary font */
+  font-family: var(--font-family-game, 'Cinzel', serif);
+  font-size: var(--font-size-base, 1rem);
+  color: var(--color-gaming-text-primary, #ccc);
+  
+  /* Layout: Flexbox center */
   display: flex;
   flex-direction: column;
   align-items: center;
-  padding: clamp(2vh, 6vh, 10vh) 1rem 2rem;
+  
+  /* Performance: GPU optimization */
+  will-change: transform;
+  contain: layout style;
+  
+  /* Position: Fixed fullscreen */
   position: fixed;
   inset: 0;
+  z-index: var(--z-index-modal, 1000);
+  
+  /* Spacing: Responsive padding */
+  padding: clamp(var(--spacing-lg, 2vh), 6vh, var(--spacing-xl, 10vh)) var(--spacing-md, 1rem) var(--spacing-lg, 2rem);
+  
+  /* Reset: Box model */
   box-sizing: border-box;
+  overflow: hidden;
+  margin: 0;
 }
 
-/* DPI 125%環境での調整 */
-@media (min-resolution: 1.25dppx) {
+/* ==========================================================================
+   DPI Scale Optimization - Design Tokens
+   ========================================================================== */
+
+/* High DPI optimization */
+@media (min-resolution: 192dpi) {
   .ranking {
-    padding: clamp(1vh, 4vh, 8vh) 1rem 1.5rem;
+    transform: scale(0.95);
+    transform-origin: top left;
   }
 }
 
-/* コンテナ */
+/* Standard DPI optimization (125%) */
+@media (min-resolution: 120dpi) and (max-resolution: 144dpi) {
+  .ranking {
+    padding: clamp(var(--spacing-md, 1vh), 4vh, var(--spacing-2xl, 8vh)) var(--spacing-md, 1rem) var(--spacing-md, 1.5rem);
+  }
+}
+
+/* ==========================================================================
+   Container Element - BEM Element
+   ========================================================================== */
+
 .ranking__container {
+  /* Layout: Full width container */
   width: 100%;
-  max-width: 960px;
+  max-width: var(--container-lg, 960px);
   text-align: center;
 }
 
-/* タイトル */
+/* ==========================================================================
+   Title Element - BEM Element
+   ========================================================================== */
+
 .ranking__title {
-  font-size: clamp(2rem, 5vw, 2.6rem);
-  margin-bottom: clamp(1.5rem, 4vh, 3rem);
-  color: #e5ccaa;
+  /* Typography: Large title */
+  font-size: var(--font-size-game-title, clamp(2rem, 5vw, 2.6rem));
+  font-family: var(--font-family-game, 'Cinzel', serif);
+  font-weight: 700;
   letter-spacing: 0.2rem;
+  
+  /* Color: Gaming accent */
+  color: var(--color-gaming-text-accent, #e5ccaa);
+  
+  /* Effects: Glow */
   text-shadow: 0 0 8px rgba(255, 220, 150, 0.3);
+  
+  /* Spacing */
+  margin-bottom: clamp(var(--spacing-md, 1.5rem), 4vh, var(--spacing-xl, 3rem));
+  margin-top: 0;
 }
 
-/* テーブル */
+/* ==========================================================================
+   Table Elements - BEM Elements
+   ========================================================================== */
+
 .ranking__table {
+  /* Layout: Full width table */
   width: 100%;
   border-collapse: collapse;
-  margin-bottom: clamp(1rem, 3vh, 2rem);
+  
+  /* Spacing */
+  margin-bottom: clamp(var(--spacing-md, 1rem), 3vh, var(--spacing-lg, 2rem));
+  
+  /* Performance */
+  contain: layout style;
 }
 
 .ranking__table th,
 .ranking__table td {
-  padding: clamp(0.5rem, 2vw, 1rem);
-  font-size: clamp(0.8rem, 2vw, 1rem);
-  border-bottom: 1px solid rgba(255,255,255,0.08);
+  /* Spacing: Responsive padding */
+  padding: clamp(var(--spacing-sm, 0.5rem), 2vw, var(--spacing-md, 1rem));
+  
+  /* Typography: Small text */
+  font-size: var(--font-size-sm, clamp(0.8rem, 2vw, 1rem));
+  
+  /* Border: Subtle separation */
+  border-bottom: 1px solid rgba(255, 255, 255, 0.08);
 }
 
 .ranking__table th {
-  color: #c8b78d;
+  /* Color: Accent header */
+  color: var(--color-gaming-text-secondary, #c8b78d);
   font-weight: bold;
+  
+  /* Effects: Subtle glow */
   text-shadow: 0 0 5px rgba(255, 255, 255, 0.05);
 }
 
 .ranking__table td {
-  color: #eee;
+  /* Color: Primary text */
+  color: var(--color-gaming-text-primary, #eee);
 }
 
-/* ページネーション */
+/* ==========================================================================
+   Pagination Elements - BEM Elements
+   ========================================================================== */
+
 .ranking__pagination {
+  /* Layout: Horizontal center */
   display: flex;
   justify-content: center;
-  gap: 1rem;
-  margin-bottom: clamp(1rem, 2vh, 2rem);
+  gap: var(--spacing-md, 1rem);
+  
+  /* Spacing */
+  margin-bottom: clamp(var(--spacing-md, 1rem), 2vh, var(--spacing-lg, 2rem));
 }
 
 .ranking__pageBtn {
-  padding: 0.4rem 1rem;
-  font-size: 0.9rem;
-  color: #cce0ff;
-  background: rgba(255,255,255,0.02);
-  border: 1px solid rgba(255,255,255,0.05);
-  border-radius: 4px;
+  /* Spacing: Button padding */
+  padding: var(--spacing-sm, 0.4rem) var(--spacing-md, 1rem);
+  
+  /* Typography: Small button */
+  font-size: var(--font-size-sm, 0.9rem);
+  font-family: var(--font-family-game, 'Cinzel', serif);
+  
+  /* Color: Secondary button */
+  color: var(--color-gaming-text-secondary, #cce0ff);
+  background: rgba(255, 255, 255, 0.02);
+  border: 1px solid rgba(255, 255, 255, 0.05);
+  
+  /* Style: Rounded corners */
+  border-radius: var(--border-radius-sm, 4px);
+  
+  /* Interactive: Cursor */
   cursor: pointer;
-  transition: all 0.3s ease;
+  
+  /* Transition: Smooth hover */
+  transition: all var(--duration-fast, 0.3s) var(--easing-smooth, ease);
 }
 
-.ranking__pageBtn:hover {
+.ranking__pageBtn:hover,
+.ranking__pageBtn:focus {
   background: rgba(100, 180, 255, 0.05);
   border-color: rgba(100, 180, 255, 0.2);
+  outline: none;
 }
 
-/* ボタン群 */
+/* ==========================================================================
+   Button Elements - BEM Elements
+   ========================================================================== */
+
 .ranking__buttons {
+  /* Layout: Horizontal center */
   display: flex;
   justify-content: center;
-  gap: clamp(1rem, 4vw, 2rem);
+  gap: clamp(var(--spacing-md, 1rem), 4vw, var(--spacing-lg, 2rem));
   flex-wrap: wrap;
 }
 
 .button {
-  padding: 0.5rem 2rem;
-  border: 1px solid rgba(200, 200, 255, 0.1);
+  /* Spacing: Button padding */
+  padding: var(--spacing-sm, 0.5rem) var(--spacing-lg, 2rem);
+  
+  /* Typography: Base button */
+  font-size: var(--font-size-base, 1rem);
+  font-family: var(--font-family-game, 'Cinzel', serif);
+  
+  /* Color: Primary button */
+  color: var(--color-gaming-text-secondary, #cce0ff);
   background: rgba(255, 255, 255, 0.02);
-  color: #cce0ff;
-  border-radius: 4px;
-  font-size: 1rem;
+  border: 1px solid rgba(200, 200, 255, 0.1);
+  
+  /* Style: Rounded corners */
+  border-radius: var(--border-radius-sm, 4px);
+  
+  /* Interactive: Cursor */
   cursor: pointer;
-  text-shadow: 0 0 3px rgba(0,0,0,0.4);
-  box-shadow: 0 0 8px rgba(150,180,255,0.1);
-  transition: all 0.25s ease;
+  
+  /* Effects: Subtle shadow and glow */
+  text-shadow: 0 0 3px rgba(0, 0, 0, 0.4);
+  box-shadow: 0 0 8px rgba(150, 180, 255, 0.1);
+  
+  /* Transition: Smooth hover */
+  transition: all var(--duration-normal, 0.25s) var(--easing-smooth, ease);
 }
 
-.button:hover {
+.button:hover,
+.button:focus {
   background: rgba(180, 220, 255, 0.05);
   border-color: rgba(150, 180, 255, 0.3);
-  color: #fff;
-  box-shadow: 0 0 12px rgba(120,180,255,0.2);
+  color: var(--color-gaming-text-accent, #fff);
+  box-shadow: 0 0 12px rgba(120, 180, 255, 0.2);
+  outline: none;
 }
 
-/* レスポンシブ調整 */
+/* ==========================================================================
+   Responsive Design - 2025 Modern Approach
+   ========================================================================== */
+
+/* Mobile optimization */
 @media (max-width: 768px) {
   .ranking__table th,
   .ranking__table td {
     padding: 0.6rem 0.3rem;
-    font-size: 0.85rem;
+    font-size: var(--font-size-xs, 0.85rem);
   }
   
   .ranking__pagination {
-    gap: 0.5rem;
+    gap: var(--spacing-sm, 0.5rem);
   }
   
   .ranking__pageBtn {
-    padding: 0.3rem 0.8rem;
-    font-size: 0.8rem;
+    padding: var(--spacing-xs, 0.3rem) var(--spacing-sm, 0.8rem);
+    font-size: var(--font-size-xs, 0.8rem);
   }
   
   .button {
-    padding: 0.4rem 1.5rem;
-    font-size: 0.9rem;
+    padding: var(--spacing-sm, 0.4rem) var(--spacing-md, 1.5rem);
+    font-size: var(--font-size-sm, 0.9rem);
+  }
+}
+
+/* ==========================================================================
+   Accessibility - WCAG 2.1 Compliance
+   ========================================================================== */
+
+/* Focus visible indicators */
+.ranking__pageBtn:focus-visible,
+.button:focus-visible {
+  outline: 2px solid var(--color-gaming-text-accent, #ffd88a);
+  outline-offset: 2px;
+}
+
+/* Reduced motion support */
+@media (prefers-reduced-motion: reduce) {
+  .ranking__pageBtn,
+  .button {
+    transition: none;
+  }
+}
+
+/* High contrast support */
+@media (prefers-contrast: high) {
+  .ranking {
+    background: #000000;
+  }
+  
+  .ranking__title {
+    color: #ffffff;
+  }
+  
+  .ranking__table th,
+  .ranking__table td {
+    color: #ffffff;
+    border-color: #ffffff;
+  }
+  
+  .ranking__pageBtn,
+  .button {
+    color: #ffffff;
+    border-color: #ffffff;
+  }
+  
+  .ranking__pageBtn:hover,
+  .ranking__pageBtn:focus,
+  .button:hover,
+  .button:focus {
+    background: #333333;
+    color: #ffff00;
   }
 }

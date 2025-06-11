@@ -1,66 +1,333 @@
 /* ==========================================================================
-   ScreenWrapper - BEM Design System Integration
-   プロダクションレベル スクリーンラッパー（BEM対応版）
+   ScreenWrapper - CSS-Design-Best-Practices.md完全準拠版
+   - デザイントークン駆動設計
+   - BEM記法統一
+   - ゲーミングテーマ対応
+   - 2025年最新技術対応
+   ========================================================================== */
+
+/* ==========================================================================
+   Screen Wrapper Base - BEM Block
    ========================================================================== */
 
 .screenWrapper {
+  /* Layout: Full viewport container */
   width: 100%;
   max-width: 100%;
   min-height: 100vh;
+  min-height: 100dvh; /* Dynamic viewport height */
+  
+  /* Layout: Flex column layout */
   display: flex;
   flex-direction: column;
-  box-sizing: border-box;
-  overflow-x: hidden;
+  
+  /* Position: Relative for child positioning */
   position: relative;
-  background: radial-gradient(ellipse at center, var(--color-bg-secondary), var(--color-bg-primary));
-  color: var(--color-text-primary);
-  font-family: var(--font-family-primary);
+  
+  /* Overflow: Prevent horizontal scroll */
+  overflow-x: hidden;
+  overflow-y: auto;
+  -webkit-overflow-scrolling: touch;
+  
+  /* Background: Gaming theme gradient */
+  background: var(--color-game-bg-radial, radial-gradient(ellipse at center, #0a0f1b, #000));
+  
+  /* Typography: Gaming font system */
+  font-family: var(--font-family-game, 'Cinzel', serif);
+  font-size: var(--font-size-base, 1rem);
+  color: var(--color-gaming-text-primary, #e0e0e0);
+  line-height: var(--line-height-normal, 1.5);
+  
+  /* Reset: Box model */
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+  
+  /* Performance: GPU acceleration */
+  will-change: var(--will-change-scroll, scroll-position);
+  contain: layout style;
+  
+  /* Container Queries: Enable responsive behavior */
+  container: screen-wrapper / inline-size;
 }
 
+/* Reset for all child elements */
+.screenWrapper *,
+.screenWrapper *::before,
+.screenWrapper *::after {
+  box-sizing: border-box;
+}
+
+/* ==========================================================================
+   Screen Wrapper Variants - BEM Modifiers
+   ========================================================================== */
+
 .screenWrapper--bordered {
-  border: 1px solid var(--color-border-primary);
-  border-radius: var(--border-radius-lg);
+  /* Border: Gaming accent border */
+  border: 1px solid var(--color-border-accent, rgba(255, 216, 138, 0.3));
+  border-radius: var(--radius-lg, 0.75rem);
+  
+  /* Effects: Subtle inner glow */
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.1);
 }
 
 .screenWrapper--elevated {
-  box-shadow: var(--shadow-xl);
-  backdrop-filter: blur(12px);
+  /* Effects: Enhanced glass morphism */
+  backdrop-filter: blur(16px);
+  box-shadow: 
+    0 25px 50px rgba(0, 0, 0, 0.6),
+    0 0 30px rgba(255, 216, 138, 0.1),
+    inset 0 1px 0 rgba(255, 255, 255, 0.1);
+  
+  /* Background: Semi-transparent overlay */
+  background: 
+    linear-gradient(135deg, rgba(255, 255, 255, 0.05), rgba(255, 255, 255, 0.02)),
+    var(--color-game-bg-radial, radial-gradient(ellipse at center, #0a0f1b, #000));
 }
 
 .screenWrapper--glass {
-  background: rgba(255, 255, 255, 0.03);
-  box-shadow: 0 0 80px rgba(120, 180, 255, 0.06), 
-              inset 0 0 12px rgba(255, 255, 255, 0.02);
+  /* Background: Glass effect */
+  background: 
+    rgba(20, 20, 25, 0.8),
+    var(--color-game-bg-radial, radial-gradient(ellipse at center, #0a0f1b, #000));
+  
+  /* Effects: Advanced glass morphism */
+  backdrop-filter: blur(20px);
+  box-shadow: 
+    0 0 80px rgba(78, 205, 196, 0.08),
+    0 0 40px rgba(255, 216, 138, 0.06),
+    inset 0 1px 0 rgba(255, 255, 255, 0.08),
+    inset 0 0 20px rgba(255, 255, 255, 0.03);
+  
+  /* Border: Subtle glass border */
+  border: 1px solid rgba(255, 255, 255, 0.1);
 }
 
 .screenWrapper--centered {
+  /* Layout: Center all content */
   align-items: center;
   justify-content: center;
   text-align: center;
 }
 
 .screenWrapper--padded {
-  padding: var(--spacing-xl);
+  /* Spacing: Responsive padding */
+  padding: clamp(var(--spacing-lg, 1.5rem), 4vw, var(--spacing-xl, 2rem));
 }
 
 .screenWrapper--fullscreen {
+  /* Layout: True fullscreen */
   width: 100vw;
   height: 100vh;
+  height: 100dvh; /* Dynamic viewport height */
+  position: fixed;
+  inset: 0;
+  z-index: var(--z-index-fullscreen, 1500);
   overflow: hidden;
 }
 
+.screenWrapper--game {
+  /* Gaming: Enhanced gaming background */
+  background: 
+    radial-gradient(circle at 20% 50%, rgba(78, 205, 196, 0.1) 0%, transparent 50%),
+    radial-gradient(circle at 80% 50%, rgba(255, 216, 138, 0.1) 0%, transparent 50%),
+    var(--color-game-bg-radial, radial-gradient(ellipse at center, #0a0f1b, #000));
+  
+  /* Animation: Subtle background animation */
+  animation: screenWrapperGamingGlow 8s ease-in-out infinite;
+}
+
+.screenWrapper--loading {
+  /* State: Loading indicator */
+  cursor: wait;
+  pointer-events: none;
+  
+  /* Effects: Loading overlay */
+  position: relative;
+}
+
+.screenWrapper--loading::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.3);
+  backdrop-filter: blur(2px);
+  z-index: var(--z-index-overlay, 1300);
+}
+
 /* ==========================================================================
-   レスポンシブ対応
+   Screen Wrapper Elements - BEM Elements
    ========================================================================== */
 
-@media (max-width: 768px) {
-  .screenWrapper--padded {
-    padding: var(--spacing-lg);
+.screenWrapper__header {
+  /* Layout: Header section */
+  flex-shrink: 0;
+  width: 100%;
+  padding: var(--spacing-lg, 1.5rem) var(--spacing-xl, 2rem);
+  
+  /* Background: Header distinction */
+  background: linear-gradient(135deg, 
+    rgba(255, 255, 255, 0.05), 
+    rgba(255, 255, 255, 0.02)
+  );
+  border-bottom: 1px solid var(--color-border-secondary, rgba(255, 255, 255, 0.1));
+}
+
+.screenWrapper__content {
+  /* Layout: Main content area */
+  flex: 1;
+  width: 100%;
+  min-height: 0; /* Allow flex shrinking */
+  
+  /* Container Queries: Content responsiveness */
+  container: wrapper-content / inline-size;
+}
+
+.screenWrapper__footer {
+  /* Layout: Footer section */
+  flex-shrink: 0;
+  width: 100%;
+  padding: var(--spacing-lg, 1.5rem) var(--spacing-xl, 2rem);
+  
+  /* Background: Footer distinction */
+  background: linear-gradient(135deg, 
+    rgba(255, 255, 255, 0.02), 
+    rgba(255, 255, 255, 0.05)
+  );
+  border-top: 1px solid var(--color-border-secondary, rgba(255, 255, 255, 0.1));
+}
+
+/* ==========================================================================
+   Animations - CSS Custom Properties
+   ========================================================================== */
+
+@keyframes screenWrapperGamingGlow {
+  0%, 100% {
+    filter: brightness(1) saturate(1);
+  }
+  50% {
+    filter: brightness(1.05) saturate(1.1);
   }
 }
 
-@media (max-width: 480px) {
+/* ==========================================================================
+   Container Queries - 2025 Modern Responsive
+   ========================================================================== */
+
+/* Small wrapper */
+@container screen-wrapper (inline-size < 640px) {
   .screenWrapper--padded {
-    padding: var(--spacing-md);
+    padding: var(--spacing-md, 1rem);
   }
+  
+  .screenWrapper__header,
+  .screenWrapper__footer {
+    padding: var(--spacing-md, 1rem);
+  }
+}
+
+/* Medium wrapper */
+@container screen-wrapper (640px <= inline-size < 1024px) {
+  .screenWrapper--padded {
+    padding: var(--spacing-lg, 1.5rem);
+  }
+}
+
+/* Large wrapper */
+@container screen-wrapper (inline-size >= 1024px) {
+  .screenWrapper--padded {
+    padding: var(--spacing-xl, 2rem);
+  }
+}
+
+/* ==========================================================================
+   Responsive Design - Viewport-based Fallback
+   ========================================================================== */
+
+/* Mobile optimization */
+@media (width < 768px) {
+  .screenWrapper--padded {
+    padding: var(--spacing-md, 1rem);
+  }
+  
+  .screenWrapper__header,
+  .screenWrapper__footer {
+    padding: var(--spacing-md, 1rem);
+  }
+}
+
+/* Very small screens */
+@media (width < 480px) {
+  .screenWrapper--padded {
+    padding: var(--spacing-sm, 0.5rem);
+  }
+  
+  .screenWrapper__header,
+  .screenWrapper__footer {
+    padding: var(--spacing-sm, 0.5rem) var(--spacing-md, 1rem);
+  }
+}
+
+/* Tablet optimization */
+@media (768px <= width < 1024px) {
+  .screenWrapper--padded {
+    padding: var(--spacing-lg, 1.5rem);
+  }
+}
+
+/* Desktop optimization */
+@media (width >= 1024px) {
+  .screenWrapper--padded {
+    padding: var(--spacing-xl, 2rem);
+  }
+}
+
+/* ==========================================================================
+   Accessibility Support - WCAG 2.1 Compliance
+   ========================================================================== */
+
+/* High contrast mode */
+@media (prefers-contrast: high) {
+  .screenWrapper {
+    background: #000000;
+    color: #ffffff;
+    border: 2px solid #ffffff;
+  }
+  
+  .screenWrapper--bordered,
+  .screenWrapper--glass {
+    border: 2px solid #ffffff;
+    background: #000000;
+  }
+  
+  .screenWrapper__header,
+  .screenWrapper__footer {
+    background: #ffffff;
+    color: #000000;
+    border-color: #000000;
+  }
+}
+
+/* Reduced motion support */
+@media (prefers-reduced-motion: reduce) {
+  .screenWrapper--game {
+    animation: none;
+  }
+  
+  .screenWrapper {
+    will-change: auto;
+  }
+}
+
+/* Focus management */
+.screenWrapper:focus-within {
+  outline: none;
+}
+
+/* Safe area support for mobile devices */
+.screenWrapper {
+  padding-top: env(safe-area-inset-top, 0);
+  padding-bottom: env(safe-area-inset-bottom, 0);
+  padding-left: env(safe-area-inset-left, 0);
+  padding-right: env(safe-area-inset-right, 0);
 }
