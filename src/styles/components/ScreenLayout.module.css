@@ -62,10 +62,9 @@
   /* 2025年 Container Query対応 */
   inline-size: 100%;
   max-inline-size: min(var(--container-4xl), 90vi); /* Viewport Inline */
-  block-size: calc(100dvh - var(--spacing-viewport-lg));
-  display: flex;
+  block-size: calc(100dvh - var(--spacing-viewport-lg));  display: flex;
   flex-direction: column;
-  animation: var(--animation-fade-in) var(--animation-duration-slow) ease-out;
+  /* 🚀 Rich transition ready - fade in animation removed for future implementation */
   position: relative;
   z-index: var(--z-index-base);
   
@@ -213,9 +212,10 @@
 }
 
 /* ==========================================================================
-   Animations
-   ========================================================================== */
+   Animations   ========================================================================== */
 
+/* 🚀 Rich transition ready - fadeIn keyframes removed for future implementation */
+/*
 @keyframes fadeIn {
   from {
     opacity: 0;
@@ -226,9 +226,11 @@
     transform: translateY(0);
   }
 }
+*/
 
 .screenLayout__content--animated {
-  animation: fadeIn 0.6s ease-out;
+  /* 🚀 Rich transition ready - fade in animation removed for future implementation */
+  position: relative; /* Placeholder property to avoid empty rule */
 }
 
 /* ==========================================================================

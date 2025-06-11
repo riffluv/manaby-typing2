@@ -67,13 +67,11 @@
     0 8px 32px rgba(0, 0, 0, 0.3),
     0 0 20px rgba(100, 180, 255, 0.1),
     inset 0 1px 0 rgba(255, 255, 255, 0.1);
-  
-  /* Layout: Internal spacing */
+    /* Layout: Internal spacing */
   padding: clamp(1.5rem, 4vw, 2.5rem);
   text-align: center;
   
-  /* Animation: Smooth entry */
-  animation: typingAreaFadeIn var(--duration-slow, 0.8s) var(--easing-smooth, ease);
+  /* 🚀 Rich transition ready - smooth entry animation removed for future implementation */
   
   /* Performance: Optimize rendering */
   will-change: contents;
@@ -190,6 +188,8 @@
    Animations - Custom Properties
    ========================================================================== */
 
+/* 🚀 Rich transition ready - typing area fade animation removed for future implementation */
+/*
 @keyframes typingAreaFadeIn {
   from {
     opacity: 0;
@@ -200,7 +200,9 @@
     transform: translateY(0) scale(1);
   }
 }
+*/
 
+/* Gameplay UI animation - kept for UX */
 @keyframes focusPulse {
   from {
     background: rgba(255, 225, 141, 0.1);

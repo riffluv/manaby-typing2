@@ -64,12 +64,10 @@
   background: rgba(255, 255, 255, 0.02);
   border: 1px solid rgba(255, 255, 255, 0.05);
   border-radius: var(--border-radius-lg, 16px);
-  
-  /* Effects: Shadow */
+    /* Effects: Shadow */
   box-shadow: 0 0 50px rgba(0, 0, 0, 0.6);
   
-  /* Animation: Fade in */
-  animation: fadeIn var(--duration-slower, 1.2s) var(--easing-smooth, ease);
+  /* 🚀 Rich transition ready - fade in animation removed for future implementation */
 }
 
 /* ==========================================================================
@@ -277,8 +275,9 @@
 }
 
 /* ==========================================================================
-   Animations - system.html完全一致
+   🚀 Rich transition ready - fadeIn animation removed for future implementation
    ========================================================================== */
+/*
 @keyframes fadeIn {
   from {
     opacity: 0;
@@ -289,6 +288,7 @@
     transform: translateY(0);
   }
 }
+*/
 
 /* ==========================================================================
    Responsive Design - レスポンシブ対応

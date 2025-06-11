@@ -16,15 +16,14 @@
   z-index: 1000;
   padding-top: 15vh;
   margin: 0;
-  box-sizing: border-box;
-  overflow: hidden;
-  animation: resultScreenFadeIn 2s ease;
+  box-sizing: border-box;  overflow: hidden;
+  /* 🚀 Rich transition ready - screen fade animation removed for future implementation */
 }
 
 .result {
   text-align: center;
   width: min(90vw, 800px);
-  animation: resultContainerSlideUp 2s ease;
+  /* 🚀 Rich transition ready - slide up animation removed for future implementation */
 }
 
 .resultTitle {
@@ -109,7 +108,8 @@
   outline-offset: 2px;
 }
 
-/* Animations */
+/* 🚀 Rich transition ready - keyframe animations removed for future implementation */
+/*
 @keyframes resultScreenFadeIn {
   from { opacity: 0; }
   to { opacity: 1; }
@@ -125,6 +125,7 @@
     transform: translateY(0);
   }
 }
+*/
 
 /* Responsive Design */
 @media (max-width: 768px) {

@@ -42,12 +42,10 @@
   
   /* Position: Fixed fullscreen */
   position: fixed;
-  top: 0;
-  left: 0;
+  top: 0;  left: 0;
   z-index: var(--z-index-modal, 1000);
   
-  /* Animation: Fade in */
-  animation: fadeIn var(--duration-slow, 2s) var(--easing-smooth, ease);
+  /* 🚀 Rich transition ready - fade in animation removed for future implementation */
   
   /* Reset: Box model */
   margin: 0;
@@ -79,11 +77,9 @@
   text-align: center;
   
   /* Position: Relative for children */
-  position: relative;
-  z-index: 1;
+  position: relative;  z-index: 1;
   
-  /* Animation: Container fade up */
-  animation: fadeUp var(--duration-slow, 2s) var(--easing-smooth, ease-in-out);
+  /* 🚀 Rich transition ready - fade up animation removed for future implementation */
 }
 
 /* ==========================================================================
@@ -137,9 +133,7 @@
   flex-direction: column;
   gap: var(--spacing-game-md, 1.2rem);
   align-items: center;
-  
-  /* Animation: Fade up */
-  animation: fadeUp var(--duration-slow, 2s) var(--easing-smooth, ease-in-out);
+    /* 🚀 Rich transition ready - fade up animation removed for future implementation */
 }
 
 .mainMenu__navItem {
@@ -620,6 +614,8 @@
    Animations - Custom Properties
    ========================================================================== */
 
+/* 🚀 Rich transition ready - screen transition animations removed for future implementation */
+/*
 @keyframes fadeIn {
   from {
     opacity: 0;
@@ -641,7 +637,9 @@
     transform: translateY(0);
   }
 }
+*/
 
+/* UI Element animations - kept for UX */
 @keyframes pulse {
   0%, 100% {
     opacity: 0.7;
