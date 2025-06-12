@@ -1,4 +1,28 @@
 /* ==========================================================================
+   🚀 SCREENLAYOUT ANIMATIONS DISABLED FOR FUTURE RICH TRANSITION LIBRARY
+   ========================================================================== */
+
+/* Global animation disable for ScreenLayout component */
+.screenLayout *,
+.screenLayout *::before,
+.screenLayout *::after {
+  animation: none !important;
+  transition: none !important;
+  transform: none !important;
+}
+
+/* Specific animation overrides */
+.screenLayout,
+.screenLayout__content,
+.screenLayout__title,
+.screenLayout__content--animated {
+  animation: none !important;
+  transition: none !important;
+  transform: none !important;
+  opacity: 1 !important;
+}
+
+/* ==========================================================================
    Screen Layout Component - 2025年最新基準対応
    ========================================================================== */
 @import '../design-tokens/2025-modern.css';

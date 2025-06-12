@@ -7,6 +7,30 @@
    ========================================================================== */
 
 /* ==========================================================================
+   🚀 COMMONMODAL ANIMATIONS DISABLED FOR FUTURE RICH TRANSITION LIBRARY
+   ========================================================================== */
+
+/* Global animation disable for CommonModal component */
+.commonModal *,
+.commonModal *::before,
+.commonModal *::after {
+  animation: none !important;
+  transition: none !important;
+  transform: none !important;
+}
+
+/* Specific animation overrides */
+.commonModal,
+.commonModal__overlay,
+.commonModal__container,
+.commonModal__closeButton {
+  animation: none !important;
+  transition: none !important;
+  transform: none !important;
+  opacity: 1 !important;
+}
+
+/* ==========================================================================
    Modal Base - BEM Block
    ========================================================================== */
 

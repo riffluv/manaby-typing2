@@ -43,10 +43,11 @@
   box-shadow: 
     inset 0 1px 0 rgba(255, 255, 255, 0.1),
     0 2px 8px rgba(0, 0, 0, 0.2);
-  
-  /* Interaction: Smooth transitions */
+    /* Interaction: Smooth transitions - DISABLED FOR FUTURE RICH TRANSITION LIBRARY */
   cursor: pointer;
-  transition: all var(--transition-base, 0.25s ease);
+  /* transition: all var(--transition-base, 0.25s ease); */
+  /* 🚀 Transitions disabled for future rich transition library */
+  transition: none;
   outline: none;
   
   /* Performance: GPU acceleration */
@@ -74,11 +75,13 @@
     inset 0 1px 0 rgba(255, 255, 255, 0.2),
     0 4px 16px rgba(255, 216, 138, 0.2),
     0 0 12px rgba(255, 216, 138, 0.1);
-  transform: translateY(-2px);
+  /* transform: translateY(-2px); */
+  /* 🚀 Transform disabled for future rich transition library */
 }
 
 .button:active:not(:disabled) {
-  transform: translateY(0);
+  /* transform: translateY(0); */
+  /* 🚀 Transform disabled for future rich transition library */
   box-shadow: 
     inset 0 1px 0 rgba(255, 255, 255, 0.1),
     0 2px 8px rgba(0, 0, 0, 0.3);
@@ -94,7 +97,8 @@
   opacity: var(--opacity-disabled, 0.5);
   cursor: not-allowed;
   pointer-events: none;
-  transform: none;
+  /* transform: none; */
+  /* 🚀 Transform disabled for future rich transition library */
 }
 
 /* ==========================================================================
@@ -230,7 +234,8 @@
   border: 2px solid currentColor;
   border-radius: 50%;
   border-top-color: transparent;
-  animation: buttonSpin var(--duration-slow, 1s) linear infinite;
+  /* animation: buttonSpin var(--duration-slow, 1s) linear infinite; */
+  /* 🚀 Animation disabled for future rich transition library */
 }
 
 @keyframes buttonSpin {

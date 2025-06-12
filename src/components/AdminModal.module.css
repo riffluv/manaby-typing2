@@ -7,6 +7,40 @@
    ========================================================================== */
 
 /* ==========================================================================
+   🚀 ADMINMODAL ANIMATIONS DISABLED FOR FUTURE RICH TRANSITION LIBRARY
+   ========================================================================== */
+
+/* Global animation disable for AdminModal component */
+.adminModal *,
+.adminModal *::before,
+.adminModal *::after {
+  animation: none !important;
+  transition: none !important;
+  transform: none !important;
+}
+
+.confirmModal *,
+.confirmModal *::before,
+.confirmModal *::after {
+  animation: none !important;
+  transition: none !important;
+  transform: none !important;
+}
+
+/* Specific animation overrides */
+.adminModal,
+.adminModal__overlay,
+.adminModal__container,
+.adminModal__button,
+.confirmModal,
+.confirmModal__container {
+  animation: none !important;
+  transition: none !important;
+  transform: none !important;
+  opacity: 1 !important;
+}
+
+/* ==========================================================================
    Admin Modal Base - BEM Block
    ========================================================================== */
 

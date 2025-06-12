@@ -46,9 +46,9 @@
       padding: 2rem 3rem;
       background: rgba(255, 255, 255, 0.02);
       border: 1px solid rgba(255, 255, 255, 0.05);
-      box-shadow: 0 0 50px var(--shadow-color);
-      border-radius: var(--radius);
-      animation: fadeIn 1.2s ease;
+      box-shadow: 0 0 50px var(--shadow-color);      border-radius: var(--radius);
+      /* animation: fadeIn 1.2s ease; */
+      /* 🚀 Animation disabled for future rich transition library */
     }
 
     .system__title {
@@ -120,10 +120,10 @@
       width: 20px;
       height: 20px;
       border-radius: 50%;
-      top: 2px;
-      left: 2px;
+      top: 2px;      left: 2px;
       background: var(--highlight-color);
-      transition: all 0.3s;
+      /* transition: all 0.3s; */
+      /* 🚀 Transition disabled for future rich transition library */
     }
 
     .system__toggle--on {
@@ -149,10 +149,10 @@
       color: #cce0ff;
       border-radius: 4px;
       font-size: 1rem;
-      cursor: pointer;
-      text-shadow: 0 0 3px rgba(0,0,0,0.4);
+      cursor: pointer;      text-shadow: 0 0 3px rgba(0,0,0,0.4);
       box-shadow: 0 0 8px rgba(150,180,255,0.1);
-      transition: all 0.25s ease;
+      /* transition: all 0.25s ease; */
+      /* 🚀 Transition disabled for future rich transition library */
     }
 
     .button:hover {
@@ -160,12 +160,13 @@
       border-color: var(--button-hover-border);
       color: #fff;
       box-shadow: 0 0 12px rgba(120,180,255,0.2);
-    }
-
+    }    /* 🚀 Keyframes animation disabled for future rich transition library */
+    /*
     @keyframes fadeIn {
       from { opacity: 0; transform: translateY(10px); }
       to { opacity: 1; transform: translateY(0); }
     }
+    */
   </style>
 </head>
 <body>

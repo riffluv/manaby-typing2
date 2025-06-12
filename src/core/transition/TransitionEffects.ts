@@ -1,7 +1,8 @@
 /**
- * TransitionEffects.ts
+ * TransitionEffects.ts - DISABLED FOR FUTURE RICH TRANSITION LIBRARY
  * シンプルな遷移エフェクトの実装
  * 
+ * 🚀 将来のリッチな画面遷移ライブラリとの競合を防ぐため、全機能を無効化
  * 基本的なfade/slide遷移のみをサポート
  */
 
@@ -13,9 +14,9 @@ export type EffectCallback = () => void;
 /**
  * シンプルなトランジションエフェクト
  */
-export class TransitionEffects {
-  /**
-   * 要素にシンプルなエフェクトを適用する
+export class TransitionEffects {  /**
+   * 要素にシンプルなエフェクトを適用する - DISABLED
+   * 🚀 将来のリッチな画面遷移ライブラリとの競合を防ぐため無効化
    */
   static applyEffect(
     element: HTMLElement,
@@ -23,38 +24,28 @@ export class TransitionEffects {
     config: TransitionConfig,
     onComplete?: EffectCallback
   ): void {
+    // 🚀 DISABLED: All transition effects disabled for future rich transition library
+    
     if (!element) {
       if (onComplete) setTimeout(onComplete, 0);
       return;
     }
 
-    const duration = config.duration;
-    const direction = config.direction || 'both';
-
-    // エフェクトタイプに基づいてCSSクラスを適用
-    const effectClass = this.getEffectClassName(type, direction === 'out' ? 'exit' : 'enter');
-
-    // アニメーションクラスを設定
-    element.classList.add(effectClass);
-
-    // アニメーション完了時のコールバック
-    const handleComplete = () => {
-      element.classList.remove(effectClass);
-      if (onComplete) onComplete();
-    };
-
-    // シンプルなタイマーベースの完了検知
-    setTimeout(handleComplete, duration);
+    // すぐに完了時コールバックを実行（アニメーションなし）
+    if (onComplete) {
+      setTimeout(onComplete, 0);
+    }
   }
 
   /**
    * エフェクトタイプとディレクションからCSSクラス名を取得
+   */  /**
+   * エフェクトタイプとディレクションからCSSクラス名を取得 - DISABLED
+   * 🚀 将来のリッチな画面遷移ライブラリとの競合を防ぐため無効化
    */
   private static getEffectClassName(type: TransitionType, direction: 'enter' | 'exit'): string {
-    if (type === 'slide') {
-      return direction === 'enter' ? 'simple-slide-enter' : 'simple-slide-exit';
-    }
-    return direction === 'enter' ? 'simple-fade-enter' : 'simple-fade-exit';
+    // 🚀 DISABLED: Return empty string as no classes are applied
+    return '';
   }
 
 }

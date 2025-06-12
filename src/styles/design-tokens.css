@@ -159,15 +159,15 @@
   --shadow-xl: 0 25px 50px -12px rgba(0, 0, 0, 0.25);
   --shadow-glow: 0 0 20px rgba(212, 175, 55, 0.3);
   --shadow-game: 0 0 30px rgba(201, 167, 111, 0.2);
-  
-  /* ==========================================================================
-     Transitions
+    /* ==========================================================================
+     Transitions - DISABLED FOR FUTURE RICH TRANSITION LIBRARY
      ========================================================================== */
   
-  --transition-fast: 0.15s ease;
-  --transition-base: 0.25s ease;
-  --transition-slow: 0.35s ease;
-  --transition-bounce: 0.25s cubic-bezier(0.68, -0.55, 0.265, 1.55);
+  /* 🚀 All transitions disabled to prevent conflicts with future rich transition library */
+  --transition-fast: none;
+  --transition-base: none;
+  --transition-slow: none;
+  --transition-bounce: none;
   
   /* ==========================================================================
      Z-Index Scale
@@ -208,14 +208,24 @@
   }
 }
 
-/* Reduced Motion Support */
+/* Reduced Motion Support - Enhanced to disable all animations */
 @media (prefers-reduced-motion: reduce) {
   :root {
-    --transition-fast: 0.01ms;
-    --transition-base: 0.01ms;
-    --transition-slow: 0.01ms;
-    --transition-bounce: 0.01ms;
+    /* 🚀 All transitions set to 0ms for future rich transition library */
+    --transition-fast: 0ms;
+    --transition-base: 0ms;
+    --transition-slow: 0ms;
+    --transition-bounce: 0ms;
   }
+}
+
+/* Global animation disable - Preparing for future rich transition library */
+*, *::before, *::after {
+  /* 🚀 Disable all animations and transitions globally */
+  animation-duration: 0ms !important;
+  transition-duration: 0ms !important;
+  animation-delay: 0ms !important;
+  transition-delay: 0ms !important;
 }
 
 /* High Contrast Support */

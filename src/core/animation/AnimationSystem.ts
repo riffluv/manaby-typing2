@@ -1,7 +1,8 @@
 /**
- * AnimationSystem.ts
+ * AnimationSystem.ts - DISABLED FOR FUTURE RICH TRANSITION LIBRARY
  * 汎用アニメーションシステム
  * 
+ * 🚀 このシステムは将来のリッチな画面遷移ライブラリとの競合を防ぐため無効化されています
  * 画面遷移以外の一般的なアニメーションを管理する中央モジュール
  * UI要素、スコア表示、エフェクトなどを統一的に処理
  */
@@ -31,8 +32,8 @@ interface AnimationResult {
 }
 
 /**
- * アニメーションシステムクラス
- * ゲーム全体で一貫したアニメーション管理を提供
+ * アニメーションシステムクラス - DISABLED
+ * 🚀 将来のリッチな画面遷移ライブラリとの競合を防ぐため、全機能を無効化
  */
 export class AnimationSystem {
   // 実行中のアニメーションを追跡
@@ -42,7 +43,8 @@ export class AnimationSystem {
   private static idCounter = 0;
 
   /**
-   * 要素にアニメーションを適用する
+   * 要素にアニメーションを適用する - DISABLED
+   * 🚀 将来のリッチな画面遷移ライブラリとの競合を防ぐため無効化
    * @param element 対象DOM要素
    * @param type アニメーションタイプ
    * @param config アニメーション設定
@@ -55,149 +57,29 @@ export class AnimationSystem {
     config: AnimationConfig = {},
     onComplete?: () => void
   ): AnimationResult {
-    // まず既存のアニメーションをクリア
-    this.clearAnimation(element);
-
+    // 🚀 DISABLED: All animations disabled for future rich transition library
+    
     // アニメーションIDを生成
-    const animId = `anim_${++this.idCounter}`;
-
-    // 設定のデフォルト値設定
-    const duration = config.duration || 1000;
-    const delay = config.delay || 0;
-    const iterations = config.iterations || 1;
-    const intensity = config.intensity || 5;
-
-    // アニメーションクラス名を取得
-    let className: string;
-    if (config.customClass) {
-      className = config.customClass;
-    } else {
-      // 組み込みアニメーションのクラス名構築
-      className = `animate-${type}`;
-      if (intensity !== 5) {
-        className += `-${intensity}`;
-      }
+    const animId = `anim_disabled_${++this.idCounter}`;
+    
+    // すぐに完了時コールバックを実行
+    if (onComplete) {
+      setTimeout(onComplete, 0);
     }
 
-    // アニメーション適用
-    element.classList.add(className);
-
-    // スタイルのカスタマイズ
-    if (config.duration || config.delay || config.easing || 
-        config.iterations || config.direction || config.fillMode) {
-      
-      element.style.animationDuration = `${duration}ms`;
-      if (delay) element.style.animationDelay = `${delay}ms`;
-      if (config.easing) element.style.animationTimingFunction = config.easing;
-      element.style.animationIterationCount = iterations === -1 ? 'infinite' : iterations.toString();
-      if (config.direction) element.style.animationDirection = config.direction;
-      if (config.fillMode) element.style.animationFillMode = config.fillMode;
-    }
-
-    // アニメーション終了の検出
-    let timeoutId: number | undefined;
-    const animationEndHandler = () => {
-      if (timeoutId !== undefined) {
-        clearTimeout(timeoutId);
-      }
-      cleanup();
-      if (onComplete) onComplete();
-    };
-
-    // アニメーションの終了を監視
-    let hasEnded = false;
-    element.addEventListener('animationend', animationEndHandler);
-
-    // タイムアウトをセット（フォールバック）
-    const totalDuration = duration * (iterations === -1 ? 1 : iterations) + delay;
-    if (iterations !== -1) { // 無限アニメーションでなければタイムアウトを設定
-      timeoutId = window.setTimeout(() => {
-        if (!hasEnded) {
-          hasEnded = true;
-          cleanup();
-          if (onComplete) onComplete();
-        }
-      }, totalDuration + 50); // 余裕を持たせる
-    }
-
-    // クリーンアップ関数
-    const cleanup = () => {
-      hasEnded = true;
-      element.classList.remove(className);
-      element.removeEventListener('animationend', animationEndHandler);
-      element.style.animation = '';
-      this.activeAnimations.delete(animId);
-    };
-
-    // アニメーション制御オブジェクトを作成
-    const result: AnimationResult = {
+    // 無効化された制御オブジェクトを返す
+    return {
       id: animId,
-      stop: () => {
-        cleanup();
-      },
-      pause: () => {
-        element.style.animationPlayState = 'paused';
-      },
-      resume: () => {
-        element.style.animationPlayState = 'running';
-      },
-      finish: () => {
-        if (!hasEnded) {
-          hasEnded = true;
-          cleanup();
-          if (onComplete) onComplete();
-        }
-      }
+      stop: () => { /* DISABLED */ },
+      pause: () => { /* DISABLED */ },
+      resume: () => { /* DISABLED */ },
+      finish: () => { /* DISABLED */ }
     };
-
-    // アクティブアニメーションを記録
-    this.activeAnimations.set(animId, {
-      element,
-      cleanup
-    });
-
-    return result;
   }
 
   /**
-   * 要素からアニメーションをクリア
-   * @param element 対象DOM要素
-   */
-  static clearAnimation(element: HTMLElement): void {
-    // この要素に関連するアクティブなアニメーションを検索
-    for (const [id, data] of this.activeAnimations.entries()) {
-      if (data.element === element) {
-        data.cleanup();
-        this.activeAnimations.delete(id);
-      }
-    }
-  }
-
-  /**
-   * すべてのアニメーションを停止
-   */
-  static clearAllAnimations(): void {
-    for (const [, data] of this.activeAnimations) {
-      data.cleanup();
-    }
-    this.activeAnimations.clear();
-  }
-
-  /**
-   * アクティブなアニメーション数を取得
-   * @returns 現在アクティブなアニメーション数
-   */
-  static getActiveCount(): number {
-    return this.activeAnimations.size;
-  }
-
-  /**
-   * パラレルアニメーション：複数の要素に同時にアニメーションを適用
-   * @param elements 対象DOM要素の配列
-   * @param type アニメーションタイプ
-   * @param config アニメーション設定
-   * @param onAllComplete すべて完了時のコールバック
-   * @returns アニメーション制御オブジェクトの配列
+   * 複数要素の並列アニメーション - DISABLED
+   * 🚀 将来のリッチな画面遷移ライブラリとの競合を防ぐため無効化
    */
   static animateAll(
     elements: HTMLElement[],
@@ -205,42 +87,26 @@ export class AnimationSystem {
     config: AnimationConfig = {},
     onAllComplete?: () => void
   ): AnimationResult[] {
-    const results: AnimationResult[] = [];
-    let completedCount = 0;
+    // 🚀 DISABLED: All animations disabled for future rich transition library
     
-    // 各要素にアニメーションを適用
-    for (let i = 0; i < elements.length; i++) {
-      const element = elements[i];
-      
-      // 個別のアニメーション完了ハンドラー
-      const onSingleComplete = () => {
-        completedCount++;
-        if (completedCount === elements.length && onAllComplete) {
-          onAllComplete();
-        }
-      };
-      
-      // 個別の遅延を追加（連続的なアニメーション効果）
-      const elementConfig = { 
-        ...config,
-        delay: (config.delay || 0) + (i * 100) // 各要素に100msずつ遅延を追加
-      };
-      
-      // アニメーション適用
-      const result = this.animate(element, type, elementConfig, onSingleComplete);
-      results.push(result);
+    // すぐに完了時コールバックを実行
+    if (onAllComplete) {
+      setTimeout(onAllComplete, 0);
     }
     
-    return results;
+    // 無効化された制御オブジェクトの配列を返す
+    return elements.map((_, index) => ({
+      id: `all_disabled_${++this.idCounter}`,
+      stop: () => { /* DISABLED */ },
+      pause: () => { /* DISABLED */ },
+      resume: () => { /* DISABLED */ },
+      finish: () => { /* DISABLED */ }
+    }));
   }
 
   /**
-   * シーケンシャルアニメーション：要素に順番にアニメーションを適用
-   * @param elements 対象DOM要素の配列
-   * @param type アニメーションタイプ
-   * @param config アニメーション設定
-   * @param onAllComplete すべて完了時のコールバック
-   * @returns アニメーション制御オブジェクトの配列
+   * 複数要素の連続アニメーション - DISABLED
+   * 🚀 将来のリッチな画面遷移ライブラリとの競合を防ぐため無効化
    */
   static animateSequence(
     elements: HTMLElement[],
@@ -248,27 +114,56 @@ export class AnimationSystem {
     config: AnimationConfig = {},
     onAllComplete?: () => void
   ): AnimationResult[] {
-    const results: AnimationResult[] = [];
+    // 🚀 DISABLED: All animations disabled for future rich transition library
     
-    const animateNext = (index: number) => {
-      if (index >= elements.length) {
-        if (onAllComplete) onAllComplete();
-        return;
-      }
-      
-      const element = elements[index];
-      const result = this.animate(element, type, config, () => {
-        // 次の要素をアニメーション
-        animateNext(index + 1);
-      });
-      
-      results.push(result);
-    };
+    // すぐに完了時コールバックを実行
+    if (onAllComplete) {
+      setTimeout(onAllComplete, 0);
+    }
     
-    // 最初の要素からアニメーション開始
-    animateNext(0);
-    
-    return results;
+    // 無効化された制御オブジェクトの配列を返す
+    return elements.map((_, index) => ({
+      id: `seq_disabled_${++this.idCounter}`,
+      stop: () => { /* DISABLED */ },
+      pause: () => { /* DISABLED */ },
+      resume: () => { /* DISABLED */ },
+      finish: () => { /* DISABLED */ }
+    }));
+  }
+
+  /**
+   * 要素からアニメーションをクリア - DISABLED
+   * 🚀 将来のリッチな画面遷移ライブラリとの競合を防ぐため無効化
+   */
+  static clearAnimation(element: HTMLElement): void {
+    // 🚀 DISABLED: No animation clearing needed as animations are disabled
+  }
+
+  /**
+   * 全てのアニメーションを停止 - DISABLED
+   * 🚀 将来のリッチな画面遷移ライブラリとの競合を防ぐため無効化
+   */
+  static clearAllAnimations(): void {
+    // 🚀 DISABLED: No animations to clear as all are disabled
+    this.activeAnimations.clear();
+  }
+
+  /**
+   * アクティブなアニメーション数を取得 - DISABLED
+   * 🚀 将来のリッチな画面遷移ライブラリとの競合を防ぐため無効化
+   */
+  static getActiveCount(): number {
+    // 🚀 DISABLED: Always return 0 as no animations are active
+    return 0;
+  }
+
+  /**
+   * 全てのアニメーションを停止 - DISABLED
+   * 🚀 将来のリッチな画面遷移ライブラリとの競合を防ぐため無効化
+   */
+  static stopAllAnimations(): void {
+    // 🚀 DISABLED: No animations to stop as all are disabled
+    this.activeAnimations.clear();
   }
 }
 

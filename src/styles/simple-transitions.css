@@ -1,14 +1,20 @@
-/* Simple Transitions CSS */
+/* Simple Transitions CSS - DISABLED FOR FUTURE RICH TRANSITION LIBRARY */
 
-/* シンプルなフェードトランジション */
+/* 🚀 All simple transitions disabled to prevent conflicts with future rich transition library */
+
+/* シンプルなフェードトランジション - DISABLED */
 .simple-fade-enter {
-  animation: simpleFadeIn 0.6s ease-in-out forwards;
+  /* animation: simpleFadeIn 0.6s ease-in-out forwards; */
+  opacity: 1; /* Static state */
 }
 
 .simple-fade-exit {
-  animation: simpleFadeOut 0.4s ease-in-out forwards;
+  /* animation: simpleFadeOut 0.4s ease-in-out forwards; */
+  opacity: 0; /* Static state */
 }
 
+/* Disabled keyframes - kept for reference */
+/*
 @keyframes simpleFadeIn {
   from {
     opacity: 0;
@@ -26,16 +32,23 @@
     opacity: 0;
   }
 }
+*/
 
-/* シンプルなスライドトランジション */
+/* シンプルなスライドトランジション - DISABLED */
 .simple-slide-enter {
-  animation: simpleSlideIn 0.6s ease-in-out forwards;
+  /* animation: simpleSlideIn 0.6s ease-in-out forwards; */
+  opacity: 1; /* Static state */
+  transform: translateY(0); /* Static state */
 }
 
 .simple-slide-exit {
-  animation: simpleSlideOut 0.4s ease-in-out forwards;
+  /* animation: simpleSlideOut 0.4s ease-in-out forwards; */
+  opacity: 0; /* Static state */
+  transform: translateY(0); /* Static state */
 }
 
+/* Disabled keyframes - kept for reference */
+/*
 @keyframes simpleSlideIn {
   from {
     opacity: 0;
@@ -57,8 +70,10 @@
     transform: translateY(-20px);
   }
 }
+*/
 
-/* シンプルなトランジションコンテナ */
+/* シンプルなトランジションコンテナ - DISABLED */
 .simple-transition-container {
-  transition: opacity 0.6s ease-in-out;
+  /* transition: opacity 0.6s ease-in-out; */
+  opacity: 1; /* Static state */
 }

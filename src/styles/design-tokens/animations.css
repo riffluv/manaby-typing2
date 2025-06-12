@@ -1,51 +1,52 @@
-/* Animation and Transition Design Tokens */
+/* Animation and Transition Design Tokens - DISABLED FOR FUTURE RICH TRANSITION LIBRARY */
 :root {
-  /* Timing Functions */
-  --timing-linear: linear;
-  --timing-ease: ease;
-  --timing-ease-in: ease-in;
-  --timing-ease-out: ease-out;
-  --timing-ease-in-out: ease-in-out;
+  /* 🚀 All animation tokens disabled to prevent conflicts with future rich transition library */
+  /* Timing Functions - DISABLED */
+  --timing-linear: none;
+  --timing-ease: none;
+  --timing-ease-in: none;
+  --timing-ease-out: none;
+  --timing-ease-in-out: none;
   
-  /* Custom Timing Functions for Game UI */
-  --timing-bounce: cubic-bezier(0.68, -0.55, 0.265, 1.55);
-  --timing-smooth: cubic-bezier(0.4, 0, 0.2, 1);
-  --timing-sharp: cubic-bezier(0.4, 0, 0.6, 1);
-  --timing-snappy: cubic-bezier(0.25, 0.46, 0.45, 0.94);
+  /* Custom Timing Functions for Game UI - DISABLED */
+  --timing-bounce: none;
+  --timing-smooth: none;
+  --timing-sharp: none;
+  --timing-snappy: none;
 
-  /* Duration Values */
+  /* Duration Values - DISABLED */
   --duration-instant: 0ms;
-  --duration-fast: 150ms;
-  --duration-normal: 250ms;
-  --duration-slow: 350ms;
-  --duration-slower: 500ms;
-  --duration-slowest: 750ms;
+  --duration-fast: 0ms;
+  --duration-normal: 0ms;
+  --duration-slow: 0ms;
+  --duration-slower: 0ms;
+  --duration-slowest: 0ms;
 
-  /* Game-specific Animation Durations */
-  --duration-button-hover: var(--duration-fast);
-  --duration-modal-enter: var(--duration-normal);
-  --duration-screen-transition: var(--duration-slow);
-  --duration-score-animation: var(--duration-slower);
+  /* Game-specific Animation Durations - DISABLED */
+  --duration-button-hover: 0ms;
+  --duration-modal-enter: 0ms;
+  --duration-screen-transition: 0ms;
+  --duration-score-animation: 0ms;
 
-  /* Easing Aliases */
-  --easing-smooth: var(--timing-smooth);
-  --easing-bounce: var(--timing-bounce);
-  --easing-sharp: var(--timing-sharp);
+  /* Easing Aliases - DISABLED */
+  --easing-smooth: none;
+  --easing-bounce: none;
+  --easing-sharp: none;
 
-  /* Common Animation Presets */
-  --animation-fade-in: opacity var(--duration-normal) var(--timing-ease-out);
-  --animation-fade-out: opacity var(--duration-fast) var(--timing-ease-in);
-  --animation-slide-in: transform var(--duration-normal) var(--timing-smooth);
-  --animation-bounce-in: transform var(--duration-slow) var(--timing-bounce);
-  --animation-scale-in: transform var(--duration-normal) var(--timing-smooth);
+  /* Common Animation Presets - DISABLED */
+  --animation-fade-in: none;
+  --animation-fade-out: none;
+  --animation-slide-in: none;
+  --animation-bounce-in: none;
+  --animation-scale-in: none;
 
-  /* Transform Values */
-  --transform-scale-sm: scale(0.95);
-  --transform-scale-md: scale(0.9);
-  --transform-scale-lg: scale(1.05);
-  --transform-scale-xl: scale(1.1);
+  /* Transform Values - DISABLED */
+  --transform-scale-sm: none;
+  --transform-scale-md: none;
+  --transform-scale-lg: none;
+  --transform-scale-xl: none;
 
-  /* Shadow Transitions */
-  --transition-shadow: box-shadow var(--duration-normal) var(--timing-smooth);
-  --transition-all: all var(--duration-normal) var(--timing-smooth);
+  /* Shadow Transitions - DISABLED */
+  --transition-shadow: none;
+  --transition-all: none;
 }

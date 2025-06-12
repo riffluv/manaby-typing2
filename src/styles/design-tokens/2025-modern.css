@@ -64,26 +64,26 @@
   --color-game-bg-secondary: oklch(0.15 0.03 230);
   --color-game-text-primary: oklch(0.9 0.02 90);
   --color-game-text-accent: oklch(0.8 0.12 80);
-  
-  /* ==========================================================================
-     2025: Modern Animations & Transitions
+    /* ==========================================================================
+     2025: Modern Animations & Transitions - DISABLED FOR FUTURE RICH TRANSITION LIBRARY
      ========================================================================== */
   
-  /* GPU Accelerated Animations */
-  --animation-fade: opacity var(--duration-normal) var(--easing-smooth);
-  --animation-slide: transform var(--duration-normal) var(--easing-smooth);
-  --animation-scale: scale var(--duration-fast) var(--easing-bounce);
+  /* 🚀 All animations disabled to prevent conflicts with future rich transition library */
+  /* GPU Accelerated Animations - DISABLED */
+  --animation-fade: none;
+  --animation-slide: none;
+  --animation-scale: none;
   
-  /* Modern Easing Functions */
-  --easing-smooth: cubic-bezier(0.25, 0.1, 0.25, 1);
-  --easing-bounce: cubic-bezier(0.68, -0.55, 0.265, 1.55);
-  --easing-spring: cubic-bezier(0.175, 0.885, 0.32, 1.275);
+  /* Modern Easing Functions - DISABLED */
+  --easing-smooth: none;
+  --easing-bounce: none;
+  --easing-spring: none;
   
-  /* Performance Optimized Durations */
+  /* Performance Optimized Durations - DISABLED */
   --duration-instant: 0ms;
-  --duration-fast: 150ms;
-  --duration-normal: 250ms;
-  --duration-slow: 350ms;
+  --duration-fast: 0ms;
+  --duration-normal: 0ms;
+  --duration-slow: 0ms;
   
   /* ==========================================================================
      DPI & Accessibility Responsive Spacing
@@ -193,20 +193,34 @@
   }
 }
 
-/* Reduced Motion */
+/* Reduced Motion - Enhanced for future rich transition library */
 @media (prefers-reduced-motion: reduce) {
   :root {
-    --duration-fast: 0.01ms;
-    --duration-normal: 0.01ms;
-    --duration-slow: 0.01ms;
+    /* 🚀 All durations set to 0ms for future rich transition library */
+    --duration-fast: 0ms;
+    --duration-normal: 0ms;
+    --duration-slow: 0ms;
   }
   
+  /* Global animation and transition disable */
   *,
   *::before,
   *::after {
-    animation-duration: 0.01ms !important;
-    transition-duration: 0.01ms !important;
+    animation-duration: 0ms !important;
+    transition-duration: 0ms !important;
+    animation-delay: 0ms !important;
+    transition-delay: 0ms !important;
+    transform: none !important;
   }
+}
+
+/* Global animation disable for rich transition library preparation */
+*, *::before, *::after {
+  /* 🚀 Disable all animations and transitions globally for future rich transition library */
+  animation-duration: 0ms !important;
+  transition-duration: 0ms !important;
+  animation-delay: 0ms !important;
+  transition-delay: 0ms !important;
 }
 
 /* Dark Mode System Integration */

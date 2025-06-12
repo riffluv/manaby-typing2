@@ -12,6 +12,29 @@
 @import url('https://fonts.googleapis.com/css2?family=Cinzel:wght@400;700&display=swap');
 
 /* ==========================================================================
+   🚀 SIMPLEGAMESCREEN ANIMATIONS DISABLED FOR FUTURE RICH TRANSITION LIBRARY
+   ========================================================================== */
+
+/* Global animation disable for SimpleGameScreen component */
+.gameScreen *,
+.gameScreen *::before,
+.gameScreen *::after {
+  animation: none !important;
+  transition: none !important;
+  transform: none !important;
+}
+
+/* Specific animation overrides */
+.gameScreen,
+.typingArea,
+.loadingSpinner {
+  animation: none !important;
+  transition: none !important;
+  transform: none !important;
+  opacity: 1 !important;
+}
+
+/* ==========================================================================
    Game Screen Container - BEM Block
    ========================================================================== */
 

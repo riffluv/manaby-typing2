@@ -4,7 +4,7 @@ import { useRouter } from 'next/navigation';
 import { useCallback } from 'react';
 import { useSettingsStore } from '@/store/useSettingsStore';
 import { useGlobalShortcuts } from '@/hooks/useGlobalShortcuts';
-import styles from './SettingsScreen.module.css';
+import styles from '@/styles/components/SettingsScreen.module.css';
 
 export default function SystemSettingsScreen() {
   const router = useRouter();

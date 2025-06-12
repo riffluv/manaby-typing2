@@ -1,0 +1,136 @@
+/* ==========================================================================
+   🚀 GLOBAL ANIMATION DISABLE FOR FUTURE RICH TRANSITION LIBRARY
+   ========================================================================== */
+
+/**
+ * Global animation disable CSS for preparing the codebase for a future
+ * rich transition library integration. This prevents conflicts with existing
+ * animations while maintaining visual functionality.
+ * 
+ * This file should be imported last in the CSS cascade to ensure proper
+ * override of all animation-related properties.
+ */
+
+/* Universal animation disable */
+*,
+*::before,
+*::after {
+  /* Disable all animations and transitions */
+  animation-duration: 0ms !important;
+  animation-delay: 0ms !important;
+  animation-iteration-count: 1 !important;
+  animation-fill-mode: none !important;
+  animation-play-state: paused !important;
+  
+  transition-duration: 0ms !important;
+  transition-delay: 0ms !important;
+  
+  /* Prevent transform-based animations */
+  transform: none !important;
+}
+
+/* Specific CSS custom property overrides */
+:root {
+  /* Animation duration overrides */
+  --duration-instant: 0ms !important;
+  --duration-fast: 0ms !important;
+  --duration-normal: 0ms !important;
+  --duration-slow: 0ms !important;
+  --duration-slower: 0ms !important;
+  --duration-slowest: 0ms !important;
+  
+  /* Transition overrides */
+  --transition-fast: none !important;
+  --transition-base: none !important;
+  --transition-slow: none !important;
+  --transition-bounce: none !important;
+  --transition-all: none !important;
+  --transition-shadow: none !important;
+  
+  /* Animation preset overrides */
+  --animation-fade: none !important;
+  --animation-slide: none !important;
+  --animation-scale: none !important;
+  --animation-fade-in: none !important;
+  --animation-fade-out: none !important;
+  --animation-slide-in: none !important;
+  --animation-bounce-in: none !important;
+  --animation-scale-in: none !important;
+  
+  /* Easing function overrides (set to none to disable) */
+  --easing-smooth: none !important;
+  --easing-bounce: none !important;
+  --easing-spring: none !important;
+  --easing-linear: none !important;
+  --easing-ease: none !important;
+  --easing-sharp: none !important;
+}
+
+/* Specific component animation overrides */
+[class*="animate-"],
+[class*="transition-"],
+[class*="fade-"],
+[class*="slide-"],
+[class*="scale-"],
+[class*="bounce-"],
+[class*="glow-"],
+[class*="pulse-"] {
+  animation: none !important;
+  transition: none !important;
+  transform: none !important;
+}
+
+/* CSS animation class overrides */
+.animate-spin,
+.animate-ping,
+.animate-pulse,
+.animate-bounce {
+  animation: none !important;
+}
+
+/* Will-change property reset for performance */
+* {
+  will-change: auto !important;
+}
+
+/* Media query overrides */
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0ms !important;
+    transition-duration: 0ms !important;
+    transform: none !important;
+  }
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  /* Even when users prefer motion, disable for rich transition library */
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0ms !important;
+    transition-duration: 0ms !important;
+    transform: none !important;
+  }
+}
+
+/* Debug: Add subtle visual indicator that animations are disabled */
+body::after {
+  content: "🚀 Animations disabled for rich transition library";
+  position: fixed;
+  bottom: 10px;
+  right: 10px;
+  background: rgba(0, 0, 0, 0.8);
+  color: white;
+  padding: 4px 8px;
+  border-radius: 4px;
+  font-size: 10px;
+  z-index: 9999;
+  pointer-events: none;
+  opacity: 0.5;
+}
+
+/* ==========================================================================
+   End of global animation disable
+   ========================================================================== */

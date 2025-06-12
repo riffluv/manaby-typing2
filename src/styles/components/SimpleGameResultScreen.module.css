@@ -913,3 +913,30 @@
     width: 30px;
   }
 }
+
+/* ==========================================================================
+   🚀 SIMPLEGAMERESULTSCREEN ANIMATIONS DISABLED FOR FUTURE RICH TRANSITION LIBRARY
+   ========================================================================== */
+
+/* Global animation disable for SimpleGameResultScreen component */
+.resultScreen *,
+.resultScreen *::before,
+.resultScreen *::after {
+  animation: none !important;
+  transition: none !important;
+  transform: none !important;
+}
+
+/* Specific animation overrides */
+.resultScreen,
+.resultScreen__title,
+.resultScreen__content,
+.modal,
+.resultButtons,
+.resultButton,
+.button {
+  animation: none !important;
+  transition: none !important;
+  transform: none !important;
+  opacity: 1 !important;
+}

@@ -156,19 +156,19 @@ body {
   --shadow-game: 0 8px 25px color-mix(in srgb, black 30%, transparent),
                  inset 0 0 30px color-mix(in srgb, white 15%, transparent);
   --shadow-glow: 0 0 20px color-mix(in srgb, var(--game-text-accent) 30%, transparent);
-  
-  /* 🎯 Animations & Transitions */
+    /* 🎯 Animations & Transitions - DISABLED FOR FUTURE RICH TRANSITION LIBRARY */
+  /* 🚀 All animation settings disabled to prevent conflicts with future rich transition library */
   --duration-instant: 0ms;
-  --duration-fast: 150ms;
-  --duration-normal: 250ms;
-  --duration-slow: 350ms;
-  --duration-slower: 500ms;
+  --duration-fast: 0ms;
+  --duration-normal: 0ms;
+  --duration-slow: 0ms;
+  --duration-slower: 0ms;
   
-  --easing-linear: linear;
-  --easing-ease: ease;
-  --easing-smooth: cubic-bezier(0.25, 0.1, 0.25, 1);
-  --easing-bounce: cubic-bezier(0.68, -0.55, 0.265, 1.55);
-  --easing-spring: cubic-bezier(0.175, 0.885, 0.32, 1.275);
+  --easing-linear: none;
+  --easing-ease: none;
+  --easing-smooth: none;
+  --easing-bounce: none;
+  --easing-spring: none;
   
   /* 🎯 Z-Index Scale */
   --z-hide: -1;
@@ -482,4 +482,35 @@ table {
   .no-print {
     display: none !important;
   }
+}
+
+/* ==========================================================================
+   🚀 GLOBAL ANIMATION DISABLE FOR FUTURE RICH TRANSITION LIBRARY
+   ========================================================================== */
+
+/* Completely disable all animations and transitions globally */
+*, *::before, *::after {
+  animation-duration: 0ms !important;
+  transition-duration: 0ms !important;
+  animation-delay: 0ms !important;
+  transition-delay: 0ms !important;
+  animation-fill-mode: none !important;
+  animation-iteration-count: 1 !important;
+  animation-play-state: paused !important;
+}
+
+/* Reset any transform animations */
+*[style*="transform"] {
+  transform: none !important;
+}
+
+/* Reset any opacity animations */
+*[style*="opacity"] {
+  opacity: 1 !important;
+}
+
+/* Disable CSS custom property animations */
+:root {
+  --animation-duration: 0ms !important;
+  --transition-duration: 0ms !important;
 }

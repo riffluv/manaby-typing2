@@ -7,6 +7,31 @@
    ========================================================================== */
 
 /* ==========================================================================
+   🚀 RPGTRANSITIONSYSTEM ANIMATIONS DISABLED FOR FUTURE RICH TRANSITION LIBRARY
+   ========================================================================== */
+
+/* Global animation disable for RPGTransitionSystem component */
+.rpgTransition *,
+.rpgTransition *::before,
+.rpgTransition *::after {
+  animation: none !important;
+  transition: none !important;
+  transform: none !important;
+}
+
+/* Specific animation overrides */
+.rpgTransition,
+.rpgTransition__content,
+.rpgTransition--entering,
+.rpgTransition--exiting,
+.rpgTransition--loading {
+  animation: none !important;
+  transition: none !important;
+  transform: none !important;
+  opacity: 1 !important;
+}
+
+/* ==========================================================================
    Transition Container - BEM Block
    ========================================================================== */
 

@@ -12,6 +12,31 @@
    ========================================================================== */
 @import url('https://fonts.googleapis.com/css2?family=Cinzel:wght@400;700&display=swap');
 
+/* ==========================================================================
+   🚀 RANKINGSCREEN ANIMATIONS DISABLED FOR FUTURE RICH TRANSITION LIBRARY
+   ========================================================================== */
+
+/* Global animation disable for RankingScreen component */
+.ranking *,
+.ranking *::before,
+.ranking *::after {
+  animation: none !important;
+  transition: none !important;
+  transform: none !important;
+}
+
+/* Specific animation overrides */
+.ranking,
+.ranking__title,
+.ranking__pageBtn,
+.button,
+.ranking__buttons {
+  animation: none !important;
+  transition: none !important;
+  transform: none !important;
+  opacity: 1 !important;
+}
+
 /* メインコンテナ - BEM Block */
 .ranking {
   /* ELDEN RING テーマカラー */

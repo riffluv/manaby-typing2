@@ -12,6 +12,33 @@
 @import url('https://fonts.googleapis.com/css2?family=Cinzel:wght@400;700&display=swap');
 
 /* ==========================================================================
+   🚀 MAINMENU ANIMATIONS DISABLED FOR FUTURE RICH TRANSITION LIBRARY
+   ========================================================================== */
+
+/* Global animation disable for MainMenu component */
+.mainMenu *,
+.mainMenu *::before,
+.mainMenu *::after {
+  animation: none !important;
+  transition: none !important;
+  transform: none !important;
+}
+
+/* Specific animation overrides */
+.mainMenu__subtitle,
+.mainMenu__nav,
+.mainMenu__navItem,
+.mainMenu__container,
+.modal,
+.modal__content,
+.modal__option {
+  animation: none !important;
+  transition: none !important;
+  transform: none !important;
+  opacity: 1 !important;
+}
+
+/* ==========================================================================
    Main Menu Container - BEM Block
    ========================================================================== */
 
@@ -93,6 +120,9 @@
   position: relative;  
   z-index: 1;
   
+  /* 🚀 2025年最新CSS設計: Container Queries サポート */
+  container: main-menu / inline-size;
+  
   /* Animation */
   animation: fadeUpElements 1.2s ease-out forwards;
   animation-delay: 0.3s;
@@ -141,10 +171,10 @@
 
 .mainMenu__subtitle {
   /* Typography: Extra large subtitle - NIGHTREIGN風 */
-  font-size: var(--font-size-game-subtitle, clamp(4rem, 10vw, 6rem));
+  font-size: clamp(4rem, 10vw, 6rem) !important;
   font-family: var(--font-family-game, 'Cinzel', serif);
   font-weight: 700;
-  letter-spacing: 0.8rem;
+  letter-spacing: 0.8rem !important;
   
   /* Color: NIGHTREIGN風の青白い氷の質感 */
   background: linear-gradient(
@@ -310,30 +340,53 @@
    ========================================================================== */
 
 .mainMenu__shortcut {
-  /* Position: Bottom center */
-  position: absolute;
-  bottom: var(--spacing-lg, 28px);
-  left: 50%;
-  transform: translateX(-50%);
+  /* 🚀 2025 CSS Design: 強制的な横並び配置（最優先） */
+  position: absolute !important;
+  bottom: var(--spacing-lg, 28px) !important;
+  left: 0 !important;
+  right: 0 !important;
+  width: 100% !important;
   
-  /* Layout: Horizontal */
-  display: flex;
-  gap: var(--spacing-lg, 2rem);
+  /* Layout: 強制的なFlexbox横並び */
+  display: flex !important;
+  flex-direction: row !important;
+  justify-content: center !important;
+  align-items: center !important;
+  gap: var(--spacing-lg, 2rem) !important;
+  flex-wrap: wrap !important;
   
-  /* Typography: Small */
+  /* Container Queries Support (2025) */
+  container: shortcut-area / inline-size;
+  
+  /* Typography: Responsive Design Tokens */
   font-size: var(--font-size-sm, 0.85rem);
   font-family: var(--font-family-game, 'Cinzel', serif);
   font-weight: bold;
   letter-spacing: 0.05rem;
   
-  /* Color: Accent */
-  color: #a3d8ff;
+  /* Color: Design Tokens Driven */
+  color: var(--color-nightreign-blue-light, #a3d8ff);
   opacity: 0.8;
   
-  /* Effects: Glow */
+  /* Effects: 2025 Optimized Glow */
   text-shadow: 
-    0 0 3px #000, 
-    0 0 6px rgba(163, 216, 255, 0.4);
+    0 0 3px rgba(0, 0, 0, 0.8), 
+    0 0 6px rgba(163, 216, 255, 0.4),
+    0 0 12px rgba(163, 216, 255, 0.2);
+  
+  /* Performance: GPU Acceleration */
+  will-change: transform;
+  contain: layout style;
+}
+
+/* ショートカット案内の子要素（span）を横並びに強制 */
+.mainMenu__shortcut > span {
+  display: inline-block !important;
+  white-space: nowrap !important;
+  margin: 0 !important;
+  padding: 0 !important;
+  flex-shrink: 0 !important;
+  line-height: 1 !important;
 }
 
 .mainMenu__footer {
@@ -480,11 +533,18 @@
   
   .mainMenu__navItem {
     font-size: var(--font-size-base, 1.2rem);
-  }
-    .mainMenu__shortcut {
+  }  .mainMenu__shortcut {
+    /* 2025 Responsive: Container Query Optimization */
     gap: var(--spacing-md, 1rem);
     font-size: var(--font-size-xs, 0.75rem);
     bottom: var(--spacing-md, 20px);
+    
+    /* 2025: Perfect Center Maintained on Mobile */
+    justify-content: center;
+    align-items: center;
+    
+    /* Mobile-specific Container Queries */
+    container: shortcut-mobile / inline-size;
   }
   
   .mainMenu__footer {
@@ -563,6 +623,21 @@
   .mainMenu {
     transform: scale(0.95);
     transform-origin: top left;
+  }
+  
+  /* 2025 DPI: Shortcut Perfect Center on High DPI */
+  .mainMenu__shortcut {
+    /* Ensure perfect centering on high DPI displays */
+    left: 0;
+    right: 0;
+    width: 100%;
+    justify-content: center;
+    align-items: center;
+    
+    /* High DPI text optimization */
+    text-rendering: optimizeLegibility;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
   }
 }
 
@@ -1261,12 +1336,18 @@
   
   .mainMenu__navItem {
     font-size: 1.1rem;
-  }
-  
-  .mainMenu__shortcut {
-    flex-direction: column;
-    gap: 0.5rem;
-    align-items: center;
+  }    .mainMenu__shortcut {
+    /* 🚀 2025 Ultra-small Screen: 強制的な横並び維持 */
+    flex-direction: row !important;
+    gap: 0.8rem !important;
+    align-items: center !important;
+    justify-content: center !important;
+    
+    /* Ensure perfect centering on tiny screens */
+    left: 0;
+    right: 0;
+    width: 100%;
+    text-align: center;
   }
 }
 
@@ -1455,4 +1536,139 @@
   .mainMenu::after {
     animation: none;
   }
+}
+
+/* ==========================================================================
+   🚀 2025年最新CSS設計: Container Queries レスポンシブ対応
+   ========================================================================== */
+
+/* Container Query: メインメニュー全体のサイズ対応 */
+@container main-menu (width < 480px) {
+  .mainMenu__title {
+    font-size: clamp(1.8rem, 5vw, 2.5rem);
+    letter-spacing: 0.2rem;
+  }
+    .mainMenu__subtitle {
+    /* 🚀 修正: IIのフォントサイズを強制的に適切なサイズに維持 */
+    font-size: clamp(4rem, 10vw, 6rem) !important;
+    letter-spacing: 0.8rem !important;
+  }
+  
+  .mainMenu__shortcut {
+    font-size: clamp(0.7rem, 2vw, 0.85rem);
+    padding: var(--spacing-xs, 8px) var(--spacing-sm, 12px);
+    bottom: var(--spacing-md, 20px);
+  }
+}
+
+@container main-menu (width >= 480px) and (width < 768px) {
+  .mainMenu__title {
+    font-size: clamp(2.2rem, 5.5vw, 3rem);
+    letter-spacing: 0.3rem;
+  }
+    .mainMenu__subtitle {
+    /* 🚀 修正: IIのフォントサイズを強制的に適切なサイズに維持 */
+    font-size: clamp(4rem, 10vw, 6rem) !important;
+    letter-spacing: 0.8rem !important;
+  }
+  
+  .mainMenu__shortcut {
+    font-size: clamp(0.8rem, 2.2vw, 0.9rem);
+    padding: var(--spacing-sm, 12px) var(--spacing-md, 16px);
+    bottom: var(--spacing-lg, 24px);
+  }
+}
+
+@container main-menu (width >= 768px) {
+  .mainMenu__title {
+    font-size: var(--font-size-game-title, clamp(2.5rem, 6vw, 3.5rem));
+    letter-spacing: 0.4rem;
+  }
+    .mainMenu__subtitle {
+    /* 🚀 修正: IIのフォントサイズを強制的に適切なサイズに維持 */
+    font-size: clamp(4rem, 10vw, 6rem) !important;
+    letter-spacing: 0.8rem !important;
+  }
+  
+  .mainMenu__shortcut {
+    font-size: var(--font-size-body, clamp(0.85rem, 2.5vw, 0.95rem));
+    padding: var(--spacing-md, 16px) var(--spacing-lg, 20px);
+    bottom: var(--spacing-lg, 28px);
+  }
+}
+
+/* Container Query: ショートカット案内専用のコンテナ対応 */
+@container shortcut-area (width < 300px) {
+  .mainMenu__shortcut {
+    /* 🚀 修正: 常に横並びを維持（強制） */
+    flex-direction: row !important;
+    gap: var(--spacing-xs, 6px) !important;
+    font-size: 0.75rem;
+    
+    /* 極小画面での中央配置強化 */
+    left: var(--spacing-xs, 8px);
+    right: var(--spacing-xs, 8px);
+    width: calc(100% - var(--spacing-sm, 16px));
+    transform: none;
+    
+    /* 横並び時の折り返し対応 */
+    flex-wrap: wrap !important;
+    justify-content: center !important;
+  }
+}
+
+@container shortcut-area (width >= 300px) and (width < 500px) {
+  .mainMenu__shortcut {
+    flex-direction: row !important;
+    gap: var(--spacing-sm, 10px) !important;
+    font-size: 0.8rem;
+    
+    /* 小画面での中央配置強化 */
+    left: var(--spacing-sm, 12px);
+    right: var(--spacing-sm, 12px);
+    width: calc(100% - var(--spacing-md, 24px));
+    transform: none;
+    flex-wrap: wrap !important;
+    justify-content: center !important;
+  }
+}
+
+@container shortcut-area (width >= 500px) {
+  .mainMenu__shortcut {
+    flex-direction: row !important;
+    gap: var(--spacing-md, 14px) !important;
+    font-size: var(--font-size-body, clamp(0.85rem, 2.5vw, 0.95rem));
+    
+    /* 通常画面での完全中央配置 */
+    left: 0;
+    right: 0;
+    width: 100%;
+    transform: none;
+    flex-wrap: wrap !important;
+    justify-content: center !important;
+  }
+}
+
+/* ==========================================================================
+   🚀 2025年最新CSS設計: 完全な中央配置保証システム
+   ========================================================================== */
+
+/* ショートカット案内の最終中央配置保証 */
+.mainMenu__shortcut {
+  /* デフォルトの中央配置を保証 */
+  margin-left: auto;
+  margin-right: auto;
+  
+  /* Flexboxの中央配置を強制 */
+  justify-content: center !important;
+  align-items: center !important;
+  
+  /* Grid fallback */
+  display: grid;
+  place-items: center;
+  
+  /* Modern CSS での完全中央配置 */
+  inset-inline: 0;
+  justify-self: center;
+  align-self: center;
 }

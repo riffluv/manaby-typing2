@@ -7,6 +7,28 @@
    ========================================================================== */
 
 /* ==========================================================================
+   🚀 SCREENWRAPPER ANIMATIONS DISABLED FOR FUTURE RICH TRANSITION LIBRARY
+   ========================================================================== */
+
+/* Global animation disable for ScreenWrapper component */
+.screenWrapper *,
+.screenWrapper *::before,
+.screenWrapper *::after {
+  animation: none !important;
+  transition: none !important;
+  transform: none !important;
+}
+
+/* Specific animation overrides */
+.screenWrapper,
+.screenWrapper--loading {
+  animation: none !important;
+  transition: none !important;
+  transform: none !important;
+  opacity: 1 !important;
+}
+
+/* ==========================================================================
    Screen Wrapper Base - BEM Block
    ========================================================================== */
 

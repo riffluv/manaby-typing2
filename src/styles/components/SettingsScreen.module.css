@@ -22,6 +22,33 @@
 }
 
 /* ==========================================================================
+   🚀 SETTINGSSCREEN ANIMATIONS DISABLED FOR FUTURE RICH TRANSITION LIBRARY
+   ========================================================================== */
+
+/* Global animation disable for SettingsScreen component */
+.system *,
+.system *::before,
+.system *::after {
+  animation: none !important;
+  transition: none !important;
+  transform: none !important;
+}
+
+/* Specific animation overrides */
+.system,
+.system__item,
+.system__title,
+.system__toggle,
+.system__buttons,
+.system__button,
+.button {
+  animation: none !important;
+  transition: none !important;
+  transform: none !important;
+  opacity: 1 !important;
+}
+
+/* ==========================================================================
    Settings Screen Container - BEM Block
    ========================================================================== */
 

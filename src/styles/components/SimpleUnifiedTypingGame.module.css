@@ -7,6 +7,31 @@
    ========================================================================== */
 
 /* ==========================================================================
+   🚀 SIMPLEUNIFIEDTYPINGGAME ANIMATIONS DISABLED FOR FUTURE RICH TRANSITION LIBRARY
+   ========================================================================== */
+
+/* Global animation disable for SimpleUnifiedTypingGame component */
+.unifiedGame *,
+.unifiedGame *::before,
+.unifiedGame *::after {
+  animation: none !important;
+  transition: none !important;
+  transform: none !important;
+}
+
+/* Specific animation overrides */
+.unifiedGame,
+.unifiedGame__loadingSpinner,
+.unifiedGame--playing,
+.unifiedGame--paused,
+.unifiedGame--completed {
+  animation: none !important;
+  transition: none !important;
+  transform: none !important;
+  opacity: 1 !important;
+}
+
+/* ==========================================================================
    Game Container - BEM Block
    ========================================================================== */
 
