@@ -472,7 +472,7 @@ export class HybridTypingEngine {
       }
     }
   }  /**
-   * 🚀 超高速Canvas描画 - 高速連続入力最適化版
+   * 🚀 超高速Canvas描画 - シンプル確実版
    */
   private renderCanvas(): void {
     if (!this.ctx || !this.romajiCanvas) return;
@@ -482,18 +482,12 @@ export class HybridTypingEngine {
     
     if (changedChars.length === 0) return; // 🚀 変更なしなら描画スキップ
 
-    // 🚀 高速連続入力時の部分描画最適化（閾値拡大）
-    if (changedChars.length <= 5) {
-      // 少数文字変更時：部分的にクリア＆描画（通常の連続入力は1-2文字のみ）
-      this.renderChangedCharsOnly(changedChars);
-    } else {
-      // 多数文字変更時：全体描画
-      this.renderAllChars();
-    }
+    // 🚀 シンプルが最速：常に全体描画で確実性重視
+    this.renderAllChars();
 
     // 🚀 更新フラグをクリア
     changedChars.forEach(char => char.clearUpdateFlag());
-  }  /**
+  }/**
    * 🚀 部分描画：高速連続入力専用最適化
    */
   private renderChangedCharsOnly(changedChars: CanvasRomajiChar[]): void {
@@ -501,27 +495,28 @@ export class HybridTypingEngine {
 
     this.ctx.font = CANVAS_FONT_CONFIG.fontString;
     this.ctx.textAlign = 'center';
-    this.ctx.textBaseline = 'middle';
+    this.ctx.textBaseline = 'middle';    // 🚀 シャドウ重複防止：影響範囲の隣接文字も含めて描画
+    const expandedChars = this.getExpandedRenderSet(changedChars);
 
-    changedChars.forEach(char => {
-      // 🚀 精密クリア：文字サイズベースの最小領域（高速化）
+    expandedChars.forEach(char => {
+      // 🚀 シャドウブラー対応クリア：シャドウがはみ出さない十分な領域確保
       const fontSizeValue = parseFloat(CANVAS_FONT_CONFIG.fontSize); // rem値を数値化
-      const clearWidth = fontSizeValue * 16 * 1.2; // rem → px変換（16px/rem） + マージン
-      const clearHeight = fontSizeValue * 16 * 1.4; // rem → px変換 + マージン
+      const baseSize = fontSizeValue * 16; // rem → px変換
+      const shadowMargin = 20; // 最大シャドウブラー(8px) + 安全マージン
+      const clearWidth = baseSize * 1.5 + shadowMargin; // 文字幅 + シャドウマージン
+      const clearHeight = baseSize * 1.6 + shadowMargin; // 文字高 + シャドウマージン
       this.ctx!.clearRect(
         char.x - clearWidth/2, 
         char.y - clearHeight/2, 
         clearWidth, 
         clearHeight
-      );
-
-      // 🚀 単一文字描画
+      );      // 🚀 単一文字描画
       const state = char.getState();
       switch (state) {
         case 'active':
           this.ctx!.fillStyle = CANVAS_FONT_CONFIG.activeColor;
-          this.ctx!.shadowColor = 'rgba(255, 215, 0, 0.9)';
-          this.ctx!.shadowBlur = 8;
+          this.ctx!.shadowColor = 'rgba(255, 215, 0, 0.8)'; // 透明度を少し下げて鮮明に
+          this.ctx!.shadowBlur = 6; // ブラーを少し減らして鮮明に
           break;
         case 'completed':
           this.ctx!.fillStyle = CANVAS_FONT_CONFIG.completedColor;
@@ -542,6 +537,31 @@ export class HybridTypingEngine {
     this.ctx.shadowColor = 'transparent';
     this.ctx.shadowBlur = 0;
   }
+  /**
+   * 🚀 シャドウ重複防止：影響範囲拡張
+   */
+  private getExpandedRenderSet(changedChars: CanvasRomajiChar[]): CanvasRomajiChar[] {
+    const expandedSet = new Set(changedChars);
+    
+    changedChars.forEach(char => {
+      const charIndex = this.canvasChars.indexOf(char);
+      if (charIndex === -1) return;
+      
+      // activeな文字の場合、前後1文字も含める（シャドウ影響範囲）
+      if (char.getState() === 'active') {
+        // 前の文字
+        if (charIndex > 0) {
+          expandedSet.add(this.canvasChars[charIndex - 1]);
+        }
+        // 次の文字
+        if (charIndex < this.canvasChars.length - 1) {
+          expandedSet.add(this.canvasChars[charIndex + 1]);
+        }
+      }
+    });
+    
+    return Array.from(expandedSet);
+  }
 
   /**
    * 🚀 全体描画：初期化・大量変更時用
@@ -554,17 +574,15 @@ export class HybridTypingEngine {
 
     this.ctx.font = CANVAS_FONT_CONFIG.fontString;
     this.ctx.textAlign = 'center';
-    this.ctx.textBaseline = 'middle';
-
-    // 🚀 全文字描画
+    this.ctx.textBaseline = 'middle';    // 🚀 全文字描画
     this.canvasChars.forEach(char => {
       const state = char.getState();
       
       switch (state) {
         case 'active':
           this.ctx!.fillStyle = CANVAS_FONT_CONFIG.activeColor;
-          this.ctx!.shadowColor = 'rgba(255, 215, 0, 0.9)';
-          this.ctx!.shadowBlur = 8;
+          this.ctx!.shadowColor = 'rgba(255, 215, 0, 0.8)'; // 透明度を少し下げて鮮明に
+          this.ctx!.shadowBlur = 6; // ブラーを少し減らして鮮明に
           break;
         case 'completed':
           this.ctx!.fillStyle = CANVAS_FONT_CONFIG.completedColor;
@@ -615,8 +633,7 @@ export class HybridTypingEngine {
   }
   /**
    * 単語完了処理
-   */
-  private handleWordComplete(): void {
+   */  private handleWordComplete(): void {
     if (this.onComplete) {
       const endTime = Date.now();
       const elapsedTime = (endTime - this.state.startTime) / 1000;
