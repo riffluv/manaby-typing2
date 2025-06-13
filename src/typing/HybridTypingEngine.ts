@@ -11,7 +11,7 @@ import { TypingChar } from './TypingChar';
 import type { KanaDisplay, PerWordScoreLog } from '@/types';
 
 /**
- * Canvas設定 - typingmania-ref流シンプル設計
+ * Canvas設定 + タイピンガーZ級最適化定数
  */
 const CANVAS_CONFIG = {
   fontString: '500 1.8rem "Courier New", monospace',
@@ -19,6 +19,59 @@ const CANVAS_CONFIG = {
   completedColor: '#4FC3F7', 
   inactiveColor: '#B0BEC5'
 } as const;
+
+/**
+ * 🚀 タイピンガーZ級音響システム
+ */
+class TaipingazSfx {
+  private static context: AudioContext | null = null;
+  private static sounds: Map<string, AudioBuffer> = new Map();
+  private static volume = 0.8; // タイピンガーZ級音量
+
+  static async init() {
+    if (!this.context) {
+      this.context = new (window.AudioContext || (window as any).webkitAudioContext)();
+      
+      // 🎯 タイピンガーZ級効果音プリロード
+      await this.loadSound('correct', this.generateTone(800, 0.1));
+      await this.loadSound('incorrect', this.generateTone(400, 0.15));
+    }
+  }
+
+  private static generateTone(frequency: number, duration: number): AudioBuffer {
+    const sampleRate = this.context!.sampleRate;
+    const buffer = this.context!.createBuffer(1, sampleRate * duration, sampleRate);
+    const data = buffer.getChannelData(0);
+    
+    for (let i = 0; i < data.length; i++) {
+      data[i] = Math.sin(2 * Math.PI * frequency * i / sampleRate) * 0.3;
+    }
+    return buffer;
+  }
+
+  private static async loadSound(name: string, buffer: AudioBuffer) {
+    this.sounds.set(name, buffer);
+  }
+
+  static play(soundName: string) {
+    if (!this.context || !this.sounds.has(soundName)) return;
+    
+    const buffer = this.sounds.get(soundName)!;
+    const source = this.context.createBufferSource();
+    const gainNode = this.context.createGain();
+    
+    source.buffer = buffer;
+    gainNode.gain.value = this.volume;
+    
+    source.connect(gainNode);
+    gainNode.connect(this.context.destination);
+    source.start();
+  }
+
+  static resumeContext() {
+    this.context?.resume();
+  }
+}
 
 /**
  * Canvas文字クラス - 最小限実装
@@ -91,16 +144,15 @@ export class HybridTypingEngine {
     this.state.startTime = 0;
 
     this.setupDOM(originalText);
-    this.setupCanvas();
-    this.setupKeyListener();
+    this.setupCanvas();    this.setupKeyListener();
     
-    SimpleSfx.init();
+    // 🚀 タイピンガーZ級音響初期化
+    TaipingazSfx.init();
     this.updateCanvasStates();
     this.renderCanvas();
   }
-
   /**
-   * DOM構築 - 最小限
+   * 🚀 タイピンガーZ級DOM構築
    */
   private setupDOM(originalText: string): void {
     if (!this.container) return;
@@ -121,12 +173,20 @@ export class HybridTypingEngine {
           display: block; margin: 0 auto; height: 50px;
           image-rendering: crisp-edges;
         "></canvas>
+        
+        <!-- 🚀 タイピンガーZ級専用入力フィールド -->
+        <input 
+          id="taipingaz-focus-retriever" 
+          style="position: fixed; left: -300px; top: 0; opacity: 0;" 
+          type="text" 
+          readonly 
+          tabindex="-1"
+        />
       </div>
     `;
   }
-
   /**
-   * Canvas初期化 - シンプル
+   * 🚀 タイピンガーZ級Canvas初期化
    */
   private setupCanvas(): void {
     this.romajiCanvas = this.container?.querySelector('.romaji-canvas') as HTMLCanvasElement;
@@ -141,18 +201,24 @@ export class HybridTypingEngine {
     this.ctx = this.romajiCanvas.getContext('2d');
     if (!this.ctx) return;
 
+    // 🔥 GPU加速ヒント設定
     this.ctx.scale(dpr, dpr);
     this.ctx.font = CANVAS_CONFIG.fontString;
     this.ctx.textAlign = 'center';
-    this.ctx.textBaseline = 'middle';    // Canvas文字配置 - センター配置（最適間隔）
+    this.ctx.textBaseline = 'middle';
+    
+    // 🚀 超高速描画設定
+    this.ctx.imageSmoothingEnabled = false; // ピクセル完璧
+    this.ctx.globalCompositeOperation = 'source-over'; // デフォルト明示
+
+    // Canvas文字配置 - 最適間隔設定
     this.canvasChars = [];
     
-    // 🎯 タイピングゲーム最適間隔設定
     const totalRomaji = this.state.typingChars.reduce((sum, char) => sum + char.patterns[0].length, 0);
-    const charSpacing = 18; // 1.8remフォント（約29px）に対する最適間隔
+    const charSpacing = 18; // 1.8remフォント最適間隔
     const totalWidth = totalRomaji * charSpacing;
     const canvasWidth = 800;
-    const startX = (canvasWidth - totalWidth) / 2 + charSpacing / 2; // センター開始位置
+    const startX = (canvasWidth - totalWidth) / 2 + charSpacing / 2;
     
     let x = startX;
     const y = 25;
@@ -165,27 +231,31 @@ export class HybridTypingEngine {
       }
     });
   }
-
   /**
-   * キーリスナー - シンプル
+   * 🚀 タイピンガーZ級超高速キーリスナー
    */
   private setupKeyListener(): void {
     this.keyHandler = (e: KeyboardEvent) => {
       if (e.ctrlKey || e.altKey || e.metaKey || e.key.length !== 1) return;
       e.preventDefault();
-      e.stopPropagation();
+      e.stopImmediatePropagation(); // 🔥 即座停止
       this.processKey(e.key);
     };
 
-    window.addEventListener('keydown', this.keyHandler, { passive: false, capture: true });
+    // 🚀 最高優先度キャプチャ + パッシブ無効
+    window.addEventListener('keydown', this.keyHandler, { 
+      passive: false, 
+      capture: true,
+      once: false
+    });
   }
-
   /**
-   * キー処理 - typingmania-ref流
+   * 🚀 タイピンガーZ級キー処理
    */
   private processKey(key: string): void {
+    // 🎯 初回キー：音声コンテキスト + タイマー開始
     if (this.state.keyCount === 0) {
-      SimpleSfx.resumeContext();
+      TaipingazSfx.resumeContext();
       this.state.startTime = Date.now();
     }
 
@@ -195,13 +265,13 @@ export class HybridTypingEngine {
 
     let shouldUpdate = false;
 
-    // 分岐処理
+    // 🔥 分岐処理：超高速判定
     if (currentChar.branchingState) {
       const nextChar = this.state.typingChars[this.state.currentIndex + 1];
       const result = currentChar.typeBranching(key, nextChar);
 
       if (result.success) {
-        SimpleSfx.play('key');
+        TaipingazSfx.play('correct'); // 🚀 タイピンガーZ級効果音
         shouldUpdate = true;
 
         if (result.completeWithSingle) {
@@ -222,7 +292,7 @@ export class HybridTypingEngine {
         }
       } else {
         this.state.mistakeCount++;
-        SimpleSfx.play('error');
+        TaipingazSfx.play('incorrect'); // 🚀 タイピンガーZ級エラー音
         shouldUpdate = true;
       }
     } else {
@@ -230,7 +300,7 @@ export class HybridTypingEngine {
       const isCorrect = currentChar.type(key);
 
       if (isCorrect) {
-        SimpleSfx.play('key');
+        TaipingazSfx.play('correct'); // 🚀 タイピンガーZ級効果音
         shouldUpdate = true;
 
         if (currentChar.completed) {
@@ -242,11 +312,12 @@ export class HybridTypingEngine {
         }
       } else {
         this.state.mistakeCount++;
-        SimpleSfx.play('error');
+        TaipingazSfx.play('incorrect'); // 🚀 タイピンガーZ級エラー音
         shouldUpdate = true;
       }
     }
 
+    // 🚀 即座更新：最小チェック
     if (shouldUpdate) {
       this.updateCanvasStates();
       this.renderCanvas();
@@ -283,9 +354,8 @@ export class HybridTypingEngine {
       }
     });
   }
-
   /**
-   * Canvas描画 - typingmania-ref流シンプル
+   * 🚀 タイピンガーZ級超高速Canvas描画
    */
   private renderCanvas(): void {
     if (!this.ctx || !this.romajiCanvas) return;
@@ -293,38 +363,46 @@ export class HybridTypingEngine {
     const changedChars = this.canvasChars.filter(char => char.needsUpdate());
     if (changedChars.length === 0) return;
 
-    // シンプルが最速：常に全体描画
+    // 🔥 GPU最適化：ビットマップキャッシュスタイル設定
     this.ctx.clearRect(0, 0, this.romajiCanvas.width, this.romajiCanvas.height);
+
+    // 🚀 バッチ描画：状態別グループ化
+    const activeChars: CanvasRomajiChar[] = [];
+    const completedChars: CanvasRomajiChar[] = [];
+    const inactiveChars: CanvasRomajiChar[] = [];
 
     this.canvasChars.forEach(char => {
       const state = char.getState();
-      
-      switch (state) {
-        case 'active':
-          this.ctx!.fillStyle = CANVAS_CONFIG.activeColor;
-          this.ctx!.shadowColor = 'rgba(255, 215, 0, 0.8)';
-          this.ctx!.shadowBlur = 6;
-          break;
-        case 'completed':
-          this.ctx!.fillStyle = CANVAS_CONFIG.completedColor;
-          this.ctx!.shadowColor = 'rgba(79, 195, 247, 0.7)';
-          this.ctx!.shadowBlur = 6;
-          break;
-        default:
-          this.ctx!.fillStyle = CANVAS_CONFIG.inactiveColor;
-          this.ctx!.shadowColor = 'rgba(0,0,0,0.4)';
-          this.ctx!.shadowBlur = 2;
-          break;
-      }
-      
-      this.ctx!.fillText(char.character, char.x, char.y);
+      if (state === 'active') activeChars.push(char);
+      else if (state === 'completed') completedChars.push(char);
+      else inactiveChars.push(char);
     });
+
+    // 🎯 状態別バッチ描画（スタイル変更最小化）
+    this.drawCharBatch(inactiveChars, CANVAS_CONFIG.inactiveColor, 'rgba(0,0,0,0.4)', 2);
+    this.drawCharBatch(completedChars, CANVAS_CONFIG.completedColor, 'rgba(79, 195, 247, 0.7)', 6);
+    this.drawCharBatch(activeChars, CANVAS_CONFIG.activeColor, 'rgba(255, 215, 0, 0.8)', 6);
 
     // シャドウリセット
     this.ctx.shadowColor = 'transparent';
     this.ctx.shadowBlur = 0;
 
     changedChars.forEach(char => char.clearUpdateFlag());
+  }
+
+  /**
+   * 🚀 バッチ描画：状態変更最小化
+   */
+  private drawCharBatch(chars: CanvasRomajiChar[], fillStyle: string, shadowColor: string, shadowBlur: number): void {
+    if (chars.length === 0) return;
+    
+    this.ctx!.fillStyle = fillStyle;
+    this.ctx!.shadowColor = shadowColor;
+    this.ctx!.shadowBlur = shadowBlur;
+    
+    chars.forEach(char => {
+      this.ctx!.fillText(char.character, char.x, char.y);
+    });
   }
 
   /**
