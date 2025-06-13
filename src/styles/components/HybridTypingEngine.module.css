@@ -10,12 +10,12 @@
    ========================================================================== */
 
 .hybridTypingEngine__romajiCanvas {
-  /* Typography: Monospace font for typing accuracy */
-  font-family: var(--font-family-mono, "Courier New", "Consolas", "Liberation Mono", monospace) !important;
-  font-weight: var(--font-weight-normal, 400) !important;
-  font-size: var(--font-size-game-text, 1.25rem) !important;
-  text-transform: none !important;
-  font-variant: normal !important;
+  /* Typography: Monospace font for typing accuracy - NO !important */
+  font-family: var(--font-family-mono, "Courier New", "Consolas", "Liberation Mono", monospace);
+  font-weight: var(--font-weight-normal, 400);
+  font-size: var(--font-size-game-text, 1.25rem);
+  text-transform: none;
+  font-variant: normal;
   
   /* Performance: Canvas rendering optimization */
   will-change: contents;
@@ -70,10 +70,10 @@
 
 /* @deprecated Use .hybridTypingEngine__romajiCanvas instead */
 .hybrid-romaji-canvas {
-  font-family: var(--font-family-mono, "Courier New", "Consolas", "Liberation Mono", monospace) !important;
-  font-weight: var(--font-weight-normal, 400) !important;
-  text-transform: none !important;
-  font-variant: normal !important;
+  font-family: var(--font-family-mono, "Courier New", "Consolas", "Liberation Mono", monospace);
+  font-weight: var(--font-weight-normal, 400);
+  text-transform: none;
+  font-variant: normal;
 }
 
 /* @deprecated Use .hybridTypingEngine__originalText, .hybridTypingEngine__kanaContainer instead */
@@ -95,7 +95,7 @@
 /* Mobile optimization */
 @media (width < 768px) {
   .hybridTypingEngine__romajiCanvas {
-    font-size: var(--font-size-base, 1rem) !important;
+    font-size: var(--font-size-base, 1rem);
   }
   
   .hybridTypingEngine__originalText,
@@ -107,7 +107,7 @@
 /* Tablet optimization */
 @media (768px <= width < 1024px) {
   .hybridTypingEngine__romajiCanvas {
-    font-size: var(--font-size-lg, 1.125rem) !important;
+    font-size: var(--font-size-lg, 1.125rem);
   }
   
   .hybridTypingEngine__originalText,
@@ -123,8 +123,8 @@
 /* High contrast support */
 @media (prefers-contrast: high) {
   .hybridTypingEngine__romajiCanvas {
-    color: #ffffff !important;
-    background: #000000 !important;
+    color: #ffffff;
+    background: #000000;
   }
   
   .hybridTypingEngine__originalText,

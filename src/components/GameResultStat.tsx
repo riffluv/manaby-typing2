@@ -1,12 +1,14 @@
 import { motion } from 'framer-motion';
 
+import { motion, type Variants } from 'framer-motion';
+
 interface GameResultStatProps {
   label: string;
   value: number;
   valueClass?: string;
   custom: number;
   showContent: boolean;
-  statVariants: any;
+  statVariants: Variants; // 適切な型を指定
 }
 
 const GameResultStat: React.FC<GameResultStatProps> = ({ 

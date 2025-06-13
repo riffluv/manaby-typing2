@@ -108,9 +108,9 @@ const SimpleUnifiedTypingGame: React.FC<{
   // 現在のお題が変わったときに更新 - 最適化された比較
   useEffect(() => {
     if (storeWord?.hiragana && storeWord.hiragana !== currentWord.hiragana) {
-      setCurrentWord(storeWord);
+          setCurrentWord(storeWord);
     }
-  }, [storeWord?.hiragana, currentWord.hiragana]);
+  }, [storeWord?.hiragana, currentWord.hiragana, storeWord]); // storeWordを依存関係に追加
 
   // 単語完了時の処理 - メモ化
   const handleWordComplete = useCallback((scoreLog: PerWordScoreLog) => {

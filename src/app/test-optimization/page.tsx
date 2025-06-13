@@ -16,15 +16,15 @@ const TEST_WORDS = [
 
 interface TestResult {
   word: string;
-  typingChars: any[];
-  nChars: any[];
+  typingChars: unknown[];
+  nChars: unknown[];
   processingTime: number;
 }
 
 export default function OptimizationTestPage() {
   const [testResults, setTestResults] = useState<TestResult[]>([]);
   const [isLoading, setIsLoading] = useState(false);
-  const [performanceStats, setPerformanceStats] = useState<any>(null);
+  const [performanceStats] = useState<unknown>(null); // 未使用のsetterを削除
 
   const runTests = async () => {    setIsLoading(true);
     const results: TestResult[] = [];

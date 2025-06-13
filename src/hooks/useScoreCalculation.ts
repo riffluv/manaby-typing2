@@ -83,8 +83,8 @@ export function useScoreCalculation(
         const fallbackResult = calculateFallbackScore();
         onScoreCalculatedRef.current(fallbackResult);
       }
-    }
-  }, [gameStatus, scoreLog]);
+    }  }, [gameStatus, scoreLog]); // calculateFallbackScoreは依存関係から除外（循環依存回避）
+  
   // フォールバックスコア計算（WebWorker失敗時用）
   const calculateFallbackScore = useCallback(() => {
     if (scoreLog.length === 0) return { kpm: 0, accuracy: 0, correct: 0, miss: 0 };

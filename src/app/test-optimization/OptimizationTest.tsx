@@ -13,12 +13,12 @@ export default function OptimizationTestPage() {
   const gameStatus = useOptimizedGameStatus();
   const currentWord = useOptimizedCurrentWord();
   const currentIndex = useTypingGameStore((state) => state.currentWordIndex);
-  const questionCount = useTypingGameStore((state) => state.questionCount);
+    const questionCount = useTypingGameStore((state) => state.questionCount);
 
-  // レンダリング回数をカウント
+  // レンダリング回数をカウント - 依存関係配列を追加
   useEffect(() => {
     setRenderCount(prev => prev + 1);
-  });
+  }, []); // 初回レンダリング時のみ実行
 
   const elapsedTime = Date.now() - startTime;
 

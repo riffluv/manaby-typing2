@@ -21,10 +21,9 @@
  * - 40年タイピング経験者の感覚に対応した遅延ゼロ実装
  */
 
-import { TypingChar, type DisplayInfo } from './TypingChar';
-import type { KanaDisplay, PerWordScoreLog, TypingWord } from '@/types';
+import { TypingChar } from './TypingChar';
+import type { KanaDisplay, PerWordScoreLog } from '@/types';
 import UltraFastAudioSystem from '@/utils/UltraFastAudioSystem';
-import { debug } from '../utils/debug';
 
 
 

@@ -8,8 +8,8 @@
  * - フォーカス機能完全再現
  */
 
-import { TypingChar, type DisplayInfo } from './TypingChar';
-import type { KanaDisplay, PerWordScoreLog, TypingWord } from '@/types';
+import { TypingChar } from './TypingChar';
+import type { KanaDisplay, PerWordScoreLog } from '@/types';
 import UltraFastAudioSystem from '@/utils/UltraFastAudioSystem';
 
 /**
