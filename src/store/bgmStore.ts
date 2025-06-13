@@ -8,7 +8,8 @@ interface BGMState {
   volume: number;
   enabled: boolean;
 
-  // アクション  switchMode: (mode: BGMMode) => Promise<void>;
+  // アクション
+  switchMode: (mode: BGMMode) => Promise<void>;
   setVolume: (volume: number) => void;
   setEnabled: (enabled: boolean) => void;
   stop: () => Promise<void>;

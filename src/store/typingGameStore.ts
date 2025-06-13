@@ -155,7 +155,7 @@ const useTypingGameStoreBase = create<TypingGameState>((set, get) => ({
     // 出題数をリスト長以下に制限
     const questionCount = Math.min(get().questionCount, list.length);
     // シャッフルして先頭から必要数だけ抽出
-    currentGameQuestions = shuffleArray(list).slice(0, questionCount);
+    currentGameQuestions = shuffleArray([...list]).slice(0, questionCount);
     set({
       gameStatus: 'ready',
       currentWordIndex: 0,
@@ -176,7 +176,12 @@ const useTypingGameStoreBase = create<TypingGameState>((set, get) => ({
   
   setupCurrentWord: () => {
     const { currentWordIndex } = get();
-    const word = currentGameQuestions[currentWordIndex];
+    const word = currentGameQuestions[currentWordIndex] as { 
+      japanese?: string; 
+      kanji?: string; 
+      hiragana: string; 
+      explanation?: string 
+    };
     if (!word) return;
     
     // 🚀 新システム：JapaneseConverterを使用してTypingChar配列を生成  
@@ -187,7 +192,7 @@ const useTypingGameStoreBase = create<TypingGameState>((set, get) => ({
     
     set({
       currentWord: {
-        japanese: word.japanese || word.kanji,
+        japanese: word.japanese || word.kanji || '',
         hiragana: word.hiragana,
         romaji: romajiString,
         typingChars: typingChars,

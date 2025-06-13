@@ -41,15 +41,22 @@ export async function addRankingEntry(entry: Omit<RankingEntry, 'createdAt'>) {
 function isRankingEntry(data: unknown): data is RankingEntry {
   if (!data || typeof data !== 'object') return false;
   const obj = data as Record<string, unknown>;
-  return (
+  
+  const basicTypesValid = (
     typeof obj.name === 'string' &&
     typeof obj.kpm === 'number' &&
     typeof obj.accuracy === 'number' &&
     typeof obj.correct === 'number' &&
-    typeof obj.miss === 'number' &&
-    (obj.mode === 'normal' || obj.mode === 'hard') &&
-    (obj.createdAt instanceof Date || (obj.createdAt && typeof (obj.createdAt as { toDate?: unknown }).toDate === 'function'))
+    typeof obj.miss === 'number'
   );
+  
+  const modeValid = (obj.mode === 'normal' || obj.mode === 'hard');
+    const dateValid = Boolean(
+    obj.createdAt instanceof Date || 
+    (obj.createdAt && typeof (obj.createdAt as { toDate?: unknown }).toDate === 'function')
+  );
+  
+  return basicTypesValid && modeValid && dateValid;
 }
 
 function safeToDate(createdAt: unknown): Date {

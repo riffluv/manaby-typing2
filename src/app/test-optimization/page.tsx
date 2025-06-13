@@ -2,6 +2,7 @@
 
 import { useState, useEffect } from 'react';
 import { JapaneseConverter } from '@/typing/JapaneseConverter';
+import type { TypingChar } from '@/types/typing';
 
 // テスト用の日本語単語（「ん」を含む）
 const TEST_WORDS = [
@@ -16,15 +17,21 @@ const TEST_WORDS = [
 
 interface TestResult {
   word: string;
-  typingChars: unknown[];
-  nChars: unknown[];
+  typingChars: TypingChar[];
+  nChars: TypingChar[];
   processingTime: number;
+}
+
+interface PerformanceStats {
+  cacheSize: number;
+  cacheHitRate: number;
+  totalPatterns: number;
 }
 
 export default function OptimizationTestPage() {
   const [testResults, setTestResults] = useState<TestResult[]>([]);
   const [isLoading, setIsLoading] = useState(false);
-  const [performanceStats] = useState<unknown>(null); // 未使用のsetterを削除
+  const [performanceStats] = useState<PerformanceStats | null>(null);
 
   const runTests = async () => {    setIsLoading(true);
     const results: TestResult[] = [];
@@ -33,9 +40,8 @@ export default function OptimizationTestPage() {
 
     for (const word of TEST_WORDS) {
       const startTime = performance.now();
-        try {
-        const typingChars = JapaneseConverter.convertToTypingChars(word);
-        const nChars = typingChars.filter(char => char.kana === 'ん');
+        try {        const typingChars = JapaneseConverter.convertToTypingChars(word);
+        const nChars = typingChars.filter((char: TypingChar) => char.kana === 'ん');
         const processingTime = performance.now() - startTime;
 
         results.push({

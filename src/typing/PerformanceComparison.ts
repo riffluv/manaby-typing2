@@ -85,13 +85,13 @@ export class CanvasRenderingComparison {
     if (changedChars.length === 0) {
       PerformanceComparison.endMeasure('Optimized Render', start);
       return;
-    }
-
-    // 部分クリア
+    }    // 部分クリア
     changedChars.forEach(char => {
-      if (char.shouldClear()) {
-        const bounds = char.getBounds();
-        ctx.clearRect(bounds.x, bounds.y, bounds.width, bounds.height);
+      if (char.shouldClear && char.shouldClear()) {
+        const bounds = char.getBounds && char.getBounds();
+        if (bounds) {
+          ctx.clearRect(bounds.x, bounds.y, bounds.width, bounds.height);
+        }
       }
     });
 
@@ -99,7 +99,9 @@ export class CanvasRenderingComparison {
     changedChars.forEach(char => {
       ctx.fillStyle = char.getColor();
       ctx.fillText(char.character, char.x, char.y);
-      char.markRedrawn();
+      if (char.markRedrawn) {
+        char.markRedrawn();
+      }
     });
     
     PerformanceComparison.endMeasure('Optimized Render', start);

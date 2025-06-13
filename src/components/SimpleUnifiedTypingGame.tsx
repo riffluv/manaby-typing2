@@ -2,7 +2,7 @@ import React, { useState, useEffect, useCallback, useMemo } from 'react';
 import { useRouter } from 'next/navigation';
 import { useOptimizedGameStatus, useOptimizedCurrentWord } from '@/store/optimizedSelectors';
 import { useTypingGameStore } from '@/store/typingGameStore';
-import { TypingWord, PerWordScoreLog, GameScoreLog } from '@/types';
+import { TypingWord, PerWordScoreLog, GameScoreLog, TypingChar } from '@/types';
 import { useScoreCalculation } from '@/hooks/useScoreCalculation';
 // import { PerformanceProfiler } from '@/utils/PerformanceProfiler'; // sub-5ms optimization: 測定オーバーヘッド除去
 import SimpleGameScreen from './SimpleGameScreen';

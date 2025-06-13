@@ -6,6 +6,9 @@
 
 import type { TypingChar } from '@/typing/TypingChar';
 
+// TypingCharを再エクスポート
+export type { TypingChar } from '@/typing/TypingChar';
+
 export type TypingWord = {
   japanese: string;
   hiragana: string;
