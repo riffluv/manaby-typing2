@@ -25,7 +25,7 @@ export const isAdminEnabled = (): boolean => {
 /**
  * 管理者機能のアクセスログ
  */
-export const logAdminAccess = (action: string, details?: any) => {
+export const logAdminAccess = (action: string, details?: unknown) => {
   if (process.env.NODE_ENV === 'development') {
     console.log(`🔐 [Admin] ${action}`, details || '');
   }

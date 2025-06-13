@@ -149,11 +149,10 @@ class AudioSystemManager {
 
   /**
    * 音声ログを無効化してパフォーマンス向上
-   */
-  private static disableAudioLogging() {
+   */  private static disableAudioLogging() {
     // console.logの一時的な無効化（音声関連のみ）
     const originalConsoleLog = console.log;
-    console.log = (...args: any[]) => {
+    console.log = (...args: unknown[]) => {
       const message = args.join(' ');
       // 音声関連のログをフィルタリング
       if (!message.includes('[AudioPerformance]') && 
@@ -226,7 +225,7 @@ class AudioSystemManager {
 
 // グローバルアクセス用
 if (typeof window !== 'undefined') {
-  (window as any).audioSystemManager = AudioSystemManager;
+  (window as unknown as { audioSystemManager: typeof AudioSystemManager }).audioSystemManager = AudioSystemManager;
 }
 
 export default AudioSystemManager;

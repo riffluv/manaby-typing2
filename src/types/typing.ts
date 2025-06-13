@@ -4,11 +4,13 @@
  * 高速レスポンスを維持しながら段階的リファクタリングをサポート
  */
 
+import type { TypingChar } from '@/typing/TypingChar';
+
 export type TypingWord = {
   japanese: string;
   hiragana: string;
   romaji: string;
-  typingChars: any[]; // 新しいTypingCharを使用
+  typingChars: TypingChar[]; // TypingCharを使用
   displayChars: string[];
 };
 
@@ -23,6 +25,6 @@ export type NewTypingWord = {
   japanese: string;
   hiragana: string;
   romaji: string;
-  typingChars: any[]; // 新しいTypingCharを使用予定
+  typingChars: TypingChar[]; // TypingCharを使用
   displayChars: string[];
 };

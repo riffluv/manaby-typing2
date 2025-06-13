@@ -32,14 +32,13 @@ function measureCSSLoadTime() {
 function measureRenderingPerformance() {
   const observer = new PerformanceObserver((list) => {
     for (const entry of list.getEntries()) {
-      // 型安全な方法でパフォーマンスメトリクスを取得
-      const renderingEntry = entry as any; // Web API型定義の制限により一時的にany使用
       console.log(`🚀 Rendering Metrics:`, {
         type: entry.entryType,
         name: entry.name,
         startTime: entry.startTime ? `${entry.startTime.toFixed(2)}ms` : 'N/A',
         duration: entry.duration ? `${entry.duration.toFixed(2)}ms` : 'N/A',
-        value: renderingEntry.value ? renderingEntry.value.toFixed(4) : 'N/A'
+        // Layout Shift専用のvalueプロパティがある場合のみ表示
+        ...(entry.entryType === 'layout-shift' && 'value' in entry ? { value: (entry as unknown as { value: number }).value.toFixed(4) } : {})
       });
     }
   });
@@ -128,9 +127,8 @@ function checkCSSConflicts() {
     const conflicts = Array.from(duplicateRules.entries())
     .filter(([, locations]) => locations.length > 1);
     if (conflicts.length > 0) {
-    console.warn(`⚠️ CSS Conflicts detected (${conflicts.length} selectors):`);
-    conflicts.slice(0, 10).forEach(([selector, locations]) => {
-      console.log(`  ${selector} appears in:`, locations.map((l: any) => l.href));
+    console.warn(`⚠️ CSS Conflicts detected (${conflicts.length} selectors):`);    conflicts.slice(0, 10).forEach(([selector, locations]) => {
+      console.log(`  ${selector} appears in:`, locations.map((l: { href: string }) => l.href));
     });
   } else {
     console.log(`✅ No CSS conflicts detected`);
@@ -168,10 +166,9 @@ function runPerformanceTests() {
   
   // CSS競合チェックは少し遅延実行
   setTimeout(checkCSSConflicts, 1000);
-  
-  // パフォーマンス監視継続
+    // パフォーマンス監視継続
   setInterval(() => {
-    const memoryInfo = (performance as any).memory;
+    const memoryInfo = (performance as { memory?: { usedJSHeapSize: number; totalJSHeapSize: number; jsHeapSizeLimit: number } }).memory;
     if (memoryInfo) {
       console.log(`💾 Memory Usage:`, {
         used: `${(memoryInfo.usedJSHeapSize / 1024 / 1024).toFixed(2)}MB`,

@@ -51,8 +51,8 @@ export class AnimationSystem {
    * @param onComplete 完了時コールバック
    * @returns アニメーション制御オブジェクト
    */  static animate(
-    element: HTMLElement,
-    type: AnimationType,
+    _element: HTMLElement,
+    _type: AnimationType,
     _config: AnimationConfig = {},
     onComplete?: () => void
   ): AnimationResult {
@@ -129,8 +129,7 @@ export class AnimationSystem {
   /**
    * 要素からアニメーションをクリア - DISABLED
    * 🚀 将来のリッチな画面遷移ライブラリとの競合を防ぐため無効化
-   */
-  static clearAnimation(element: HTMLElement): void {
+   */  static clearAnimation(_element: HTMLElement): void {
     // 🚀 DISABLED: No animation clearing needed as animations are disabled
   }
 

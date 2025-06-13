@@ -24,10 +24,9 @@ class UltraFastAudioSystem {
   // 🚀 typingmania-ref流：超高速初期化
   static init(): void {
     if (this.ctx) return;
-    
-    try {
+      try {
       // Safari対応のためのWebkit互換性処理
-      const AudioContextClass = window.AudioContext || (window as any).webkitAudioContext;
+      const AudioContextClass = window.AudioContext || (window as unknown as { webkitAudioContext: typeof AudioContext }).webkitAudioContext;
       this.ctx = new AudioContextClass();
       this.generateSimpleBuffers();
       this.isReady = true;

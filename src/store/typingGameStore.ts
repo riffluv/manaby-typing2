@@ -2,6 +2,11 @@ import { create } from 'zustand';
 import { createSelectors } from '@/store/createSelectors';
 import { wordList } from '@/data/wordList';
 import { JapaneseConverter } from '@/typing';
+import type { TypingChar } from '@/types/typing';
+import { hardQuestions } from '@/data/hardQuestions';
+import { sonkeigoQuestions } from '@/data/sonkeigoQuestions';
+import { kenjougoQuestions } from '@/data/kenjougoQuestions_fixed';
+import { businessQuestions } from '@/data/businessQuestions';
 
 /**
  * タイピングゲーム状態管理ストア
@@ -26,7 +31,7 @@ interface TypingGameState {
     japanese: string;
     hiragana: string;
     romaji: string;
-    typingChars: any[]; // 新システム対応：型を一般化
+    typingChars: TypingChar[]; // 新システム対応：適切な型を使用
     displayChars: string[];
     explanation?: string | null;  // マナビー解説（将来的に使用）
   };
@@ -52,7 +57,7 @@ const initialCurrentWord = {
   japanese: '',
   hiragana: '',
   romaji: '',
-  typingChars: [] as any[], // 新システム対応
+  typingChars: [] as TypingChar[], // 新システム対応
   displayChars: [] as string[],
   explanation: null
 };
@@ -115,7 +120,7 @@ function shuffleArray<T>(array: T[]): T[] {
 }
 
 // --- ゲームごとの出題リストを管理 ---
-let currentGameQuestions: any[] = [];
+let currentGameQuestions: unknown[] = [];
 
 const useTypingGameStoreBase = create<TypingGameState>((set, get) => ({
   // 初期状態
@@ -137,13 +142,13 @@ const useTypingGameStoreBase = create<TypingGameState>((set, get) => ({
     const currentMode = get().mode;
     let list;
     if (currentMode === 'hard') {
-      list = require('@/data/hardQuestions').hardQuestions;
+      list = hardQuestions;
     } else if (currentMode === 'sonkeigo') {
-      list = require('@/data/sonkeigoQuestions').sonkeigoQuestions;
+      list = sonkeigoQuestions;
     } else if (currentMode === 'kenjougo') {
-      list = require('@/data/kenjougoQuestions_fixed').kenjougoQuestions;
+      list = kenjougoQuestions;
     } else if (currentMode === 'business') {
-      list = require('@/data/businessQuestions').businessQuestions;
+      list = businessQuestions;
     } else {
       list = wordList;
     }
@@ -178,7 +183,7 @@ const useTypingGameStoreBase = create<TypingGameState>((set, get) => ({
     const typingChars = JapaneseConverter.convertToTypingChars(word.hiragana);
     
     // ローマ字表示用：各文字の最初のパターンを使用
-    const romajiString = typingChars.map((char: any) => char.patterns[0] || '').join('');
+    const romajiString = typingChars.map((char: TypingChar) => char.patterns[0] || '').join('');
     
     set({
       currentWord: {
@@ -186,7 +191,7 @@ const useTypingGameStoreBase = create<TypingGameState>((set, get) => ({
         hiragana: word.hiragana,
         romaji: romajiString,
         typingChars: typingChars,
-        displayChars: typingChars.map((char: any) => char.kana), // ひらがな表示用
+        displayChars: typingChars.map((char: TypingChar) => char.kana), // ひらがな表示用
         explanation: word.explanation || null
       }
     });

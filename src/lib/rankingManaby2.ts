@@ -38,21 +38,25 @@ export async function addRankingEntry(entry: Omit<RankingEntry, 'createdAt'>) {
   }
 }
 
-function isRankingEntry(data: any): data is RankingEntry {
+function isRankingEntry(data: unknown): data is RankingEntry {
+  if (!data || typeof data !== 'object') return false;
+  const obj = data as Record<string, unknown>;
   return (
-    typeof data?.name === 'string' &&
-    typeof data?.kpm === 'number' &&
-    typeof data?.accuracy === 'number' &&
-    typeof data?.correct === 'number' &&
-    typeof data?.miss === 'number' &&
-    (data?.mode === 'normal' || data?.mode === 'hard') &&
-    (data?.createdAt instanceof Date || (data?.createdAt && typeof data.createdAt.toDate === 'function'))
+    typeof obj.name === 'string' &&
+    typeof obj.kpm === 'number' &&
+    typeof obj.accuracy === 'number' &&
+    typeof obj.correct === 'number' &&
+    typeof obj.miss === 'number' &&
+    (obj.mode === 'normal' || obj.mode === 'hard') &&
+    (obj.createdAt instanceof Date || (obj.createdAt && typeof (obj.createdAt as { toDate?: unknown }).toDate === 'function'))
   );
 }
 
-function safeToDate(createdAt: any): Date {
+function safeToDate(createdAt: unknown): Date {
   if (createdAt instanceof Date) return createdAt;
-  if (createdAt && typeof createdAt.toDate === 'function') return createdAt.toDate();
+  if (createdAt && typeof createdAt === 'object' && 'toDate' in createdAt && typeof (createdAt as { toDate: () => Date }).toDate === 'function') {
+    return (createdAt as { toDate: () => Date }).toDate();
+  }
   return new Date();
 }
 

@@ -8,12 +8,11 @@ interface BGMState {
   volume: number;
   enabled: boolean;
 
-  // アクション
-  switchMode: (mode: BGMMode) => Promise<void>;
+  // アクション  switchMode: (mode: BGMMode) => Promise<void>;
   setVolume: (volume: number) => void;
   setEnabled: (enabled: boolean) => void;
   stop: () => Promise<void>;
-  getStatus: () => any;
+  getStatus: () => { currentMode: BGMMode; isPlaying: boolean; volume: number; enabled: boolean };
 }
 
 const useBGMStoreBase = create<BGMState>((set, get) => ({

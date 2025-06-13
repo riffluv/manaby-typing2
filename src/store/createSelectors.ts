@@ -18,12 +18,12 @@ export const createSelectors = <T extends object, F extends object = T>(
     {
       get: (_, prop: string) => {
         // prop が元のストアのプロパティであれば、セレクターを返す
-        return (selector?: any) => {
+        return (selector?: <T>(state: T) => unknown) => {
           if (selector) {
             return useStore(selector);
           }
           return useStore((state) => {
-            const storeState = state as any;
+            const storeState = state as Record<string, unknown>;
             if (prop in storeState) {
               return storeState[prop];
             }

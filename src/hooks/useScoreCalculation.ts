@@ -16,11 +16,28 @@ export function useScoreCalculation(
   // WebWorkerとコールバックのref管理
   const workerRef = useRef<Worker | null>(null);
   const onScoreCalculatedRef = useRef(onScoreCalculated);
-  
-  // 常に最新のコールバックを参照
+    // 常に最新のコールバックを参照
   useEffect(() => {
     onScoreCalculatedRef.current = onScoreCalculated;
   }, [onScoreCalculated]);
+
+  // フォールバックスコア計算（WebWorker失敗時用）
+  const calculateFallbackScore = useCallback(() => {
+    if (scoreLog.length === 0) return { kpm: 0, accuracy: 0, correct: 0, miss: 0 };
+    
+    const totalCorrect = scoreLog.reduce((sum, log) => sum + (log.correct || 0), 0);
+    const totalMiss = scoreLog.reduce((sum, log) => sum + (log.miss || 0), 0);
+    const avgKpm = scoreLog.reduce((sum, log) => sum + (log.kpm || 0), 0) / scoreLog.length;
+    const avgAccuracy = scoreLog.reduce((sum, log) => sum + (log.accuracy || 0), 0) / scoreLog.length;
+    
+    return {
+      kpm: Math.floor(avgKpm),
+      accuracy: Math.floor(avgAccuracy * 100),
+      correct: totalCorrect,
+      miss: totalMiss
+    };
+  }, [scoreLog]);
+
   // WebWorker初期化
   useEffect(() => {
     try {
@@ -54,25 +71,7 @@ export function useScoreCalculation(
         workerRef.current.terminate();
         workerRef.current = null;
         console.log('WebWorkerクリーンアップ完了');
-      }
-    };  }, []);
-
-  // フォールバックスコア計算（WebWorker失敗時用）
-  const calculateFallbackScore = useCallback(() => {
-    if (scoreLog.length === 0) return { kpm: 0, accuracy: 0, correct: 0, miss: 0 };
-    
-    const totalCorrect = scoreLog.reduce((sum, log) => sum + (log.correct || 0), 0);
-    const totalMiss = scoreLog.reduce((sum, log) => sum + (log.miss || 0), 0);
-    const avgKpm = scoreLog.reduce((sum, log) => sum + (log.kpm || 0), 0) / scoreLog.length;
-    const avgAccuracy = scoreLog.reduce((sum, log) => sum + (log.accuracy || 0), 0) / scoreLog.length;
-    
-    return {
-      kpm: Math.floor(avgKpm),
-      accuracy: Math.floor(avgAccuracy * 100),
-      correct: totalCorrect,
-      miss: totalMiss
-    };
-  }, [scoreLog]);
+      }    };  }, [calculateFallbackScore]);
 
   // ゲーム終了時にWebWorkerでスコア計算実行
   useEffect(() => {

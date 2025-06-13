@@ -1,5 +1,4 @@
 import { useEffect } from 'react';
-import { useRouter } from 'next/navigation';
 import { useBGMStore } from '@/store/bgmStore';
 import type { BGMMode } from '@/utils/BGMPlayer';
 

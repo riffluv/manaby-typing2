@@ -11,6 +11,7 @@ interface TypingState {
   // 入力関連の状態
   // userInput, currentKanaIndex, currentKanaDisplayはuseRef/useStateで管理するためZustandから除外
   // アクションも不要
+  placeholder?: never; // 空のインターフェースを防ぐためのプレースホルダー
 }
 
 // Zustandストアの作成
