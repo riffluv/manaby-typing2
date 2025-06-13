@@ -50,11 +50,10 @@ export class AnimationSystem {
    * @param config アニメーション設定
    * @param onComplete 完了時コールバック
    * @returns アニメーション制御オブジェクト
-   */
-  static animate(
+   */  static animate(
     element: HTMLElement,
     type: AnimationType,
-    config: AnimationConfig = {},
+    _config: AnimationConfig = {},
     onComplete?: () => void
   ): AnimationResult {
     // 🚀 DISABLED: All animations disabled for future rich transition library
@@ -80,11 +79,10 @@ export class AnimationSystem {
   /**
    * 複数要素の並列アニメーション - DISABLED
    * 🚀 将来のリッチな画面遷移ライブラリとの競合を防ぐため無効化
-   */
-  static animateAll(
+   */  static animateAll(
     elements: HTMLElement[],
-    type: AnimationType,
-    config: AnimationConfig = {},
+    _type: AnimationType,
+    _config: AnimationConfig = {},
     onAllComplete?: () => void
   ): AnimationResult[] {
     // 🚀 DISABLED: All animations disabled for future rich transition library
@@ -93,9 +91,8 @@ export class AnimationSystem {
     if (onAllComplete) {
       setTimeout(onAllComplete, 0);
     }
-    
-    // 無効化された制御オブジェクトの配列を返す
-    return elements.map((_, index) => ({
+      // 無効化された制御オブジェクトの配列を返す
+    return elements.map(() => ({
       id: `all_disabled_${++this.idCounter}`,
       stop: () => { /* DISABLED */ },
       pause: () => { /* DISABLED */ },
@@ -107,11 +104,10 @@ export class AnimationSystem {
   /**
    * 複数要素の連続アニメーション - DISABLED
    * 🚀 将来のリッチな画面遷移ライブラリとの競合を防ぐため無効化
-   */
-  static animateSequence(
+   */  static animateSequence(
     elements: HTMLElement[],
-    type: AnimationType,
-    config: AnimationConfig = {},
+    _type: AnimationType,
+    _config: AnimationConfig = {},
     onAllComplete?: () => void
   ): AnimationResult[] {
     // 🚀 DISABLED: All animations disabled for future rich transition library
@@ -120,9 +116,8 @@ export class AnimationSystem {
     if (onAllComplete) {
       setTimeout(onAllComplete, 0);
     }
-    
-    // 無効化された制御オブジェクトの配列を返す
-    return elements.map((_, index) => ({
+      // 無効化された制御オブジェクトの配列を返す
+    return elements.map(() => ({
       id: `seq_disabled_${++this.idCounter}`,
       stop: () => { /* DISABLED */ },
       pause: () => { /* DISABLED */ },

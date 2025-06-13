@@ -26,8 +26,8 @@ class OptimizedAudioSystem {
   // 🚀 超高速初期化（完全同期・遅延ゼロ）
   static init(): void {
     if (this.ctx) return;
-    
-    try {      // @ts-ignore - webkitAudioContext for Safari compatibility
+      try {
+      // @ts-expect-error - webkitAudioContext for Safari compatibility
       this.ctx = new (window.AudioContext || window.webkitAudioContext)();
       
       // 🚀 ユーザージェスチャー後のみAudioContextをResume（警告回避）
@@ -172,11 +172,10 @@ class OptimizedAudioSystem {
     if (!this.isReady || !buffer || !this.ctx) return;
     
     try {
-      const source = this.ctx.createBufferSource();
-      source.buffer = buffer;
+      const source = this.ctx.createBufferSource();      source.buffer = buffer;
       source.connect(this.ctx.destination);
       source.start();
-    } catch (error) {
+    } catch {
       // サイレント処理（パフォーマンス優先）
     }
   }

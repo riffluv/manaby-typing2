@@ -217,7 +217,7 @@ export const japaneseToRomajiMap: { [key: string]: string[] } = {
  * 複数の入力パターンをサポート
  */
 export const convertHiraganaToRomaji = (hiragana: string) => {
-  let result: Array<{
+  const result: Array<{
     kana: string;
     romaji: string;
     alternatives: string[];

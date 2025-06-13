@@ -41,11 +41,10 @@ class BGMPlayer {
   private static currentTrack: BGMTrack | null = null;
   private static isInitialized = false;
   private static globalVolume = 0.5;
-
   // BGM用AudioContext初期化
   private static async initContext() {
     if (this.bgmCtx) return;
-    // @ts-ignore - webkitAudioContext for Safari compatibility
+    // @ts-expect-error - webkitAudioContext for Safari compatibility
     this.bgmCtx = new (window.AudioContext || window.webkitAudioContext)();
     this.gainNode = this.bgmCtx.createGain();
     this.gainNode.gain.value = this.globalVolume;

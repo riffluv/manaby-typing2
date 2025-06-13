@@ -25,7 +25,25 @@ export type ScoreWorkerResponse = {
   },
 };
 
-self.onmessage = (e: MessageEvent<any>) => {
+interface WorkerPayload {
+  results: Array<{
+    correctCount?: number;
+    correct?: number;
+    missCount?: number;
+    miss?: number;
+    keyCount?: number;
+    startTime?: number;
+    endTime?: number;
+    duration?: number;
+  }>;
+}
+
+interface WorkerMessage {
+  type: string;
+  payload: WorkerPayload;
+}
+
+self.onmessage = (e: MessageEvent<WorkerMessage>) => {
   try {
     if (!e.data || typeof e.data !== 'object') {
       throw new Error('不正なメッセージ形式');
@@ -37,12 +55,10 @@ self.onmessage = (e: MessageEvent<any>) => {
       throw new Error(`不正なメッセージタイプまたはデータ: ${type}`);    }
     
     const { results } = payload;
-    
-    let kpmSum = 0;
+      let kpmSum = 0;
     let kpmCount = 0;
     let totalCorrect = 0;
     let totalMiss = 0;
-    let totalKey = 0;
     let totalInput = 0;
     
     if (!Array.isArray(results) || results.length === 0) {
@@ -65,10 +81,8 @@ self.onmessage = (e: MessageEvent<any>) => {
         kpmSum += (keyCount / timeSec) * 60;
         kpmCount++;
       }
-      
-      totalCorrect += correctCount;
+        totalCorrect += correctCount;
       totalMiss += missCount;
-      totalKey += keyCount;
       totalInput += correctCount + missCount;
     }
     

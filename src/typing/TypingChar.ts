@@ -142,7 +142,7 @@ export class TypingChar {
   }  /**
    * 分岐状態でのキー処理（最適化版）
    */
-  typeBranching(char: string, nextChar?: TypingChar): { success: boolean; completeWithSingle?: boolean } {
+  typeBranching(char: string, _nextChar?: TypingChar): { success: boolean; completeWithSingle?: boolean } {
     if (!this.branchingState) {
       return { success: false };
     }

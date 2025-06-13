@@ -23,14 +23,13 @@ const NewSimpleGameScreen: React.FC<NewSimpleGameScreenProps> = ({
     if (!currentWord.hiragana) return [];
     // 🚀 JapaneseConverter使用で最新最適化技術を活用
     return JapaneseConverter.convertToTypingChars(currentWord.hiragana);
-  }, [currentWord.hiragana]);
-  // typingmania-ref流：ローマ字文字列を生成
+  }, [currentWord.hiragana]);  // typingmania-ref流：ローマ字文字列を生成
   const romajiString = React.useMemo(() => {
     if (!typingChars || typingChars.length === 0) return '';
     
     // 各TypingCharの最初のパターン（デフォルトパターン）を連結
-    return typingChars.map((char: any) => char.patterns[0] || '').join('');
-  }, [typingChars]);  const { containerRef } = useDirectTyping2({
+    return typingChars.map((char: { patterns: string[] }) => char.patterns[0] || '').join('');
+  }, [typingChars]);const { containerRef } = useDirectTyping2({
     word: currentWord,
     typingChars,
     onWordComplete,

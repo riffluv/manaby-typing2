@@ -22,7 +22,6 @@ interface BGMAutoControlOptions {
  */
 export function useBGMAutoControl(options: BGMAutoControlOptions = {}) {
   const { switchMode } = useBGMStore();
-  const router = useRouter();
 
   useEffect(() => {
     if (options.forceMode) {

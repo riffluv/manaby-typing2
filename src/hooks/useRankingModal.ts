@@ -78,11 +78,11 @@ export function useRankingModal(
       dispatch({ type: 'success' });
       
       // 成功メッセージを表示後、モーダルを閉じる
-      setTimeout(() => dispatch({ type: 'close' }), 1200);
-    } catch (e: any) {
+      setTimeout(() => dispatch({ type: 'close' }), 1200);    } catch (e: unknown) {
+      const errorMessage = e instanceof Error ? e.message : String(e);
       dispatch({ 
         type: 'error', 
-        error: '登録に失敗しました: ' + (e?.message || String(e)) 
+        error: '登録に失敗しました: ' + errorMessage 
       });
     }
   }, [resultScore, modalState.name, isScoreRegistered, onScoreRegistered, mode]);

@@ -28,12 +28,12 @@ const SimpleUnifiedTypingGame: React.FC<{
   const setGameStatus = useTypingGameStore((state) => state.setGameStatus);
   const advanceToNextWord = useTypingGameStore((state) => state.advanceToNextWord);
   const storeWord = useOptimizedCurrentWord();
-    // currentWordのメモ化された初期値
+  // currentWordのメモ化された初期値
   const initialCurrentWord = useMemo(() => ({
     japanese: '',
     hiragana: '',
     romaji: '',
-    typingChars: [] as any[],
+    typingChars: [] as TypingChar[],
     displayChars: [] as string[]
   }), []);
 

@@ -21,14 +21,14 @@ class UltraFastAudioSystem {
   private static errorBuffer: AudioBuffer | null = null;
   private static successBuffer: AudioBuffer | null = null;
   private static isReady = false;
-
   // 🚀 typingmania-ref流：超高速初期化
   static init(): void {
     if (this.ctx) return;
     
     try {
-      // @ts-ignore - webkitAudioContext for Safari compatibility
-      this.ctx = new (window.AudioContext || window.webkitAudioContext)();
+      // Safari対応のためのWebkit互換性処理
+      const AudioContextClass = window.AudioContext || (window as any).webkitAudioContext;
+      this.ctx = new AudioContextClass();
       this.generateSimpleBuffers();
       this.isReady = true;
     } catch (error) {

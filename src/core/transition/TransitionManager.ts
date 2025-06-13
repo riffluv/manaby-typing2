@@ -39,8 +39,7 @@ export class TransitionManager {
    * 特定のシーンのトランジション設定を取得
    * @param scene シーンタイプ
    * @returns デフォルト設定
-   */
-  static getSceneConfig(scene: SceneType): SceneTransitionConfig {
+   */  static getSceneConfig(_scene: SceneType): SceneTransitionConfig {
     // すべてのシーンでデフォルト設定を使用
     return this.defaultConfig;
   }
@@ -48,7 +47,7 @@ export class TransitionManager {
   /**
    * 遷移記録（シンプルなログのみ）
    */
-  static recordTransition(from: SceneType, to: SceneType, type: TransitionType, duration: number): void {
+  static recordTransition(_from: SceneType, _to: SceneType, _type: TransitionType, _duration: number): void {
     // プロダクションでは何もしない
   }
 }

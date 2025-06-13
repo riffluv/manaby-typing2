@@ -474,13 +474,8 @@ export class HybridTypingEngine {
     // 🚀 フォント設定最適化 - 事前計算済み文字列使用
     this.ctx.font = CANVAS_FONT_CONFIG.fontString;
     this.ctx.textAlign = 'center';
-    this.ctx.textBaseline = 'middle';
-
-    // 🚀 差分更新：変更された文字のみを描画対象に
-    const changedChars = this.canvasChars.filter(char => {
-      // 実際の実装では、前回の状態と比較して変更された文字のみ
-      return true; // 簡略化：全て描画（将来的に差分検出機能追加）
-    });
+    this.ctx.textBaseline = 'middle';    // 🚀 差分更新：現在は全文字を描画（将来的に差分検出機能追加予定）
+    const changedChars = this.canvasChars;
 
     // 🚀 シャドウ状態ごとにグループ化して描画（最適化）
     const charsByState = {

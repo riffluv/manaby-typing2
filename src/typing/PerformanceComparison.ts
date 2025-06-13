@@ -3,11 +3,21 @@
  * 過度な最適化による逆効果を検証
  */
 
+interface CanvasChar {
+  shouldRedraw(): boolean;
+  shouldClear?(): boolean;
+  getBounds?(): { x: number; y: number; width: number; height: number };
+  getColor(): string;
+  character: string;
+  x: number;
+  y: number;
+  markRedrawn?(): void;
+}
+
 export class PerformanceComparison {
   private static measurements: { [key: string]: number[] } = {};
-
   // 🔬 測定開始
-  static startMeasure(label: string): number {
+  static startMeasure(_label: string): number {
     return performance.now();
   }
 
@@ -66,9 +76,8 @@ export class PerformanceComparison {
  * Canvas描画方式の比較テスト
  */
 export class CanvasRenderingComparison {
-  
-  // 🚀 現在の「最適化版」描画
-  static optimizedRender(ctx: CanvasRenderingContext2D, chars: any[]): void {
+    // 🚀 現在の「最適化版」描画
+  static optimizedRender(ctx: CanvasRenderingContext2D, chars: CanvasChar[]): void {
     const start = PerformanceComparison.startMeasure('Optimized Render');
     
     // 変更文字のフィルタリング
@@ -95,9 +104,8 @@ export class CanvasRenderingComparison {
     
     PerformanceComparison.endMeasure('Optimized Render', start);
   }
-
   // 🔧 シンプル版描画（比較用）
-  static simpleRender(ctx: CanvasRenderingContext2D, canvas: HTMLCanvasElement, chars: any[]): void {
+  static simpleRender(ctx: CanvasRenderingContext2D, canvas: HTMLCanvasElement, chars: CanvasChar[]): void {
     const start = PerformanceComparison.startMeasure('Simple Render');
     
     // 全画面クリア

@@ -42,8 +42,7 @@ export class TransitionEffects {  /**
    */  /**
    * エフェクトタイプとディレクションからCSSクラス名を取得 - DISABLED
    * 🚀 将来のリッチな画面遷移ライブラリとの競合を防ぐため無効化
-   */
-  private static getEffectClassName(type: TransitionType, direction: 'enter' | 'exit'): string {
+   */  private static getEffectClassName(_type: TransitionType, _direction: 'enter' | 'exit'): string {
     // 🚀 DISABLED: Return empty string as no classes are applied
     return '';
   }

@@ -125,9 +125,8 @@ function checkCSSConflicts() {
       console.warn(`Could not access stylesheet ${sheetIndex}:`, e.message);
     }
   });
-  
-  const conflicts = Array.from(duplicateRules.entries())
-    .filter(([_, locations]) => locations.length > 1);
+    const conflicts = Array.from(duplicateRules.entries())
+    .filter(([, locations]) => locations.length > 1);
     if (conflicts.length > 0) {
     console.warn(`⚠️ CSS Conflicts detected (${conflicts.length} selectors):`);
     conflicts.slice(0, 10).forEach(([selector, locations]) => {
