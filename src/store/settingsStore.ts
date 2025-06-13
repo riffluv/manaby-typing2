@@ -37,7 +37,7 @@ const defaultSettings = {
 
 export const useSettingsStore = create<SettingsState>()(
   persist(
-    (set, get) => ({
+    (set) => ({
       ...defaultSettings,
       
       setEnableOptimization: (enabled: boolean) => set({ enableOptimization: enabled }),

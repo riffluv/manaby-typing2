@@ -1,19 +1,15 @@
 import React, { useState, useCallback, useMemo, useEffect, useRef } from 'react';
-import { useTypingGameStore, useQuestionCount } from '@/store/typingGameStore';
+import { useTypingGameStore } from '@/store/typingGameStore';
 import { useSceneNavigationStore } from '@/store/sceneNavigationStore';
 import { useGlobalShortcuts } from '@/hooks/useGlobalShortcuts';
 import styles from '@/styles/components/MainMenu.module.css';
 // ELDEN RING NIGHTREIGNスタイル用のトークンをインポート
 import '@/styles/components/elden-ring-tokens.css';
-import { deleteRankingEntriesByMode } from '@/lib/rankingManaby2';
-import CommonModal from './common/CommonModal';
-import CommonButton from './common/CommonButton';
 import AdminModal from './AdminModal';
 import OptimizedAudioSystem from '@/utils/OptimizedAudioSystem';
 
 interface MainMenuProps {
   onStart: () => void;
-  onRetry: () => void;
   onRanking: () => void;
 }
 
@@ -30,14 +26,12 @@ const modeDescriptions: Record<string, string> = {
  * MainMenu - 製品化レベル高品質メインメニュー
  * indexselect.htmlの完全再現 + アクセシビリティ + パフォーマンス最適化
  */
-const MainMenu: React.FC<MainMenuProps> = React.memo(({ onStart, onRetry, onRanking }) => {
-  // 直接のstore使用に変更
+const MainMenu: React.FC<MainMenuProps> = React.memo(({ onStart, onRanking }) => {  // 直接のstore使用に変更
   const mode = useTypingGameStore((state) => state.mode);
   const resetGame = useTypingGameStore((state) => state.resetGame);
   const setGameStatus = useTypingGameStore((state) => state.setGameStatus);
   const setMode = useTypingGameStore((state) => state.setMode);
-  const { setLastScore, goToSettings } = useSceneNavigationStore();
-  const questionCount = useQuestionCount();
+  const { goToSettings } = useSceneNavigationStore();
   
   // セキュリティチェック: 開発環境でのみ管理者機能を有効化
   const isDevelopment = process.env.NODE_ENV === 'development';
@@ -75,20 +69,10 @@ const MainMenu: React.FC<MainMenuProps> = React.memo(({ onStart, onRetry, onRank
   // 設定画面への移動をメモ化
   const handleGoSettings = useCallback(() => {
     goToSettings();
-  }, [goToSettings]);
-    // モード選択ハンドラー
+  }, [goToSettings]);  // モード選択ハンドラー
   const handleModeSelect = useCallback((newMode: 'normal' | 'hard' | 'sonkeigo' | 'kenjougo' | 'business') => {
     setMode(newMode);
-    // setModeSelectOpen(false); // ← これを削除
-  }, [setMode]);
-
-  // モーダルのキーボードナビゲーション対応
-  const handleModeSelectKeydown = useCallback((e: React.KeyboardEvent, newMode: 'normal' | 'hard' | 'sonkeigo' | 'kenjougo' | 'business') => {
-    if (e.key === 'Enter' || e.key === ' ') {
-      e.preventDefault();
-      handleModeSelect(newMode);
-    }
-  }, [handleModeSelect]);  // ショートカット定義をメモ化
+  }, [setMode]);// ショートカット定義をメモ化
   const shortcuts = useMemo(() => [
     {
       key: ' ',

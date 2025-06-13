@@ -45,13 +45,13 @@ const useAudioStoreBase = create<AudioState>((set, get) => ({
     }
   },
 
-  playSuccessSound: (volume = 1.0) => {
+  playSuccessSound: () => {
     if (get().effectsEnabled) {
       OptimizedAudioSystem.playSuccessSound();
     }
   },
 
-  playErrorSound: (volume = 1.0) => {
+  playErrorSound: () => {
     if (get().effectsEnabled) {
       OptimizedAudioSystem.playErrorSound();
     }

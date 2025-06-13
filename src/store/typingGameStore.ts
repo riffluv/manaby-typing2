@@ -2,7 +2,6 @@ import { create } from 'zustand';
 import { createSelectors } from '@/store/createSelectors';
 import { wordList } from '@/data/wordList';
 import { JapaneseConverter } from '@/typing';
-import { shallow } from 'zustand/shallow';
 
 /**
  * タイピングゲーム状態管理ストア
@@ -92,42 +91,6 @@ const loadQuestionHistory = (): QuestionHistory => {
       kenjougo: [],
       business: []
     };
-  }
-};
-
-// 履歴をLocalStorageに保存する関数
-const saveQuestionHistory = (history: QuestionHistory): void => {
-  if (typeof window !== 'undefined') {
-    try {
-      localStorage.setItem('typingQuestionHistory', JSON.stringify(history));
-    } catch (e) {
-      console.error('Failed to save question history:', e);
-    }
-  }
-};
-
-// 次の問題インデックスを選択する関数
-const selectNextQuestionIndex = (mode: TypingMode, list: any[], history: number[]): number => {
-  // 未出題の問題インデックスを見つける
-  const unseenIndices = list.map((_, index) => index).filter(idx => !history.includes(idx));
-  
-  if (unseenIndices.length > 0) {
-    // 未出題の問題からランダムに選択
-    const randomIndex = Math.floor(Math.random() * unseenIndices.length);
-    return unseenIndices[randomIndex];
-  } else {
-    // すべての問題が出題済みの場合は、すべてから再度ランダムに選択
-    // ただし直前に出題された問題は避ける
-    let newIndex = Math.floor(Math.random() * list.length);
-    const lastIndex = history.length > 0 ? history[history.length - 1] : -1;
-    
-    // 直前と同じ問題が選ばれそうな場合は違う問題を選ぶ（リストが複数ある場合）
-    if (newIndex === lastIndex && list.length > 1) {
-      // 異なるインデックスを強制的に選択
-      newIndex = (lastIndex + 1) % list.length;
-    }
-    
-    return newIndex;
   }
 };
 

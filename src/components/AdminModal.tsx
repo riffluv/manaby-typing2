@@ -21,24 +21,19 @@ const AdminModal: React.FC<AdminModalProps> = React.memo(({ isOpen, onClose }) =
   const questionCount = useQuestionCount();
   const { setQuestionCount } = useTypingGameStore();
   
-  // セキュリティチェック: 管理者パネルが有効かどうか確認
-  if (!isAdminEnabled()) {
-    showSecurityWarning();
-    return null;
-  }
+  // 状態管理 - フックは常にトップレベルで呼び出す
+  const [questionInput, setQuestionInput] = useState(questionCount);
+  const [status, setStatus] = useState('');
+  const [loading, setLoading] = useState(false);
+  const [showConfirmModal, setShowConfirmModal] = useState(false);
+  const [confirmAction, setConfirmAction] = useState<'normal' | 'hard' | null>(null);
   
   // 管理者パネルアクセスをログに記録
   React.useEffect(() => {
-    if (isOpen) {
+    if (isOpen && isAdminEnabled()) {
       logAdminAccess('Admin panel opened');
     }
   }, [isOpen]);
-  
-  // 状態管理
-  const [questionInput, setQuestionInput] = useState(questionCount);
-  const [status, setStatus] = useState('');
-  const [loading, setLoading] = useState(false);  const [showConfirmModal, setShowConfirmModal] = useState(false);
-  const [confirmAction, setConfirmAction] = useState<'normal' | 'hard' | null>(null);
   
   // 問題数の更新をメモ化
   const handleUpdateQuestionCount = useCallback(() => {
@@ -88,6 +83,7 @@ const AdminModal: React.FC<AdminModalProps> = React.memo(({ isOpen, onClose }) =
       setTimeout(() => setStatus(''), 3000);
     }
   }, [confirmAction]);
+  
   // モーダルを閉じる処理をメモ化
   const handleClose = useCallback(() => {
     setShowConfirmModal(false);
@@ -114,6 +110,12 @@ const AdminModal: React.FC<AdminModalProps> = React.memo(({ isOpen, onClose }) =
       handleUpdateQuestionCount();
     }
   }, [handleUpdateQuestionCount]);
+
+  // セキュリティチェック: 管理者パネルが有効かどうか確認
+  if (!isAdminEnabled()) {
+    showSecurityWarning();
+    return null;
+  }
 
   if (!isOpen) return null;
 

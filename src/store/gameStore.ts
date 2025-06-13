@@ -38,9 +38,7 @@ export const useGameStore = create<GameState>((set, get) => ({
     startTime: Date.now(),
   }),
   endGame: () => {
-    const { score, highScore, startTime } = get();
-    const endTime = Date.now();
-    const timeTaken = startTime ? (endTime - startTime) / 1000 : 0; // seconds
+    const { score, highScore } = get();
     // 必要に応じてスコア計算やハイスコア更新
     if (score > highScore) {
       set({ highScore: score });

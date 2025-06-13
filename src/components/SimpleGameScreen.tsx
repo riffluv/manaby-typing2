@@ -26,11 +26,8 @@ const SimpleGameScreen: React.FC<SimpleGameScreenProps> = React.memo(({
   // HybridTypingEngine用のTypingChar生成
   const typingChars = React.useMemo(() => {
     if (!currentWord.hiragana) return [];
-    return JapaneseConverter.convertToTypingChars(currentWord.hiragana);
-  }, [currentWord.hiragana]);  // HybridTypingEngine 設定 - 表示制御のみ（フォントは内部管理）
-  const hybridTypingConfig = React.useMemo(() => ({
-    showKanaDisplay,
-  }), [showKanaDisplay]);
+    return JapaneseConverter.convertToTypingChars(currentWord.hiragana);  }, [currentWord.hiragana]);
+  
   const { containerRef } = useHybridTyping({
     word: currentWord,
     typingChars,

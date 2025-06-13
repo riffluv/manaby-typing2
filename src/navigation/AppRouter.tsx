@@ -24,7 +24,7 @@ const AppRouter: React.FC = React.memo(() => {
       background: 'radial-gradient(circle, #0a0f1b 0%, #000000 100%)'
     }}>
       {currentScene === 'menu' && (
-        <MainMenu onStart={goToGame} onRanking={goToRanking} onRetry={goToGame} />
+        <MainMenu onStart={goToGame} onRanking={goToRanking} />
       )}
       {currentScene === 'ranking' && (
         <LazyRankingScreen onGoMenu={goToMenu} />
