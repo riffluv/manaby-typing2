@@ -358,12 +358,11 @@ export class HybridTypingEngine {
         if (this.state.currentIndex >= this.state.typingChars.length) {
           this.handleWordComplete();
           return;
-        }
-
-        // 🚀 軽量更新で高速レスポンス
-        this.scheduleCanvasUpdate();
+        }        // 🚀 typingmania-ref流：即座更新で最高レスポンス
+        this.updateCanvasStates();
+        this.renderCanvas();
         this.notifyProgress();
-        return;      } else {
+        return;} else {
         this.state.mistakeCount++;
         // 🚀 即座エラー音再生（遅延最小化）
         UltraFastAudioSystem.playErrorSound();
@@ -393,8 +392,9 @@ export class HybridTypingEngine {
       this.state.mistakeCount++;
       // 🚀 即座エラー音再生（遅延最小化）
       UltraFastAudioSystem.playErrorSound();
-    }    // 🚀 高速連続入力最適化 - Canvas更新をスケジュール化
-    this.scheduleCanvasUpdate();
+    }    // 🚀 typingmania-ref流：即座更新で最高レスポンス
+    this.updateCanvasStates();
+    this.renderCanvas();
     this.notifyProgress();
   }
 
