@@ -93,15 +93,10 @@ export class HybridTypingEngine {
   private container: HTMLElement | null = null;
   private originalTextDisplay: HTMLElement | null = null;
   private kanaDisplay: HTMLElement | null = null;
-  
-  // Canvas関連 - ローマ字専用
+    // Canvas関連 - ローマ字専用
   private romajiCanvas: HTMLCanvasElement | null = null;
   private ctx: CanvasRenderingContext2D | null = null;
   private canvasChars: CanvasRomajiChar[] = [];
-  
-  // 🚀 高速連続入力最適化
-  private canvasUpdateScheduled = false;
-  private canvasUpdateTimer?: number;
   
   private onProgress?: (index: number, display: KanaDisplay) => void;
   private onComplete?: (scoreLog: PerWordScoreLog) => void;
@@ -362,13 +357,14 @@ export class HybridTypingEngine {
         this.updateCanvasStates();
         this.renderCanvas();
         this.notifyProgress();
-        return;} else {
+        return;      } else {
         this.state.mistakeCount++;
         // 🚀 即座エラー音再生（遅延最小化）
         UltraFastAudioSystem.playErrorSound();
         
         // エラー時は即座に表示更新（視覚フィードバック重要）
-        this.forceCanvasUpdate();
+        this.updateCanvasStates();
+        this.renderCanvas();
         this.notifyProgress();
         return;
       }
@@ -591,50 +587,13 @@ export class HybridTypingEngine {
       
       this.onComplete(scoreLog);
     }
-  }
-  /**
+  }  /**
    * クリーンアップ
    */
   cleanup(): void {
-    // Canvas更新タイマーをクリア
-    if (this.canvasUpdateTimer) {
-      cancelAnimationFrame(this.canvasUpdateTimer);
-      this.canvasUpdateScheduled = false;
-    }
-    
     if (this.keyHandler) {
       window.removeEventListener('keydown', this.keyHandler, true);
       this.keyHandler = undefined;
     }
-  }
-
-  /**
-   * 🚀 高速連続入力最適化 - Canvas更新スケジュール
-   */
-  private scheduleCanvasUpdate(): void {
-    if (this.canvasUpdateScheduled) return; // 既にスケジュール済み
-    
-    this.canvasUpdateScheduled = true;
-    
-    // 🚀 即座に状態更新（音声フィードバック用）
-    this.updateCanvasStates();
-    
-    // 🚀 次のフレームでCanvas描画（高速連続入力時の負荷軽減）
-    this.canvasUpdateTimer = window.requestAnimationFrame(() => {
-      this.renderCanvas();
-      this.canvasUpdateScheduled = false;
-    });
-  }
-
-  /**
-   * 🚀 緊急Canvas更新 - エラー時や完了時の即座描画用
-   */
-  private forceCanvasUpdate(): void {
-    if (this.canvasUpdateTimer) {
-      cancelAnimationFrame(this.canvasUpdateTimer);
-      this.canvasUpdateScheduled = false;
-    }
-    this.updateCanvasStates();
-    this.renderCanvas();
   }
 }
