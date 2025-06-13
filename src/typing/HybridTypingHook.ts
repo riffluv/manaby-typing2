@@ -37,9 +37,7 @@ export function useHybridTyping({
     if (engineRef.current) {
       engineRef.current.cleanup();
     }    // 新しいハイブリッドエンジンを作成
-    const engine = new HybridTypingEngine({
-      showKanaDisplay: config.showKanaDisplay ?? showKanaDisplay,
-    });
+    const engine = new HybridTypingEngine();
 
     // 原文を設定（漢字入りのテキスト）
     const originalText = word.japanese || word.hiragana || '';

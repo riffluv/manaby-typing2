@@ -116,7 +116,6 @@ export class HybridTypingEngine {
     mistakeCount: 0,
     startTime: 0
   };
-
   private container: HTMLElement | null = null;
   private romajiCanvas: HTMLCanvasElement | null = null;
   private ctx: CanvasRenderingContext2D | null = null;
@@ -125,6 +124,7 @@ export class HybridTypingEngine {
   private onProgress?: (index: number, display: KanaDisplay) => void;
   private onComplete?: (scoreLog: PerWordScoreLog) => void;
   private keyHandler?: (e: KeyboardEvent) => void;
+  private focusOutHandler?: (e: FocusEvent) => void;
 
   /**
    * 初期化 - シンプルインターフェース
@@ -230,24 +230,56 @@ export class HybridTypingEngine {
         x += charSpacing;
       }
     });
-  }
-  /**
-   * 🚀 タイピンガーZ級超高速キーリスナー
+  }  /**
+   * 🚀 Container-Scoped キーリスナー - 他画面と完全分離
    */
   private setupKeyListener(): void {
+    if (!this.container) return;
+
+    // 🚀 コンテナをフォーカス可能にする
+    this.container.setAttribute('tabindex', '0');
+    this.container.style.outline = 'none';
+    this.container.focus();
+
+    // 🔥 コンテナレベルでのキーイベント処理（windowレベルではない）
     this.keyHandler = (e: KeyboardEvent) => {
-      if (e.ctrlKey || e.altKey || e.metaKey || e.key.length !== 1) return;
+      // 修飾キーや特殊キーは完全スルー（他画面のショートカット用）
+      if (e.ctrlKey || e.altKey || e.metaKey) return;
+      if (e.key.length !== 1 || e.key < ' ' || e.key > '~') return;
+      
+      // タイピング処理のみpreventDefault
       e.preventDefault();
-      e.stopImmediatePropagation(); // 🔥 即座停止
+      e.stopImmediatePropagation();
       this.processKey(e.key);
     };
 
-    // 🚀 最高優先度キャプチャ + パッシブ無効
-    window.addEventListener('keydown', this.keyHandler, { 
+    // 🚀 Container-Scopedイベントリスナー（windowではなくcontainer）
+    this.container.addEventListener('keydown', this.keyHandler, { 
       passive: false, 
-      capture: true,
-      once: false
+      capture: false
     });
+
+    // 🔥 フォーカス維持管理
+    this.setupFocusManagement();
+  }
+
+  /**
+   * 🚀 Container Focus Management - タイピング中のみフォーカス維持
+   */
+  private setupFocusManagement(): void {
+    if (!this.container) return;
+
+    // フォーカスアウト時の処理
+    this.focusOutHandler = (e: FocusEvent) => {
+      // タイピング中はフォーカスを戻す
+      setTimeout(() => {
+        if (this.container && this.state.currentIndex < this.state.typingChars.length) {
+          this.container.focus();
+        }
+      }, 10);
+    };
+
+    this.container.addEventListener('focusout', this.focusOutHandler);
   }
   /**
    * 🚀 タイピンガーZ級キー処理
@@ -424,8 +456,12 @@ export class HybridTypingEngine {
 
   /**
    * 完了処理 - シンプル
-   */
-  private handleWordComplete(): void {
+   */  private handleWordComplete(): void {
+    // 🚀 完了時にコンテナからフォーカスを外す
+    if (this.container) {
+      this.container.blur();
+    }
+
     if (!this.onComplete) return;
 
     const endTime = Date.now();
@@ -448,12 +484,37 @@ export class HybridTypingEngine {
 
   /**
    * クリーンアップ - シンプル
-   */
-  cleanup(): void {
-    if (this.keyHandler) {
-      window.removeEventListener('keydown', this.keyHandler, true);
+   */  cleanup(): void {
+    // 🚀 Container-scopedイベントリスナー削除
+    if (this.container && this.keyHandler) {
+      this.container.removeEventListener('keydown', this.keyHandler, false);
       this.keyHandler = undefined;
     }
+
+    if (this.container && this.focusOutHandler) {
+      this.container.removeEventListener('focusout', this.focusOutHandler);
+      this.focusOutHandler = undefined;
+    }
+
+    // 🚀 コンテナのフォーカス属性をリセット
+    if (this.container) {
+      this.container.removeAttribute('tabindex');
+      this.container.blur();
+    }
+
+    // 🚀 状態リセット
+    this.state = {
+      typingChars: [],
+      currentIndex: 0,
+      keyCount: 0,
+      mistakeCount: 0,
+      startTime: 0
+    };
+    
+    this.container = null;
+    this.romajiCanvas = null;
+    this.ctx = null;
+    this.canvasChars = [];
   }
 }
 
