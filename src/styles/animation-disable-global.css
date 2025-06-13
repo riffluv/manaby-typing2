@@ -11,107 +11,107 @@
  * override of all animation-related properties.
  */
 
-/* Universal animation disable */
-*,
-*::before,
-*::after {
+/* Universal animation disable with high specificity instead of !important */
+html body *,
+html body *::before,
+html body *::after {
   /* Disable all animations and transitions */
-  animation-duration: 0ms !important;
-  animation-delay: 0ms !important;
-  animation-iteration-count: 1 !important;
-  animation-fill-mode: none !important;
-  animation-play-state: paused !important;
+  animation-duration: 0ms;
+  animation-delay: 0ms;
+  animation-iteration-count: 1;
+  animation-fill-mode: none;
+  animation-play-state: paused;
   
-  transition-duration: 0ms !important;
-  transition-delay: 0ms !important;
+  transition-duration: 0ms;
+  transition-delay: 0ms;
   
   /* Prevent transform-based animations */
-  transform: none !important;
+  transform: none;
 }
 
-/* Specific CSS custom property overrides */
-:root {
+/* Specific CSS custom property overrides with higher specificity */
+html:root {
   /* Animation duration overrides */
-  --duration-instant: 0ms !important;
-  --duration-fast: 0ms !important;
-  --duration-normal: 0ms !important;
-  --duration-slow: 0ms !important;
-  --duration-slower: 0ms !important;
-  --duration-slowest: 0ms !important;
+  --duration-instant: 0ms;
+  --duration-fast: 0ms;
+  --duration-normal: 0ms;
+  --duration-slow: 0ms;
+  --duration-slower: 0ms;
+  --duration-slowest: 0ms;
   
   /* Transition overrides */
-  --transition-fast: none !important;
-  --transition-base: none !important;
-  --transition-slow: none !important;
-  --transition-bounce: none !important;
-  --transition-all: none !important;
-  --transition-shadow: none !important;
+  --transition-fast: none;
+  --transition-base: none;
+  --transition-slow: none;
+  --transition-bounce: none;
+  --transition-all: none;
+  --transition-shadow: none;
   
   /* Animation preset overrides */
-  --animation-fade: none !important;
-  --animation-slide: none !important;
-  --animation-scale: none !important;
-  --animation-fade-in: none !important;
-  --animation-fade-out: none !important;
-  --animation-slide-in: none !important;
-  --animation-bounce-in: none !important;
-  --animation-scale-in: none !important;
+  --animation-fade: none;
+    --animation-slide: none;
+  --animation-scale: none;
+  --animation-fade-in: none;
+  --animation-fade-out: none;
+  --animation-slide-in: none;
+  --animation-bounce-in: none;
+  --animation-scale-in: none;
   
   /* Easing function overrides (set to none to disable) */
-  --easing-smooth: none !important;
-  --easing-bounce: none !important;
-  --easing-spring: none !important;
-  --easing-linear: none !important;
-  --easing-ease: none !important;
-  --easing-sharp: none !important;
+  --easing-smooth: none;
+  --easing-bounce: none;
+  --easing-spring: none;
+  --easing-linear: none;
+  --easing-ease: none;
+  --easing-sharp: none;
 }
 
-/* Specific component animation overrides */
-[class*="animate-"],
-[class*="transition-"],
-[class*="fade-"],
-[class*="slide-"],
-[class*="scale-"],
-[class*="bounce-"],
-[class*="glow-"],
-[class*="pulse-"] {
-  animation: none !important;
-  transition: none !important;
-  transform: none !important;
+/* Specific component animation overrides with higher specificity */
+html body [class*="animate-"],
+html body [class*="transition-"],
+html body [class*="fade-"],
+html body [class*="slide-"],
+html body [class*="scale-"],
+html body [class*="bounce-"],
+html body [class*="glow-"],
+html body [class*="pulse-"] {
+  animation: none;
+  transition: none;
+  transform: none;
 }
 
-/* CSS animation class overrides */
-.animate-spin,
-.animate-ping,
-.animate-pulse,
-.animate-bounce {
-  animation: none !important;
+/* CSS animation class overrides with higher specificity */
+html body .animate-spin,
+html body .animate-ping,
+html body .animate-pulse,
+html body .animate-bounce {
+  animation: none;
 }
 
 /* Will-change property reset for performance */
-* {
-  will-change: auto !important;
+html body * {
+  will-change: auto;
 }
 
-/* Media query overrides */
+/* Media query overrides with higher specificity */
 @media (prefers-reduced-motion: reduce) {
-  *,
-  *::before,
-  *::after {
-    animation-duration: 0ms !important;
-    transition-duration: 0ms !important;
-    transform: none !important;
+  html body *,
+  html body *::before,
+  html body *::after {
+    animation-duration: 0ms;
+    transition-duration: 0ms;
+    transform: none;
   }
 }
 
 @media (prefers-reduced-motion: no-preference) {
   /* Even when users prefer motion, disable for rich transition library */
-  *,
-  *::before,
-  *::after {
-    animation-duration: 0ms !important;
-    transition-duration: 0ms !important;
-    transform: none !important;
+  html body *,
+  html body *::before,
+  html body *::after {
+    animation-duration: 0ms;
+    transition-duration: 0ms;
+    transform: none;
   }
 }
 

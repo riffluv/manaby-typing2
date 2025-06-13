@@ -1,56 +1,87 @@
 # Pre-Commit Check Script
-# コミット前の安全チェック用
+# UTF-8 エンコーディング対応版
 
-Write-Host "🔍 コミット前チェックを実行します..." -ForegroundColor Yellow
+# PowerShellの文字エンコーディングを設定
+[Console]::OutputEncoding = [System.Text.Encoding]::UTF8
+$OutputEncoding = [System.Text.Encoding]::UTF8
 
-# 1. 空ファイル検出
-Write-Host "📁 空ファイルチェック..." -ForegroundColor Cyan
-$emptyFiles = Get-ChildItem -Recurse -File | Where-Object { 
-    $_.Length -eq 0 -and 
-    $_.FullName -notlike "*node_modules*" -and
-    $_.Name -ne "settings.json" -and
-    $_.Name -ne ".gitkeep"
-}
+Write-Host "CSS Conflict & Design Best Practices Check" -ForegroundColor Yellow
 
-$hasIssues = $false
-
-if ($emptyFiles) {
-    Write-Host "❌ 空ファイルが見つかりました:" -ForegroundColor Red
-    $emptyFiles | ForEach-Object { Write-Host "  - $($_.FullName)" -ForegroundColor Yellow }
-    $hasIssues = $true
-}
-
-# 2. ステージングエリアチェック
-Write-Host "📋 ステージングエリアチェック..." -ForegroundColor Cyan
-$stagedFiles = git diff --cached --name-only
-if ($stagedFiles) {
-    Write-Host "📝 ステージングされたファイル:" -ForegroundColor Green
-    $stagedFiles | ForEach-Object { Write-Host "  + $_" -ForegroundColor Green }
-} else {
-    Write-Host "⚠️ ステージングされたファイルがありません" -ForegroundColor Yellow
-    $hasIssues = $true
-}
-
-# 3. 最適化ファイル検出
-Write-Host "🔧 不要ファイルチェック..." -ForegroundColor Cyan
-$unnecessaryFiles = Get-ChildItem -Recurse -Include "*.optimized.*", "*.backup.*", "*-responsive.*" | 
+# 1. CSS競合チェック
+Write-Host "CSS Conflicts Check..." -ForegroundColor Cyan
+$cssFiles = Get-ChildItem -Recurse -Include "*.css", "*.module.css" | 
     Where-Object { $_.FullName -notlike "*node_modules*" }
 
-if ($unnecessaryFiles) {
-    Write-Host "❌ 不要ファイルが見つかりました:" -ForegroundColor Red
-    $unnecessaryFiles | ForEach-Object { Write-Host "  - $($_.FullName)" -ForegroundColor Yellow }
-    $hasIssues = $true
+$conflictIssues = @()
+
+foreach ($file in $cssFiles) {
+    $content = Get-Content $file.FullName -Encoding UTF8 -ErrorAction SilentlyContinue
+    if ($content) {
+        # !important 使用チェック
+        $importantCount = ($content | Select-String -Pattern "!important" -AllMatches).Matches.Count
+        if ($importantCount -gt 0) {
+            $conflictIssues += "WARN: $($file.Name) has $importantCount '!important' declarations"
+        }
+        
+        # インラインスタイルチェック
+        $inlineStyles = ($content | Select-String -Pattern "style\s*=" -AllMatches).Matches.Count
+        if ($inlineStyles -gt 0) {
+            $conflictIssues += "WARN: $($file.Name) has $inlineStyles inline styles"
+        }
+        
+        # CSS Modules準拠チェック
+        if ($file.Name -like "*.module.css") {
+            $nonBemClasses = $content | Select-String -Pattern "\.[a-z]+[A-Z]" -AllMatches
+            if ($nonBemClasses.Matches.Count -gt 0) {
+                $conflictIssues += "INFO: $($file.Name) may have non-BEM classes"
+            }
+        }
+    }
 }
 
-# 4. 結果
-if ($hasIssues) {
-    Write-Host "`n❌ コミット前に問題を修正してください！" -ForegroundColor Red
-    Write-Host "💡 解決方法:" -ForegroundColor Magenta
-    Write-Host "  1. 空ファイルを削除: Get-ChildItem -Recurse -File | Where-Object { `$_.Length -eq 0 } | Remove-Item" -ForegroundColor White
-    Write-Host "  2. 不要ファイルを削除" -ForegroundColor White
-    Write-Host "  3. 必要なファイルをステージング: git add <file>" -ForegroundColor White
+# 2. Design Best Practices チェック
+Write-Host "Design Best Practices Check..." -ForegroundColor Cyan
+$practicesIssues = @()
+
+# CSS-Design-Best-Practices.mdの存在確認
+$bestPracticesFile = "CSS-Design-Best-Practices.md"
+if (Test-Path $bestPracticesFile) {
+    Write-Host "  Found: $bestPracticesFile" -ForegroundColor Green
+} else {
+    $practicesIssues += "ERROR: CSS-Design-Best-Practices.md not found"
+}
+
+# デザイントークンファイルの確認
+$designTokenFiles = Get-ChildItem -Recurse -Include "*tokens*", "*variables*", "*globals*" -Name "*.css"
+if ($designTokenFiles) {
+    Write-Host "  Design Token Files:" -ForegroundColor Green
+    $designTokenFiles | ForEach-Object { Write-Host "    + $_" -ForegroundColor Green }
+} else {
+    $practicesIssues += "WARN: No design token files found"
+}
+
+if ($conflictIssues -or $practicesIssues) {
+    Write-Host "`nIssues Found:" -ForegroundColor Red
+    ($conflictIssues + $practicesIssues) | ForEach-Object { Write-Host "  - $_" -ForegroundColor Yellow }
+} else {
+    Write-Host "`nAll checks passed!" -ForegroundColor Green
+}
+
+# 3. CSS Files Analysis
+Write-Host "`nCSS Files Analysis:" -ForegroundColor Cyan
+$cssFiles | ForEach-Object {
+    $fileSize = [math]::Round($_.Length / 1KB, 2)
+    $status = if ($_.Name -like "*.module.css") { "CSS Modules" } else { "Global CSS" }
+    Write-Host "  $($_.Name) - ${fileSize}KB ($status)" -ForegroundColor White
+}
+
+Write-Host "`nCheck completed!" -ForegroundColor Green
+
+# 4. Final Status
+if ($conflictIssues.Count -gt 0 -or $practicesIssues.Count -gt 0) {
+    Write-Host "`n⚠️ Issues found - Review recommended before commit" -ForegroundColor Yellow
     exit 1
 } else {
-    Write-Host "`n✅ コミット準備完了！" -ForegroundColor Green
-    Write-Host "🚀 git commit でコミットできます" -ForegroundColor Cyan
+    Write-Host "`n✅ All checks passed!" -ForegroundColor Green
+    Write-Host "🚀 Ready for commit" -ForegroundColor Cyan
 }

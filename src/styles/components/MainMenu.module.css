@@ -1,42 +1,15 @@
 /* ==========================================================================
-   MainMenu - CSS-Design-Best-Practices.md完全準拠版 - ELDEN RING NIGHTREIGN風
+   MainMenu - CSS-Design-Best-Practices.md完全準拠版
    - デザイントークン駆動設計
    - BEM記法統一
-   - モダンCSS機能活用
-   - ELDEN RING NIGHTREIGN風デザイン実装
+   - アニメーション完全削除（スパゲティ解消）
+   - !important最小化
    ========================================================================== */
 
 /* ==========================================================================
    Import Design Tokens
    ========================================================================== */
 @import url('https://fonts.googleapis.com/css2?family=Cinzel:wght@400;700&display=swap');
-
-/* ==========================================================================
-   🚀 MAINMENU ANIMATIONS DISABLED FOR FUTURE RICH TRANSITION LIBRARY
-   ========================================================================== */
-
-/* Global animation disable for MainMenu component */
-.mainMenu *,
-.mainMenu *::before,
-.mainMenu *::after {
-  animation: none !important;
-  transition: none !important;
-  transform: none !important;
-}
-
-/* Specific animation overrides */
-.mainMenu__subtitle,
-.mainMenu__nav,
-.mainMenu__navItem,
-.mainMenu__container,
-.modal,
-.modal__content,
-.modal__option {
-  animation: none !important;
-  transition: none !important;
-  transform: none !important;
-  opacity: 1 !important;
-}
 
 /* ==========================================================================
    Main Menu Container - BEM Block
@@ -47,6 +20,7 @@
   width: 100%;
   height: 100vh;
   min-height: 100vh;
+  
   /* Background: ELDEN RING風ナイトスカイ背景 - コードのみで再現 */
   background: 
     radial-gradient(ellipse at center, rgba(10, 20, 38, 0.95) 0%, rgba(2, 4, 8, 0.98) 70%),
@@ -59,8 +33,6 @@
       transparent 4%
     );
   background-blend-mode: normal, overlay, color;
-  position: relative;
-  overflow: hidden;
   
   /* Typography: Primary font */
   font-family: var(--font-family-game, 'Cinzel', serif);
@@ -74,18 +46,11 @@
   justify-content: center;
   align-items: center;
   
-  /* Performance: GPU optimization */
-  will-change: transform;
-  contain: layout style;
-  
   /* Position: Fixed fullscreen */
   position: fixed;
   top: 0;  
   left: 0;
   z-index: var(--z-index-modal, 1000);
-  
-  /* Animation */
-  animation: fadeInBackground 1.5s ease-out forwards;
   
   /* Reset: Box model */
   margin: 0;
@@ -122,12 +87,6 @@
   
   /* 🚀 2025年最新CSS設計: Container Queries サポート */
   container: main-menu / inline-size;
-  
-  /* Animation */
-  animation: fadeUpElements 1.2s ease-out forwards;
-  animation-delay: 0.3s;
-  opacity: 0;
-  transform: translateY(30px);
 }
 
 /* ==========================================================================
@@ -164,17 +123,14 @@
   /* Spacing */
   margin: 0;
   padding-bottom: 0.2rem;
-  
-  /* Animation */
-  animation: titleGlow 3s infinite alternate ease-in-out;
 }
 
 .mainMenu__subtitle {
   /* Typography: Extra large subtitle - NIGHTREIGN風 */
-  font-size: clamp(4rem, 10vw, 6rem) !important;
+  font-size: clamp(4rem, 10vw, 6rem);
   font-family: var(--font-family-game, 'Cinzel', serif);
   font-weight: 700;
-  letter-spacing: 0.8rem !important;
+  letter-spacing: 0.8rem;
   
   /* Color: NIGHTREIGN風の青白い氷の質感 */
   background: linear-gradient(
@@ -198,9 +154,6 @@
   
   /* Spacing */
   margin: var(--spacing-sm, 0.5rem) 0 var(--spacing-xl, 3rem);
-  
-  /* Animation */
-  animation: subtitleGlow 4s infinite alternate ease-in-out;
 }
 
 /* ==========================================================================
@@ -216,11 +169,6 @@
   
   /* Spacing */
   margin-top: 2.5rem;
-  
-  /* Animation: 順番に表示 */
-  opacity: 0;
-  animation: fadeUpElements 1s ease-out forwards;
-  animation-delay: 0.7s;
 }
 
 .mainMenu__navItem {
@@ -247,9 +195,6 @@
   
   /* Position: For pseudo elements */
   position: relative;
-  
-  /* Transition: Smooth hover */
-  transition: all 0.3s ease;
 }
 
 /* Navigation item hover state */
@@ -259,61 +204,7 @@
   text-shadow: 
     0 0 10px rgba(163, 216, 255, 0.8),
     0 0 20px rgba(163, 216, 255, 0.4);
-  transform: scale(1.05);
-  letter-spacing: 0.2rem;
   outline: none;
-}
-
-/* Navigation item decorative line - left */
-.mainMenu__navItem:hover::before,
-.mainMenu__navItem:focus::before {
-  content: '';
-  position: absolute;
-  top: 50%;
-  left: -40px;
-  transform: translateY(-50%);
-  width: 30px;
-  height: 1px;
-  background: linear-gradient(
-    to right, 
-    transparent, 
-    rgba(163, 216, 255, 0.3),
-    #a3d8ff,
-    #ffffff
-  );
-  animation: lineGrow 0.3s ease-out forwards;
-}
-
-/* Navigation item decorative line - right */
-.mainMenu__navItem:hover::after,
-.mainMenu__navItem:focus::after {
-  content: '';
-  position: absolute;
-  top: 50%;
-  right: -40px;
-  transform: translateY(-50%);
-  width: 30px;
-  height: 1px;
-  background: linear-gradient(
-    to left, 
-    transparent, 
-    rgba(163, 216, 255, 0.3),
-    #a3d8ff,
-    #ffffff
-  );
-  animation: lineGrow 0.3s ease-out forwards;
-}
-
-/* Line growth animation */
-@keyframes lineGrow {
-  0% {
-    width: 0;
-    opacity: 0;
-  }
-  100% {
-    width: 30px;
-    opacity: 1;
-  }
 }
 
 /* ==========================================================================
@@ -340,53 +231,22 @@
    ========================================================================== */
 
 .mainMenu__shortcut {
-  /* 🚀 2025 CSS Design: 強制的な横並び配置（最優先） */
-  position: absolute !important;
-  bottom: var(--spacing-lg, 28px) !important;
-  left: 0 !important;
-  right: 0 !important;
-  width: 100% !important;
+  /* ショートカット案内を視覚的に非表示にする */
+  /* ユーザー要求: デザインのみ削除、機能は保持 */
+  display: none;
   
-  /* Layout: 強制的なFlexbox横並び */
-  display: flex !important;
-  flex-direction: row !important;
-  justify-content: center !important;
-  align-items: center !important;
-  gap: var(--spacing-lg, 2rem) !important;
-  flex-wrap: wrap !important;
-  
-  /* Container Queries Support (2025) */
-  container: shortcut-area / inline-size;
-  
-  /* Typography: Responsive Design Tokens */
-  font-size: var(--font-size-sm, 0.85rem);
-  font-family: var(--font-family-game, 'Cinzel', serif);
-  font-weight: bold;
-  letter-spacing: 0.05rem;
-  
-  /* Color: Design Tokens Driven */
-  color: var(--color-nightreign-blue-light, #a3d8ff);
-  opacity: 0.8;
-  
-  /* Effects: 2025 Optimized Glow */
-  text-shadow: 
-    0 0 3px rgba(0, 0, 0, 0.8), 
-    0 0 6px rgba(163, 216, 255, 0.4),
-    0 0 12px rgba(163, 216, 255, 0.2);
-  
-  /* Performance: GPU Acceleration */
-  will-change: transform;
-  contain: layout style;
+  /* アクセシビリティ対応: スクリーンリーダー向けは残す */
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
 }
 
-/* ショートカット案内の子要素（span）を横並びに強制 */
+/* ショートカット案内の子要素（span）制御 - 非表示のため無効化 */
 .mainMenu__shortcut > span {
-  display: inline-block !important;
-  white-space: nowrap !important;
-  margin: 0 !important;
-  padding: 0 !important;
-  flex-shrink: 0 !important;
-  line-height: 1 !important;
+  display: none;
 }
 
 .mainMenu__footer {
@@ -415,7 +275,6 @@
 
 /* Footer copyright text */
 .mainMenu__footer__copyright {
-  /* Typography: Inherit from parent */
   font-size: inherit;
   font-family: inherit;
   font-weight: inherit;
@@ -424,93 +283,340 @@
 
 /* Footer version text */
 .mainMenu__footer__version {
-  /* Typography: Inherit from parent */
   font-size: inherit;
   font-family: inherit;
   font-weight: inherit;
-  
-  /* Color: Slightly brighter */
   color: var(--color-gaming-text-secondary, #999);
 }
 
 /* ==========================================================================
-   Animations - ELDEN RING風
+   Error Display - BEM Element
    ========================================================================== */
 
-@keyframes fadeInBackground {
-  0% {
-    opacity: 0;
+.mainMenu__error {
+  /* Position: Top center */
+  position: absolute;
+  top: var(--spacing-md, 20px);
+  left: 50%;
+  transform: translateX(-50%);
+  
+  /* Size: Responsive width */
+  max-width: 80%;
+  
+  /* Style: Error box - ELDEN RING風 */
+  background: rgba(100, 0, 0, 0.3);
+  border: 1px solid rgba(255, 100, 100, 0.3);
+  border-radius: var(--border-radius-sm, 4px);
+  
+  /* Typography: Small */
+  font-size: var(--font-size-sm, 0.9rem);
+  font-family: var(--font-family-game, 'Cinzel', serif);
+  text-align: center;
+  
+  /* Color: Error */
+  color: #ff9999;
+  
+  /* Spacing */
+  padding: var(--spacing-sm, 0.8rem) var(--spacing-md, 1.5rem);
+  
+  /* Effects */
+  box-shadow: 0 0 10px rgba(255, 0, 0, 0.2);
+}
+
+/* ==========================================================================
+   Modal Base - BEM Block - ELDEN RING風
+   ========================================================================== */
+
+.modal {
+  /* Position: Fixed fullscreen overlay */
+  position: fixed;
+  inset: 0;
+  
+  /* Layout: Center content */
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  
+  /* Layer: Above main menu */
+  z-index: var(--z-index-modal-overlay, 2000);
+  
+  /* Background: Dark overlay with enhanced atmosphere */
+  background: radial-gradient(
+    circle at center,
+    rgba(0, 0, 0, 0.85),
+    rgba(0, 0, 0, 0.95)
+  );
+  backdrop-filter: blur(8px);
+  
+  /* Typography: ELDEN RING font */
+  font-family: var(--font-eldenring-title, 'Cinzel', serif);
+  color: var(--color-eldenring-text-primary, #e0e0e0);
+}
+
+/* Modal content container */
+.modal__content {
+  /* Position: Above overlay */
+  position: relative;
+  z-index: 1;
+  
+  /* Layout: Two-column layout */
+  display: flex;
+  width: min(90vw, 800px);
+  height: min(80vh, 600px);
+  
+  /* Visual: Gaming theme styling - ELDEN RING NIGHTREIGN風 */
+  background: linear-gradient(135deg, 
+    var(--color-eldenring-bg-tertiary, rgba(16, 24, 48, 0.98)), 
+    var(--color-eldenring-bg-primary, rgba(5, 10, 20, 0.99))
+  );
+  border: 2px solid rgba(163, 216, 255, 0.3);
+  border-radius: var(--border-radius-sm, 4px);
+  box-shadow: 
+    0 20px 40px rgba(0, 0, 0, 0.9),
+    0 0 30px rgba(163, 216, 255, 0.15),
+    0 0 50px rgba(163, 216, 255, 0.05),
+    inset 0 1px 0 rgba(255, 255, 255, 0.05);
+  
+  /* Overflow: Hidden for clean edges */
+  overflow: hidden;
+}
+
+/* Modal sidebar (mode list) */
+.modal__sidebar {
+  /* Layout: Fixed width sidebar */
+  flex: 0 0 250px;
+  padding: var(--spacing-lg, 1.5rem);
+  
+  /* Background: Slightly darker with gradient */
+  background: 
+    linear-gradient(to right,
+      rgba(0, 0, 0, 0.5),
+      rgba(0, 0, 0, 0.3)
+    );
+  border-right: 1px solid rgba(163, 216, 255, 0.25);
+  
+  /* Layout: Vertical stack */
+  display: flex;
+  flex-direction: column;
+  gap: var(--spacing-md, 1rem);
+}
+
+/* Mode option buttons */
+.modal__option {
+  /* Reset: Button styles */
+  border: none;
+  outline: none;
+  background: none;
+  cursor: pointer;
+  
+  /* Layout: Full width */
+  width: 100%;
+  padding: var(--spacing-md, 1rem);
+  text-align: left;
+  position: relative;
+  
+  /* Typography: Menu item - ELDEN RING font */
+  font-size: var(--font-size-base, 1rem);
+  font-family: var(--font-eldenring-title, 'Cinzel', serif);
+  font-weight: 500;
+  letter-spacing: var(--letter-spacing-eldenring-menu, 0.15rem);
+  
+  /* Color: Primary text */
+  color: var(--color-eldenring-text-secondary, #b0b0b0);
+  
+  /* Border: Bottom only with faded effect */
+  border-bottom: 1px solid rgba(163, 216, 255, 0.1);
+  
+  /* Subtle text shadow for all options */
+  text-shadow: 0 0 4px rgba(163, 216, 255, 0.1);
+}
+
+/* Mode option hover state */
+.modal__option:hover,
+.modal__option:focus {
+  background: rgba(163, 216, 255, 0.07);
+  color: #ffffff;
+  text-shadow: 
+    0 0 6px rgba(163, 216, 255, 0.6),
+    0 0 12px rgba(163, 216, 255, 0.2);
+  outline: none;
+}
+
+/* Mode option selected state */
+.modal__option--selected {
+  background: rgba(163, 216, 255, 0.15);
+  color: var(--color-nightreign-blue-light, #a3d8ff);
+  text-shadow: 
+    0 0 8px rgba(163, 216, 255, 0.6),
+    0 0 16px rgba(163, 216, 255, 0.3);
+  border-left: 2px solid var(--color-nightreign-blue-light, #a3d8ff);
+  
+  /* Layout: Add left padding */
+  padding-left: calc(var(--spacing-md, 1rem) - 2px);
+}
+
+/* Modal main content */
+.modal__main {
+  /* Layout: Flexible content area */
+  flex: 1;
+  padding: var(--spacing-lg, 1.5rem);
+  
+  /* Layout: Content position */
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+}
+
+/* Modal description text */
+.modal__description {
+  /* Typography: Description text */
+  font-size: var(--font-size-base, 1rem);
+  font-family: var(--font-family-primary, 'Noto Sans JP', sans-serif);
+  line-height: 1.6;
+  
+  /* Color: Improved text with subtle glow */
+  color: var(--color-eldenring-text-primary, #e0e0e0);
+  text-shadow: 0 0 8px rgba(163, 216, 255, 0.1);
+  
+  /* Spacing: Push away from bottom button */
+  margin-bottom: auto;
+  padding-bottom: var(--spacing-lg, 1.5rem);
+  
+  /* Visual enhancement */
+  position: relative;
+  border-left: 2px solid rgba(163, 216, 255, 0.1);
+  padding-left: var(--spacing-md, 1rem);
+  
+  /* 🚀 修正: 静的表示 */
+  opacity: 1;
+  transform: none;
+}
+
+/* Modal close button */
+.modal__close {
+  /* Layout: Self-align with improved positioning */
+  align-self: flex-end;
+  margin-top: var(--spacing-lg, 1.5rem);
+  position: relative;
+  
+  /* Style: ELDEN RING NIGHTREIGN風ボタン */
+  background: rgba(16, 24, 48, 0.6);
+  border: 1px solid rgba(163, 216, 255, 0.3);
+  border-radius: var(--border-radius-sm, 4px);
+  padding: var(--spacing-sm, 0.5rem) var(--spacing-lg, 1.5rem);
+  
+  /* Typography: Button text - ELDEN RING font */
+  font-size: var(--font-size-base, 1rem);
+  font-family: var(--font-eldenring-title, 'Cinzel', serif);
+  font-weight: 500;
+  letter-spacing: var(--letter-spacing-eldenring-menu, 0.15rem);
+  
+  /* Color: Button text with slight glow */
+  color: var(--color-nightreign-blue-light, #a3d8ff);
+  text-shadow: 0 0 6px rgba(163, 216, 255, 0.3);
+  
+  /* Interactive: Cursor */
+  cursor: pointer;
+  
+  /* Add box shadow */
+  box-shadow: 
+    0 3px 6px rgba(0, 0, 0, 0.3),
+    inset 0 1px rgba(255, 255, 255, 0.1);
+}
+
+/* Modal close button hover state */
+.modal__close:hover,
+.modal__close:focus {
+  background: rgba(16, 24, 48, 0.8);
+  color: #ffffff;
+  text-shadow: 
+    0 0 8px rgba(163, 216, 255, 0.6),
+    0 0 16px rgba(163, 216, 255, 0.3);
+  border-color: rgba(163, 216, 255, 0.5);
+  box-shadow: 
+    0 6px 12px rgba(0, 0, 0, 0.3),
+    0 0 20px rgba(163, 216, 255, 0.2),
+    inset 0 1px rgba(255, 255, 255, 0.15);
+  outline: none;
+}
+
+/* ==========================================================================
+   2025年最新CSS設計: Container Queries レスポンシブ対応
+   ========================================================================== */
+
+/* Container Query: メインメニュー全体のサイズ対応 */
+@container main-menu (width < 480px) {
+  .mainMenu__title {
+    font-size: clamp(1.8rem, 5vw, 2.5rem);
+    letter-spacing: 0.2rem;
   }
-  100% {
-    opacity: 1;
+  
+  .mainMenu__subtitle {
+    font-size: clamp(4rem, 10vw, 6rem);
+    letter-spacing: 0.8rem;
+  }
+  
+  .mainMenu__shortcut {
+    font-size: clamp(0.7rem, 2vw, 0.85rem);
+    gap: var(--spacing-sm, 0.8rem);
+    bottom: var(--spacing-md, 20px);
   }
 }
 
-@keyframes fadeUpElements {
-  0% {
-    opacity: 0;
-    transform: translateY(20px);
+@container main-menu (width >= 480px) and (width < 768px) {
+  .mainMenu__title {
+    font-size: clamp(2.2rem, 5.5vw, 3rem);
+    letter-spacing: 0.3rem;
   }
-  100% {
-    opacity: 1;
-    transform: translateY(0);
+  
+  .mainMenu__subtitle {
+    font-size: clamp(4rem, 10vw, 6rem);
+    letter-spacing: 0.8rem;
   }
-}
-
-@keyframes titleGlow {
-  0% {
-    text-shadow: 
-      0 0 10px rgba(255, 223, 128, 0.4),
-      0 0 20px rgba(255, 223, 128, 0.2);
-    filter: drop-shadow(0 0 2px rgba(255, 223, 128, 0.6));
-  }
-  50% {
-    text-shadow: 
-      0 0 12px rgba(255, 223, 128, 0.5),
-      0 0 25px rgba(255, 223, 128, 0.25);
-    filter: drop-shadow(0 0 3px rgba(255, 223, 128, 0.7));
-  }
-  100% {
-    text-shadow: 
-      0 0 15px rgba(255, 223, 128, 0.6),
-      0 0 30px rgba(255, 223, 128, 0.3);
-    filter: drop-shadow(0 0 4px rgba(255, 223, 128, 0.8));
+    .mainMenu__shortcut {
+    display: none; /* ショートカット案内を非表示 */
   }
 }
 
-@keyframes subtitleGlow {
-  0% {
-    text-shadow: 
-      0 0 15px rgba(163, 216, 255, 0.5),
-      0 0 30px rgba(163, 216, 255, 0.2);
-    filter: drop-shadow(0 0 2px rgba(163, 216, 255, 0.7));
+@container main-menu (width >= 768px) {
+  .mainMenu__title {
+    font-size: var(--font-size-game-title, clamp(2.5rem, 6vw, 3.5rem));
+    letter-spacing: 0.4rem;
   }
-  50% {
-    text-shadow: 
-      0 0 18px rgba(163, 216, 255, 0.6),
-      0 0 35px rgba(163, 216, 255, 0.3);
-    filter: drop-shadow(0 0 3px rgba(163, 216, 255, 0.8));
+  
+  .mainMenu__subtitle {
+    font-size: clamp(4rem, 10vw, 6rem);
+    letter-spacing: 0.8rem;
   }
-  100% {
-    text-shadow: 
-      0 0 20px rgba(163, 216, 255, 0.7),
-      0 0 40px rgba(163, 216, 255, 0.4);
-    filter: drop-shadow(0 0 4px rgba(163, 216, 255, 0.9));
+    .mainMenu__shortcut {
+    display: none; /* ショートカット案内を非表示 */
   }
 }
 
-/* Loading state for button */
-.mainMenu__navItem--loading {
-  animation: loadingPulse 1.5s infinite alternate ease-in-out;
-  cursor: wait;
+/* Container Query: ショートカット案内専用のコンテナ対応 */
+@container shortcut-area (width < 300px) {
+  .mainMenu__shortcut {
+    display: none; /* ショートカット案内を非表示 */
+  }
 }
 
-@keyframes loadingPulse {
-  0% {
-    opacity: 0.6;
+@container shortcut-area (width >= 300px) and (width < 500px) {
+  .mainMenu__shortcut {
+    flex-direction: row;
+    gap: var(--spacing-sm, 10px);
+    font-size: 0.8rem;
+    flex-wrap: wrap;
+    justify-content: center;
   }
-  100% {
-    opacity: 1;
+}
+
+@container shortcut-area (width >= 500px) {
+  .mainMenu__shortcut {
+    flex-direction: row;
+    gap: var(--spacing-md, 14px);
+    font-size: var(--font-size-body, clamp(0.85rem, 2.5vw, 0.95rem));
+    flex-wrap: wrap;
+    justify-content: center;
   }
 }
 
@@ -533,28 +639,19 @@
   
   .mainMenu__navItem {
     font-size: var(--font-size-base, 1.2rem);
-  }  .mainMenu__shortcut {
-    /* 2025 Responsive: Container Query Optimization */
+  }
+  
+  .mainMenu__shortcut {
     gap: var(--spacing-md, 1rem);
     font-size: var(--font-size-xs, 0.75rem);
     bottom: var(--spacing-md, 20px);
-    
-    /* 2025: Perfect Center Maintained on Mobile */
     justify-content: center;
     align-items: center;
-    
-    /* Mobile-specific Container Queries */
-    container: shortcut-mobile / inline-size;
   }
   
   .mainMenu__footer {
     padding: 0 var(--spacing-sm, 10px);
     font-size: var(--font-size-xs, 0.65rem);
-  }
-  
-  .mainMenu__footer__copyright,
-  .mainMenu__footer__version {
-    font-size: inherit;
   }
   
   /* Modal mobile optimization */
@@ -618,31 +715,23 @@
   }
 }
 
-/* High DPI optimization */
-@media (min-resolution: 192dpi) {
-  .mainMenu {
-    transform: scale(0.95);
-    transform-origin: top left;
-  }
-  
-  /* 2025 DPI: Shortcut Perfect Center on High DPI */
+/* 小画面での最終調整 */
+@media (width < 480px) {
   .mainMenu__shortcut {
-    /* Ensure perfect centering on high DPI displays */
+    flex-direction: row;
+    gap: 0.8rem;
+    align-items: center;
+    justify-content: center;
     left: 0;
     right: 0;
     width: 100%;
-    justify-content: center;
-    align-items: center;
-    
-    /* High DPI text optimization */
-    text-rendering: optimizeLegibility;
-    -webkit-font-smoothing: antialiased;
-    -moz-osx-font-smoothing: grayscale;
+    text-align: center;
+    transform: translateX(0);
   }
 }
 
 /* ==========================================================================
-   Accessibility - WCAG 2.1 Compliance
+   アクセシビリティ - WCAG 2.1 Compliance
    ========================================================================== */
 
 /* Focus visible indicators */
@@ -661,40 +750,6 @@
 .modal__close:focus-visible {
   outline: 2px solid var(--color-gaming-text-accent, #ffd88a);
   outline-offset: 2px;
-}
-
-/* Reduced motion support */
-@media (prefers-reduced-motion: reduce) {
-  .mainMenu,
-  .mainMenu__container,
-  .mainMenu__nav {
-    animation: none;
-  }
-  
-  .mainMenu__navItem {
-    transition: none;
-  }
-  
-  .mainMenu__navItem:hover::before,
-  .mainMenu__navItem:focus::before {
-    animation: none;
-  }
-    /* Disable modal animations */
-  .modal {
-    /* animation: none; */
-    /* Placeholder for future rich transition implementation */
-    opacity: 1;
-  }
-  
-  .modal__content {
-    /* animation: none; */
-    /* Placeholder for future rich transition implementation */
-    transform: none;
-  }
-  
-  .modal__option {
-    transition: none;
-  }
 }
 
 /* High contrast support */
@@ -767,908 +822,13 @@
   }
 }
 
-/* ==========================================================================
-   Error Display - BEM Element
-   ========================================================================== */
-
-.mainMenu__error {
-  /* Position: Top center */
-  position: absolute;
-  top: var(--spacing-md, 20px);
-  left: 50%;
-  transform: translateX(-50%);
-  
-  /* Size: Responsive width */
-  max-width: 80%;
-  
-  /* Style: Error box - ELDEN RING風 */
-  background: rgba(100, 0, 0, 0.3);
-  border: 1px solid rgba(255, 100, 100, 0.3);
-  border-radius: var(--border-radius-sm, 4px);
-  
-  /* Typography: Small */
-  font-size: var(--font-size-sm, 0.9rem);
-  font-family: var(--font-family-game, 'Cinzel', serif);
-  text-align: center;
-  
-  /* Color: Error */
-  color: #ff9999;
-  
-  /* Spacing */
-  padding: var(--spacing-sm, 0.8rem) var(--spacing-md, 1.5rem);
-  
-  /* Effects */
-  box-shadow: 0 0 10px rgba(255, 0, 0, 0.2);
-}
-
-/* ==========================================================================
-   Modal Base - BEM Block - ELDEN RING風
-   ========================================================================== */
-
-.mainMenu__modal {
-  /* Position: Fixed overlay */
-  position: fixed;
-  inset: 0;
-  
-  /* Layout: Center content */
-  display: none;
-  justify-content: center;
-  align-items: center;
-  
-  /* Layer: Above main menu */
-  z-index: var(--z-index-modal-overlay, 2000);
-  
-  /* Background: Dark overlay */
-  background: rgba(0, 0, 0, 0.85);
-  backdrop-filter: blur(4px);
-}
-
-/* Modal visible state */
-.mainMenu__modal--visible {
-  display: flex;
-}
-
-/* =========================================================================
-   Mode Select Modal - ELDEN RING NIGHTREIGN風
-   ========================================================================== */
-/* Modal base - Enhanced ELDEN RING NIGHTREIGN style */
-.modal {
-  /* Position: Fixed fullscreen overlay */
-  position: fixed;
-  inset: 0;
-  
-  /* Layout: Center content */
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  
-  /* Layer: Above main menu */
-  z-index: var(--z-index-modal-overlay, 2000);
-  
-  /* Background: Dark overlay with enhanced atmosphere */
-  background: radial-gradient(
-    circle at center,
-    rgba(0, 0, 0, 0.85),
-    rgba(0, 0, 0, 0.95)
-  );
-  backdrop-filter: blur(8px);
-  
-  /* Animation */
-  animation: modalFadeIn 0.5s ease-out forwards;
-  
-  /* Typography: ELDEN RING font */
-  font-family: var(--font-eldenring-title, 'Cinzel', serif);
-  color: var(--color-eldenring-text-primary, #e0e0e0);
-  
-  /* Performance: GPU optimization */
-  will-change: opacity, transform;
-  
-  /* Add subtle floating particles effect */
-  background-attachment: fixed;
-  background-image:
-    radial-gradient(circle at center, rgba(0, 0, 0, 0.85), rgba(0, 0, 0, 0.95)),
-    url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='400' height='400' viewBox='0 0 800 800'%3E%3Cg fill='none' stroke='%23163B59' stroke-width='1'%3E%3Cpath d='M769 229L1037 260.9M927 880L731 737 520 660 309 538 40 599 295 764 126.5 879.5 40 599-197 493 102 382-31 229 126.5 79.5-69-63'/%3E%3Cpath d='M-31 229L237 261 390 382 603 493 308.5 537.5 101.5 381.5M370 905L295 764'/%3E%3Cpath d='M520 660L578 842 731 737 840 599 603 493 520 660 295 764 309 538 390 382 539 269 769 229 577.5 41.5 370 105 295 -36 126.5 79.5 237 261 102 382 40 599 -69 737 127 880'/%3E%3Cpath d='M520-140L578.5 42.5 731-63M603 493L539 269 237 261 370 105M902 382L539 269M390 382L102 382'/%3E%3Cpath d='M-222 42L126.5 79.5 370 105 539 269 577.5 41.5 927 80 769 229 902 382 603 493 731 737M295-36L577.5 41.5M578 842L295 764M40-201L127 80M102 382L-261 269'/%3E%3C/g%3E%3Cg fill='%230A1020'%3E%3Ccircle cx='769' cy='229' r='5'/%3E%3Ccircle cx='539' cy='269' r='5'/%3E%3Ccircle cx='603' cy='493' r='5'/%3E%3Ccircle cx='731' cy='737' r='5'/%3E%3Ccircle cx='520' cy='660' r='5'/%3E%3Ccircle cx='309' cy='538' r='5'/%3E%3Ccircle cx='295' cy='764' r='5'/%3E%3Ccircle cx='40' cy='599' r='5'/%3E%3Ccircle cx='102' cy='382' r='5'/%3E%3Ccircle cx='127' cy='80' r='5'/%3E%3Ccircle cx='370' cy='105' r='5'/%3E%3Ccircle cx='578' cy='42' r='5'/%3E%3Ccircle cx='237' cy='261' r='5'/%3E%3Ccircle cx='390' cy='382' r='5'/%3E%3C/g%3E%3C/svg%3E");
-}
-
-/* Modal active state */
-.modal--active {
-  opacity: 1;
-}
-
-/* Modal overlay background */
-.modal__overlay {
-  /* Position: Cover full modal */
-  position: absolute;
-  inset: 0;
-  
-  /* Interaction: Click to close */
-  cursor: pointer;
-  
-  /* Background: Transparent (handled by parent) */
-  background: transparent;
-}
-
-/* Modal content container */
-.modal__content {
-  /* Position: Above overlay */
-  position: relative;
-  z-index: 1;
-  
-  /* Layout: Two-column layout */
-  display: flex;
-  width: min(90vw, 800px);
-  height: min(80vh, 600px);
-  
-  /* Visual: Gaming theme styling - ELDEN RING NIGHTREIGN風 */
-  background: linear-gradient(135deg, 
-    var(--color-eldenring-bg-tertiary, rgba(16, 24, 48, 0.98)), 
-    var(--color-eldenring-bg-primary, rgba(5, 10, 20, 0.99))
-  );
-  border: 2px solid rgba(163, 216, 255, 0.3);
-  border-radius: var(--border-radius-sm, 4px);
-  box-shadow: 
-    0 20px 40px rgba(0, 0, 0, 0.9),
-    0 0 30px rgba(163, 216, 255, 0.15),
-    0 0 50px rgba(163, 216, 255, 0.05),
-    inset 0 1px 0 rgba(255, 255, 255, 0.05);
-  
-  /* Animation */
-  animation: modalScaleIn 0.5s ease-out forwards;
-  
-  /* Overflow: Hidden for clean edges */
-  overflow: hidden;
-  
-  /* Enhanced NIGHTREIGN style border with pseudo-element glow */
-  position: relative;
-  
-  /* Add inner shine effect */
-  background-attachment: fixed;
-  background-image: 
-    linear-gradient(135deg, 
-      var(--color-eldenring-bg-tertiary, rgba(16, 24, 48, 0.98)), 
-      var(--color-eldenring-bg-primary, rgba(5, 10, 20, 0.99))
-    ),
-    radial-gradient(
-      ellipse at top right,
-      rgba(163, 216, 255, 0.2) 0%, 
-      rgba(10, 16, 32, 0) 60%
-    );
-}
-
-/* Add subtle border glow effect */
-.modal__content::before {
-  content: '';
-  position: absolute;
-  inset: -1px;
-  background: transparent;
-  border-radius: inherit;
-  z-index: -1;
-  box-shadow: 0 0 15px 2px rgba(163, 216, 255, 0.15);
-  pointer-events: none;
-}
-
-/* Modal sidebar (mode list) */
-.modal__sidebar {
-  /* Layout: Fixed width sidebar */
-  flex: 0 0 250px;
-  padding: var(--spacing-lg, 1.5rem);
-  
-  /* Background: Slightly darker with gradient */
-  background: 
-    linear-gradient(to right,
-      rgba(0, 0, 0, 0.5),
-      rgba(0, 0, 0, 0.3)
-    );
-  border-right: 1px solid rgba(163, 216, 255, 0.25);
-  
-  /* Add subtle blue glow to the right border */
-  box-shadow: inset -3px 0 6px -3px rgba(163, 216, 255, 0.15);
-  
-  /* Layout: Vertical stack */
-  display: flex;
-  flex-direction: column;
-  gap: var(--spacing-md, 1rem);
-  
-  /* Add slight texture */
-  position: relative;
-  overflow: hidden;
-}
-
-/* Add subtle animated overlay to sidebar */
-.modal__sidebar::after {
-  content: '';
-  position: absolute;
-  top: 0;
-  left: 0;
-  right: 0;
-  bottom: 0;
-  background: 
-    radial-gradient(
-      circle at 30% 20%,
-      rgba(163, 216, 255, 0.03) 0%,
-      transparent 60%
-    );
-  pointer-events: none;
-}
-
-/* Mode option buttons */
-.modal__option {
-  /* Reset: Button styles */
-  border: none;
-  outline: none;
-  background: none;
-  cursor: pointer;
-  
-  /* Layout: Full width */
-  width: 100%;
-  padding: var(--spacing-md, 1rem);
-  text-align: left;
-  position: relative;
-  
-  /* Typography: Menu item - ELDEN RING font */
-  font-size: var(--font-size-base, 1rem);
-  font-family: var(--font-eldenring-title, 'Cinzel', serif);
-  font-weight: 500;
-  letter-spacing: var(--letter-spacing-eldenring-menu, 0.15rem);
-  
-  /* Color: Primary text */
-  color: var(--color-eldenring-text-secondary, #b0b0b0);
-  
-  /* Border: Bottom only with faded effect */
-  border-bottom: 1px solid rgba(163, 216, 255, 0.1);
-  
-  /* Subtle text shadow for all options */
-  text-shadow: 0 0 4px rgba(163, 216, 255, 0.1);
-  
-  /* Transition: Smooth hover with multiple properties */
-  transition: 
-    color var(--eldenring-animation-fast, 0.3s) var(--eldenring-easing-smooth),
-    background-color var(--eldenring-animation-fast, 0.3s) var(--eldenring-easing-smooth),
-    text-shadow var(--eldenring-animation-fast, 0.3s) var(--eldenring-easing-smooth),
-    transform var(--eldenring-animation-fast, 0.3s) var(--eldenring-easing-smooth);
-}
-
-/* Mode option hover state - Enhanced NIGHTREIGN style */
-.modal__option:hover,
-.modal__option:focus {
-  background: rgba(163, 216, 255, 0.07);
-  color: #ffffff;
-  text-shadow: 
-    0 0 6px rgba(163, 216, 255, 0.6),
-    0 0 12px rgba(163, 216, 255, 0.2);
-  outline: none;
-  transform: translateX(2px);
-}
-
-/* Hover effect for the option button */
-.modal__option::after {
-  content: '';
-  position: absolute;
-  top: 0;
-  left: 0;
-  width: 0;
-  height: 100%;
-  background: linear-gradient(to right, 
-    rgba(163, 216, 255, 0.1), 
-    transparent
-  );
-  transition: width 0.3s ease;
-  pointer-events: none;
-}
-
-.modal__option:hover::after,
-.modal__option:focus::after {
-  width: 100%;
-}
-
-/* Mode option selected state - Enhanced ELDEN RING NIGHTREIGN style */
-.modal__option--selected {
-  background: rgba(163, 216, 255, 0.15);
-  color: var(--color-nightreign-blue-light, #a3d8ff);
-  text-shadow: 
-    0 0 8px rgba(163, 216, 255, 0.6),
-    0 0 16px rgba(163, 216, 255, 0.3);
-  border-left: 2px solid var(--color-nightreign-blue-light, #a3d8ff);
-  
-  /* Layout: Add left padding */
-  padding-left: calc(var(--spacing-md, 1rem) - 2px);
-  
-  /* Selected option gets slight glow effect */
-  box-shadow: inset 0 0 8px rgba(163, 216, 255, 0.1);
-  
-  /* Add subtle pulsating effect */
-  animation: eldenring-option-pulse 3s infinite alternate ease-in-out;
-}
-
-/* Pulsating effect keyframes */
-@keyframes eldenring-option-pulse {
-  from {
-    text-shadow: 
-      0 0 8px rgba(163, 216, 255, 0.5),
-      0 0 16px rgba(163, 216, 255, 0.2);
+/* モーション制御 - アニメーション完全無効化環境での対応 */
+@media (prefers-reduced-motion: reduce) {
+  /* 基本は何もしない - アニメーションを最初から定義していないため */
+  .mainMenu *,
+  .mainMenu *::before,
+  .mainMenu *::after {
+    /* アニメーション無効化が必要な場合のみ */
+    transition: none;
   }
-  to {
-    text-shadow: 
-      0 0 10px rgba(163, 216, 255, 0.7),
-      0 0 20px rgba(163, 216, 255, 0.3);
-  }
-}
-
-/* Modal main content */
-.modal__main {
-  /* Layout: Flexible content area */
-  flex: 1;
-  padding: var(--spacing-lg, 1.5rem);
-  
-  /* Layout: Content position */
-  display: flex;
-  flex-direction: column;
-  justify-content: space-between;
-}
-
-/* Modal description text */
-.modal__description {
-  /* Typography: Description text */
-  font-size: var(--font-size-base, 1rem);
-  font-family: var(--font-family-primary, 'Noto Sans JP', sans-serif);
-  line-height: 1.6;
-  
-  /* Color: Improved text with subtle glow */
-  color: var(--color-eldenring-text-primary, #e0e0e0);
-  text-shadow: 0 0 8px rgba(163, 216, 255, 0.1);
-  
-  /* Spacing: Push away from bottom button */
-  margin-bottom: auto;
-  padding-bottom: var(--spacing-lg, 1.5rem);
-  
-  /* Visual enhancement */
-  position: relative;
-  border-left: 2px solid rgba(163, 216, 255, 0.1);
-  padding-left: var(--spacing-md, 1rem);
-  
-  /* Animation: Fade in and slight move */
-  animation: eldenring-description-reveal 0.8s ease-out forwards;
-  animation-delay: 0.2s;
-  opacity: 0;
-  transform: translateY(10px);
-}
-
-/* Description reveal animation */
-@keyframes eldenring-description-reveal {
-  from {
-    opacity: 0;
-    transform: translateY(10px);
-  }
-  to {
-    opacity: 1;
-    transform: translateY(0);
-  }
-}
-
-/* Modal close button - Enhanced ELDEN RING NIGHTREIGN style */
-.modal__close {
-  /* Layout: Self-align with improved positioning */
-  align-self: flex-end;
-  margin-top: var(--spacing-lg, 1.5rem);
-  position: relative;
-  
-  /* Style: ELDEN RING NIGHTREIGN風ボタン */
-  background: rgba(16, 24, 48, 0.6);
-  border: 1px solid rgba(163, 216, 255, 0.3);
-  border-radius: var(--border-radius-sm, 4px);
-  padding: var(--spacing-sm, 0.5rem) var(--spacing-lg, 1.5rem);
-  
-  /* Add subtle gradient */
-  background-image: linear-gradient(
-    to bottom,
-    rgba(163, 216, 255, 0.15),
-    rgba(10, 16, 32, 0.15)
-  );
-  
-  /* Typography: Button text - ELDEN RING font */
-  font-size: var(--font-size-base, 1rem);
-  font-family: var(--font-eldenring-title, 'Cinzel', serif);
-  font-weight: 500;
-  letter-spacing: var(--letter-spacing-eldenring-menu, 0.15rem);
-  
-  /* Color: Button text with slight glow */
-  color: var(--color-nightreign-blue-light, #a3d8ff);
-  text-shadow: 0 0 6px rgba(163, 216, 255, 0.3);
-  
-  /* Interactive: Cursor */
-  cursor: pointer;
-  
-  /* Add box shadow */
-  box-shadow: 
-    0 3px 6px rgba(0, 0, 0, 0.3),
-    inset 0 1px rgba(255, 255, 255, 0.1);
-  
-  /* Transition: Smooth hover with multiple properties */
-  transition: 
-    all var(--eldenring-animation-fast, 0.3s) var(--eldenring-easing-smooth),
-    transform 0.2s ease-out,
-    box-shadow 0.2s ease-out;
-}
-
-/* Add light effect behind the button */
-.modal__close::before {
-  content: '';
-  position: absolute;
-  top: 50%;
-  left: 50%;
-  width: 80%;
-  height: 80%;
-  background: transparent;
-  border-radius: inherit;
-  filter: blur(12px);
-  transform: translate(-50%, -50%);
-  z-index: -1;
-  box-shadow: 0 0 15px rgba(163, 216, 255, 0.15);
-  opacity: 0.5;
-  transition: opacity 0.3s ease;
-}
-
-/* Modal close button hover state - Enhanced effects */
-.modal__close:hover,
-.modal__close:focus {
-  background: rgba(16, 24, 48, 0.8);
-  background-image: linear-gradient(
-    to bottom,
-    rgba(163, 216, 255, 0.2),
-    rgba(10, 16, 32, 0.2)
-  );
-  color: #ffffff;
-  text-shadow: 
-    0 0 8px rgba(163, 216, 255, 0.6),
-    0 0 16px rgba(163, 216, 255, 0.3);
-  border-color: rgba(163, 216, 255, 0.5);
-  box-shadow: 
-    0 6px 12px rgba(0, 0, 0, 0.3),
-    0 0 20px rgba(163, 216, 255, 0.2),
-    inset 0 1px rgba(255, 255, 255, 0.15);
-  outline: none;
-  transform: translateY(-1px);
-}
-
-.modal__close:hover::before,
-.modal__close:focus::before {
-  opacity: 0.8;
-}
-
-/* Active state for the button */
-.modal__close:active {
-  transform: translateY(1px);
-  box-shadow: 
-    0 2px 4px rgba(0, 0, 0, 0.4),
-    inset 0 1px rgba(255, 255, 255, 0.05);
-}
-
-/* =========================================================================
-   Modal Animations - Enhanced ELDEN RING NIGHTREIGN style
-   ========================================================================== */
-
-@keyframes modalFadeIn {
-  0% {
-    opacity: 0;
-    backdrop-filter: blur(0);
-  }
-  50% {
-    backdrop-filter: blur(4px);
-  }
-  100% {
-    opacity: 1;
-    backdrop-filter: blur(8px);
-  }
-}
-
-@keyframes modalScaleIn {
-  0% {
-    opacity: 0;
-    transform: scale(0.96);
-    filter: brightness(1.5) blur(3px);
-  }
-  50% {
-    filter: brightness(1.2) blur(1px);
-  }
-  100% {
-    opacity: 1;
-    transform: scale(1);
-    filter: brightness(1) blur(0);
-  }
-}
-
-/* Pulse glow effect for borders */
-@keyframes borderGlowPulse {
-  0% {
-    box-shadow: 0 0 5px rgba(163, 216, 255, 0.3);
-  }
-  50% {
-    box-shadow: 0 0 15px rgba(163, 216, 255, 0.5);
-  }
-  100% {
-    box-shadow: 0 0 5px rgba(163, 216, 255, 0.3);
-  }
-}
-
-/* =========================================================================
-   Responsive Design - Elden Ring風
-   ========================================================================== */
-
-@media (max-width: 768px) {
-  .modal__content {
-    flex-direction: column;
-    height: 90vh;
-    width: 95vw;
-    max-height: 700px;
-  }
-  
-  .modal__sidebar {
-    flex: 0 0 auto;
-    border-right: none;
-    border-bottom: 2px solid rgba(163, 216, 255, 0.25);
-  }
-  
-  .mainMenu__title {
-    font-size: clamp(2rem, 8vw, 3rem);
-  }
-  
-  .mainMenu__subtitle {
-    font-size: clamp(2.5rem, 12vw, 4rem);
-    letter-spacing: 0.5rem;
-  }
-  
-  .mainMenu__navItem {
-    font-size: 1.2rem;
-  }
-}
-
-/* モバイル向け追加調整 */
-@media (max-width: 480px) {
-  .mainMenu__title {
-    font-size: clamp(1.8rem, 7vw, 2.5rem);
-    letter-spacing: 0.2rem;
-  }
-  
-  .mainMenu__subtitle {
-    font-size: clamp(2.2rem, 10vw, 3.5rem);
-    letter-spacing: 0.3rem;
-  }
-  
-  .mainMenu__navItem {
-    font-size: 1.1rem;
-  }    .mainMenu__shortcut {
-    /* 🚀 2025 Ultra-small Screen: 強制的な横並び維持 */
-    flex-direction: row !important;
-    gap: 0.8rem !important;
-    align-items: center !important;
-    justify-content: center !important;
-    
-    /* Ensure perfect centering on tiny screens */
-    left: 0;
-    right: 0;
-    width: 100%;
-    text-align: center;
-  }
-}
-
-/* ==========================================================================
-   ELDEN RING風 背景エフェクト強化 - コードのみで完全実装
-   ========================================================================== */
-
-/* 基本背景 */
-.mainMenu {
-  /* 既存のレイアウトプロパティは維持 */
-  background: 
-    radial-gradient(ellipse at center, rgba(10, 20, 38, 0.95) 0%, rgba(2, 4, 8, 0.98) 70%),
-    linear-gradient(180deg, rgba(15, 25, 50, 0.2) 0%, rgba(5, 10, 20, 0.2) 100%),
-    repeating-linear-gradient(
-      45deg, 
-      rgba(10, 15, 25, 0.1) 0%, 
-      rgba(10, 15, 25, 0.05) 2%,
-      transparent 2%,
-      transparent 4%
-    );
-  background-blend-mode: normal, overlay, color;
-  position: relative;
-  overflow: hidden;
-}
-
-/* 星屑のような小さな点を作る疑似要素 */
-.mainMenu::before {
-  content: '';
-  position: absolute;
-  top: 0;
-  left: 0;
-  right: 0;
-  bottom: 0;
-  width: 100%;
-  height: 100%;
-  background-image: 
-    radial-gradient(1px 1px at 10% 10%, rgba(255, 255, 255, 0.3) 50%, transparent 100%),
-    radial-gradient(1px 1px at 20% 20%, rgba(255, 255, 255, 0.2) 50%, transparent 100%),
-    radial-gradient(2px 2px at 30% 30%, rgba(255, 255, 255, 0.3) 50%, transparent 100%),
-    radial-gradient(1px 1px at 40% 40%, rgba(255, 255, 255, 0.2) 50%, transparent 100%),
-    radial-gradient(2px 2px at 50% 50%, rgba(255, 255, 255, 0.3) 50%, transparent 100%),
-    radial-gradient(1px 1px at 60% 60%, rgba(255, 255, 255, 0.2) 50%, transparent 100%),
-    radial-gradient(1px 1px at 70% 70%, rgba(255, 255, 255, 0.3) 50%, transparent 100%),
-    radial-gradient(1px 1px at 80% 80%, rgba(255, 255, 255, 0.2) 50%, transparent 100%),
-    radial-gradient(2px 2px at 90% 90%, rgba(255, 255, 255, 0.3) 50%, transparent 100%),
-    radial-gradient(1px 1px at 15% 55%, rgba(255, 255, 255, 0.3) 50%, transparent 100%),
-    radial-gradient(2px 2px at 35% 75%, rgba(255, 255, 255, 0.2) 50%, transparent 100%),
-    radial-gradient(1px 1px at 65% 25%, rgba(255, 255, 255, 0.3) 50%, transparent 100%),
-    radial-gradient(1px 1px at 85% 45%, rgba(255, 255, 255, 0.2) 50%, transparent 100%);
-  background-size: 150% 150%;
-  opacity: 0.5;
-  z-index: 0;
-  animation: starsMovement 120s linear infinite;
-  pointer-events: none;
-}
-
-/* ELDEN RING風の光芒を作る疑似要素 */
-.mainMenu::after {
-  content: '';
-  position: absolute;
-  top: 0;
-  left: 0;
-  right: 0;
-  bottom: 0;
-  width: 100%;
-  height: 100%;
-  background: 
-    radial-gradient(
-      ellipse at 50% 30%, 
-      rgba(30, 50, 100, 0.15) 0%, 
-      rgba(10, 20, 40, 0.05) 40%, 
-      transparent 70%
-    ),
-    radial-gradient(
-      circle at 70% 60%, 
-      rgba(20, 40, 80, 0.1) 0%, 
-      transparent 50%
-    ),
-    radial-gradient(
-      circle at 30% 70%, 
-      rgba(30, 60, 100, 0.08) 0%, 
-      transparent 40%
-    );
-  z-index: 0;
-  opacity: 0.7;
-  animation: pulse 8s ease-in-out infinite alternate;
-  pointer-events: none;
-  background-blend-mode: screen;
-}
-
-/* アニメーション: きらめき効果 - 星の動き */
-@keyframes starsMovement {
-  0% {
-    background-position: 0% 0%;
-    opacity: 0.4;
-  }
-  25% {
-    opacity: 0.5;
-  }
-  50% {
-    background-position: 100% 50%;
-    opacity: 0.6;
-  }
-  75% {
-    opacity: 0.5;
-  }
-  100% {
-    background-position: 0% 100%;
-    opacity: 0.4;
-  }
-}
-
-/* アニメーション: 脈動する光芒 */
-@keyframes pulse {
-  0% {
-    opacity: 0.5;
-    background-position: 0% 0%;
-  }
-  50% {
-    opacity: 0.7;
-    background-position: 30% 30%;
-  }
-  100% {
-    opacity: 0.5;
-    background-position: 0% 0%;
-  }
-}
-
-/* メインコンテナの表示アニメーション強化 */
-.mainMenu__container {
-  animation: fadeUpElements 1.2s ease-out forwards;
-  animation-delay: 0.3s;
-  opacity: 0;
-  transform: translateY(30px);
-}
-
-/* タイトルアニメーションの強化 */
-@keyframes titleGlow {
-  0% {
-    text-shadow: 
-      0 0 10px rgba(255, 223, 128, 0.4),
-      0 0 20px rgba(255, 223, 128, 0.2);
-    filter: drop-shadow(0 0 2px rgba(255, 223, 128, 0.6));
-  }
-  50% {
-    text-shadow: 
-      0 0 12px rgba(255, 223, 128, 0.5),
-      0 0 25px rgba(255, 223, 128, 0.25);
-    filter: drop-shadow(0 0 3px rgba(255, 223, 128, 0.7));
-  }
-  100% {
-    text-shadow: 
-      0 0 15px rgba(255, 223, 128, 0.6),
-      0 0 30px rgba(255, 223, 128, 0.3);
-    filter: drop-shadow(0 0 4px rgba(255, 223, 128, 0.8));
-  }
-}
-
-/* サブタイトルアニメーションの強化 */
-@keyframes subtitleGlow {
-  0% {
-    text-shadow: 
-      0 0 15px rgba(163, 216, 255, 0.5),
-      0 0 30px rgba(163, 216, 255, 0.2);
-    filter: drop-shadow(0 0 2px rgba(163, 216, 255, 0.7));
-  }
-  50% {
-    text-shadow: 
-      0 0 18px rgba(163, 216, 255, 0.6),
-      0 0 35px rgba(163, 216, 255, 0.3);
-    filter: drop-shadow(0 0 3px rgba(163, 216, 255, 0.8));
-  }
-  100% {
-    text-shadow: 
-      0 0 20px rgba(163, 216, 255, 0.7),
-      0 0 40px rgba(163, 216, 255, 0.4);
-    filter: drop-shadow(0 0 4px rgba(163, 216, 255, 0.9));
-  }
-}
-
-/* フレームレート最適化（パフォーマンス考慮） */
-@media (prefers-reduced-motion) {
-  .mainMenu::before {
-    animation: none;
-  }
-  .mainMenu::after {
-    animation: none;
-  }
-}
-
-/* ==========================================================================
-   🚀 2025年最新CSS設計: Container Queries レスポンシブ対応
-   ========================================================================== */
-
-/* Container Query: メインメニュー全体のサイズ対応 */
-@container main-menu (width < 480px) {
-  .mainMenu__title {
-    font-size: clamp(1.8rem, 5vw, 2.5rem);
-    letter-spacing: 0.2rem;
-  }
-    .mainMenu__subtitle {
-    /* 🚀 修正: IIのフォントサイズを強制的に適切なサイズに維持 */
-    font-size: clamp(4rem, 10vw, 6rem) !important;
-    letter-spacing: 0.8rem !important;
-  }
-  
-  .mainMenu__shortcut {
-    font-size: clamp(0.7rem, 2vw, 0.85rem);
-    padding: var(--spacing-xs, 8px) var(--spacing-sm, 12px);
-    bottom: var(--spacing-md, 20px);
-  }
-}
-
-@container main-menu (width >= 480px) and (width < 768px) {
-  .mainMenu__title {
-    font-size: clamp(2.2rem, 5.5vw, 3rem);
-    letter-spacing: 0.3rem;
-  }
-    .mainMenu__subtitle {
-    /* 🚀 修正: IIのフォントサイズを強制的に適切なサイズに維持 */
-    font-size: clamp(4rem, 10vw, 6rem) !important;
-    letter-spacing: 0.8rem !important;
-  }
-  
-  .mainMenu__shortcut {
-    font-size: clamp(0.8rem, 2.2vw, 0.9rem);
-    padding: var(--spacing-sm, 12px) var(--spacing-md, 16px);
-    bottom: var(--spacing-lg, 24px);
-  }
-}
-
-@container main-menu (width >= 768px) {
-  .mainMenu__title {
-    font-size: var(--font-size-game-title, clamp(2.5rem, 6vw, 3.5rem));
-    letter-spacing: 0.4rem;
-  }
-    .mainMenu__subtitle {
-    /* 🚀 修正: IIのフォントサイズを強制的に適切なサイズに維持 */
-    font-size: clamp(4rem, 10vw, 6rem) !important;
-    letter-spacing: 0.8rem !important;
-  }
-  
-  .mainMenu__shortcut {
-    font-size: var(--font-size-body, clamp(0.85rem, 2.5vw, 0.95rem));
-    padding: var(--spacing-md, 16px) var(--spacing-lg, 20px);
-    bottom: var(--spacing-lg, 28px);
-  }
-}
-
-/* Container Query: ショートカット案内専用のコンテナ対応 */
-@container shortcut-area (width < 300px) {
-  .mainMenu__shortcut {
-    /* 🚀 修正: 常に横並びを維持（強制） */
-    flex-direction: row !important;
-    gap: var(--spacing-xs, 6px) !important;
-    font-size: 0.75rem;
-    
-    /* 極小画面での中央配置強化 */
-    left: var(--spacing-xs, 8px);
-    right: var(--spacing-xs, 8px);
-    width: calc(100% - var(--spacing-sm, 16px));
-    transform: none;
-    
-    /* 横並び時の折り返し対応 */
-    flex-wrap: wrap !important;
-    justify-content: center !important;
-  }
-}
-
-@container shortcut-area (width >= 300px) and (width < 500px) {
-  .mainMenu__shortcut {
-    flex-direction: row !important;
-    gap: var(--spacing-sm, 10px) !important;
-    font-size: 0.8rem;
-    
-    /* 小画面での中央配置強化 */
-    left: var(--spacing-sm, 12px);
-    right: var(--spacing-sm, 12px);
-    width: calc(100% - var(--spacing-md, 24px));
-    transform: none;
-    flex-wrap: wrap !important;
-    justify-content: center !important;
-  }
-}
-
-@container shortcut-area (width >= 500px) {
-  .mainMenu__shortcut {
-    flex-direction: row !important;
-    gap: var(--spacing-md, 14px) !important;
-    font-size: var(--font-size-body, clamp(0.85rem, 2.5vw, 0.95rem));
-    
-    /* 通常画面での完全中央配置 */
-    left: 0;
-    right: 0;
-    width: 100%;
-    transform: none;
-    flex-wrap: wrap !important;
-    justify-content: center !important;
-  }
-}
-
-/* ==========================================================================
-   🚀 2025年最新CSS設計: 完全な中央配置保証システム
-   ========================================================================== */
-
-/* ショートカット案内の最終中央配置保証 */
-.mainMenu__shortcut {
-  /* デフォルトの中央配置を保証 */
-  margin-left: auto;
-  margin-right: auto;
-  
-  /* Flexboxの中央配置を強制 */
-  justify-content: center !important;
-  align-items: center !important;
-  
-  /* Grid fallback */
-  display: grid;
-  place-items: center;
-  
-  /* Modern CSS での完全中央配置 */
-  inset-inline: 0;
-  justify-self: center;
-  align-self: center;
 }

@@ -15,23 +15,23 @@
    🚀 SIMPLEGAMESCREEN ANIMATIONS DISABLED FOR FUTURE RICH TRANSITION LIBRARY
    ========================================================================== */
 
-/* Global animation disable for SimpleGameScreen component */
-.gameScreen *,
-.gameScreen *::before,
-.gameScreen *::after {
-  animation: none !important;
-  transition: none !important;
-  transform: none !important;
+/* Global animation disable for SimpleGameScreen component with high specificity */
+html body .gameScreen *,
+html body .gameScreen *::before,
+html body .gameScreen *::after {
+  animation: none;
+  transition: none;
+  transform: none;
 }
 
-/* Specific animation overrides */
-.gameScreen,
-.typingArea,
-.loadingSpinner {
-  animation: none !important;
-  transition: none !important;
-  transform: none !important;
-  opacity: 1 !important;
+/* Specific animation overrides with component specificity */
+html body .gameScreen,
+html body .typingArea,
+html body .loadingSpinner {
+  animation: none;
+  transition: none;
+  transform: none;
+  opacity: 1;
 }
 
 /* ==========================================================================
@@ -295,19 +295,6 @@
   letter-spacing: 0.06em;
   line-height: 1.6;
   
-  /* Layout: HybridTypingのためのフレックスコンテナ */
-  display: flex !important;
-  align-items: center !important;
-  justify-content: center !important;
-  flex-wrap: wrap !important;
-  gap: 3px !important; /* 文字間のスペースを少し広げる */
-  
-  /* Reset: HybridTypingのデフォルトをオーバーライド */
-  padding: 0 !important;
-  background: transparent !important;
-  border-radius: 0 !important;
-  min-height: auto !important;
-  
   /* スタイル: ELDEN RINGスタイルのエレガントな効果 */
   color: var(--color-nightreign-blue-light); /* NIGHTREIGNの青っぽいテキスト */
   text-shadow: 0 0 6px rgba(163, 216, 255, 0.2); /* 青い発光効果 */
@@ -318,6 +305,22 @@
   /* Performance: Text optimization */
   text-rendering: optimizeLegibility;
   -webkit-font-smoothing: antialiased;
+}
+
+/* タイピングエリアの強制レイアウト修正 - 高特異性セレクタ使用 */
+html body .gameScreen .promptBox__roma {
+  /* Layout: HybridTypingのためのフレックスコンテナ（高特異性） */
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-wrap: wrap;
+  gap: 3px; /* 文字間のスペースを少し広げる */
+  
+  /* Reset: HybridTypingのデフォルトをオーバーライド（高特異性） */
+  padding: 0;
+  background: transparent;
+  border-radius: 0;
+  min-height: auto;
 }
 
 /* ==========================================================================

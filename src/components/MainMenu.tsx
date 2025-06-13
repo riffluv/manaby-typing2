@@ -218,12 +218,7 @@ const MainMenu: React.FC<MainMenuProps> = React.memo(({ onStart, onRetry, onRank
         </div>        
         <div className={styles.mainMenu__selectedMode} role="status" aria-live="polite">
           Mode: {selectedModeDisplay}
-        </div>
-      </div>      {/* ショートカットキー表示（index.htmlスタイル完全再現） */}
-      <div className={styles.mainMenu__shortcut}>
-        <span>[Space] Start</span>
-        <span>[Alt+R] Rank</span>
-      </div>
+        </div>      </div>
 
       {/* フッター（index.htmlスタイル完全再現） */}
       <div className={styles.mainMenu__footer}>
