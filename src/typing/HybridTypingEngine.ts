@@ -1,16 +1,15 @@
 /**
- * HybridTypingEngine - ローマ字のみCanvas高速化エンジン
+ * HybridTypingEngine - typingmania-ref流超高速タイピングエンジン
  * 
  * 特徴:
  * - 原文・ひらがな: DOM（既存の美しいスタイル維持）
  * - ローマ字: Canvas（1-3ms超高速レスポンス）
- * - 既存DirectTypingEngine2との完全互換性
+ * - typingmania-ref流「シンプルが最速」の哲学を採用
  * - フォーカス機能完全再現
  */
 
 import { TypingChar } from './TypingChar';
 import type { KanaDisplay, PerWordScoreLog } from '@/types';
-import UltraFastAudioSystem from '@/utils/UltraFastAudioSystem';
 
 /**
  * ハイブリッドエンジン設定 - 表示制御のみ
@@ -36,22 +35,19 @@ const CANVAS_FONT_CONFIG = {
 } as const;
 
 /**
- * Canvas用ローマ字文字クラス - 個別フォーカス対応
+ * Canvas用ローマ字文字クラス - typingmania-ref流シンプル設計
  */
 class CanvasRomajiChar {
   private state: 'inactive' | 'active' | 'completed' = 'inactive';
-  private lastState: 'inactive' | 'active' | 'completed' = 'inactive';
 
   constructor(
     public character: string,
     public x: number,
     public y: number
   ) {}
-  setState(newState: 'inactive' | 'active' | 'completed'): boolean {
-    if (this.lastState === newState) return false; // 重複更新防止
-    this.lastState = newState;
+  
+  setState(newState: 'inactive' | 'active' | 'completed'): void {
     this.state = newState;
-    return true; // 更新された
   }
   
   getState(): 'inactive' | 'active' | 'completed' {
@@ -86,7 +82,7 @@ interface HybridEngineState {
 }
 
 /**
- * 🚀 HybridTypingEngine - ローマ字のみCanvas超高速化
+ * 🚀 HybridTypingEngine - typingmania-ref流超高速レスポンス実装
  */
 export class HybridTypingEngine {
   private state: HybridEngineState;
@@ -142,9 +138,8 @@ export class HybridTypingEngine {
     this.state.totalRomajiLength = typingChars.reduce((sum, char) => sum + char.patterns[0].length, 0);    this.setupHybridDOM();
     this.setupCanvasRomaji();
     this.setupKeyListener();
-    
-    // 🚀 音響システム事前初期化（最初のキー遅延を排除）
-    UltraFastAudioSystem.init();
+      // 🚀 typingmania-ref流：音響システム事前初期化
+    SimpleSfx.init();
     
     // 🚀 初期状態設定：最初の文字をアクティブに設定
     this.updateCanvasStates();
@@ -313,10 +308,9 @@ export class HybridTypingEngine {
   }  /**
    * 🚀 ZERO-LATENCY キー処理 - DirectTypingEngine2完全互換
    */
-  private processKey(key: string): void {
-    // 🚀 初回キー時の音響コンテキスト復旧（最適化）
+  private processKey(key: string): void {    // 🚀 typingmania-ref流：初回キー時の音響コンテキスト復旧
     if (this.state.keyCount === 0) {
-      UltraFastAudioSystem.resumeAudioContext();
+      SimpleSfx.resumeContext();
     }
 
     if (this.state.startTime === 0) {
@@ -332,8 +326,8 @@ export class HybridTypingEngine {
     if (currentChar.branchingState) {
       const nextChar = this.state.typingChars[this.state.currentIndex + 1];
       const result = currentChar.typeBranching(key, nextChar);      if (result.success) {
-        // 🚀 即座音声再生（遅延最小化）
-        UltraFastAudioSystem.playClickSound();
+        // 🚀 typingmania-ref流：即座音声再生
+        SimpleSfx.play('key');
 
         if (result.completeWithSingle) {
           // 'n'パターン: 「ん」完了後、次文字に継続
@@ -359,8 +353,8 @@ export class HybridTypingEngine {
         this.notifyProgress();
         return;      } else {
         this.state.mistakeCount++;
-        // 🚀 即座エラー音再生（遅延最小化）
-        UltraFastAudioSystem.playErrorSound();
+        // 🚀 typingmania-ref流：即座エラー音再生
+        SimpleSfx.play('error');
         
         // エラー時は即座に表示更新（視覚フィードバック重要）
         this.updateCanvasStates();
@@ -371,11 +365,9 @@ export class HybridTypingEngine {
     }
 
     // 通常のタイピング処理
-    const isCorrect = currentChar.type(key);
-
-    if (isCorrect) {
-      // 🚀 即座音声再生（遅延最小化）
-      UltraFastAudioSystem.playClickSound();
+    const isCorrect = currentChar.type(key);    if (isCorrect) {
+      // 🚀 typingmania-ref流：即座音声再生
+      SimpleSfx.play('key');
 
       if (currentChar.completed) {
         this.state.currentIndex++;
@@ -386,9 +378,9 @@ export class HybridTypingEngine {
         }
       }    } else {
       this.state.mistakeCount++;
-      // 🚀 即座エラー音再生（遅延最小化）
-      UltraFastAudioSystem.playErrorSound();
-    }    // 🚀 typingmania-ref流：即座更新で最高レスポンス
+      // 🚀 typingmania-ref流：即座エラー音再生
+      SimpleSfx.play('error');
+    }// 🚀 typingmania-ref流：即座更新で最高レスポンス
     this.updateCanvasStates();
     this.renderCanvas();
     this.notifyProgress();
@@ -421,9 +413,8 @@ export class HybridTypingEngine {
         this.state.currentIndex++;
       }
     }
-    
-    this.state.keyCount++;
-    UltraFastAudioSystem.playClickSound();
+      this.state.keyCount++;
+    SimpleSfx.play('key');
     
     this.updateCanvasStates();
     this.renderCanvas();
@@ -455,8 +446,7 @@ export class HybridTypingEngine {
           // 未入力
           newState = 'inactive';
         }
-        
-        // 🚀 状態更新（差分更新で最適化）
+          // 🚀 typingmania-ref流：シンプル状態更新
         this.canvasChars[romajiIndex].setState(newState);
         romajiIndex++;
       }
@@ -472,69 +462,37 @@ export class HybridTypingEngine {
     // 🚀 フォント設定最適化 - 事前計算済み文字列使用
     this.ctx.font = CANVAS_FONT_CONFIG.fontString;
     this.ctx.textAlign = 'center';
-    this.ctx.textBaseline = 'middle';    // 🚀 差分更新：現在は全文字を描画（将来的に差分検出機能追加予定）
-    const changedChars = this.canvasChars;
-
-    // 🚀 シャドウ状態ごとにグループ化して描画（最適化）
-    const charsByState = {
-      active: [] as CanvasRomajiChar[],
-      completed: [] as CanvasRomajiChar[],
-      inactive: [] as CanvasRomajiChar[]
-    };
-
-    // 状態別に分類
-    changedChars.forEach(char => {
+    this.ctx.textBaseline = 'middle';    // 🚀 typingmania-ref流：1回のループで全描画（シャドウ設定変更最小化）
+    this.canvasChars.forEach(char => {
       const state = char.getState();
-      charsByState[state].push(char);
-    });
-
-    // 状態ごとにまとめて描画（シャドウ設定を最小化）
-    this.renderCharGroup(charsByState.inactive, 'inactive');
-    this.renderCharGroup(charsByState.completed, 'completed');
-    this.renderCharGroup(charsByState.active, 'active');
-
-    // シャドウリセット
-    this.ctx.shadowColor = 'transparent';
-    this.ctx.shadowBlur = 0;
-    this.ctx.shadowOffsetX = 0;
-    this.ctx.shadowOffsetY = 0;
-  }
-
-  /**
-   * 🚀 状態別文字グループ描画（シャドウ最適化）
-   */
-  private renderCharGroup(chars: CanvasRomajiChar[], state: 'inactive' | 'active' | 'completed'): void {
-    if (chars.length === 0 || !this.ctx) return;    // 状態に応じたスタイル設定（プロフェッショナルゲーミング仕様）
-    switch (state) {
-      case 'active':
-        this.ctx.fillStyle = CANVAS_FONT_CONFIG.activeColor;
-        this.ctx.shadowColor = 'rgba(255, 215, 0, 0.9)';  // ゴールドグロー
-        this.ctx.shadowBlur = 8;
-        this.ctx.shadowOffsetX = 0;
-        this.ctx.shadowOffsetY = 2;
-        break;
-      case 'completed':
-        this.ctx.fillStyle = CANVAS_FONT_CONFIG.completedColor;
-        this.ctx.shadowColor = 'rgba(79, 195, 247, 0.7)'; // スカイブルーグロー
-        this.ctx.shadowBlur = 6;
-        this.ctx.shadowOffsetX = 0;
-        this.ctx.shadowOffsetY = 1;
-        break;
-      case 'inactive':
-        this.ctx.fillStyle = CANVAS_FONT_CONFIG.inactiveColor;
-        this.ctx.shadowColor = 'rgba(0,0,0,0.4)';         // 控えめシャドウ
-        this.ctx.shadowBlur = 2;
-        this.ctx.shadowOffsetX = 0;
-        this.ctx.shadowOffsetY = 1;
-        break;
-    }
-
-    // 同じ状態の文字をまとめて描画
-    chars.forEach(char => {
+      
+      // 状態に応じたスタイル設定（最小限の変更）
+      switch (state) {
+        case 'active':
+          this.ctx!.fillStyle = CANVAS_FONT_CONFIG.activeColor;
+          this.ctx!.shadowColor = 'rgba(255, 215, 0, 0.9)';
+          this.ctx!.shadowBlur = 8;
+          break;
+        case 'completed':
+          this.ctx!.fillStyle = CANVAS_FONT_CONFIG.completedColor;
+          this.ctx!.shadowColor = 'rgba(79, 195, 247, 0.7)';
+          this.ctx!.shadowBlur = 6;
+          break;
+        default: // inactive
+          this.ctx!.fillStyle = CANVAS_FONT_CONFIG.inactiveColor;
+          this.ctx!.shadowColor = 'rgba(0,0,0,0.4)';
+          this.ctx!.shadowBlur = 2;
+          break;
+      }
+      
+      // 文字描画
       this.ctx!.fillText(char.character, char.x, char.y);
     });
-  }
 
+    // シャドウリセット（1回のみ）
+    this.ctx.shadowColor = 'transparent';
+    this.ctx.shadowBlur = 0;
+  }
   /**
    * 進捗通知 - DirectTypingEngine2互換
    */
@@ -594,6 +552,51 @@ export class HybridTypingEngine {
     if (this.keyHandler) {
       window.removeEventListener('keydown', this.keyHandler, true);
       this.keyHandler = undefined;
+    }
+  }
+}
+
+/**
+ * typingmania-ref流シンプル音響システム
+ */
+class SimpleSfx {
+  private static audioContext: AudioContext | null = null;
+  
+  static async init(): Promise<void> {
+    if (!this.audioContext) {
+      this.audioContext = new (window.AudioContext || (window as any).webkitAudioContext)();
+    }
+  }
+  
+  static async play(soundType: 'key' | 'error'): Promise<void> {
+    if (!this.audioContext) await this.init();
+    if (!this.audioContext) return;
+    
+    // typingmania-ref流：Web Audio API使用（軽量）
+    const oscillator = this.audioContext.createOscillator();
+    const gainNode = this.audioContext.createGain();
+    
+    oscillator.connect(gainNode);
+    gainNode.connect(this.audioContext.destination);
+    
+    // 音の設定
+    if (soundType === 'key') {
+      oscillator.frequency.setValueAtTime(800, this.audioContext.currentTime);
+      gainNode.gain.setValueAtTime(0.1, this.audioContext.currentTime);
+    } else {
+      oscillator.frequency.setValueAtTime(200, this.audioContext.currentTime);
+      gainNode.gain.setValueAtTime(0.15, this.audioContext.currentTime);
+    }
+    
+    // 短時間再生
+    oscillator.start();
+    gainNode.gain.exponentialRampToValueAtTime(0.01, this.audioContext.currentTime + 0.1);
+    oscillator.stop(this.audioContext.currentTime + 0.1);
+  }
+  
+  static resumeContext(): void {
+    if (this.audioContext && this.audioContext.state === 'suspended') {
+      this.audioContext.resume();
     }
   }
 }

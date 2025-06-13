@@ -52,14 +52,13 @@ export function useHybridTyping({
       onWordComplete
     );
 
-    engineRef.current = engine;
-
-    return () => {
+    engineRef.current = engine;    return () => {
       if (engineRef.current) {
         engineRef.current.cleanup();
         engineRef.current = null;
       }
-    };  }, [word, typingChars, onWordComplete, config.showKanaDisplay, showKanaDisplay]);
+    };
+  }, [word, typingChars, onWordComplete, config.showKanaDisplay, showKanaDisplay]);
 
   // リセット関数
   const reset = useCallback(() => {
