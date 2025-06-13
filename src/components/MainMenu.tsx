@@ -32,9 +32,9 @@ const MainMenu: React.FC<MainMenuProps> = React.memo(({ onStart, onRanking }) =>
   const setGameStatus = useTypingGameStore((state) => state.setGameStatus);
   const setMode = useTypingGameStore((state) => state.setMode);
   const { goToSettings } = useSceneNavigationStore();
-  
   // セキュリティチェック: 開発環境でのみ管理者機能を有効化
   const isDevelopment = process.env.NODE_ENV === 'development';
+  
     // 状態管理
   const [adminOpen, setAdminOpen] = useState(false);
   const [modeSelectOpen, setModeSelectOpen] = useState(false);
@@ -99,9 +99,8 @@ const MainMenu: React.FC<MainMenuProps> = React.memo(({ onStart, onRanking }) =>
           setModeSelectOpen(false);
         }
       },
-    },
-    {
-      key: '@',
+    },    {
+      key: 'a',
       ctrlKey: true,
       handler: (e: KeyboardEvent) => {
         // 本番環境では管理者パネルを無効化
@@ -113,7 +112,7 @@ const MainMenu: React.FC<MainMenuProps> = React.memo(({ onStart, onRanking }) =>
         setAdminOpen((v) => !v);
       },
       allowInputFocus: true
-    },  ], [handleStart, handleGoRanking, adminOpen, modeSelectOpen, isDevelopment]);
+    },], [handleStart, handleGoRanking, adminOpen, modeSelectOpen, isDevelopment]);
 
   useGlobalShortcuts(shortcuts, [handleStart, handleGoRanking, adminOpen, modeSelectOpen, isDevelopment]);
 
@@ -202,9 +201,7 @@ const MainMenu: React.FC<MainMenuProps> = React.memo(({ onStart, onRanking }) =>
         </div>        
         <div className={styles.mainMenu__selectedMode} role="status" aria-live="polite">
           Mode: {selectedModeDisplay}
-        </div>      </div>
-
-      {/* フッター（index.htmlスタイル完全再現） */}
+        </div>      </div>      {/* フッター（index.htmlスタイル完全再現） */}
       <div className={styles.mainMenu__footer}>
         <div className={styles.mainMenu__footer__copyright}>&copy;2025 manaby Omiya Studio</div>
         <div className={styles.mainMenu__footer__version}>ver. 0.9.3 (Beta)</div>
