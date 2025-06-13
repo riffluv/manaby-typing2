@@ -151,6 +151,8 @@ export class HybridTypingEngine {
     // 🚀 音響システム事前初期化（最初のキー遅延を排除）
     UltraFastAudioSystem.init();
     
+    // 🚀 初期状態設定：最初の文字をアクティブに設定
+    this.updateCanvasStates();
     this.renderCanvas();
   }
 
