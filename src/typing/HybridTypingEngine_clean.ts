@@ -1,4 +1,4 @@
-﻿/**
+/**
  * HybridTypingEngine - typingmania-ref流超高速タイピングエンジン
  * 
  * 哲学: 「シンプルが最速」
@@ -144,24 +144,18 @@ export class HybridTypingEngine {
     this.ctx.scale(dpr, dpr);
     this.ctx.font = CANVAS_CONFIG.fontString;
     this.ctx.textAlign = 'center';
-    this.ctx.textBaseline = 'middle';    // Canvas文字配置 - センター配置（最適間隔）
+    this.ctx.textBaseline = 'middle';
+
+    // Canvas文字配置
     this.canvasChars = [];
-    
-    // 🎯 タイピングゲーム最適間隔設定
-    const totalRomaji = this.state.typingChars.reduce((sum, char) => sum + char.patterns[0].length, 0);
-    const charSpacing = 18; // 1.8remフォント（約29px）に対する最適間隔
-    const totalWidth = totalRomaji * charSpacing;
-    const canvasWidth = 800;
-    const startX = (canvasWidth - totalWidth) / 2 + charSpacing / 2; // センター開始位置
-    
-    let x = startX;
+    let x = 50;
     const y = 25;
 
     this.state.typingChars.forEach(char => {
       const romaji = char.patterns[0];
       for (let i = 0; i < romaji.length; i++) {
         this.canvasChars.push(new CanvasRomajiChar(romaji[i], x, y));
-        x += charSpacing;
+        x += 25;
       }
     });
   }
