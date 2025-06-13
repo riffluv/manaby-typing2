@@ -578,14 +578,13 @@ class SimpleSfx {
     
     oscillator.connect(gainNode);
     gainNode.connect(this.audioContext.destination);
-    
-    // 音の設定
+      // 音の設定 - 🔊 ボリューム強化版
     if (soundType === 'key') {
       oscillator.frequency.setValueAtTime(800, this.audioContext.currentTime);
-      gainNode.gain.setValueAtTime(0.1, this.audioContext.currentTime);
+      gainNode.gain.setValueAtTime(0.3, this.audioContext.currentTime); // 0.1 → 0.3（3倍）
     } else {
       oscillator.frequency.setValueAtTime(200, this.audioContext.currentTime);
-      gainNode.gain.setValueAtTime(0.15, this.audioContext.currentTime);
+      gainNode.gain.setValueAtTime(0.4, this.audioContext.currentTime); // 0.15 → 0.4（約2.7倍）
     }
     
     // 短時間再生
