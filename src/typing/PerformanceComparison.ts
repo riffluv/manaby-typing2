@@ -54,14 +54,14 @@ export class PerformanceComparison {
       p95: sorted[Math.floor(sorted.length * 0.95)].toFixed(3)
     };
   }
-
   // 📈 全統計表示
   static logAllStats(): void {
-    console.log('🔬 === Performance Comparison Results ===');
+    // Performance: Reduce console.log for typing responsiveness
+    // console.log('🔬 === Performance Comparison Results ===');
     Object.keys(this.measurements).forEach(label => {
       const stats = this.getStats(label);
       if (stats) {
-        console.log(`📊 ${label}:`, stats);
+        // console.log(`📊 ${label}:`, stats);
       }
     });
   }

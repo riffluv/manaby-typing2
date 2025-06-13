@@ -42,9 +42,8 @@ export function useBGMAutoControl(options: BGMAutoControlOptions = {}) {
       targetMode = 'ranking';
     } else if (path.includes('/settings')) {
       targetMode = 'settings';
-    }
-
-    console.log(`[BGMAutoControl] 🎵 ページ: ${path} → BGMモード: ${targetMode}`);
+    }    // Performance: Reduce console.log for typing responsiveness
+    // console.log(`[BGMAutoControl] 🎵 ページ: ${path} → BGMモード: ${targetMode}`);
     switchMode(targetMode);
   }, [options.forceMode, switchMode]);
 }
@@ -83,9 +82,8 @@ export function useBGMGameControl(
         break;
       default:
         return;
-    }
-
-    console.log(`[BGMGameControl] 🎮 ゲーム状態: ${gameState} → BGMモード: ${targetMode}`);
+    }    // Performance: Reduce console.log for typing responsiveness
+    // console.log(`[BGMGameControl] 🎮 ゲーム状態: ${gameState} → BGMモード: ${targetMode}`);
     switchMode(targetMode);
   }, [gameState, options.changeOnGameStart, options.changeOnGameEnd, switchMode]);
 }

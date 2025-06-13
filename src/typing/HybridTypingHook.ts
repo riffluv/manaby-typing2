@@ -59,19 +59,20 @@ export function useHybridTyping({
         engineRef.current.cleanup();
         engineRef.current = null;
       }
-    };
-  }, [word, typingChars, onWordComplete, config.showKanaDisplay, showKanaDisplay]);
+    };  }, [word, typingChars, onWordComplete, config.showKanaDisplay, showKanaDisplay]);
 
   // リセット関数
   const reset = useCallback(() => {
     // HybridTypingEngineにはreset機能を今後追加する可能性
-    console.log('HybridTypingEngine reset (機能準備中)');
+    // Performance: Reduce console.log for typing responsiveness
+    // console.log('HybridTypingEngine reset (機能準備中)');
   }, []);
 
   // 詳細進捗取得
   const getDetailedProgress = useCallback(() => {
     // HybridTypingEngineには詳細進捗取得機能を内部で使用
-    console.log('HybridTypingEngine progress (内部処理)');
+    // Performance: Reduce console.log for typing responsiveness
+    // console.log('HybridTypingEngine progress (内部処理)');
     return null;
   }, []);
 

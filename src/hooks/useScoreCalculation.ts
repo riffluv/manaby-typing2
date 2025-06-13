@@ -59,7 +59,8 @@ export function useScoreCalculation(
         onScoreCalculatedRef.current(fallbackResult);
       };
 
-      console.log('WebWorker初期化完了');
+      // Performance: Reduce console.log for typing responsiveness
+      // console.log('WebWorker初期化完了');
     } catch (error) {
       console.error('WebWorker初期化エラー:', error);
       // WebWorker作成に失敗した場合もフォールバックを用意
@@ -70,7 +71,8 @@ export function useScoreCalculation(
       if (workerRef.current) {
         workerRef.current.terminate();
         workerRef.current = null;
-        console.log('WebWorkerクリーンアップ完了');
+        // Performance: Reduce console.log for typing responsiveness
+        // console.log('WebWorkerクリーンアップ完了');
       }    };  }, [calculateFallbackScore]);
 
   // ゲーム終了時にWebWorkerでスコア計算実行
@@ -89,7 +91,8 @@ export function useScoreCalculation(
           }))
         }
       };      // WebWorkerにデータ送信
-      console.log('WebWorkerにスコア計算データ送信:', workerData);
+      // Performance: Reduce console.log for typing responsiveness
+      // console.log('WebWorkerにスコア計算データ送信:', workerData);
       try {
         workerRef.current.postMessage(workerData);
       } catch (error) {

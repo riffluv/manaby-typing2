@@ -26,20 +26,20 @@ const useBGMStoreBase = create<BGMState>((set, get) => ({
   // BGMモード切り替え
   switchMode: async (mode: BGMMode) => {
     const { enabled } = get();
-    
-    if (!enabled) {
-      console.log('[BGMStore] BGM無効のため切り替えスキップ');
+      if (!enabled) {
+      // Performance: Reduce console.log for typing responsiveness
+      // console.log('[BGMStore] BGM無効のため切り替えスキップ');
       set({ currentMode: mode });
       return;
-    }    try {
+    }try {
       await globalBGMPlayer.switchMode(mode);
       const status: BGMStatus = globalBGMPlayer.getStatus();
         set({
         currentMode: mode,
         isPlaying: status.isPlaying ?? false
-      });
-      
-      console.log(`[BGMStore] ✅ BGMモード切り替え完了: ${mode}`);
+      });      
+      // Performance: Reduce console.log for typing responsiveness
+      // console.log(`[BGMStore] ✅ BGMモード切り替え完了: ${mode}`);
     } catch (error) {
       console.error('[BGMStore] BGMモード切り替えエラー:', error);
     }
@@ -48,9 +48,9 @@ const useBGMStoreBase = create<BGMState>((set, get) => ({
   setVolume: (volume: number) => {
     const normalizedVolume = Math.max(0, Math.min(1, volume));
     globalBGMPlayer.setVolume(normalizedVolume); // 🔧 setGlobalVolume → setVolume に修正
-    
-    set({ volume: normalizedVolume });
-    console.log(`[BGMStore] 🔊 BGM音量: ${(normalizedVolume * 100).toFixed(0)}%`);
+      set({ volume: normalizedVolume });
+    // Performance: Reduce console.log for typing responsiveness
+    // console.log(`[BGMStore] 🔊 BGM音量: ${(normalizedVolume * 100).toFixed(0)}%`);
   },
 
   // BGM有効/無効切り替え
@@ -58,26 +58,26 @@ const useBGMStoreBase = create<BGMState>((set, get) => ({
     set({ enabled });
     
     if (!enabled) {
-      await globalBGMPlayer.stop();
-      set({ isPlaying: false });
-      console.log('[BGMStore] 🔇 BGM無効化');
+      await globalBGMPlayer.stop();      set({ isPlaying: false });
+      // Performance: Reduce console.log for typing responsiveness
+      // console.log('[BGMStore] 🔇 BGM無効化');
     } else {
       const { currentMode } = get();      if (currentMode !== 'silent') {        await globalBGMPlayer.switchMode(currentMode);
         const status: BGMStatus = globalBGMPlayer.getStatus();
-        set({ isPlaying: status.isPlaying ?? false });
-      }
-      console.log('[BGMStore] 🔊 BGM有効化');
+        set({ isPlaying: status.isPlaying ?? false });      }
+      // Performance: Reduce console.log for typing responsiveness
+      // console.log('[BGMStore] 🔊 BGM有効化');
     }
   },
 
   // BGM停止
   stop: async () => {
-    await globalBGMPlayer.stop();
-    set({ 
+    await globalBGMPlayer.stop();    set({ 
       currentMode: 'silent',
       isPlaying: false 
     });
-    console.log('[BGMStore] 🛑 BGM停止');
+    // Performance: Reduce console.log for typing responsiveness
+    // console.log('[BGMStore] 🛑 BGM停止');
   },
   // 現在の状態取得
   getStatus: (): BGMState & BGMStatus => {

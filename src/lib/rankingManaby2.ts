@@ -23,14 +23,14 @@ export type RankingEntry = {
 };
 
 // ランキング登録（名前・スコア・難易度）
-export async function addRankingEntry(entry: Omit<RankingEntry, 'createdAt'>) {
-  try {
-    console.log('[Firestore] 登録開始', entry);
+export async function addRankingEntry(entry: Omit<RankingEntry, 'createdAt'>) {  try {
+    // Performance: Reduce console.log for typing responsiveness
+    // console.log('[Firestore] 登録開始', entry);
     const result = await addDoc(collection(db, COLLECTION), {
       ...entry,
       createdAt: Timestamp.now()
     });
-    console.log('[Firestore] 登録完了', result);
+    // console.log('[Firestore] 登録完了', result);
     return result;
   } catch (e) {
     console.error('[Firestore] 登録エラー', e);
@@ -68,16 +68,16 @@ function safeToDate(createdAt: unknown): Date {
 }
 
 // ランキング取得（上位N件、modeでフィルタ）
-export async function getRankingEntries(topN = 30, mode: 'normal' | 'hard' = 'normal'): Promise<RankingEntry[]> {
-  try {
-    console.log('[Firestore] ランキング取得開始', mode);
+export async function getRankingEntries(topN = 30, mode: 'normal' | 'hard' = 'normal'): Promise<RankingEntry[]> {  try {
+    // Performance: Reduce console.log for typing responsiveness
+    // console.log('[Firestore] ランキング取得開始', mode);
     const q = query(
       collection(db, COLLECTION),
       orderBy('kpm', 'desc'),
       limit(100) // まず多めに取得
     );
     const snap = await getDocs(q);
-    console.log('[Firestore] 取得件数', snap.size);
+    // console.log('[Firestore] 取得件数', snap.size);
     // modeでフィルタ
     const filtered = snap.docs
       .map(doc => doc.data())
