@@ -35,10 +35,11 @@ const CANVAS_FONT_CONFIG = {
 } as const;
 
 /**
- * Canvas用ローマ字文字クラス - typingmania-ref流シンプル設計
+ * Canvas用ローマ字文字クラス - 高速連続入力最適化版
  */
 class CanvasRomajiChar {
   private state: 'inactive' | 'active' | 'completed' = 'inactive';
+  private needsRedraw: boolean = true; // 🚀 差分描画フラグ
 
   constructor(
     public character: string,
@@ -46,12 +47,24 @@ class CanvasRomajiChar {
     public y: number
   ) {}
   
-  setState(newState: 'inactive' | 'active' | 'completed'): void {
+  setState(newState: 'inactive' | 'active' | 'completed'): boolean {
+    if (this.state === newState) return false; // 🚀 無駄な更新を防止
     this.state = newState;
+    this.needsRedraw = true; // 🚀 再描画フラグ設定
+    return true;
   }
   
   getState(): 'inactive' | 'active' | 'completed' {
     return this.state;
+  }
+  
+  // 🚀 差分描画制御
+  needsUpdate(): boolean {
+    return this.needsRedraw;
+  }
+  
+  clearUpdateFlag(): void {
+    this.needsRedraw = false;
   }
   getColor(): string {
     switch (this.state) {
@@ -308,7 +321,8 @@ export class HybridTypingEngine {
   }  /**
    * 🚀 ZERO-LATENCY キー処理 - DirectTypingEngine2完全互換
    */
-  private processKey(key: string): void {    // 🚀 typingmania-ref流：初回キー時の音響コンテキスト復旧
+  private processKey(key: string): void {
+    // 🚀 typingmania-ref流：初回キー時の音響コンテキスト復旧
     if (this.state.keyCount === 0) {
       SimpleSfx.resumeContext();
     }
@@ -322,12 +336,17 @@ export class HybridTypingEngine {
     const currentChar = this.state.typingChars[this.state.currentIndex];
     if (!currentChar) return;
 
+    let shouldUpdate = false; // 🚀 更新フラグで不要な描画を抑制
+
     // 「ん」の分岐状態処理 - DirectTypingEngine2完全再現
     if (currentChar.branchingState) {
       const nextChar = this.state.typingChars[this.state.currentIndex + 1];
-      const result = currentChar.typeBranching(key, nextChar);      if (result.success) {
+      const result = currentChar.typeBranching(key, nextChar);
+
+      if (result.success) {
         // 🚀 typingmania-ref流：即座音声再生
         SimpleSfx.play('key');
+        shouldUpdate = true;
 
         if (result.completeWithSingle) {
           // 'n'パターン: 「ん」完了後、次文字に継続
@@ -347,43 +366,44 @@ export class HybridTypingEngine {
         if (this.state.currentIndex >= this.state.typingChars.length) {
           this.handleWordComplete();
           return;
-        }        // 🚀 typingmania-ref流：即座更新で最高レスポンス
-        this.updateCanvasStates();
-        this.renderCanvas();
-        this.notifyProgress();
-        return;      } else {
+        }
+      } else {
         this.state.mistakeCount++;
         // 🚀 typingmania-ref流：即座エラー音再生
         SimpleSfx.play('error');
-        
-        // エラー時は即座に表示更新（視覚フィードバック重要）
-        this.updateCanvasStates();
-        this.renderCanvas();
-        this.notifyProgress();
-        return;
+        shouldUpdate = true;
+      }
+    } else {
+      // 通常のタイピング処理
+      const isCorrect = currentChar.type(key);
+
+      if (isCorrect) {
+        // 🚀 typingmania-ref流：即座音声再生
+        SimpleSfx.play('key');
+        shouldUpdate = true;
+
+        if (currentChar.completed) {
+          this.state.currentIndex++;
+
+          if (this.state.currentIndex >= this.state.typingChars.length) {
+            this.handleWordComplete();
+            return;
+          }
+        }
+      } else {
+        this.state.mistakeCount++;
+        // 🚀 typingmania-ref流：即座エラー音再生
+        SimpleSfx.play('error');
+        shouldUpdate = true;
       }
     }
 
-    // 通常のタイピング処理
-    const isCorrect = currentChar.type(key);    if (isCorrect) {
-      // 🚀 typingmania-ref流：即座音声再生
-      SimpleSfx.play('key');
-
-      if (currentChar.completed) {
-        this.state.currentIndex++;
-
-        if (this.state.currentIndex >= this.state.typingChars.length) {
-          this.handleWordComplete();
-          return;
-        }
-      }    } else {
-      this.state.mistakeCount++;
-      // 🚀 typingmania-ref流：即座エラー音再生
-      SimpleSfx.play('error');
-    }// 🚀 typingmania-ref流：即座更新で最高レスポンス
-    this.updateCanvasStates();
-    this.renderCanvas();
-    this.notifyProgress();
+    // 🚀 高速連続入力最適化：状態変更時のみ描画更新
+    if (shouldUpdate) {
+      this.updateCanvasStates();
+      this.renderCanvas();
+      this.notifyProgress();
+    }
   }
 
   /**
@@ -451,22 +471,52 @@ export class HybridTypingEngine {
         romajiIndex++;
       }
     }
-  }/**
-   * 🚀 ULTRA高速Canvas描画 - 差分更新＋シャドウ最適化版
-   */  private renderCanvas(): void {
+  }  /**
+   * 🚀 超高速Canvas描画 - 高速連続入力最適化版
+   */
+  private renderCanvas(): void {
     if (!this.ctx || !this.romajiCanvas) return;
 
-    // Canvas クリア
-    this.ctx.clearRect(0, 0, this.romajiCanvas.width, this.romajiCanvas.height);
+    // 🚀 差分描画：変更された文字のみを特定
+    const changedChars = this.canvasChars.filter(char => char.needsUpdate());
+    
+    if (changedChars.length === 0) return; // 🚀 変更なしなら描画スキップ
 
-    // 🚀 フォント設定最適化 - 事前計算済み文字列使用
+    // 🚀 高速連続入力時の部分描画最適化（閾値拡大）
+    if (changedChars.length <= 5) {
+      // 少数文字変更時：部分的にクリア＆描画（通常の連続入力は1-2文字のみ）
+      this.renderChangedCharsOnly(changedChars);
+    } else {
+      // 多数文字変更時：全体描画
+      this.renderAllChars();
+    }
+
+    // 🚀 更新フラグをクリア
+    changedChars.forEach(char => char.clearUpdateFlag());
+  }  /**
+   * 🚀 部分描画：高速連続入力専用最適化
+   */
+  private renderChangedCharsOnly(changedChars: CanvasRomajiChar[]): void {
+    if (!this.ctx) return;
+
     this.ctx.font = CANVAS_FONT_CONFIG.fontString;
     this.ctx.textAlign = 'center';
-    this.ctx.textBaseline = 'middle';    // 🚀 typingmania-ref流：1回のループで全描画（シャドウ設定変更最小化）
-    this.canvasChars.forEach(char => {
+    this.ctx.textBaseline = 'middle';
+
+    changedChars.forEach(char => {
+      // 🚀 精密クリア：文字サイズベースの最小領域（高速化）
+      const fontSizeValue = parseFloat(CANVAS_FONT_CONFIG.fontSize); // rem値を数値化
+      const clearWidth = fontSizeValue * 16 * 1.2; // rem → px変換（16px/rem） + マージン
+      const clearHeight = fontSizeValue * 16 * 1.4; // rem → px変換 + マージン
+      this.ctx!.clearRect(
+        char.x - clearWidth/2, 
+        char.y - clearHeight/2, 
+        clearWidth, 
+        clearHeight
+      );
+
+      // 🚀 単一文字描画
       const state = char.getState();
-      
-      // 状態に応じたスタイル設定（最小限の変更）
       switch (state) {
         case 'active':
           this.ctx!.fillStyle = CANVAS_FONT_CONFIG.activeColor;
@@ -478,18 +528,60 @@ export class HybridTypingEngine {
           this.ctx!.shadowColor = 'rgba(79, 195, 247, 0.7)';
           this.ctx!.shadowBlur = 6;
           break;
-        default: // inactive
+        default:
           this.ctx!.fillStyle = CANVAS_FONT_CONFIG.inactiveColor;
           this.ctx!.shadowColor = 'rgba(0,0,0,0.4)';
           this.ctx!.shadowBlur = 2;
           break;
       }
       
-      // 文字描画
       this.ctx!.fillText(char.character, char.x, char.y);
     });
 
-    // シャドウリセット（1回のみ）
+    // シャドウリセット
+    this.ctx.shadowColor = 'transparent';
+    this.ctx.shadowBlur = 0;
+  }
+
+  /**
+   * 🚀 全体描画：初期化・大量変更時用
+   */
+  private renderAllChars(): void {
+    if (!this.ctx || !this.romajiCanvas) return;
+
+    // Canvas クリア
+    this.ctx.clearRect(0, 0, this.romajiCanvas.width, this.romajiCanvas.height);
+
+    this.ctx.font = CANVAS_FONT_CONFIG.fontString;
+    this.ctx.textAlign = 'center';
+    this.ctx.textBaseline = 'middle';
+
+    // 🚀 全文字描画
+    this.canvasChars.forEach(char => {
+      const state = char.getState();
+      
+      switch (state) {
+        case 'active':
+          this.ctx!.fillStyle = CANVAS_FONT_CONFIG.activeColor;
+          this.ctx!.shadowColor = 'rgba(255, 215, 0, 0.9)';
+          this.ctx!.shadowBlur = 8;
+          break;
+        case 'completed':
+          this.ctx!.fillStyle = CANVAS_FONT_CONFIG.completedColor;
+          this.ctx!.shadowColor = 'rgba(79, 195, 247, 0.7)';
+          this.ctx!.shadowBlur = 6;
+          break;
+        default:
+          this.ctx!.fillStyle = CANVAS_FONT_CONFIG.inactiveColor;
+          this.ctx!.shadowColor = 'rgba(0,0,0,0.4)';
+          this.ctx!.shadowBlur = 2;
+          break;
+      }
+      
+      this.ctx!.fillText(char.character, char.x, char.y);
+    });
+
+    // シャドウリセット
     this.ctx.shadowColor = 'transparent';
     this.ctx.shadowBlur = 0;
   }
@@ -557,10 +649,12 @@ export class HybridTypingEngine {
 }
 
 /**
- * typingmania-ref流シンプル音響システム
+ * typingmania-ref流シンプル音響システム - 高速連続入力最適化版
  */
 class SimpleSfx {
   private static audioContext: AudioContext | null = null;
+  private static lastPlayTime = 0; // 🚀 高速連続入力制御
+  private static THROTTLE_INTERVAL = 20; // 🚀 20msデバウンス（50fps以上を保証）
   
   static async init(): Promise<void> {
     if (!this.audioContext) {
@@ -572,13 +666,21 @@ class SimpleSfx {
     if (!this.audioContext) await this.init();
     if (!this.audioContext) return;
     
+    // 🚀 高速連続入力時の音響負荷軽減
+    const now = Date.now();
+    if (soundType === 'key' && (now - this.lastPlayTime) < this.THROTTLE_INTERVAL) {
+      return; // 高速入力時はキー音を間引き（エラー音は常に再生）
+    }
+    this.lastPlayTime = now;
+    
     // typingmania-ref流：Web Audio API使用（軽量）
     const oscillator = this.audioContext.createOscillator();
     const gainNode = this.audioContext.createGain();
     
     oscillator.connect(gainNode);
     gainNode.connect(this.audioContext.destination);
-      // 音の設定 - 🔊 ボリューム強化版
+    
+    // 音の設定 - 🔊 ボリューム強化版
     if (soundType === 'key') {
       oscillator.frequency.setValueAtTime(800, this.audioContext.currentTime);
       gainNode.gain.setValueAtTime(0.3, this.audioContext.currentTime); // 0.1 → 0.3（3倍）
