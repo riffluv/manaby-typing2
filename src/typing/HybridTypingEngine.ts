@@ -25,8 +25,7 @@ const COLOSSEUM_CONFIG = {
     completed: 4,   // 完了文字の満足感
     inactive: 1     // 未入力文字の控えめ表示
   },
-  charSpacing: 18,  // 最適文字間隔
-  animationDuration: 150 // 状態変化アニメーション時間
+  charSpacing: 18   // 最適文字間隔
 } as const;
 
 /**
@@ -145,14 +144,10 @@ class ColosseumAudioEngine {
 }
 
 /**
- * 🔥 コロシアム級Canvas文字 - アニメーション対応
+ * 🔥 コロシアム級Canvas文字 - シンプル＆スムーズ
  */
 class ColosseumCanvasChar {
   private state: 'inactive' | 'active' | 'completed' = 'inactive';
-  private needsRedraw = true;
-  private animationProgress = 0;
-  private targetScale = 1;
-  private currentScale = 1;
 
   constructor(
     public character: string, 
@@ -160,36 +155,11 @@ class ColosseumCanvasChar {
     public y: number
   ) {}
   
-  setState(newState: 'inactive' | 'active' | 'completed'): boolean {
-    if (this.state === newState) return false;
-    
+  setState(newState: 'inactive' | 'active' | 'completed'): void {
     this.state = newState;
-    this.needsRedraw = true;
-    
-    // 状態変化アニメーション
-    this.animationProgress = 0;
-    this.targetScale = newState === 'active' ? 1.1 : 1;
-    
-    return true;
-  }
-  
-  updateAnimation(deltaTime: number): boolean {
-    if (this.animationProgress >= 1) return false;
-    
-    this.animationProgress = Math.min(1, this.animationProgress + deltaTime / COLOSSEUM_CONFIG.animationDuration);
-    
-    // イージング関数: easeOutCubic
-    const ease = 1 - Math.pow(1 - this.animationProgress, 3);
-    this.currentScale = 1 + (this.targetScale - 1) * ease;
-    
-    this.needsRedraw = true;
-    return true;
   }
   
   getState() { return this.state; }
-  needsUpdate() { return this.needsRedraw; }
-  clearUpdateFlag() { this.needsRedraw = false; }
-  getScale() { return this.currentScale; }
 }
 
 /**
@@ -287,25 +257,13 @@ export class HybridTypingEngine {
     this.updateCanvasStates();
     this.startRenderLoop();
   }
-
   /**
-   * 🚀 コロシアム級描画ループ開始
+   * 🚀 コロシアム級描画ループ開始 - シンプル＆スムーズ
    */
   private startRenderLoop(): void {
-    this.renderScheduler.start((deltaTime) => {
-      let needsRedraw = false;
-      
-      // アニメーション更新
-      this.canvasChars.forEach(char => {
-        if (char.updateAnimation(deltaTime)) {
-          needsRedraw = true;
-        }
-      });
-      
-      // 再描画が必要な場合のみCanvas更新
-      if (needsRedraw || this.canvasChars.some(char => char.needsUpdate())) {
-        this.renderCanvas();
-      }
+    this.renderScheduler.start(() => {
+      // 毎フレーム全体を再描画（シンプル＆スムーズ）
+      this.renderCanvas();
     });
   }
   /**
@@ -540,64 +498,42 @@ export class HybridTypingEngine {
       }
     });
   }  /**
-   * 🚀 コロシアム級超高速Canvas描画
+   * 🚀 コロシアム級シンプル＆スムーズCanvas描画
    */
   private renderCanvas(): void {
     if (!this.ctx || !this.romajiCanvas) return;
 
-    const changedChars = this.canvasChars.filter(char => char.needsUpdate());
-    if (changedChars.length === 0) return;
-
-    // 🔥 GPU最適化：ビットマップキャッシュスタイル設定
+    // 🔥 毎フレーム全体をクリア
     this.ctx.clearRect(0, 0, this.romajiCanvas.width, this.romajiCanvas.height);
 
-    // 🚀 バッチ描画：状態別グループ化
-    const activeChars: ColosseumCanvasChar[] = [];
-    const completedChars: ColosseumCanvasChar[] = [];
-    const inactiveChars: ColosseumCanvasChar[] = [];
-
+    // 🚀 全文字を状態に応じて直接描画（シンプル＆スムーズ）
     this.canvasChars.forEach(char => {
       const state = char.getState();
-      if (state === 'active') activeChars.push(char);
-      else if (state === 'completed') completedChars.push(char);
-      else inactiveChars.push(char);
+      
+      // 状態別スタイル設定と即座描画
+      if (state === 'active') {
+        this.ctx!.fillStyle = COLOSSEUM_CONFIG.activeColor;
+        this.ctx!.shadowColor = 'rgba(255, 215, 0, 0.8)';
+        this.ctx!.shadowBlur = COLOSSEUM_CONFIG.shadowBlur.active;
+      } else if (state === 'completed') {
+        this.ctx!.fillStyle = COLOSSEUM_CONFIG.completedColor;
+        this.ctx!.shadowColor = 'rgba(0, 230, 118, 0.6)';
+        this.ctx!.shadowBlur = COLOSSEUM_CONFIG.shadowBlur.completed;
+      } else {
+        this.ctx!.fillStyle = COLOSSEUM_CONFIG.inactiveColor;
+        this.ctx!.shadowColor = 'rgba(0,0,0,0.3)';
+        this.ctx!.shadowBlur = COLOSSEUM_CONFIG.shadowBlur.inactive;
+      }
+      
+      // 文字描画
+      this.ctx!.fillText(char.character, char.x, char.y);
     });
-
-    // 🎯 状態別バッチ描画（スタイル変更最小化）
-    this.drawCharBatch(inactiveChars, COLOSSEUM_CONFIG.inactiveColor, 'rgba(0,0,0,0.3)', COLOSSEUM_CONFIG.shadowBlur.inactive);
-    this.drawCharBatch(completedChars, COLOSSEUM_CONFIG.completedColor, 'rgba(0, 230, 118, 0.6)', COLOSSEUM_CONFIG.shadowBlur.completed);
-    this.drawCharBatch(activeChars, COLOSSEUM_CONFIG.activeColor, 'rgba(255, 215, 0, 0.8)', COLOSSEUM_CONFIG.shadowBlur.active);
 
     // シャドウリセット
     this.ctx.shadowColor = 'transparent';
     this.ctx.shadowBlur = 0;
-
-    changedChars.forEach(char => char.clearUpdateFlag());
   }
 
-  /**
-   * 🚀 コロシアム級バッチ描画：状態変更最小化
-   */
-  private drawCharBatch(chars: ColosseumCanvasChar[], fillStyle: string, shadowColor: string, shadowBlur: number): void {
-    if (chars.length === 0) return;
-    
-    this.ctx!.fillStyle = fillStyle;
-    this.ctx!.shadowColor = shadowColor;
-    this.ctx!.shadowBlur = shadowBlur;
-    
-    chars.forEach(char => {
-      const scale = char.getScale();
-      if (scale !== 1) {
-        this.ctx!.save();
-        this.ctx!.translate(char.x, char.y);
-        this.ctx!.scale(scale, scale);
-        this.ctx!.fillText(char.character, 0, 0);
-        this.ctx!.restore();
-      } else {
-        this.ctx!.fillText(char.character, char.x, char.y);
-      }
-    });
-  }
 
   /**
    * 進捗通知 - シンプル
