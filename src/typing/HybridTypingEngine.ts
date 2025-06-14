@@ -163,42 +163,6 @@ class ColosseumCanvasChar {
 }
 
 /**
- * 🚀 コロシアム級描画スケジューラー
- */
-class ColosseumRenderScheduler {
-  private animationId: number | null = null;
-  private lastFrameTime = 0;
-  private renderCallback: ((deltaTime: number) => void) | null = null;
-
-  start(callback: (deltaTime: number) => void): void {
-    this.renderCallback = callback;
-    this.lastFrameTime = performance.now();
-    this.scheduleNextFrame();
-  }
-
-  private scheduleNextFrame = (): void => {
-    this.animationId = requestAnimationFrame((currentTime) => {
-      const deltaTime = currentTime - this.lastFrameTime;
-      this.lastFrameTime = currentTime;
-      
-      if (this.renderCallback) {
-        this.renderCallback(deltaTime);
-      }
-      
-      this.scheduleNextFrame();
-    });
-  };
-
-  stop(): void {
-    if (this.animationId !== null) {
-      cancelAnimationFrame(this.animationId);
-      this.animationId = null;
-    }
-    this.renderCallback = null;
-  }
-}
-
-/**
  * エンジン状態 - シンプル
  */
 interface EngineState {
@@ -224,15 +188,12 @@ export class HybridTypingEngine {
   private romajiCanvas: HTMLCanvasElement | null = null;
   private ctx: CanvasRenderingContext2D | null = null;
   private canvasChars: ColosseumCanvasChar[] = [];
-  private renderScheduler = new ColosseumRenderScheduler();
   
   private onProgress?: (index: number, display: KanaDisplay) => void;
   private onComplete?: (scoreLog: PerWordScoreLog) => void;
   private keyHandler?: (e: KeyboardEvent) => void;
-  private focusOutHandler?: (e: FocusEvent) => void;
-
   /**
-   * 🚀 コロシアム級初期化
+   * 🚀 初期化 - シンプル高速版
    */
   initialize(
     container: HTMLElement,
@@ -252,22 +213,12 @@ export class HybridTypingEngine {
     this.setupCanvas();
     this.setupKeyListener();
     
-    // 🚀 コロシアム級音響初期化
+    // 🚀 シンプル音響初期化
     ColosseumAudioEngine.init();
     this.updateCanvasStates();
-    this.startRenderLoop();
-  }
-  /**
-   * 🚀 コロシアム級描画ループ開始 - シンプル＆スムーズ
-   */
-  private startRenderLoop(): void {
-    this.renderScheduler.start(() => {
-      // 毎フレーム全体を再描画（シンプル＆スムーズ）
-      this.renderCanvas();
-    });
-  }
-  /**
-   * 🚀 タイピンガーZ級DOM構築
+    this.renderCanvas(); // 初回描画のみ
+  }  /**
+   * 🚀 シンプルDOM構築
    */
   private setupDOM(originalText: string): void {
     if (!this.container) return;
@@ -288,19 +239,10 @@ export class HybridTypingEngine {
           display: block; margin: 0 auto; height: 50px;
           image-rendering: crisp-edges;
         "></canvas>
-        
-        <!-- 🚀 タイピンガーZ級専用入力フィールド -->
-        <input 
-          id="taipingaz-focus-retriever" 
-          style="position: fixed; left: -300px; top: 0; opacity: 0;" 
-          type="text" 
-          readonly 
-          tabindex="-1"
-        />
       </div>
     `;
   }  /**
-   * 🚀 コロシアム級Canvas初期化
+   * 🚀 シンプルCanvas初期化
    */
   private setupCanvas(): void {
     this.romajiCanvas = this.container?.querySelector('.romaji-canvas') as HTMLCanvasElement;
@@ -315,17 +257,13 @@ export class HybridTypingEngine {
     this.ctx = this.romajiCanvas.getContext('2d');
     if (!this.ctx) return;
 
-    // 🔥 GPU加速ヒント設定
+    // 🔥 基本設定
     this.ctx.scale(dpr, dpr);
     this.ctx.font = COLOSSEUM_CONFIG.fontString;
     this.ctx.textAlign = 'center';
     this.ctx.textBaseline = 'middle';
-    
-    // 🚀 超高速描画設定
-    this.ctx.imageSmoothingEnabled = false;
-    this.ctx.globalCompositeOperation = 'source-over';
 
-    // Canvas文字配置 - コロシアム級最適間隔
+    // Canvas文字配置 - シンプル
     this.canvasChars = [];
     
     const totalRomaji = this.state.typingChars.reduce((sum, char) => sum + char.patterns[0].length, 0);
@@ -345,56 +283,18 @@ export class HybridTypingEngine {
       }
     });
   }/**
-   * 🚀 Container-Scoped キーリスナー - 他画面と完全分離
+   * 🚀 シンプル高速キーリスナー
    */
   private setupKeyListener(): void {
-    if (!this.container) return;
-
-    // 🚀 コンテナをフォーカス可能にする
-    this.container.setAttribute('tabindex', '0');
-    this.container.style.outline = 'none';
-    this.container.focus();
-
-    // 🔥 コンテナレベルでのキーイベント処理（windowレベルではない）
     this.keyHandler = (e: KeyboardEvent) => {
-      // 修飾キーや特殊キーは完全スルー（他画面のショートカット用）
-      if (e.ctrlKey || e.altKey || e.metaKey) return;
-      if (e.key.length !== 1 || e.key < ' ' || e.key > '~') return;
-      
-      // タイピング処理のみpreventDefault
+      if (e.ctrlKey || e.altKey || e.metaKey || e.key.length !== 1) return;
       e.preventDefault();
-      e.stopImmediatePropagation();
+      e.stopPropagation();
       this.processKey(e.key);
     };
 
-    // 🚀 Container-Scopedイベントリスナー（windowではなくcontainer）
-    this.container.addEventListener('keydown', this.keyHandler, { 
-      passive: false, 
-      capture: false
-    });
-
-    // 🔥 フォーカス維持管理
-    this.setupFocusManagement();
-  }
-
-  /**
-   * 🚀 Container Focus Management - タイピング中のみフォーカス維持
-   */
-  private setupFocusManagement(): void {
-    if (!this.container) return;
-
-    // フォーカスアウト時の処理
-    this.focusOutHandler = (e: FocusEvent) => {
-      // タイピング中はフォーカスを戻す
-      setTimeout(() => {
-        if (this.container && this.state.currentIndex < this.state.typingChars.length) {
-          this.container.focus();
-        }
-      }, 10);
-    };
-
-    this.container.addEventListener('focusout', this.focusOutHandler);
-  }  /**
+    window.addEventListener('keydown', this.keyHandler, { passive: false, capture: true });
+  }/**
    * 🚀 コロシアム級キー処理
    */
   private processKey(key: string): void {
@@ -460,11 +360,10 @@ export class HybridTypingEngine {
         ColosseumAudioEngine.play('error');
         shouldUpdate = true;
       }
-    }
-
-    // 🚀 即座更新：最小チェック
+    }    // 🚀 即座更新：最小チェック + 即座描画
     if (shouldUpdate) {
       this.updateCanvasStates();
+      this.renderCanvas(); // 必要時のみ描画
       this.notifyProgress();
     }
   }
@@ -498,19 +397,19 @@ export class HybridTypingEngine {
       }
     });
   }  /**
-   * 🚀 コロシアム級シンプル＆スムーズCanvas描画
+   * 🚀 シンプル＆高速Canvas描画
    */
   private renderCanvas(): void {
     if (!this.ctx || !this.romajiCanvas) return;
 
-    // 🔥 毎フレーム全体をクリア
+    // 🔥 全体をクリア
     this.ctx.clearRect(0, 0, this.romajiCanvas.width, this.romajiCanvas.height);
 
-    // 🚀 全文字を状態に応じて直接描画（シンプル＆スムーズ）
+    // 🚀 全文字を状態に応じて直接描画
     this.canvasChars.forEach(char => {
       const state = char.getState();
       
-      // 状態別スタイル設定と即座描画
+      // 状態別スタイル設定
       if (state === 'active') {
         this.ctx!.fillStyle = COLOSSEUM_CONFIG.activeColor;
         this.ctx!.shadowColor = 'rgba(255, 215, 0, 0.8)';
@@ -550,18 +449,12 @@ export class HybridTypingEngine {
       remainingText: displayInfo.remainingText,
       displayText: displayInfo.displayText
     });
-  }
-  /**
-   * 完了処理 - コロシアム級
+  }  /**
+   * 完了処理 - シンプル版
    */
   private handleWordComplete(): void {
     // 🎯 完了音再生
     ColosseumAudioEngine.play('complete');
-    
-    // 🚀 完了時にコンテナからフォーカスを外す
-    if (this.container) {
-      this.container.blur();
-    }
 
     if (!this.onComplete) return;
 
@@ -582,29 +475,14 @@ export class HybridTypingEngine {
       accuracy: accuracy
     });
   }
-
   /**
-   * クリーンアップ - コロシアム級
+   * クリーンアップ - シンプル版
    */
   cleanup(): void {
-    // 🚀 描画ループ停止
-    this.renderScheduler.stop();
-
-    // 🚀 Container-scopedイベントリスナー削除
-    if (this.container && this.keyHandler) {
-      this.container.removeEventListener('keydown', this.keyHandler, false);
+    // 🚀 キーイベントリスナー削除
+    if (this.keyHandler) {
+      window.removeEventListener('keydown', this.keyHandler, { capture: true });
       this.keyHandler = undefined;
-    }
-
-    if (this.container && this.focusOutHandler) {
-      this.container.removeEventListener('focusout', this.focusOutHandler);
-      this.focusOutHandler = undefined;
-    }
-
-    // 🚀 コンテナのフォーカス属性をリセット
-    if (this.container) {
-      this.container.removeAttribute('tabindex');
-      this.container.blur();
     }
 
     // 🚀 状態リセット
