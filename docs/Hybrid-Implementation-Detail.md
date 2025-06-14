@@ -14,7 +14,7 @@
 // HybridTypingEngine.ts
 import { TypingChar, type DisplayInfo } from './TypingChar';
 import type { KanaDisplay, PerWordScoreLog, TypingWord } from '@/types';
-import UltraFastAudioSystem from '@/utils/UltraFastAudioSystem';
+import OptimizedAudioSystem from '@/utils/OptimizedAudioSystem';
 
 interface HybridEngineConfig {
   fontFamily: string;
@@ -252,7 +252,7 @@ export class HybridTypingEngine {
     const isCorrect = currentChar.type(key);
 
     if (isCorrect) {
-      UltraFastAudioSystem.playClickSound();
+      OptimizedAudioSystem.playClickSound();
       
       if (currentChar.completed) {
         this.state.currentIndex++;
@@ -264,7 +264,7 @@ export class HybridTypingEngine {
       }
     } else {
       this.state.mistakeCount++;
-      UltraFastAudioSystem.playErrorSound();
+      OptimizedAudioSystem.playErrorSound();
     }
 
     // 🚀 即座Canvas更新

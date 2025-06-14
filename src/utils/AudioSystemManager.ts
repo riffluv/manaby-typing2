@@ -153,10 +153,9 @@ class AudioSystemManager {
     // console.logの一時的な無効化（音声関連のみ）
     const originalConsoleLog = console.log;
     console.log = (...args: unknown[]) => {
-      const message = args.join(' ');
-      // 音声関連のログをフィルタリング
+      const message = args.join(' ');      // 音声関連のログをフィルタリング
       if (!message.includes('[AudioPerformance]') && 
-          !message.includes('[UltraFast]') && 
+          !message.includes('[OptimizedAudio]') && 
           !message.includes('[WebAudioOnly]')) {
         originalConsoleLog.apply(console, args);
       }

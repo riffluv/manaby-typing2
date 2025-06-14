@@ -2,6 +2,7 @@ import React, { useState, useEffect, useCallback, useMemo } from 'react';
 import { useRouter } from 'next/navigation';
 import { useOptimizedGameStatus, useOptimizedCurrentWord } from '@/store/optimizedSelectors';
 import { useTypingGameStore } from '@/store/typingGameStore';
+import { useSettingsStore } from '@/store/useSettingsStore';
 import { TypingWord, PerWordScoreLog, GameScoreLog, TypingChar } from '@/types';
 import { useScoreCalculation } from '@/hooks/useScoreCalculation';
 // import { PerformanceProfiler } from '@/utils/PerformanceProfiler'; // sub-5ms optimization: 測定オーバーヘッド除去
@@ -10,10 +11,11 @@ import SimpleGameResultScreen from './SimpleGameResultScreen';
 import styles from '@/styles/components/SimpleUnifiedTypingGame.module.css';
 
 /**
- * シンプル統合タイピングゲーム - パフォーマンス最適化版
+ * シンプル統合タイピングゲーム - Hybridエンジン最適化版
  * - React.memo適用による不要な再レンダリング防止
  * - useCallback/useMemoによる関数・値のメモ化
  * - 依存配列の最適化による無限ループ防止
+ * - HybridTypingEngine固定で「コロシアム級」レスポンス実現
  * - 日本語処理システムは変更せず、React層のみ最適化
  */
 const SimpleUnifiedTypingGame: React.FC<{ 
@@ -27,7 +29,7 @@ const SimpleUnifiedTypingGame: React.FC<{
   const gameStatus = useOptimizedGameStatus();
   const setGameStatus = useTypingGameStore((state) => state.setGameStatus);
   const advanceToNextWord = useTypingGameStore((state) => state.advanceToNextWord);
-  const storeWord = useOptimizedCurrentWord();
+  const storeWord = useOptimizedCurrentWord();  
   // currentWordのメモ化された初期値
   const initialCurrentWord = useMemo(() => ({
     japanese: '',
@@ -154,9 +156,7 @@ const SimpleUnifiedTypingGame: React.FC<{
         onCalculateFallbackScore={() => setResultScore(calculateFallbackScore())}
       />
     );
-  }
-
-  if (isPlaying) {
+  }  if (isPlaying) {
     return (
       <div className={styles.gameContainer}>
         <SimpleGameScreen

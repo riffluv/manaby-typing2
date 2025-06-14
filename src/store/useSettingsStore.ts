@@ -41,7 +41,7 @@ export const useSettingsStore = create<SettingsState>()(
   persist(
     (set) => ({
       ...defaultSettings,
-        setBgmEnabled: (enabled) => set({ bgmEnabled: enabled }),
+      setBgmEnabled: (enabled) => set({ bgmEnabled: enabled }),
       setBgmVolume: (volume) => set({ bgmVolume: volume }),
       setSoundEffectsEnabled: (enabled) => set({ soundEffectsEnabled: enabled }),
       setSoundEffectsVolume: (volume) => set({ soundEffectsVolume: volume }),

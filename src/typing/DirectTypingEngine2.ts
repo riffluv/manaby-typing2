@@ -16,14 +16,13 @@
  * - requestAnimationFrame完全排除 → 即座実行（16.67ms遅延削除）
  * - ひらがなハイライト機能を削除（パフォーマンス向上）
  * - CSS遷移を削除（0.15s ease → 即座のフィードバック）
- * - スケール変換を削除（GPU負荷軽減）
- * - UltraFastAudioSystem採用（typingmania-ref流の超高速音響）
+ * - スケール変換を削除（GPU負荷軽減） * - OptimizedAudioSystem採用（高速音響システム）
  * - 40年タイピング経験者の感覚に対応した遅延ゼロ実装
  */
 
 import { TypingChar } from './TypingChar';
 import type { KanaDisplay, PerWordScoreLog } from '@/types';
-import UltraFastAudioSystem from '@/utils/UltraFastAudioSystem';
+import OptimizedAudioSystem from '@/utils/OptimizedAudioSystem';
 
 
 
@@ -302,7 +301,7 @@ export class DirectTypingEngine2 {  private state: DirectEngineState;
    */
   private processKey(key: string): void {
     if (this.state.keyCount === 0) {
-      UltraFastAudioSystem.resumeAudioContext();
+      OptimizedAudioSystem.resumeAudioContext();
     }
 
     if (this.state.startTime === 0) {
@@ -316,7 +315,7 @@ export class DirectTypingEngine2 {  private state: DirectEngineState;
     if (currentChar.branchingState) {
       const nextChar = this.state.typingChars[this.state.currentIndex + 1];
       const result = currentChar.typeBranching(key, nextChar);      if (result.success) {
-        UltraFastAudioSystem.playClickSound();
+        OptimizedAudioSystem.playClickSound();
 
         if (result.completeWithSingle) {
           // 'n'パターン: 「ん」完了後、次文字に継続
@@ -342,7 +341,7 @@ export class DirectTypingEngine2 {  private state: DirectEngineState;
         return;
       } else {
         this.state.mistakeCount++;
-        UltraFastAudioSystem.playErrorSound();
+        OptimizedAudioSystem.playErrorSound();
         
         // 🚀 ZERO-LATENCY: DOM更新を即座実行
         this.updateDisplay();
@@ -353,7 +352,7 @@ export class DirectTypingEngine2 {  private state: DirectEngineState;
     const isCorrect = currentChar.type(key);
 
     if (isCorrect) {
-      UltraFastAudioSystem.playClickSound();
+      OptimizedAudioSystem.playClickSound();
 
       if (currentChar.completed) {
         this.state.currentIndex++;
@@ -365,7 +364,7 @@ export class DirectTypingEngine2 {  private state: DirectEngineState;
       }
     } else {
       this.state.mistakeCount++;
-      UltraFastAudioSystem.playErrorSound();
+      OptimizedAudioSystem.playErrorSound();
     }
 
     // 🚀 ZERO-LATENCY: DOM更新を即座実行

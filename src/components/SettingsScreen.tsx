@@ -6,6 +6,7 @@ import styles from '@/styles/components/SettingsScreen.module.css';
 
 const SettingsScreen: React.FC = React.memo(() => {
   const { goBack } = useSceneNavigationStore();
+
   // 音響・表示設定ストア
   const {
     bgmEnabled,
@@ -39,7 +40,8 @@ const SettingsScreen: React.FC = React.memo(() => {
   const handleHitSoundVolumeChange = useCallback((e: React.ChangeEvent<HTMLInputElement>) => 
     setHitSoundVolume(Number(e.target.value)), [setHitSoundVolume]);
   const handleKeyboardToggle = useCallback(() => 
-    setShowKeyboard(!showKeyboard), [showKeyboard, setShowKeyboard]);  const handleKanaDisplayToggle = useCallback(() => 
+    setShowKeyboard(!showKeyboard), [showKeyboard, setShowKeyboard]);
+  const handleKanaDisplayToggle = useCallback(() => 
     setShowKanaDisplay(!showKanaDisplay), [showKanaDisplay, setShowKanaDisplay]);
 
   // ESCキーでの戻る機能を追加
@@ -144,9 +146,7 @@ const SettingsScreen: React.FC = React.memo(() => {
               />
             </div>
           </div>
-        </section>
-
-        {/* Kana Display設定 */}
+        </section>        {/* Kana Display設定 */}
         <section className={styles.system__item}>
           <div className={styles.system__row}>
             <label className={styles.system__label}>Kana Display</label>
@@ -156,10 +156,11 @@ const SettingsScreen: React.FC = React.memo(() => {
                 role="switch"
                 aria-checked={showKanaDisplay}
                 onClick={handleKanaDisplayToggle}
-              />
-            </div>
+              />            </div>
           </div>
-        </section>        {/* Navigation Buttons */}
+        </section>
+
+        {/* Navigation Buttons */}
         <nav className={styles.system__buttons}>          <button className={styles.system__button} onClick={goBack}>
             BACK
           </button>

@@ -3,8 +3,8 @@
 
 // 🚀 爆速WebAudio + 超高速MP3統合システム
 export const AUDIO_CONFIG = {
-  // 常に'ultrafast'（爆速WebAudio）を使用
-  ENGINE: 'ultrafast',
+  // OptimizedAudioSystemを使用（統合音響システム）
+  ENGINE: 'optimized',
   
   // デバッグモード（パフォーマンス測定）
   DEBUG_MODE: true,
