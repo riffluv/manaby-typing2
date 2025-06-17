@@ -279,12 +279,14 @@ export class DirectTypingEngine2 {  private state: DirectEngineState;
 
   /**
    * キーリスナー設定
-   */
+  */
   private setupKeyListener(): void {
-    if (document.body) {
-      document.body.tabIndex = -1;
-      document.body.focus();
-    }
+    if (!this.container) return;
+
+    // 🚀 コンテナをフォーカス可能にする
+    this.container.setAttribute('tabindex', '0');
+    this.container.style.outline = 'none';
+    this.container.focus();
 
     this.keyHandler = (e: KeyboardEvent) => {
       if (e.ctrlKey || e.altKey || e.metaKey || e.key.length !== 1) {
@@ -295,7 +297,10 @@ export class DirectTypingEngine2 {  private state: DirectEngineState;
       e.stopPropagation();
 
       this.processKey(e.key);
-    };    document.addEventListener('keydown', this.keyHandler, { capture: true });
+    };
+
+    // 🚀 Container-Scopedイベントリスナー
+    this.container.addEventListener('keydown', this.keyHandler, { capture: true });
     // 🚀 DirectTypingEngine2 キーリスナー設定完了
   }/**
    * キー処理
