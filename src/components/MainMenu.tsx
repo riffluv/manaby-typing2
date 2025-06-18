@@ -6,7 +6,7 @@ import styles from '@/styles/components/MainMenu.module.css';
 // ELDEN RING NIGHTREIGNスタイル用のトークンをインポート
 import '@/styles/components/elden-ring-tokens.css';
 import AdminModal from './AdminModal';
-import OptimizedAudioSystem from '@/utils/OptimizedAudioSystem';
+import UltraFastAudioSystem from '@/utils/UltraFastAudioSystem';
 
 interface MainMenuProps {
   onStart: () => void;
@@ -48,9 +48,8 @@ const MainMenu: React.FC<MainMenuProps> = React.memo(({ onStart, onRanking }) =>
     setIsStarting(true);
     setError(null);
     
-    try {
-      OptimizedAudioSystem.init();
-      await OptimizedAudioSystem.resumeAudioContext();
+    try {      UltraFastAudioSystem.init();
+      await UltraFastAudioSystem.resumeAudioContext();
       resetGame();
       setGameStatus('playing');
       onStart();

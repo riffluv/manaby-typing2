@@ -9,9 +9,10 @@
 
 import { TypingChar } from './TypingChar';
 import type { KanaDisplay, PerWordScoreLog } from '@/types';
+import UltraFastAudioSystem from '@/utils/UltraFastAudioSystem';
 
 /**
- * Canvas設定 + タイピンガーZ級最適化定数
+ * Canvas設定 + HybridTypingEngine最適化定数
  */
 const CANVAS_CONFIG = {
   fontString: '500 1.8rem "Courier New", monospace',
@@ -19,59 +20,6 @@ const CANVAS_CONFIG = {
   completedColor: '#4FC3F7', 
   inactiveColor: '#B0BEC5'
 } as const;
-
-/**
- * 🚀 タイピンガーZ級音響システム
- */
-class TaipingazSfx {
-  private static context: AudioContext | null = null;
-  private static sounds: Map<string, AudioBuffer> = new Map();
-  private static volume = 0.8; // タイピンガーZ級音量
-
-  static async init() {
-    if (!this.context) {
-      this.context = new (window.AudioContext || (window as any).webkitAudioContext)();
-      
-      // 🎯 タイピンガーZ級効果音プリロード
-      await this.loadSound('correct', this.generateTone(800, 0.1));
-      await this.loadSound('incorrect', this.generateTone(400, 0.15));
-    }
-  }
-
-  private static generateTone(frequency: number, duration: number): AudioBuffer {
-    const sampleRate = this.context!.sampleRate;
-    const buffer = this.context!.createBuffer(1, sampleRate * duration, sampleRate);
-    const data = buffer.getChannelData(0);
-    
-    for (let i = 0; i < data.length; i++) {
-      data[i] = Math.sin(2 * Math.PI * frequency * i / sampleRate) * 0.3;
-    }
-    return buffer;
-  }
-
-  private static async loadSound(name: string, buffer: AudioBuffer) {
-    this.sounds.set(name, buffer);
-  }
-
-  static play(soundName: string) {
-    if (!this.context || !this.sounds.has(soundName)) return;
-    
-    const buffer = this.sounds.get(soundName)!;
-    const source = this.context.createBufferSource();
-    const gainNode = this.context.createGain();
-    
-    source.buffer = buffer;
-    gainNode.gain.value = this.volume;
-    
-    source.connect(gainNode);
-    gainNode.connect(this.context.destination);
-    source.start();
-  }
-
-  static resumeContext() {
-    this.context?.resume();
-  }
-}
 
 /**
  * Canvas文字クラス - 最小限実装
@@ -141,13 +89,11 @@ export class HybridTypingEngine {
     this.onComplete = onComplete;
     this.state.typingChars = typingChars;
     this.state.currentIndex = 0;
-    this.state.startTime = 0;
-
-    this.setupDOM(originalText);
+    this.state.startTime = 0;    this.setupDOM(originalText);
     this.setupCanvas();    this.setupKeyListener();
     
-    // 🚀 タイピンガーZ級音響初期化
-    TaipingazSfx.init();
+    // 🚀 UltraFastAudioSystem初期化（メカニカルキーボード音対応）
+    UltraFastAudioSystem.init();
     this.updateCanvasStates();
     this.renderCanvas();
   }
@@ -280,14 +226,13 @@ export class HybridTypingEngine {
     };
 
     this.container.addEventListener('focusout', this.focusOutHandler);
-  }
-  /**
-   * 🚀 タイピンガーZ級キー処理
+  }  /**
+   * 🚀 HybridTypingEngine メカニカルキーボード音対応キー処理
    */
   private processKey(key: string): void {
     // 🎯 初回キー：音声コンテキスト + タイマー開始
     if (this.state.keyCount === 0) {
-      TaipingazSfx.resumeContext();
+      UltraFastAudioSystem.resumeAudioContext();
       this.state.startTime = Date.now();
     }
 
@@ -303,7 +248,7 @@ export class HybridTypingEngine {
       const result = currentChar.typeBranching(key, nextChar);
 
       if (result.success) {
-        TaipingazSfx.play('correct'); // 🚀 タイピンガーZ級効果音
+        UltraFastAudioSystem.playClickSound(); // 🚀 メカニカルキーボード音
         shouldUpdate = true;
 
         if (result.completeWithSingle) {
@@ -324,7 +269,7 @@ export class HybridTypingEngine {
         }
       } else {
         this.state.mistakeCount++;
-        TaipingazSfx.play('incorrect'); // 🚀 タイピンガーZ級エラー音
+        UltraFastAudioSystem.playErrorSound(); // 🚀 メカニカルキーボードエラー音
         shouldUpdate = true;
       }
     } else {
@@ -332,7 +277,7 @@ export class HybridTypingEngine {
       const isCorrect = currentChar.type(key);
 
       if (isCorrect) {
-        TaipingazSfx.play('correct'); // 🚀 タイピンガーZ級効果音
+        UltraFastAudioSystem.playClickSound(); // 🚀 メカニカルキーボード音
         shouldUpdate = true;
 
         if (currentChar.completed) {
@@ -344,7 +289,7 @@ export class HybridTypingEngine {
         }
       } else {
         this.state.mistakeCount++;
-        TaipingazSfx.play('incorrect'); // 🚀 タイピンガーZ級エラー音
+        UltraFastAudioSystem.playErrorSound(); // 🚀 メカニカルキーボードエラー音
         shouldUpdate = true;
       }
     }
@@ -515,55 +460,5 @@ export class HybridTypingEngine {
     this.romajiCanvas = null;
     this.ctx = null;
     this.canvasChars = [];
-  }
-}
-
-/**
- * typingmania-ref流音響システム - 最小限実装
- */
-class SimpleSfx {
-  private static audioContext: AudioContext | null = null;
-  private static lastPlayTime = 0;
-  private static THROTTLE_INTERVAL = 20; // 50fps保証
-
-  static async init(): Promise<void> {
-    if (!this.audioContext) {
-      this.audioContext = new (window.AudioContext || (window as any).webkitAudioContext)();
-    }
-  }
-
-  static async play(soundType: 'key' | 'error'): Promise<void> {
-    if (!this.audioContext) await this.init();
-    if (!this.audioContext) return;
-
-    const now = Date.now();
-    if (soundType === 'key' && (now - this.lastPlayTime) < this.THROTTLE_INTERVAL) {
-      return;
-    }
-    this.lastPlayTime = now;
-
-    const oscillator = this.audioContext.createOscillator();
-    const gainNode = this.audioContext.createGain();
-    
-    oscillator.connect(gainNode);
-    gainNode.connect(this.audioContext.destination);
-
-    if (soundType === 'key') {
-      oscillator.frequency.setValueAtTime(800, this.audioContext.currentTime);
-      gainNode.gain.setValueAtTime(0.3, this.audioContext.currentTime);
-    } else {
-      oscillator.frequency.setValueAtTime(200, this.audioContext.currentTime);
-      gainNode.gain.setValueAtTime(0.4, this.audioContext.currentTime);
-    }
-
-    oscillator.start();
-    gainNode.gain.exponentialRampToValueAtTime(0.01, this.audioContext.currentTime + 0.1);
-    oscillator.stop(this.audioContext.currentTime + 0.1);
-  }
-
-  static resumeContext(): void {
-    if (this.audioContext && this.audioContext.state === 'suspended') {
-      this.audioContext.resume();
-    }
   }
 }

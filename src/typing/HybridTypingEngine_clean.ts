@@ -9,6 +9,7 @@
 
 import { TypingChar } from './TypingChar';
 import type { KanaDisplay, PerWordScoreLog } from '@/types';
+import UltraFastAudioSystem from '@/utils/UltraFastAudioSystem';
 
 /**
  * Canvas設定 - typingmania-ref流シンプル設計
@@ -88,13 +89,11 @@ export class HybridTypingEngine {
     this.onComplete = onComplete;
     this.state.typingChars = typingChars;
     this.state.currentIndex = 0;
-    this.state.startTime = 0;
-
-    this.setupDOM(originalText);
+    this.state.startTime = 0;    this.setupDOM(originalText);
     this.setupCanvas();
     this.setupKeyListener();
     
-    SimpleSfx.init();
+    UltraFastAudioSystem.init();
     this.updateCanvasStates();
     this.renderCanvas();
   }
@@ -177,9 +176,8 @@ export class HybridTypingEngine {
   /**
    * キー処理 - typingmania-ref流
    */
-  private processKey(key: string): void {
-    if (this.state.keyCount === 0) {
-      SimpleSfx.resumeContext();
+  private processKey(key: string): void {    if (this.state.keyCount === 0) {
+      UltraFastAudioSystem.resumeAudioContext();
       this.state.startTime = Date.now();
     }
 
@@ -195,7 +193,7 @@ export class HybridTypingEngine {
       const result = currentChar.typeBranching(key, nextChar);
 
       if (result.success) {
-        SimpleSfx.play('key');
+        UltraFastAudioSystem.playClickSound();
         shouldUpdate = true;
 
         if (result.completeWithSingle) {
@@ -216,7 +214,7 @@ export class HybridTypingEngine {
         }
       } else {
         this.state.mistakeCount++;
-        SimpleSfx.play('error');
+        UltraFastAudioSystem.playErrorSound();
         shouldUpdate = true;
       }
     } else {
@@ -224,7 +222,7 @@ export class HybridTypingEngine {
       const isCorrect = currentChar.type(key);
 
       if (isCorrect) {
-        SimpleSfx.play('key');
+        UltraFastAudioSystem.playClickSound();
         shouldUpdate = true;
 
         if (currentChar.completed) {
@@ -236,7 +234,7 @@ export class HybridTypingEngine {
         }
       } else {
         this.state.mistakeCount++;
-        SimpleSfx.play('error');
+        UltraFastAudioSystem.playErrorSound();
         shouldUpdate = true;
       }
     }
@@ -368,57 +366,6 @@ export class HybridTypingEngine {
   cleanup(): void {
     if (this.keyHandler) {
       window.removeEventListener('keydown', this.keyHandler, true);
-      this.keyHandler = undefined;
-    }
-  }
-}
-
-/**
- * typingmania-ref流音響システム - 最小限実装
- */
-class SimpleSfx {
-  private static audioContext: AudioContext | null = null;
-  private static lastPlayTime = 0;
-  private static THROTTLE_INTERVAL = 20; // 50fps保証
-
-  static async init(): Promise<void> {
-    if (!this.audioContext) {
-      this.audioContext = new (window.AudioContext || (window as any).webkitAudioContext)();
-    }
-  }
-
-  static async play(soundType: 'key' | 'error'): Promise<void> {
-    if (!this.audioContext) await this.init();
-    if (!this.audioContext) return;
-
-    const now = Date.now();
-    if (soundType === 'key' && (now - this.lastPlayTime) < this.THROTTLE_INTERVAL) {
-      return;
-    }
-    this.lastPlayTime = now;
-
-    const oscillator = this.audioContext.createOscillator();
-    const gainNode = this.audioContext.createGain();
-    
-    oscillator.connect(gainNode);
-    gainNode.connect(this.audioContext.destination);
-
-    if (soundType === 'key') {
-      oscillator.frequency.setValueAtTime(800, this.audioContext.currentTime);
-      gainNode.gain.setValueAtTime(0.3, this.audioContext.currentTime);
-    } else {
-      oscillator.frequency.setValueAtTime(200, this.audioContext.currentTime);
-      gainNode.gain.setValueAtTime(0.4, this.audioContext.currentTime);
-    }
-
-    oscillator.start();
-    gainNode.gain.exponentialRampToValueAtTime(0.01, this.audioContext.currentTime + 0.1);
-    oscillator.stop(this.audioContext.currentTime + 0.1);
-  }
-
-  static resumeContext(): void {
-    if (this.audioContext && this.audioContext.state === 'suspended') {
-      this.audioContext.resume();
-    }
+      this.keyHandler = undefined;    }
   }
 }

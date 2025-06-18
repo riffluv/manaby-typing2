@@ -2,13 +2,13 @@
 'use client';
 
 import { useEffect } from 'react';
-import OptimizedAudioSystem from '@/utils/OptimizedAudioSystem';
+import UltraFastAudioSystem from '@/utils/UltraFastAudioSystem';
 
 const AudioSystemInitializer = () => {
   useEffect(() => {
     const initializeAudio = async () => {
       try {
-        OptimizedAudioSystem.init();
+        UltraFastAudioSystem.init();
       } catch (error) {
         console.error('[AudioSystemInitializer] 音響システムの初期化に失敗:', error);
       }
