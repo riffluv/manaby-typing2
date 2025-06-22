@@ -3,6 +3,7 @@
    - Canvas描画専用最適化
    - デザイントークン駆動設計
    - BEM記法統一
+   - DPIスケール完全対応
    ========================================================================== */
 
 /* ==========================================================================
@@ -65,32 +66,42 @@
 }
 
 /* ==========================================================================
-   Legacy Class Support (Deprecated - Use BEM classes above)
+   DPI Scale Support - 2025 Best Practices
    ========================================================================== */
 
-/* @deprecated Use .hybridTypingEngine__romajiCanvas instead */
-.hybrid-romaji-canvas {
-  font-family: var(--font-family-mono, "Courier New", "Consolas", "Liberation Mono", monospace);
-  font-weight: var(--font-weight-normal, 400);
-  text-transform: none;
-  font-variant: normal;
+/* 125%スケール対応（120-144 DPI） */
+@media (min-resolution: 120dpi) and (max-resolution: 144dpi), 
+       (-webkit-min-device-pixel-ratio: 1.25) and (-webkit-max-device-pixel-ratio: 1.5) {
+  .hybridTypingEngine__romajiCanvas {
+    font-size: calc(var(--font-size-game-text, 1.25rem) * 0.95);
+  }
 }
 
-/* @deprecated Use .hybridTypingEngine__originalText, .hybridTypingEngine__kanaContainer instead */
-.hybrid-original-text,
-.hybrid-kana-container {
-  font-family: var(--font-family-game, 'Cinzel', serif);
+/* 150%スケール対応（144+ DPI） */
+@media (min-resolution: 144dpi) and (max-resolution: 191dpi), 
+       (-webkit-min-device-pixel-ratio: 1.5) and (-webkit-max-device-pixel-ratio: 1.99) {
+  .hybridTypingEngine__romajiCanvas {
+    font-size: calc(var(--font-size-game-text, 1.25rem) * 0.9);
+  }
 }
 
-/* @deprecated Use .hybridTypingEngine__canvasContainer instead */
-.hybrid-canvas-container {
-  will-change: contents;
-  contain: layout style;
+/* 200%スケール対応（Retina等） */
+@media (-webkit-min-device-pixel-ratio: 2), (min-resolution: 192dpi) {
+  .hybridTypingEngine__romajiCanvas {
+    font-size: calc(var(--font-size-game-text, 1.25rem) * 0.85);
+  }
 }
 
 /* ==========================================================================
    Responsive Design - Canvas Optimization
    ========================================================================== */
+
+/* Container Queries - 2025 Modern Responsive */
+@container typing-area (inline-size < 640px) {
+  .hybridTypingEngine__romajiCanvas {
+    font-size: var(--font-size-base, 1rem);
+  }
+}
 
 /* Mobile optimization */
 @media (width < 768px) {
@@ -140,4 +151,28 @@
     will-change: auto;
     transform: none;
   }
+}
+
+/* ==========================================================================
+   Legacy Class Support (Deprecated - Use BEM classes above)
+   ========================================================================== */
+
+/* @deprecated Use .hybridTypingEngine__romajiCanvas instead */
+.hybrid-romaji-canvas {
+  font-family: var(--font-family-mono, "Courier New", "Consolas", "Liberation Mono", monospace);
+  font-weight: var(--font-weight-normal, 400);
+  text-transform: none;
+  font-variant: normal;
+}
+
+/* @deprecated Use .hybridTypingEngine__originalText, .hybridTypingEngine__kanaContainer instead */
+.hybrid-original-text,
+.hybrid-kana-container {
+  font-family: var(--font-family-game, 'Cinzel', serif);
+}
+
+/* @deprecated Use .hybridTypingEngine__canvasContainer instead */
+.hybrid-canvas-container {
+  will-change: contents;
+  contain: layout style;
 }

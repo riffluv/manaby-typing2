@@ -4,6 +4,7 @@
    - BEM記法統一
    - ゲーミングUI統合管理
    - 2025年最新技術対応
+   - DPIスケール完全対応
    ========================================================================== */
 
 /* ==========================================================================
@@ -189,17 +190,55 @@
   position: relative; /* Placeholder property to avoid empty rule */
 }
 
-/* 🚀 Rich transition ready - completion keyframes removed for future implementation */
-/*
-@keyframes unifiedGameCompleted {
-  0%, 100% {
-    transform: scale(1);
+/* ==========================================================================
+   DPI Scale Support - 2025 Best Practices
+   ========================================================================== */
+
+/* 125%スケール対応（120-144 DPI） */
+@media (min-resolution: 120dpi) and (max-resolution: 144dpi), 
+       (-webkit-min-device-pixel-ratio: 1.25) and (-webkit-max-device-pixel-ratio: 1.5) {
+  .unifiedGame {
+    /* レイアウトシフト防止 */
+    transform: scale(0.98);
+    transform-origin: top left;
+    width: calc(100vw / 0.98); /* スケール分を計算 */
+    height: calc(100vh / 0.98); /* スケール分を計算 */
   }
-  50% {
-    transform: scale(1.02);
+  
+  .unifiedGame__progressIndicator {
+    border-width: 0.8px; /* 細いボーダーで鮮明に */
+    font-weight: 500; /* 少し太くして視認性UP */
   }
 }
-*/
+
+/* 150%スケール対応（144+ DPI） */
+@media (min-resolution: 144dpi) and (max-resolution: 191dpi), 
+       (-webkit-min-device-pixel-ratio: 1.5) and (-webkit-max-device-pixel-ratio: 1.99) {
+  .unifiedGame {
+    transform: scale(0.95); /* さらに縮小 */
+    transform-origin: top left;
+    width: calc(100vw / 0.95); /* スケール分を計算 */
+    height: calc(100vh / 0.95); /* スケール分を計算 */
+  }
+  
+  .unifiedGame__progressIndicator {
+    border-width: 0.5px; /* 高解像度での最適化 */
+  }
+}
+
+/* 200%スケール対応（Retina等） */
+@media (-webkit-min-device-pixel-ratio: 2), (min-resolution: 192dpi) {
+  .unifiedGame {
+    transform: scale(0.9);
+    transform-origin: top left;
+    width: calc(100vw / 0.9); /* スケール分を計算 */
+    height: calc(100vh / 0.9); /* スケール分を計算 */
+  }
+  
+  .unifiedGame__progressIndicator {
+    border-width: 0.5px;
+  }
+}
 
 /* ==========================================================================
    Container Queries - 2025 Modern Responsive
@@ -290,104 +329,17 @@
   .unifiedGame__progressIndicator:hover {
     transform: none;
   }
+  
+  /* DPIスケール調整を無効化（モーション削減モード） */
+  .unifiedGame {
+    transform: none !important;
+    width: 100vw !important;
+    height: 100vh !important;
+  }
 }
 
 /* Focus management */
 .unifiedGame:focus-within .unifiedGame__progressIndicator {
   opacity: 0.7;
   transition: opacity var(--transition-fast, 0.15s) ease;
-}
-
-/* ==========================================================================
-   Legacy Class Support (Deprecated - Use BEM classes above)
-   ========================================================================== */
-
-/* @deprecated Use .unifiedGame instead */
-.gameContainer {
-  min-height: 100vh;
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-  align-items: center;
-}
-
-/* @deprecated Use .unifiedGame__progressIndicator instead */
-.progressIndicator {
-  position: fixed;
-  top: var(--spacing-sm, 0.5rem);
-  right: var(--spacing-sm, 0.5rem);
-  font-size: var(--font-size-lg, 1.125rem);
-  color: var(--color-gaming-text-primary, #e0e0e0);
-  background: var(--color-gaming-bg-overlay, rgba(5, 10, 20, 0.92));
-  padding: var(--spacing-xs, 0.25rem) var(--spacing-sm, 0.5rem);
-  border-radius: var(--radius-sm, 0.25rem);
-  border: 1px solid var(--color-border-primary, rgba(255, 255, 255, 0.1));
-  backdrop-filter: blur(4px);
-  font-weight: var(--font-weight-bold, 700);
-  z-index: var(--z-index-overlay, 1300);
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
-  transition: all var(--transition-fast, 0.15s) ease;
-}
-
-/* @deprecated Use .unifiedGame__loadingScreen instead */
-.loadingScreen {
-  min-height: 100vh;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  font-size: var(--font-size-xl, 1.25rem);
-  color: var(--color-gaming-text-secondary, #b8cfe7);
-  font-weight: var(--font-weight-medium, 500);
-}
-
-@keyframes loading {
-  0% { transform: rotate(0deg); }
-  100% { transform: rotate(360deg); }
-}
-
-/* Responsive Design */
-@media (max-width: 768px) {
-  .progressIndicator {
-    top: var(--spacing-xs);
-    right: var(--spacing-xs);
-    font-size: var(--font-size-md);
-    padding: var(--spacing-2xs) var(--spacing-xs);
-  }
-  
-  .loadingScreen {
-    font-size: var(--font-size-lg);
-    padding: var(--spacing-md);
-    text-align: center;
-  }
-}
-
-/* High DPI screens */
-@media (-webkit-min-device-pixel-ratio: 2), (min-resolution: 192dpi) {
-  .progressIndicator {
-    border-width: 0.5px;
-  }
-}
-
-/* Dark mode support */
-@media (prefers-color-scheme: dark) {
-  .progressIndicator {
-    background: rgba(0, 0, 0, 0.8);
-    border-color: var(--border-secondary);
-  }
-}
-
-/* Accessibility */
-@media (prefers-reduced-motion: reduce) {
-  .loadingScreen::after {
-    animation: none;
-  }
-  
-  .progressIndicator {
-    transition: none;
-  }
-}
-
-/* Focus management */
-.gameContainer:focus-within .progressIndicator {
-  opacity: 0.7;
 }
